@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? '/yoav-fun-packages/matan-trainings/' : '/',
   plugins: [
     react(),
     VitePWA({
@@ -16,7 +17,7 @@ export default defineConfig({
         theme_color: '#242424',
         background_color: '#242424',
         display: 'standalone',
-        start_url: '/',
+        start_url: process.env.NODE_ENV === 'production' ? '/yoav-fun-packages/matan-trainings/' : '/',
         icons: [
           {
             src: 'pwa-192x192.png',

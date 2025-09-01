@@ -1,0 +1,166 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Enable Corepack
+      run: corepack enable
+        
+    - name: Install dependencies
+      run: yarn install --immutable
+      
+    - name: Build all packages
+      run: yarn build
+      
+    - name: Create deployment structure
+      run: |
+        mkdir -p dist
+        echo '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Yoav Fun Packages</title>
+            <style>
+                body {
+                    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+                    background-color: #242424;
+                    color: rgba(255, 255, 255, 0.87);
+                    margin: 0;
+                    padding: 2rem;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .container {
+                    max-width: 800px;
+                    text-align: center;
+                }
+                h1 {
+                    font-size: 3rem;
+                    margin-bottom: 2rem;
+                    background: linear-gradient(45deg, #646cff, #4CAF50);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+                .packages {
+                    display: grid;
+                    gap: 2rem;
+                    margin-top: 3rem;
+                }
+                .package-card {
+                    background: #1e1e1e;
+                    border: 1px solid #333;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    transition: all 0.3s ease;
+                }
+                .package-card:hover {
+                    border-color: #646cff;
+                    transform: translateY(-4px);
+                }
+                .package-title {
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    color: #646cff;
+                }
+                .package-description {
+                    color: #ccc;
+                    margin-bottom: 1.5rem;
+                }
+                .package-link {
+                    display: inline-block;
+                    background: #646cff;
+                    color: white;
+                    padding: 0.75rem 1.5rem;
+                    text-decoration: none;
+                    border-radius: 6px;
+                    transition: background-color 0.3s;
+                }
+                .package-link:hover {
+                    background: #535bf2;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🎯 Yoav Fun Packages</h1>
+                <p>Collection of fun and useful web applications</p>
+                
+                <div class="packages">
+                    <div class="package-card">
+                        <div class="package-title">קדי לא פראייר - Training App</div>
+                        <div class="package-description">
+                            Progressive Web App for workout tracking with Hebrew UI. 
+                            Features dark mode, custom rest times, and responsive design.
+                        </div>
+                        <a href="./matan-trainings/" class="package-link">Open Training App</a>
+                    </div>
+                </div>
+                
+                <footer style="margin-top: 4rem; color: #666;">
+                    <p>Built with ❤️ using Vite, React, and GitHub Actions</p>
+                </footer>
+            </div>
+        </body>
+        </html>' > dist/index.html
+        
+    - name: Copy package builds to dist
+      run: |
+        # Copy matan-trainings build
+        if [ -d "packages/matan-trainings/dist" ]; then
+          cp -r packages/matan-trainings/dist dist/matan-trainings
+        fi
+        
+        # Add more packages here as they are created
+        # if [ -d "packages/another-package/dist" ]; then
+        #   cp -r packages/another-package/dist dist/another-package
+        # fi
+      
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
