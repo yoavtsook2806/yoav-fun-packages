@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { trainings } from './data/trainings';
 import { TrainingState, ExerciseState } from './types';
 import TrainingSelection from './components/TrainingSelection';

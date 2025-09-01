@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'קדי לא פראייר - אימונים',
-        short_name: 'אימונים',
-        description: 'אפליקציה לניהול אימונים אישיים',
+        name: 'Matan Trainings',
+        short_name: 'Matan Trainings',
+        description: 'Personal Training Management App',
         theme_color: '#242424',
         background_color: '#242424',
         display: 'standalone',

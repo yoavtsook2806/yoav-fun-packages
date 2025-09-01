@@ -18,7 +18,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   onNextExercise,
   onResetTraining,
 }) => {
-  const [timerId, setTimerId] = useState<number | null>(null);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
