@@ -1,7 +1,8 @@
-import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage } from '../types';
+import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage, ExerciseDefaults, ExerciseDefaultsStorage } from '../types';
 
 const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
 const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
+const EXERCISE_DEFAULTS_KEY = 'matan-trainings-exercise-defaults';
 
 export const getExerciseHistory = (): ExerciseHistory => {
   try {
@@ -176,5 +177,65 @@ export const clearTrainingProgress = (): void => {
     localStorage.removeItem(TRAINING_PROGRESS_KEY);
   } catch (error) {
     console.error('Error clearing training progress:', error);
+  }
+};
+
+// Exercise Defaults Functions
+export const getExerciseDefaults = (): ExerciseDefaultsStorage => {
+  try {
+    const stored = localStorage.getItem(EXERCISE_DEFAULTS_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch (error) {
+    console.error('Error loading exercise defaults:', error);
+    return {};
+  }
+};
+
+export const getExerciseDefaultSettings = (exerciseName: string): ExerciseDefaults => {
+  const defaults = getExerciseDefaults();
+  return defaults[exerciseName] || {};
+};
+
+export const saveExerciseDefaults = (
+  exerciseName: string,
+  weight?: number,
+  restTime?: number
+): void => {
+  try {
+    const defaults = getExerciseDefaults();
+    
+    if (!defaults[exerciseName]) {
+      defaults[exerciseName] = {};
+    }
+    
+    if (weight !== undefined && weight > 0) {
+      defaults[exerciseName].weight = weight;
+    }
+    
+    if (restTime !== undefined && restTime > 0) {
+      defaults[exerciseName].restTime = restTime;
+    }
+    
+    localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify(defaults));
+  } catch (error) {
+    console.error('Error saving exercise defaults:', error);
+  }
+};
+
+export const getDefaultWeight = (exerciseName: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName);
+  return defaults.weight;
+};
+
+export const getDefaultRestTime = (exerciseName: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName);
+  return defaults.restTime;
+};
+
+export const clearExerciseDefaults = (): void => {
+  try {
+    localStorage.removeItem(EXERCISE_DEFAULTS_KEY);
+  } catch (error) {
+    console.error('Error clearing exercise defaults:', error);
   }
 };

@@ -11,7 +11,10 @@ import {
   clearExerciseHistory,
   getExerciseProgress,
   saveTrainingProgress,
-  clearTrainingProgress
+  clearTrainingProgress,
+  getDefaultWeight,
+  getDefaultRestTime,
+  clearExerciseDefaults
 } from './utils/exerciseHistory';
 
 function App() {
@@ -37,6 +40,7 @@ function App() {
     if (confirmed) {
       clearExerciseHistory();
       clearTrainingProgress();
+      clearExerciseDefaults();
       alert('כל ההיסטוריה נמחקה בהצלחה!');
       
       // Optionally reload the page to reset the app state
@@ -49,7 +53,15 @@ function App() {
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
     exercises.forEach(exerciseName => {
+      // Priority: default weight > last used weight from history
+      const defaultWeight = getDefaultWeight(exerciseName);
       const lastUsedWeight = getLastUsedWeight(exerciseName);
+      const weight = defaultWeight || lastUsedWeight;
+      
+      // Priority: default rest time > global rest time
+      const defaultRestTime = getDefaultRestTime(exerciseName);
+      const customRestTime = defaultRestTime || undefined;
+      
       const savedProgress = getExerciseProgress(trainingType, exerciseName);
       const totalSets = trainings[trainingType][exerciseName].numberOfSets;
       
@@ -59,7 +71,8 @@ function App() {
         isActive: false,
         isResting: false,
         timeLeft: 0,
-        weight: lastUsedWeight,
+        weight: weight,
+        customRestTime: customRestTime,
       };
     });
 

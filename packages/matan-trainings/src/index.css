@@ -990,3 +990,146 @@ button:disabled {
     padding: 12px 15px;
   }
 }
+
+/* Exercise Feedback Modal */
+.feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.feedback-modal {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid #333;
+}
+
+.feedback-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.feedback-header h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.feedback-exercise-name {
+  text-align: center;
+  font-size: 1.1em;
+  color: #4CAF50;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.feedback-content {
+  margin-bottom: 24px;
+}
+
+.feedback-content p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ccc;
+  font-size: 1em;
+}
+
+.feedback-input-group {
+  margin-bottom: 16px;
+}
+
+.feedback-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.feedback-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2d2d2d;
+  color: #fff;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.feedback-input:focus {
+  outline: none;
+  background-color: #3d3d3d;
+}
+
+.feedback-input::placeholder {
+  color: #888;
+  font-size: 1em;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.feedback-skip-btn,
+.feedback-save-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 100px;
+  height: auto;
+  margin: 0;
+}
+
+.feedback-skip-btn {
+  background-color: #666;
+  color: #fff;
+}
+
+.feedback-skip-btn:hover {
+  background-color: #777;
+}
+
+.feedback-save-btn {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.feedback-save-btn:hover {
+  background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+  .feedback-modal {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  .feedback-actions {
+    flex-direction: column;
+  }
+  
+  .feedback-skip-btn,
+  .feedback-save-btn {
+    width: 100%;
+  }
+}

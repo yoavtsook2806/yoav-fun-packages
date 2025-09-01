@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
+import ExerciseFeedback from './ExerciseFeedback';
+import { saveExerciseDefaults } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
   trainingState: TrainingState;
@@ -21,6 +23,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 }) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
   const [historyModal, setHistoryModal] = useState<string | null>(null);
+  const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
@@ -95,6 +98,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         isActive: false,
         isResting: false,
       });
+      
+      // Show feedback modal when exercise is completed
+      setFeedbackModal(currentExerciseName);
     } else {
       const restTime = currentExerciseState.customRestTime || trainingState.restTime;
       onUpdateExerciseState(currentExerciseName, {
@@ -126,6 +132,16 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeHistory = () => {
     setHistoryModal(currentExerciseName);
+  };
+
+  const handleFeedbackSave = (weight?: number, restTime?: number) => {
+    if (feedbackModal) {
+      saveExerciseDefaults(feedbackModal, weight, restTime);
+    }
+  };
+
+  const handleFeedbackClose = () => {
+    setFeedbackModal(null);
   };
 
 
@@ -338,6 +354,17 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <ExerciseHistory
           exerciseName={historyModal}
           onClose={() => setHistoryModal(null)}
+        />
+      )}
+      
+      {/* Exercise Feedback Modal */}
+      {feedbackModal && (
+        <ExerciseFeedback
+          exerciseName={feedbackModal}
+          currentWeight={trainingState.exerciseStates[feedbackModal]?.weight}
+          currentRestTime={trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
+          onSave={handleFeedbackSave}
+          onClose={handleFeedbackClose}
         />
       )}
     </div>

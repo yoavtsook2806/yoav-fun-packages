@@ -53,3 +53,12 @@ export interface DailyTrainingProgress {
 export interface TrainingProgressStorage {
   [trainingType: string]: DailyTrainingProgress;
 }
+
+export interface ExerciseDefaults {
+  weight?: number;
+  restTime?: number;
+}
+
+export interface ExerciseDefaultsStorage {
+  [exerciseName: string]: ExerciseDefaults;
+}
