@@ -1,7 +1,6 @@
-import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage } from '../types';
+import { ExerciseHistory, ExerciseHistoryEntry } from '../types';
 
 const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
-const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
 
 export const getExerciseHistory = (): ExerciseHistory => {
   try {
@@ -99,72 +98,5 @@ export const removeDuplicateHistoryEntries = (): void => {
     }
   } catch (error) {
     console.error('Error removing duplicate history entries:', error);
-  }
-};
-
-// Training Progress Functions
-const getTodayDateString = (): string => {
-  return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-};
-
-export const getTrainingProgress = (): TrainingProgressStorage => {
-  try {
-    const stored = localStorage.getItem(TRAINING_PROGRESS_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch (error) {
-    console.error('Error loading training progress:', error);
-    return {};
-  }
-};
-
-export const getDailyTrainingProgress = (trainingType: string): DailyTrainingProgress | null => {
-  const progress = getTrainingProgress();
-  const todayProgress = progress[trainingType];
-  
-  // Return progress only if it's from today
-  if (todayProgress && todayProgress.date === getTodayDateString()) {
-    return todayProgress;
-  }
-  
-  return null;
-};
-
-export const saveTrainingProgress = (
-  trainingType: string,
-  exerciseName: string,
-  completedSets: number
-): void => {
-  try {
-    const progress = getTrainingProgress();
-    const today = getTodayDateString();
-    
-    if (!progress[trainingType] || progress[trainingType].date !== today) {
-      // Initialize new daily progress
-      progress[trainingType] = {
-        date: today,
-        trainingType,
-        exerciseProgress: {}
-      };
-    }
-    
-    // Update the exercise progress
-    progress[trainingType].exerciseProgress[exerciseName] = completedSets;
-    
-    localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(progress));
-  } catch (error) {
-    console.error('Error saving training progress:', error);
-  }
-};
-
-export const getExerciseProgress = (trainingType: string, exerciseName: string): number => {
-  const dailyProgress = getDailyTrainingProgress(trainingType);
-  return dailyProgress?.exerciseProgress[exerciseName] || 0;
-};
-
-export const clearTrainingProgress = (): void => {
-  try {
-    localStorage.removeItem(TRAINING_PROGRESS_KEY);
-  } catch (error) {
-    console.error('Error clearing training progress:', error);
   }
 };

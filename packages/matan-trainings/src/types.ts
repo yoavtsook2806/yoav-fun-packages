@@ -41,15 +41,3 @@ export interface ExerciseHistoryEntry {
 export interface ExerciseHistory {
   [exerciseName: string]: ExerciseHistoryEntry[];
 }
-
-export interface DailyTrainingProgress {
-  date: string; // YYYY-MM-DD format
-  trainingType: string;
-  exerciseProgress: {
-    [exerciseName: string]: number; // number of completed sets
-  };
-}
-
-export interface TrainingProgressStorage {
-  [trainingType: string]: DailyTrainingProgress;
-}
