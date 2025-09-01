@@ -82,7 +82,7 @@ function App() {
         const exercise = trainings[prev.selectedTraining!][exerciseName];
         const historyEntry = {
           date: new Date().toISOString(),
-          weight: newState.weight,
+          weight: newState.weight && newState.weight > 0 ? newState.weight : undefined,
           restTime: newState.customRestTime || prev.restTime,
           completedSets: newState.currentSet,
           totalSets: exercise.numberOfSets,

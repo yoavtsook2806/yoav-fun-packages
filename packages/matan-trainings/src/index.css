@@ -522,6 +522,12 @@ button:disabled {
   background-color: #2a2a2a;
 }
 
+.weight-input::placeholder {
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+
 
 
 /* Hidden Debug Button */
@@ -909,6 +915,10 @@ button:disabled {
   .rest-time-input, .weight-input {
     width: 50px;
     font-size: 12px;
+  }
+  
+  .weight-input::placeholder {
+    font-size: 10px;
   }
   
   .rest-time-label, .weight-label {
