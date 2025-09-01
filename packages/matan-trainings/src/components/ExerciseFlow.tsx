@@ -194,7 +194,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               pattern="[0-9]*"
               value={currentExerciseState?.weight || ''}
               onChange={(e) => updateWeight(Number(e.target.value))}
-              placeholder="הכנס משקל"
+              placeholder="יאללה"
               min="0"
               max="500"
               step="0.5"
