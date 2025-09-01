@@ -1,0 +1,25 @@
+# Yoav Fun Packages - Cursor Rules
+
+## Project Structure
+This is a monorepo containing multiple fun web applications and packages.
+
+## Package Management
+- **Use yarn workspaces** for all package management operations
+- **Never use npm directly** - always use yarn workspace commands
+- To run dev server: `yarn workspace [package-name] dev`
+- To install dependencies: `yarn workspace [package-name] add [dependency]`
+- To build: `yarn workspace [package-name] build`
+
+## Current Packages
+- `matan-trainings`: Progressive Web App for workout tracking with Hebrew UI
+
+## Development Commands
+- Start matan-trainings dev server: `yarn workspace matan-trainings dev`
+- Build matan-trainings: `yarn workspace matan-trainings build`
+- Install root dependencies: `yarn install`
+
+## Code Style
+- Use TypeScript for all new code
+- Follow React best practices
+- Maintain responsive design for mobile and desktop
+- Use modern CSS features and flexbox/grid layouts
