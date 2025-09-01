@@ -4,7 +4,15 @@ import { TrainingState, ExerciseState } from './types';
 import TrainingSelection from './components/TrainingSelection';
 import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
-import { getLastUsedWeight, saveExerciseEntry, removeDuplicateHistoryEntries, clearExerciseHistory } from './utils/exerciseHistory';
+import { 
+  getLastUsedWeight, 
+  saveExerciseEntry, 
+  removeDuplicateHistoryEntries, 
+  clearExerciseHistory,
+  getExerciseProgress,
+  saveTrainingProgress,
+  clearTrainingProgress
+} from './utils/exerciseHistory';
 
 function App() {
   const [trainingState, setTrainingState] = useState<TrainingState>({
@@ -28,6 +36,7 @@ function App() {
     
     if (confirmed) {
       clearExerciseHistory();
+      clearTrainingProgress();
       alert('כל ההיסטוריה נמחקה בהצלחה!');
       
       // Optionally reload the page to reset the app state
@@ -41,9 +50,12 @@ function App() {
 
     exercises.forEach(exerciseName => {
       const lastUsedWeight = getLastUsedWeight(exerciseName);
+      const savedProgress = getExerciseProgress(trainingType, exerciseName);
+      const totalSets = trainings[trainingType][exerciseName].numberOfSets;
+      
       exerciseStates[exerciseName] = {
-        currentSet: 0,
-        completed: false,
+        currentSet: savedProgress,
+        completed: savedProgress >= totalSets,
         isActive: false,
         isResting: false,
         timeLeft: 0,
@@ -76,6 +88,13 @@ function App() {
     setTrainingState(prev => {
       const currentState = prev.exerciseStates[exerciseName];
       const newState = { ...currentState, ...updates };
+      
+      // Save progress whenever currentSet changes
+      if (updates.currentSet !== undefined && prev.selectedTraining) {
+        setTimeout(() => {
+          saveTrainingProgress(prev.selectedTraining!, exerciseName, newState.currentSet);
+        }, 0);
+      }
       
       // If exercise is being completed for the first time, save to history
       if (!currentState.completed && updates.completed === true) {
