@@ -85,7 +85,6 @@ button:disabled {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -565,6 +564,26 @@ button:disabled {
 }
 
 @media (max-width: 768px) {
+  /* Ensure full screen usage */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root {
+    width: 100vw;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .app {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
   .training-buttons {
     flex-direction: column;
     align-items: center;
@@ -586,8 +605,12 @@ button:disabled {
 
   /* New layout responsive design */
   .exercise-flow-container {
-    height: auto;
-    padding: 10px;
+    height: 100vh;
+    width: 100vw;
+    max-width: 100%;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
   }
 
   .exercise-layout {
