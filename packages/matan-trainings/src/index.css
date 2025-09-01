@@ -453,11 +453,19 @@ button:disabled {
   margin-bottom: 10px;
 }
 
-/* Header Rest Time - Top Right */
-.header-rest-time {
+/* Header Controls - Top Center */
+.header-controls {
   position: absolute;
   top: 15px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.header-rest-time, .header-weight {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -465,20 +473,211 @@ button:disabled {
   min-width: 80px;
 }
 
-.rest-time-label {
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-action-btn {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.header-action-btn:hover:not(.disabled) {
+  background: #3a3a3a;
+  border-color: #666;
+}
+
+.header-action-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rest-time-label, .weight-label {
   font-size: 12px;
   color: #ccc;
   text-align: center;
   white-space: nowrap;
 }
 
-.rest-time-input {
+.rest-time-input, .weight-input {
   padding: 4px;
-  fontSize: 14px;
-  width: 50px;
+  font-size: 14px;
+  width: 60px;
   text-align: center;
   border-radius: 4px;
   color: #ffffff;
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+}
+
+
+
+/* Hidden Debug Button */
+.hidden-debug-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  color: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 9999;
+  opacity: 0.02; /* Nearly invisible */
+  transition: opacity 0.3s ease;
+}
+
+.hidden-debug-btn:hover {
+  opacity: 0.3; /* Slightly more visible on hover */
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.hidden-debug-btn:active {
+  opacity: 0.6; /* More visible when pressed */
+  background: rgba(255, 0, 0, 0.2);
+}
+
+/* Exercise History Modal */
+.history-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 20px;
+}
+
+.history-modal {
+  background: #1e1e1e;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  background: #2a2a2a;
+}
+
+.history-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background: #3a3a3a;
+}
+
+.history-exercise-name {
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #646cff;
+  text-align: center;
+  direction: rtl;
+  border-bottom: 1px solid #333;
+}
+
+.history-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.no-history {
+  padding: 40px 20px;
+  text-align: center;
+  color: #ccc;
+  direction: rtl;
+}
+
+.no-history p {
+  margin: 10px 0;
+}
+
+.history-list {
+  width: 100%;
+}
+
+.history-list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 15px 20px;
+  background: #2a2a2a;
+  font-weight: bold;
+  color: #ccc;
+  font-size: 14px;
+  border-bottom: 1px solid #333;
+  direction: rtl;
+}
+
+.history-entry {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #333;
+  color: #ffffff;
+  font-size: 14px;
+  direction: rtl;
+}
+
+.history-entry:hover {
+  background: #2a2a2a;
+}
+
+.history-col {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-footer {
+  padding: 20px;
+  border-top: 1px solid #333;
+  text-align: center;
 }
 
 /* Back Arrow Button */
@@ -693,9 +892,56 @@ button:disabled {
     font-size: 10px;
   }
 
-  .header-rest-time {
+  .header-controls {
     position: static;
     margin-top: 10px;
     align-self: center;
+    left: auto;
+    transform: none;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .header-rest-time, .header-weight {
+    min-width: 80px;
+  }
+  
+  .rest-time-input, .weight-input {
+    width: 50px;
+    font-size: 12px;
+  }
+  
+  .rest-time-label, .weight-label {
+    font-size: 11px;
+  }
+  
+  .header-actions {
+    gap: 6px;
+  }
+  
+  .header-action-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  /* History Modal - Mobile */
+  .history-modal {
+    max-width: 95vw;
+    margin: 10px;
+  }
+  
+  .history-list-header,
+  .history-entry {
+    grid-template-columns: 1.5fr 0.8fr 0.8fr 0.8fr;
+    gap: 5px;
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+  
+  .history-exercise-name {
+    font-size: 14px;
+    padding: 12px 15px;
   }
 }

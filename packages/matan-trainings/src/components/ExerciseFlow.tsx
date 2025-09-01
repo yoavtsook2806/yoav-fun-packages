@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TrainingState, ExerciseState, Trainings } from '../types';
+import ExerciseHistory from './ExerciseHistory';
 
 interface ExerciseFlowProps {
   trainingState: TrainingState;
@@ -19,6 +20,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   onResetTraining,
 }) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+  const [historyModal, setHistoryModal] = useState<string | null>(null);
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
@@ -109,6 +111,23 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     });
   };
 
+  const updateWeight = (newWeight: number) => {
+    onUpdateExerciseState(currentExerciseName, {
+      weight: newWeight,
+    });
+  };
+
+  const handleSeeVideo = () => {
+    const exercise = trainings[trainingState.selectedTraining!][currentExerciseName];
+    if (exercise.link && exercise.link.trim() !== '') {
+      window.open(exercise.link, '_blank');
+    }
+  };
+
+  const handleSeeHistory = () => {
+    setHistoryModal(currentExerciseName);
+  };
+
 
 
   const formatTime = (seconds: number) => {
@@ -151,17 +170,48 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           ←
         </button>
         
-        {/* Rest Time Setting - Top Right */}
-        <div className="header-rest-time">
-          <div className="rest-time-label">זמן מנוחה</div>
-          <input
-            type="number"
-            value={currentExerciseState?.customRestTime || trainingState.restTime}
-            onChange={(e) => updateCustomRestTime(Number(e.target.value))}
-            min="10"
-            max="300"
-            className="rest-time-input"
-          />
+        {/* Rest Time, Weight Settings, and Action Buttons - Top Center */}
+        <div className="header-controls">
+          <div className="header-rest-time">
+            <div className="rest-time-label">זמן מנוחה</div>
+            <input
+              type="number"
+              value={currentExerciseState?.customRestTime || trainingState.restTime}
+              onChange={(e) => updateCustomRestTime(Number(e.target.value))}
+              min="10"
+              max="300"
+              className="rest-time-input"
+            />
+          </div>
+          <div className="header-weight">
+            <div className="weight-label">משקל</div>
+            <input
+              type="number"
+              value={currentExerciseState?.weight || ''}
+              onChange={(e) => updateWeight(Number(e.target.value))}
+              placeholder="הכנס משקל"
+              min="0"
+              max="500"
+              className="weight-input"
+            />
+          </div>
+          <div className="header-actions">
+            <button
+              className={`header-action-btn ${!trainings[trainingState.selectedTraining!][currentExerciseName]?.link || trainings[trainingState.selectedTraining!][currentExerciseName]?.link.trim() === '' ? 'disabled' : ''}`}
+              onClick={handleSeeVideo}
+              disabled={!trainings[trainingState.selectedTraining!][currentExerciseName]?.link || trainings[trainingState.selectedTraining!][currentExerciseName]?.link.trim() === ''}
+              title="צפה בסרטון"
+            >
+              📹
+            </button>
+            <button
+              className="header-action-btn"
+              onClick={handleSeeHistory}
+              title="היסטוריית תרגיל"
+            >
+              📊
+            </button>
+          </div>
         </div>
       </div>
 
@@ -276,6 +326,14 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           </div>
         </div>
       </div>
+      
+      {/* Exercise History Modal */}
+      {historyModal && (
+        <ExerciseHistory
+          exerciseName={historyModal}
+          onClose={() => setHistoryModal(null)}
+        />
+      )}
     </div>
   );
 };

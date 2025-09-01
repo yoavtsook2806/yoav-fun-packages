@@ -1,5 +1,6 @@
 export interface Exercise {
   numberOfSets: number;
+  link?: string;
 }
 
 export interface Training {
@@ -17,6 +18,7 @@ export interface ExerciseState {
   isResting: boolean;
   timeLeft: number;
   customRestTime?: number; // Optional custom rest time for this exercise
+  weight?: number; // Current weight being used for this exercise
 }
 
 export interface TrainingState {
@@ -26,4 +28,16 @@ export interface TrainingState {
   exercises: string[];
   exerciseStates: { [exerciseName: string]: ExerciseState };
   isTrainingComplete: boolean;
+}
+
+export interface ExerciseHistoryEntry {
+  date: string; // ISO date string
+  weight?: number;
+  restTime: number;
+  completedSets: number;
+  totalSets: number;
+}
+
+export interface ExerciseHistory {
+  [exerciseName: string]: ExerciseHistoryEntry[];
 }
