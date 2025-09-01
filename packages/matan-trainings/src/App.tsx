@@ -182,24 +182,14 @@ function App() {
   }
 
   return (
-    <div className="app">
-      {/* Hidden debug button - top right corner */}
-      <button
-        className="hidden-debug-btn"
-        onClick={handleClearAllHistory}
-        title="Debug: Clear all history"
-      >
-        🗑️
-      </button>
-      <ExerciseFlow
-        trainingState={trainingState}
-        trainings={trainings}
-        onUpdateExerciseState={updateExerciseState}
-        onGoToExercise={goToExercise}
-        onNextExercise={nextExercise}
-        onResetTraining={resetTraining}
-      />
-    </div>
+    <ExerciseFlow
+      trainingState={trainingState}
+      trainings={trainings}
+      onUpdateExerciseState={updateExerciseState}
+      onGoToExercise={goToExercise}
+      onNextExercise={nextExercise}
+      onResetTraining={resetTraining}
+    />
   );
 }
 
