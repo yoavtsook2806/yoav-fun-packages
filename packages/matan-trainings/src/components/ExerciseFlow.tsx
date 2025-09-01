@@ -249,16 +249,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               </button>
             )}
 
-            {currentExerciseState.isActive && !currentExerciseState.completed && (
+            {currentExerciseState.isActive && !currentExerciseState.completed && !(currentExerciseState.isResting && currentExerciseState.timeLeft > 0) && (
               <button
                 className="green-button"
                 onClick={finishSet}
-                disabled={currentExerciseState.isResting && currentExerciseState.timeLeft > 0}
                 style={{ padding: '15px 30px', fontSize: '18px' }}
               >
-                {currentExerciseState.isResting && currentExerciseState.timeLeft > 0 
-                  ? `המתן ${formatTime(currentExerciseState.timeLeft)}` 
-                  : 'סיים סט'}
+                סיים סט
               </button>
             )}
 
