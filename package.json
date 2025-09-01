@@ -1,0 +1,20 @@
+{
+  "name": "yoav-fun-packages",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace matan-trainings dev",
+    "build": "yarn workspace matan-trainings build",
+    "preview": "yarn workspace matan-trainings preview",
+    "type-check": "yarn workspaces foreach run type-check"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.2.0"
+  },
+  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
+}
