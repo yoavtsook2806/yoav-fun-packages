@@ -18,6 +18,12 @@ This is a monorepo containing multiple fun web applications and packages.
 - Build matan-trainings: `yarn workspace matan-trainings build`
 - Install root dependencies: `yarn install`
 
+## Git Workflow
+- **NEVER use `git push`** - only commit changes with `git commit`
+- The user will handle all pushing to remote repositories
+- Always use `git add` and `git commit` for saving changes
+- Never run `git push` under any circumstances
+
 ## Code Style
 - Use TypeScript for all new code
 - Follow React best practices
