@@ -43,7 +43,7 @@ export interface ExerciseHistory {
 }
 
 export interface DailyTrainingProgress {
-  date: string; // YYYY-MM-DD format
+  date: string; // TEMPORARY: ISO timestamp for 3-minute testing (was YYYY-MM-DD format)
   trainingType: string;
   exerciseProgress: {
     [exerciseName: string]: number; // number of completed sets

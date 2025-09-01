@@ -102,9 +102,9 @@ export const removeDuplicateHistoryEntries = (): void => {
   }
 };
 
-// Training Progress Functions
+// Training Progress Functions - TEMPORARY: Using 3-minute window for testing
 const getTodayDateString = (): string => {
-  return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  return new Date().toISOString(); // Full timestamp for testing
 };
 
 export const getTrainingProgress = (): TrainingProgressStorage => {
@@ -119,11 +119,17 @@ export const getTrainingProgress = (): TrainingProgressStorage => {
 
 export const getDailyTrainingProgress = (trainingType: string): DailyTrainingProgress | null => {
   const progress = getTrainingProgress();
-  const todayProgress = progress[trainingType];
+  const savedProgress = progress[trainingType];
   
-  // Return progress only if it's from today
-  if (todayProgress && todayProgress.date === getTodayDateString()) {
-    return todayProgress;
+  // TEMPORARY: Return progress only if it's within 3 minutes (180 seconds)
+  if (savedProgress) {
+    const savedTime = new Date(savedProgress.date).getTime();
+    const currentTime = new Date().getTime();
+    const diffInSeconds = (currentTime - savedTime) / 1000;
+    
+    if (diffInSeconds <= 180) { // 3 minutes = 180 seconds
+      return savedProgress;
+    }
   }
   
   return null;
@@ -136,15 +142,19 @@ export const saveTrainingProgress = (
 ): void => {
   try {
     const progress = getTrainingProgress();
-    const today = getTodayDateString();
+    const currentTimestamp = getTodayDateString();
     
-    if (!progress[trainingType] || progress[trainingType].date !== today) {
-      // Initialize new daily progress
+    // TEMPORARY: Always update timestamp to current time for 3-minute testing
+    if (!progress[trainingType]) {
+      // Initialize new progress
       progress[trainingType] = {
-        date: today,
+        date: currentTimestamp,
         trainingType,
         exerciseProgress: {}
       };
+    } else {
+      // Update timestamp to current time
+      progress[trainingType].date = currentTimestamp;
     }
     
     // Update the exercise progress
