@@ -197,9 +197,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           </div>
           <div className="header-actions">
             <button
-              className={`header-action-btn ${!trainings[trainingState.selectedTraining!][currentExerciseName]?.link || trainings[trainingState.selectedTraining!][currentExerciseName]?.link.trim() === '' ? 'disabled' : ''}`}
+              className={`header-action-btn ${!currentExercise?.link || currentExercise?.link.trim() === '' ? 'disabled' : ''}`}
               onClick={handleSeeVideo}
-              disabled={!trainings[trainingState.selectedTraining!][currentExerciseName]?.link || trainings[trainingState.selectedTraining!][currentExerciseName]?.link.trim() === ''}
+              disabled={!currentExercise?.link || currentExercise?.link.trim() === ''}
               title="צפה בסרטון"
             >
               📹

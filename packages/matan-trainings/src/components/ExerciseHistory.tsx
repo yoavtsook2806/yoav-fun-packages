@@ -1,5 +1,4 @@
 import React from 'react';
-import { ExerciseHistoryEntry } from '../types';
 import { getExerciseHistory } from '../utils/exerciseHistory';
 
 interface ExerciseHistoryProps {
