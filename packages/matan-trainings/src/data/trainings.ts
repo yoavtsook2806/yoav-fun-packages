@@ -4,7 +4,7 @@ export const trainings: Trainings = {
   "A": {
     "לחיצת חזה, מ. יד, שיפוע 30*": {
       "numberOfSets": 8,
-      link: "https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation",
+      link: "https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation"
     },
     "פרפר, מ. יד/מכונה": {
       "numberOfSets": 8,

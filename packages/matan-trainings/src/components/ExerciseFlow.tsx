@@ -176,10 +176,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             <div className="rest-time-label">זמן מנוחה</div>
             <input
               type="number"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={currentExerciseState?.customRestTime || trainingState.restTime}
               onChange={(e) => updateCustomRestTime(Number(e.target.value))}
               min="10"
               max="300"
+              step="5"
               className="rest-time-input"
             />
           </div>
@@ -187,11 +190,14 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             <div className="weight-label">משקל</div>
             <input
               type="number"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={currentExerciseState?.weight || ''}
               onChange={(e) => updateWeight(Number(e.target.value))}
               placeholder="הכנס משקל"
               min="0"
               max="500"
+              step="0.5"
               className="weight-input"
             />
           </div>

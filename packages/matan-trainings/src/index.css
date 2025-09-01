@@ -38,14 +38,16 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  padding: 0.8em 1.5em;
+  font-size: 1.1em;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
   color: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+  min-height: 44px; /* iOS accessibility guideline */
+  min-width: 44px;
 }
 button:hover {
   border-color: #646cff;
@@ -179,26 +181,29 @@ button:disabled {
   width: 100%;
   background-color: #1e1e1e;
   border-radius: 8px;
-  padding: 12px;
+  padding: 20px;
   border: 1px solid #333;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Exercise Row Layout - Fixed to always show 2 rows with 3 items in first row */
 .exercise-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, minmax(115px, 1fr));
   grid-template-rows: repeat(2, 1fr);
-  gap: 6px;
-  height: 120px;
+  gap: 8px;
+  height: 170px;
   width: 100%;
 }
 
 .exercise-row-item {
   background-color: #2a2a2a;
-  border-radius: 6px;
-  padding: 4px 6px;
+  border-radius: 8px;
+  padding: 5px 7px;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
@@ -206,11 +211,12 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  height: 50px;
+  height: 70px;
   justify-content: center;
-  min-width: 100px;
-  max-width: 140px;
+  min-width: 110px;
+  max-width: 160px;
   overflow: hidden;
+  margin: 2px;
 }
 
 .exercise-row-item:hover {
@@ -232,14 +238,14 @@ button:disabled {
   background-color: #646cff;
   color: white;
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: bold;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
 }
 
 .exercise-row-item.completed .exercise-row-number {
@@ -247,13 +253,13 @@ button:disabled {
 }
 
 .exercise-row-name {
-  font-size: 9px;
+  font-size: 14px;
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 600;
   direction: rtl;
   text-align: center;
-  margin-bottom: 1px;
-  line-height: 1.0;
+  margin-bottom: 3px;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -261,7 +267,7 @@ button:disabled {
 }
 
 .exercise-row-sets {
-  font-size: 8px;
+  font-size: 13px;
   color: #aaa;
   font-weight: bold;
 }
@@ -316,12 +322,13 @@ button:disabled {
 }
 
 .exercise-item-name {
-  font-size: 13px;
+  font-size: 16px;
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 600;
   direction: rtl;
   text-align: right;
   flex: 1;
+  line-height: 1.2;
 }
 
 .exercise-item-sets {
@@ -358,7 +365,6 @@ button:disabled {
   gap: 20px;
   background-color: #1e1e1e;
   border-radius: 8px;
-  padding: 25px;
   border: 1px solid #333;
   overflow-y: auto;
   max-height: calc(100vh - 120px);
@@ -449,19 +455,19 @@ button:disabled {
 .exercise-header {
   position: relative;
   text-align: center;
-  padding: 10px 0;
-  margin-bottom: 10px;
+  padding: 5px 0;
+  margin-bottom: 5px;
 }
 
 /* Header Controls - Top Center */
 .header-controls {
   position: absolute;
-  top: 15px;
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 15px;
   align-items: flex-start;
 }
 
@@ -469,8 +475,8 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-width: 80px;
+  gap: 4px;
+  min-width: 70px;
 }
 
 .header-actions {
@@ -506,21 +512,28 @@ button:disabled {
 }
 
 .rest-time-label, .weight-label {
-  font-size: 12px;
+  font-size: 11px;
   color: #ccc;
   text-align: center;
   white-space: nowrap;
 }
 
 .rest-time-input, .weight-input {
-  padding: 4px;
+  padding: 6px;
   font-size: 14px;
   width: 60px;
   text-align: center;
   border-radius: 4px;
   color: #ffffff;
-  background-color: transparent;
-  border: 1px transparent;
+  background-color: rgba(42, 42, 42, 0.8);
+  border: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.rest-time-input:focus, .weight-input:focus {
+  background-color: rgba(42, 42, 42, 1);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .weight-input::placeholder {
@@ -693,11 +706,13 @@ button:disabled {
 }
 
 .exercise-name {
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   direction: rtl;
   text-align: center;
+  line-height: 1.3;
+  color: #ffffff;
 }
 
 .exercise-progress {
@@ -769,6 +784,10 @@ button:disabled {
 }
 
 @media (max-width: 768px) {
+  .exercise-name {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
   /* Ensure full screen usage */
   body {
     margin: 0;
@@ -825,14 +844,16 @@ button:disabled {
 
   .exercise-sidebar {
     width: 100%;
-    max-height: 90px;
-    padding: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .exercise-row {
-    grid-template-columns: repeat(3, minmax(80px, 1fr));
-    gap: 4px;
-    height: 80px;
+    grid-template-columns: repeat(3, minmax(105px, 1fr));
+    gap: 6px;
+    height: 120px;
     width: 100%;
   }
 
@@ -843,31 +864,34 @@ button:disabled {
   }
 
   .exercise-row-item {
-    height: 35px;
-    padding: 3px 4px;
-    min-width: 80px;
-    max-width: 110px;
+    height: 55px;
+    padding: 4px 6px;
+    min-width: 105px;
+    max-width: 135px;
     overflow: hidden;
   }
 
   .exercise-row-number {
-    width: 12px;
-    height: 12px;
-    font-size: 7px;
-    margin-bottom: 1px;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    margin-bottom: 3px;
   }
 
   .exercise-row-name {
-    font-size: 8px;
-    margin-bottom: 0px;
+    font-size: 15px;
+    margin-bottom: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    font-weight: 700;
+    line-height: 1.1;
   }
 
   .exercise-row-sets {
-    font-size: 7px;
+    font-size: 12px;
+    font-weight: 700;
   }
 
   .sets-progress-container {
@@ -875,7 +899,8 @@ button:disabled {
   }
 
   .exercise-item-name {
-    font-size: 12px;
+    font-size: 18px;
+    font-weight: 700;
   }
 
   .exercise-item {
@@ -914,16 +939,19 @@ button:disabled {
   }
   
   .rest-time-input, .weight-input {
-    width: 50px;
-    font-size: 12px;
+    width: 65px;
+    font-size: 18px;
+    padding: 10px;
+    min-height: 44px;
   }
   
   .weight-input::placeholder {
-    font-size: 10px;
+    font-size: 14px;
   }
   
   .rest-time-label, .weight-label {
-    font-size: 11px;
+    font-size: 14px;
+    font-weight: 600;
   }
   
   .header-actions {
@@ -931,9 +959,9 @@ button:disabled {
   }
   
   .header-action-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
   }
   
   /* History Modal - Mobile */
