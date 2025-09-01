@@ -103,7 +103,7 @@ export const removeDuplicateHistoryEntries = (): void => {
   }
 };
 
-// Training Progress Functions - TEMPORARY: Using 3-minute window for testing
+// Training Progress Functions - TEMPORARY: Using 2-minute window for feedback testing
 const getTodayDateString = (): string => {
   return new Date().toISOString(); // Full timestamp for testing
 };
@@ -122,13 +122,13 @@ export const getDailyTrainingProgress = (trainingType: string): DailyTrainingPro
   const progress = getTrainingProgress();
   const savedProgress = progress[trainingType];
   
-  // TEMPORARY: Return progress only if it's within 3 minutes (180 seconds)
+  // TEMPORARY: Return progress only if it's within 2 minutes (120 seconds) for feedback testing
   if (savedProgress) {
     const savedTime = new Date(savedProgress.date).getTime();
     const currentTime = new Date().getTime();
     const diffInSeconds = (currentTime - savedTime) / 1000;
     
-    if (diffInSeconds <= 180) { // 3 minutes = 180 seconds
+    if (diffInSeconds <= 120) { // 2 minutes = 120 seconds
       return savedProgress;
     }
   }
@@ -145,7 +145,7 @@ export const saveTrainingProgress = (
     const progress = getTrainingProgress();
     const currentTimestamp = getTodayDateString();
     
-    // TEMPORARY: Always update timestamp to current time for 3-minute testing
+    // TEMPORARY: Always update timestamp to current time for 2-minute testing
     if (!progress[trainingType]) {
       // Initialize new progress
       progress[trainingType] = {
