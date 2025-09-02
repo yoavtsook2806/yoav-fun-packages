@@ -138,7 +138,7 @@ button:disabled {
   justify-content: center;
   gap: 15px;
   direction: rtl;
-  background: none;
+  background: transparent;
   border: none;
   padding: 0;
   margin: 0;
@@ -947,6 +947,7 @@ button:disabled {
   
   .rest-time-input, .weight-input {
     width: 65px;
+    background-color: transparent;
     font-size: 18px;
     padding: 10px;
     min-height: 44px;

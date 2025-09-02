@@ -38,6 +38,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
         <label htmlFor="rest-time">זמן מנוחה</label>
         <input
           id="rest-time"
+          inputMode="numeric"
           type="number"
           value={restTime}
           onChange={(e) => setRestTime(Number(e.target.value))}
