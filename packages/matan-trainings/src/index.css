@@ -1101,41 +1101,106 @@ button:disabled {
     align-self: center;
     left: auto;
     transform: none;
-    flex-direction: row;
-    gap: 15px;
+    flex-direction: column;
+    gap: 10px;
     justify-content: center;
+    width: 100%;
+    padding: 0 10px;
   }
   
-  .header-rest-time, .header-weight {
-    min-width: 80px;
+  .header-forms-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
   }
   
-  .rest-time-input, .weight-input {
+  .header-actions-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .header-rest-time, .header-weight, .header-repeats {
+    min-width: 65px;
     width: 65px;
+    flex: 0 0 65px;
+  }
+  
+  .rest-time-input, .weight-input, .repeats-input {
+    width: 55px;
     background-color: transparent;
-    font-size: 18px;
-    padding: 10px;
+    font-size: 14px;
+    padding: 8px 4px;
+    min-height: 40px;
+  }
+  
+  .weight-input::placeholder, .repeats-input::placeholder {
+    font-size: 14px;
+  }
+  
+  .header-action-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    padding: 6px;
     min-height: 44px;
+    min-width: 44px;
   }
   
-  .weight-input::placeholder {
-    font-size: 14px;
-  }
-  
-  .rest-time-label, .weight-label {
-    font-size: 14px;
+  .rest-time-label, .weight-label, .repeats-label {
+    font-size: 10px;
     font-weight: 600;
   }
   
   .header-actions {
     gap: 6px;
   }
+}
+
+/* Desktop styles - ensure proper layout on larger screens */
+@media (min-width: 769px) {
+  .header-controls {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    padding: 0;
+  }
+  
+  .header-rest-time, .header-weight, .header-repeats {
+    width: 80px;
+    min-width: 80px;
+    flex: none;
+  }
+  
+  .rest-time-input, .weight-input, .repeats-input {
+    width: 70px;
+    font-size: 14px;
+    padding: 6px;
+    min-height: auto;
+  }
   
   .header-action-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    padding: 8px;
+    min-height: auto;
+    min-width: auto;
   }
+  
+  .rest-time-label, .weight-label, .repeats-label {
+    font-size: 11px;
+    font-weight: normal;
+  }
+}
   
   /* History Modal - Mobile */
   .history-modal {
