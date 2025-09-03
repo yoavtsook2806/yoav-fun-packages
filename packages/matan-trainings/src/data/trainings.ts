@@ -7,7 +7,7 @@ export const trainings: Trainings = {
       link: "https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation",
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
-      minimumNumberOfRepeasts: 8,
+      minimumNumberOfRepeasts: 6,
       maximumNumberOfRepeasts: 8,
       note: ""
     },
@@ -112,7 +112,7 @@ export const trainings: Trainings = {
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
-      note: ""
+      note: "ההצמדה של השכמות בסרטון לא הכרחית. זה כמו הרחקת כתפיים בעמידה, רק בשיפוע"
     },
     "חתירה במכונה": {
       "numberOfSets": 8,
@@ -121,7 +121,7 @@ export const trainings: Trainings = {
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
-      note: ""
+      note: "אחיזה שנוחה לכם, פחות משנה במקרה הזה"
     },
     "כפיפת ברכיים בישיבה": {
       "numberOfSets": 8,
@@ -130,16 +130,16 @@ export const trainings: Trainings = {
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
-      note: ""
+      note: "לא להקשית גב תחתון"
     },
     "כפיפות בטן, רגליים מקובעות": {
       "numberOfSets": 3,
       link: "https://www.youtube.com/watch?v=8qQkaw1r2ic&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=145&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation",
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
-      minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8,
-      note: ""
+      minimumNumberOfRepeasts: 10,
+      maximumNumberOfRepeasts: 12,
+      note: "להוסיף משקל על החזה כשאפשר. ירידה בשליטה"
     }
   }
 };
