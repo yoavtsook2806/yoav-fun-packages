@@ -3,7 +3,7 @@ import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
-import { saveExerciseDefaults, isSoundEnabled } from '../utils/exerciseHistory';
+import { saveExerciseDefaults } from '../utils/exerciseHistory';
 import { soundManager } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
@@ -27,7 +27,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [historyModal, setHistoryModal] = useState<string | null>(null);
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
   const [infoModal, setInfoModal] = useState<string | null>(null);
-  const [soundEnabled, setSoundEnabled] = useState(() => isSoundEnabled());
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
@@ -160,11 +159,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     setInfoModal(currentExerciseName);
   };
 
-  const toggleSound = () => {
-    const newSoundEnabled = !soundEnabled;
-    setSoundEnabled(newSoundEnabled);
-    soundManager.setEnabled(newSoundEnabled);
-  };
+
 
   const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
     if (feedbackModal) {
@@ -304,13 +299,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               title="פרטי תרגיל"
             >
               ℹ️
-            </button>
-            <button
-              className={`header-action-btn ${soundEnabled ? '' : 'disabled'}`}
-              onClick={toggleSound}
-              title={soundEnabled ? "השתק צלילים" : "הפעל צלילים"}
-            >
-              {soundEnabled ? '🔊' : '🔇'}
             </button>
           </div>
         </div>

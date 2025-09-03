@@ -256,19 +256,23 @@ export const calculateDefaultRepeats = (exercise: Exercise): number => {
 };
 
 // Sound Settings Functions
-export const getSoundSettings = (): { enabled: boolean } => {
+export const getSoundSettings = (): { enabled: boolean; volume: number } => {
   try {
     const stored = localStorage.getItem(SOUND_SETTINGS_KEY);
-    return stored ? JSON.parse(stored) : { enabled: true }; // Default to enabled
+    return stored ? JSON.parse(stored) : { enabled: true, volume: 50 }; // Default to enabled with 50% volume
   } catch (error) {
     console.error('Error loading sound settings:', error);
-    return { enabled: true };
+    return { enabled: true, volume: 50 };
   }
 };
 
-export const saveSoundSettings = (enabled: boolean): void => {
+export const saveSoundSettings = (enabled: boolean, volume?: number): void => {
   try {
-    const settings = { enabled };
+    const currentSettings = getSoundSettings();
+    const settings = { 
+      enabled, 
+      volume: volume !== undefined ? volume : currentSettings.volume 
+    };
     localStorage.setItem(SOUND_SETTINGS_KEY, JSON.stringify(settings));
   } catch (error) {
     console.error('Error saving sound settings:', error);
@@ -278,4 +282,9 @@ export const saveSoundSettings = (enabled: boolean): void => {
 export const isSoundEnabled = (): boolean => {
   const settings = getSoundSettings();
   return settings.enabled;
+};
+
+export const getSoundVolume = (): number => {
+  const settings = getSoundSettings();
+  return settings.volume;
 };

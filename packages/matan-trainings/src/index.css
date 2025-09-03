@@ -562,31 +562,242 @@ button:disabled {
 
 
 
-/* Hidden Debug Button */
-.hidden-debug-btn {
+/* Settings Button */
+.settings-btn {
   position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: none;
-  color: transparent;
-  font-size: 16px;
+  top: 15px;
+  right: 15px;
+  width: 44px;
+  height: 44px;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 18px;
   cursor: pointer;
   z-index: 9999;
-  opacity: 0.02; /* Nearly invisible */
-  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.hidden-debug-btn:hover {
-  opacity: 0.3; /* Slightly more visible on hover */
-  background: rgba(255, 0, 0, 0.1);
+.settings-btn:hover {
+  background: #3a3a3a;
+  border-color: #777;
+  transform: scale(1.05);
 }
 
-.hidden-debug-btn:active {
-  opacity: 0.6; /* More visible when pressed */
-  background: rgba(255, 0, 0, 0.2);
+.settings-btn:active {
+  transform: scale(0.95);
+}
+
+/* Settings Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.settings-modal {
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  color: #ffffff;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+  background: #333;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.settings-section {
+  margin-bottom: 30px;
+}
+
+.settings-item {
+  margin-bottom: 20px;
+}
+
+.settings-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #555;
+  transition: 0.3s;
+  border-radius: 30px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-slider {
+  background-color: #4CAF50;
+}
+
+.toggle-input:checked + .toggle-slider:before {
+  transform: translateX(30px);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+}
+
+.volume-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #555;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+  border: none;
+}
+
+.volume-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.volume-icon {
+  font-size: 16px;
+}
+
+.volume-value {
+  min-width: 40px;
+  text-align: right;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.danger-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.danger-button:hover {
+  background: #c82333;
+}
+
+.settings-description {
+  font-size: 14px;
+  color: #ccc;
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .settings-modal {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .volume-control {
+    min-width: 200px;
+  }
 }
 
 /* Exercise Info Modal */

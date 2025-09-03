@@ -1,13 +1,15 @@
-import { isSoundEnabled, saveSoundSettings } from './exerciseHistory';
+import { isSoundEnabled, getSoundVolume, saveSoundSettings } from './exerciseHistory';
 
 // Sound utility for timer countdown
 class SoundManager {
   private audioContext: AudioContext | null = null;
   private isEnabled = true;
+  private volume = 0.5; // 0-1 range
 
   constructor() {
-    // Load sound preference from storage
+    // Load sound preferences from storage
     this.isEnabled = isSoundEnabled();
+    this.volume = getSoundVolume() / 100; // Convert from 0-100 to 0-1 range
     // Initialize AudioContext on first user interaction
     this.initAudioContext();
   }
@@ -33,7 +35,7 @@ class SoundManager {
     }
   }
 
-  private createBeep(frequency: number, duration: number, volume: number = 0.1): void {
+  private createBeep(frequency: number, duration: number, baseVolume: number = 0.1): void {
     if (!this.audioContext || !this.isEnabled) return;
 
     try {
@@ -46,9 +48,12 @@ class SoundManager {
       oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
       oscillator.type = 'sine'; // Gentle sine wave
 
+      // Apply user volume setting to base volume
+      const finalVolume = baseVolume * this.volume;
+
       // Smooth volume envelope to avoid clicks
       gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+      gainNode.gain.linearRampToValueAtTime(finalVolume, this.audioContext.currentTime + 0.01);
       gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
 
       oscillator.start(this.audioContext.currentTime);
@@ -81,11 +86,25 @@ class SoundManager {
   // Enable/disable sounds
   setEnabled(enabled: boolean): void {
     this.isEnabled = enabled;
-    saveSoundSettings(enabled);
+    saveSoundSettings(enabled, this.volume * 100);
+  }
+
+  // Set volume (0-1 range)
+  setVolume(volume: number): void {
+    this.volume = Math.max(0, Math.min(1, volume)); // Clamp between 0 and 1
+  }
+
+  // Play a test beep for volume adjustment
+  playVolumeTestBeep(): void {
+    this.createBeep(600, 0.2, 0.15);
   }
 
   isAudioEnabled(): boolean {
     return this.isEnabled && this.audioContext !== null;
+  }
+
+  getVolume(): number {
+    return this.volume;
   }
 }
 

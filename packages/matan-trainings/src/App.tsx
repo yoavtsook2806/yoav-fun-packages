@@ -4,6 +4,7 @@ import { TrainingState, ExerciseState } from './types';
 import TrainingSelection from './components/TrainingSelection';
 import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
+import SettingsModal from './components/SettingsModal';
 import { 
   getLastUsedWeight, 
   getLastUsedRepeats,
@@ -33,6 +34,9 @@ function App() {
   
   // Track if this is a fresh completion (to show congratulation only once)
   const [showCongratulation, setShowCongratulation] = useState(false);
+  
+  // Settings modal state
+  const [showSettings, setShowSettings] = useState(false);
 
   // Clean up duplicate history entries on app initialization
   useEffect(() => {
@@ -197,15 +201,23 @@ function App() {
   if (trainingState.isTrainingComplete && showCongratulation) {
     return (
       <div className="app">
-        {/* Hidden debug button - top right corner */}
+        {/* Settings button - top right corner */}
         <button
-          className="hidden-debug-btn"
-          onClick={handleClearAllHistory}
-          title="Debug: Clear all history"
+          className="settings-btn"
+          onClick={() => setShowSettings(true)}
+          title="הגדרות"
         >
-          🗑️
+          ⚙️
         </button>
         <TrainingComplete onRestart={resetTraining} />
+        
+        {/* Settings Modal */}
+        {showSettings && (
+          <SettingsModal
+            onClose={() => setShowSettings(false)}
+            onClearAllHistory={handleClearAllHistory}
+          />
+        )}
       </div>
     );
   }
@@ -213,18 +225,26 @@ function App() {
   if (!trainingState.selectedTraining) {
     return (
       <div className="app">
-        {/* Hidden debug button - top right corner */}
+        {/* Settings button - top right corner */}
         <button
-          className="hidden-debug-btn"
-          onClick={handleClearAllHistory}
-          title="Debug: Clear all history"
+          className="settings-btn"
+          onClick={() => setShowSettings(true)}
+          title="הגדרות"
         >
-          🗑️
+          ⚙️
         </button>
         <TrainingSelection
           onSelectTraining={initializeTraining}
           availableTrainings={Object.keys(trainings)}
         />
+        
+        {/* Settings Modal */}
+        {showSettings && (
+          <SettingsModal
+            onClose={() => setShowSettings(false)}
+            onClearAllHistory={handleClearAllHistory}
+          />
+        )}
       </div>
     );
   }
