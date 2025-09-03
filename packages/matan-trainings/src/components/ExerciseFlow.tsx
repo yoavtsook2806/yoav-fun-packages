@@ -123,6 +123,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     });
   };
 
+  const updateRepeats = (newRepeats: number) => {
+    onUpdateExerciseState(currentExerciseName, {
+      repeats: newRepeats,
+    });
+  };
+
   const handleSeeVideo = () => {
     const exercise = trainings[trainingState.selectedTraining!][currentExerciseName];
     if (exercise.link && exercise.link.trim() !== '') {
@@ -134,9 +140,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     setHistoryModal(currentExerciseName);
   };
 
-  const handleFeedbackSave = (weight?: number, restTime?: number) => {
+  const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
     if (feedbackModal) {
-      saveExerciseDefaults(feedbackModal, weight, restTime);
+      saveExerciseDefaults(feedbackModal, weight, restTime, repeats);
     }
   };
 
@@ -186,38 +192,55 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           ←
         </button>
         
-        {/* Rest Time, Weight Settings, and Action Buttons - Top Center */}
+        {/* Forms and Action Buttons - Top Center */}
         <div className="header-controls">
-          <div className="header-rest-time">
-            <div className="rest-time-label">זמן מנוחה</div>
-            <input
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={currentExerciseState?.customRestTime || trainingState.restTime}
-              onChange={(e) => updateCustomRestTime(Number(e.target.value))}
-              min="10"
-              max="300"
-              step="5"
-              className="rest-time-input"
-            />
+          <div className="header-forms-row">
+            <div className="header-rest-time">
+              <div className="rest-time-label">זמן מנוחה</div>
+              <input
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={currentExerciseState?.customRestTime || trainingState.restTime}
+                onChange={(e) => updateCustomRestTime(Number(e.target.value))}
+                min="10"
+                max="300"
+                step="5"
+                className="rest-time-input"
+              />
+            </div>
+            <div className="header-weight">
+              <div className="weight-label">משקל</div>
+              <input
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={currentExerciseState?.weight || ''}
+                onChange={(e) => updateWeight(Number(e.target.value))}
+                placeholder="יאללה"
+                min="0"
+                max="500"
+                step="0.5"
+                className="weight-input"
+              />
+            </div>
+            <div className="header-repeats">
+              <div className="repeats-label">חזרות</div>
+              <input
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={currentExerciseState?.repeats || ''}
+                onChange={(e) => updateRepeats(Number(e.target.value))}
+                placeholder="חזרות"
+                min="1"
+                max="50"
+                step="1"
+                className="repeats-input"
+              />
+            </div>
           </div>
-          <div className="header-weight">
-            <div className="weight-label">משקל</div>
-            <input
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={currentExerciseState?.weight || ''}
-              onChange={(e) => updateWeight(Number(e.target.value))}
-              placeholder="יאללה"
-              min="0"
-              max="500"
-              step="0.5"
-              className="weight-input"
-            />
-          </div>
-          <div className="header-actions">
+          <div className="header-actions-row">
             <button
               className={`header-action-btn ${!currentExercise?.link || currentExercise?.link.trim() === '' ? 'disabled' : ''}`}
               onClick={handleSeeVideo}
@@ -363,6 +386,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           exerciseName={feedbackModal}
           currentWeight={trainingState.exerciseStates[feedbackModal]?.weight}
           currentRestTime={trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
+          currentRepeats={trainingState.exerciseStates[feedbackModal]?.repeats}
           onSave={handleFeedbackSave}
           onClose={handleFeedbackClose}
         />

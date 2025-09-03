@@ -1,6 +1,10 @@
 export interface Exercise {
   numberOfSets: number;
   link?: string;
+  minimumTimeToRest: number;
+  maximumTimeToRest: number;
+  minimumNumberOfRepeasts: number;
+  maximumNumberOfRepeasts: number;
 }
 
 export interface Training {
@@ -19,6 +23,7 @@ export interface ExerciseState {
   timeLeft: number;
   customRestTime?: number; // Optional custom rest time for this exercise
   weight?: number; // Current weight being used for this exercise
+  repeats?: number; // Current repeats being used for this exercise
 }
 
 export interface TrainingState {
@@ -36,6 +41,7 @@ export interface ExerciseHistoryEntry {
   restTime: number;
   completedSets: number;
   totalSets: number;
+  repeats?: number;
 }
 
 export interface ExerciseHistory {
@@ -57,6 +63,7 @@ export interface TrainingProgressStorage {
 export interface ExerciseDefaults {
   weight?: number;
   restTime?: number;
+  repeats?: number;
 }
 
 export interface ExerciseDefaultsStorage {

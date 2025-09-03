@@ -469,24 +469,32 @@ button:disabled {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.header-forms-row {
+  display: flex;
   flex-direction: row;
   gap: 15px;
   align-items: flex-start;
 }
 
-.header-rest-time, .header-weight {
+.header-actions-row {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+}
+
+.header-rest-time, .header-weight, .header-repeats {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  min-width: 70px;
-}
-
-.header-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  width: 80px;
+  min-width: 80px;
 }
 
 .header-action-btn {
@@ -496,8 +504,9 @@ button:disabled {
   color: #ffffff;
   cursor: pointer;
   font-size: 16px;
-  width: 35px;
-  height: 35px;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -514,17 +523,17 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.rest-time-label, .weight-label {
+.rest-time-label, .weight-label, .repeats-label {
   font-size: 11px;
   color: #ccc;
   text-align: center;
   white-space: nowrap;
 }
 
-.rest-time-input, .weight-input {
+.rest-time-input, .weight-input, .repeats-input {
   padding: 6px;
   font-size: 14px;
-  width: 60px;
+  width: 70px;
   text-align: center;
   border-radius: 4px;
   color: #ffffff;
@@ -534,12 +543,12 @@ button:disabled {
   transition: all 0.2s ease;
 }
 
-.rest-time-input:focus, .weight-input:focus {
+.rest-time-input:focus, .weight-input:focus, .repeats-input:focus {
   background-color: rgba(42, 42, 42, 1);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
-.weight-input::placeholder {
+.weight-input::placeholder, .repeats-input::placeholder {
   font-size: 12px;
   color: #999;
   font-weight: 500;

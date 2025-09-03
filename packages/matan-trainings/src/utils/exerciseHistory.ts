@@ -1,4 +1,4 @@
-import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage, ExerciseDefaults, ExerciseDefaultsStorage } from '../types';
+import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage, ExerciseDefaults, ExerciseDefaultsStorage, Exercise } from '../types';
 
 const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
 const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
@@ -59,6 +59,11 @@ export const getExerciseLastEntry = (exerciseName: string): ExerciseHistoryEntry
 export const getLastUsedWeight = (exerciseName: string): number | undefined => {
   const lastEntry = getExerciseLastEntry(exerciseName);
   return lastEntry?.weight;
+};
+
+export const getLastUsedRepeats = (exerciseName: string): number | undefined => {
+  const lastEntry = getExerciseLastEntry(exerciseName);
+  return lastEntry?.repeats;
 };
 
 export const clearExerciseHistory = (): void => {
@@ -189,7 +194,8 @@ export const getExerciseDefaultSettings = (exerciseName: string): ExerciseDefaul
 export const saveExerciseDefaults = (
   exerciseName: string,
   weight?: number,
-  restTime?: number
+  restTime?: number,
+  repeats?: number
 ): void => {
   try {
     const defaults = getExerciseDefaults();
@@ -204,6 +210,10 @@ export const saveExerciseDefaults = (
     
     if (restTime !== undefined && restTime > 0) {
       defaults[exerciseName].restTime = restTime;
+    }
+    
+    if (repeats !== undefined && repeats > 0) {
+      defaults[exerciseName].repeats = repeats;
     }
     
     localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify(defaults));
@@ -222,10 +232,24 @@ export const getDefaultRestTime = (exerciseName: string): number | undefined => 
   return defaults.restTime;
 };
 
+export const getDefaultRepeats = (exerciseName: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName);
+  return defaults.repeats;
+};
+
 export const clearExerciseDefaults = (): void => {
   try {
     localStorage.removeItem(EXERCISE_DEFAULTS_KEY);
   } catch (error) {
     console.error('Error clearing exercise defaults:', error);
   }
+};
+
+// Helper functions to calculate defaults from exercise data
+export const calculateDefaultRestTime = (exercise: Exercise): number => {
+  return Math.floor((exercise.minimumTimeToRest + exercise.maximumTimeToRest) / 2);
+};
+
+export const calculateDefaultRepeats = (exercise: Exercise): number => {
+  return Math.floor((exercise.minimumNumberOfRepeasts + exercise.maximumNumberOfRepeasts) / 2);
 };

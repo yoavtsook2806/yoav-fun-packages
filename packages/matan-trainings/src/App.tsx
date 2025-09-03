@@ -6,6 +6,7 @@ import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import { 
   getLastUsedWeight, 
+  getLastUsedRepeats,
   saveExerciseEntry, 
   removeDuplicateHistoryEntries, 
   clearExerciseHistory,
@@ -14,7 +15,10 @@ import {
   clearTrainingProgress,
   getDefaultWeight,
   getDefaultRestTime,
-  clearExerciseDefaults
+  getDefaultRepeats,
+  clearExerciseDefaults,
+  calculateDefaultRestTime,
+  calculateDefaultRepeats
 } from './utils/exerciseHistory';
 
 function App() {
@@ -48,22 +52,31 @@ function App() {
     }
   };
 
-  const initializeTraining = (trainingType: string, restTime: number) => {
+  const initializeTraining = (trainingType: string) => {
     const exercises = Object.keys(trainings[trainingType]);
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
     exercises.forEach(exerciseName => {
+      const exercise = trainings[trainingType][exerciseName];
+      
       // Priority: default weight > last used weight from history
       const defaultWeight = getDefaultWeight(exerciseName);
       const lastUsedWeight = getLastUsedWeight(exerciseName);
       const weight = defaultWeight || lastUsedWeight;
       
-      // Priority: default rest time > global rest time
+      // Priority: default rest time > calculated default from exercise data
       const defaultRestTime = getDefaultRestTime(exerciseName);
-      const customRestTime = defaultRestTime || undefined;
+      const calculatedRestTime = calculateDefaultRestTime(exercise);
+      const customRestTime = defaultRestTime || calculatedRestTime;
+      
+      // Priority: default repeats > last used repeats > calculated default from exercise data
+      const defaultRepeats = getDefaultRepeats(exerciseName);
+      const lastUsedRepeats = getLastUsedRepeats(exerciseName);
+      const calculatedRepeats = calculateDefaultRepeats(exercise);
+      const repeats = defaultRepeats || lastUsedRepeats || calculatedRepeats;
       
       const savedProgress = getExerciseProgress(trainingType, exerciseName);
-      const totalSets = trainings[trainingType][exerciseName].numberOfSets;
+      const totalSets = exercise.numberOfSets;
       
       exerciseStates[exerciseName] = {
         currentSet: savedProgress,
@@ -73,12 +86,13 @@ function App() {
         timeLeft: 0,
         weight: weight,
         customRestTime: customRestTime,
+        repeats: repeats,
       };
     });
 
     setTrainingState({
       selectedTraining: trainingType,
-      restTime,
+      restTime: 60, // Default fallback, but exercises should use their customRestTime
       currentExerciseIndex: 0,
       exercises,
       exerciseStates,
@@ -118,6 +132,7 @@ function App() {
           restTime: newState.customRestTime || prev.restTime,
           completedSets: newState.currentSet,
           totalSets: exercise.numberOfSets,
+          repeats: newState.repeats && newState.repeats > 0 ? newState.repeats : undefined,
         };
         // Use setTimeout to avoid potential React batching issues
         setTimeout(() => {

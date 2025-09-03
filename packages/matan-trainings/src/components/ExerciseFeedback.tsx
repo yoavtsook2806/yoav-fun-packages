@@ -4,7 +4,8 @@ interface ExerciseFeedbackProps {
   exerciseName: string;
   currentWeight?: number;
   currentRestTime: number;
-  onSave: (weight?: number, restTime?: number) => void;
+  currentRepeats?: number;
+  onSave: (weight?: number, restTime?: number, repeats?: number) => void;
   onClose: () => void;
 }
 
@@ -12,17 +13,20 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
   exerciseName,
   currentWeight,
   currentRestTime,
+  currentRepeats,
   onSave,
   onClose,
 }) => {
   const [weight, setWeight] = useState<string>(currentWeight?.toString() || '');
   const [restTime, setRestTime] = useState<string>(currentRestTime.toString());
+  const [repeats, setRepeats] = useState<string>(currentRepeats?.toString() || '');
 
   const handleSave = () => {
     const weightValue = weight.trim() !== '' ? parseFloat(weight) : undefined;
     const restTimeValue = restTime.trim() !== '' ? parseInt(restTime) : undefined;
+    const repeatsValue = repeats.trim() !== '' ? parseInt(repeats) : undefined;
     
-    onSave(weightValue, restTimeValue);
+    onSave(weightValue, restTimeValue, repeatsValue);
     onClose();
   };
 
@@ -65,6 +69,19 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
               value={restTime}
               onChange={(e) => setRestTime(e.target.value)}
               placeholder="הכנס זמן מנוחה"
+            />
+          </div>
+          
+          <div className="feedback-input-group">
+            <label className="feedback-label">חזרות:</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              className="feedback-input"
+              value={repeats}
+              onChange={(e) => setRepeats(e.target.value)}
+              placeholder="הכנס מספר חזרות"
             />
           </div>
         </div>

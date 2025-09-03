@@ -56,7 +56,7 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
                 <div className="history-col">תאריך</div>
                 <div className="history-col">משקל</div>
                 <div className="history-col">מנוחה</div>
-                <div className="history-col">סטים</div>
+                <div className="history-col">חזרות</div>
               </div>
               
               {exerciseHistory.map((entry, index) => (
@@ -71,7 +71,7 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
                     {formatRestTime(entry.restTime)}
                   </div>
                   <div className="history-col">
-                    {entry.completedSets}/{entry.totalSets}
+                    {entry.repeats ? entry.repeats : '-'}
                   </div>
                 </div>
               ))}
