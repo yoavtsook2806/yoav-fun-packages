@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
+import ExerciseInfo from './ExerciseInfo';
 import { saveExerciseDefaults } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
@@ -24,6 +25,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
   const [historyModal, setHistoryModal] = useState<string | null>(null);
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
+  const [infoModal, setInfoModal] = useState<string | null>(null);
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
@@ -138,6 +140,10 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeHistory = () => {
     setHistoryModal(currentExerciseName);
+  };
+
+  const handleSeeInfo = () => {
+    setInfoModal(currentExerciseName);
   };
 
   const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
@@ -270,6 +276,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               title="היסטוריית תרגיל"
             >
               📊
+            </button>
+            <button
+              className="header-action-btn"
+              onClick={handleSeeInfo}
+              title="פרטי תרגיל"
+            >
+              ℹ️
             </button>
           </div>
         </div>
@@ -404,6 +417,15 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           currentRepeats={trainingState.exerciseStates[feedbackModal]?.repeats}
           onSave={handleFeedbackSave}
           onClose={handleFeedbackClose}
+        />
+      )}
+      
+      {/* Exercise Info Modal */}
+      {infoModal && (
+        <ExerciseInfo
+          exerciseName={infoModal}
+          exercise={trainings[trainingState.selectedTraining!][infoModal]}
+          onClose={() => setInfoModal(null)}
         />
       )}
     </div>

@@ -609,6 +609,136 @@ button:disabled {
   background: rgba(255, 0, 0, 0.2);
 }
 
+/* Exercise Info Modal */
+.info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.info-modal {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.info-header {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+.info-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.info-exercise-name {
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #4CAF50;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+.info-description {
+  padding: 20px;
+  background: rgba(76, 175, 80, 0.1);
+  border-bottom: 1px solid #333;
+}
+
+.info-description-text {
+  color: #e0e0e0;
+  line-height: 1.5;
+  text-align: right;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.info-content {
+  padding: 20px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px;
+  background: rgba(42, 42, 42, 0.5);
+  border-radius: 6px;
+}
+
+.info-row.info-note {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #ccc;
+  min-width: 120px;
+}
+
+.info-value {
+  color: #ffffff;
+  text-align: right;
+  flex: 1;
+}
+
+.info-note-text {
+  margin-top: 8px;
+  text-align: right;
+  line-height: 1.4;
+  color: #e0e0e0;
+}
+
+.info-footer {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border-top: 1px solid #333;
+}
+
+.info-close-btn {
+  background-color: #666;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.info-close-btn:hover {
+  background-color: #777;
+}
+
 /* Exercise History Modal */
 .history-overlay {
   position: fixed;
