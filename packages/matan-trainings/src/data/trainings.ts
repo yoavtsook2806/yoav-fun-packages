@@ -8,7 +8,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "פרפר, מ. יד/מכונה": {
       "numberOfSets": 8,
@@ -16,7 +17,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "מרפקים מעט מכופפים, חזה פתוח. לרדת בשליטה למתיחה יפה ולעלות חזרה עד שהמשקולות מעל הכתפיים"
     },
     "לחיצת רגליים": {
       "numberOfSets": 8,
@@ -24,7 +26,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "גב תחתון ואגן נשארים צמודים למשענות לאורך כל התרגיל"
     },
     "פשיטת מרפק, פולי עליון, חבל": {
       "numberOfSets": 8,
@@ -32,7 +35,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "לנעול מרפקים ולחזור לכפיפה מלאה"
     },
     "AB ROLLOUT": {
       "numberOfSets": 3,
@@ -40,7 +44,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "לשים לב שהאגן והתחת לא קופצים החוצה. להשאיר אגן מגולגל פנימה מעט"
     }
   },
   "B": {
@@ -50,7 +55,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "חתירה בכבל, רחב": {
       "numberOfSets": 8,
@@ -58,7 +64,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "הרחקות אופקיות, שיפוע 30*, מ. יד": {
       "numberOfSets": 8,
@@ -66,7 +73,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "לתת לשכמות להשמט קדימה, אין צורך להצמיד אותן בתרגיל. לחשוב על להרחיק את המשקולות לצדדים כמה שאפשר (ממש לחשוב 'לגרד את הקירות')"
     },
     "כפיפת מרפק בשיפוע 60*, סופינציה": {
       "numberOfSets": 8,
@@ -74,7 +82,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "כתפיים נשארות משוכות אחורה. אם כתף מתעגלת לפנים סימן שאתם בשיפוע נמוך מדי."
     },
     "תאומים (לחיצת רגליים/סמית' משין)": {
       "numberOfSets": 8,
@@ -82,7 +91,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: "מתיחה יפה בתחתית ולא להתפוצץ בעלייה, לעלות בשליטה"
     }
   },
   "C": {
@@ -92,7 +102,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "הרחקת כתפיים בשיפוע 60*, מ. יד, בשכיבה על החזה": {
       "numberOfSets": 8,
@@ -100,7 +111,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "חתירה במכונה": {
       "numberOfSets": 8,
@@ -108,7 +120,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "כפיפת ברכיים בישיבה": {
       "numberOfSets": 8,
@@ -116,7 +129,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     },
     "כפיפות בטן, רגליים מקובעות": {
       "numberOfSets": 3,
@@ -124,7 +138,8 @@ export const trainings: Trainings = {
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
-      maximumNumberOfRepeasts: 8
+      maximumNumberOfRepeasts: 8,
+      note: ""
     }
   }
 };

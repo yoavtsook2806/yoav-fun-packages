@@ -5,6 +5,7 @@ export interface Exercise {
   maximumTimeToRest: number;
   minimumNumberOfRepeasts: number;
   maximumNumberOfRepeasts: number;
+  note: string;
 }
 
 export interface Training {
