@@ -147,7 +147,22 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const handleFeedbackClose = () => {
+    const wasLastExercise = feedbackModal && 
+      trainingState.currentExerciseIndex === trainingState.exercises.length - 1 &&
+      trainingState.exerciseStates[feedbackModal]?.completed;
+    
     setFeedbackModal(null);
+    
+    // If this was the last exercise, trigger training completion after feedback is closed
+    if (wasLastExercise) {
+      // Check if all exercises are completed
+      const allCompleted = trainingState.exercises.every(
+        exerciseName => trainingState.exerciseStates[exerciseName].completed
+      );
+      if (allCompleted) {
+        onNextExercise(); // This will trigger the completion check in App.tsx
+      }
+    }
   };
 
 

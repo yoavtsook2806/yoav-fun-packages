@@ -30,6 +30,9 @@ function App() {
     exerciseStates: {},
     isTrainingComplete: false,
   });
+  
+  // Track if this is a fresh completion (to show congratulation only once)
+  const [showCongratulation, setShowCongratulation] = useState(false);
 
   // Clean up duplicate history entries on app initialization
   useEffect(() => {
@@ -56,6 +59,7 @@ function App() {
     const exercises = Object.keys(trainings[trainingType]);
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
+    let allCompleted = true;
     exercises.forEach(exerciseName => {
       const exercise = trainings[trainingType][exerciseName];
       
@@ -77,10 +81,15 @@ function App() {
       
       const savedProgress = getExerciseProgress(trainingType, exerciseName);
       const totalSets = exercise.numberOfSets;
+      const isCompleted = savedProgress >= totalSets;
+      
+      if (!isCompleted) {
+        allCompleted = false;
+      }
       
       exerciseStates[exerciseName] = {
         currentSet: savedProgress,
-        completed: savedProgress >= totalSets,
+        completed: isCompleted,
         isActive: false,
         isResting: false,
         timeLeft: 0,
@@ -96,8 +105,11 @@ function App() {
       currentExerciseIndex: 0,
       exercises,
       exerciseStates,
-      isTrainingComplete: false,
+      isTrainingComplete: allCompleted, // Set to true if all exercises were already completed today
     });
+    
+    // Don't show congratulation when loading a previously completed training
+    setShowCongratulation(false);
   };
 
   const resetTraining = () => {
@@ -109,6 +121,7 @@ function App() {
       exerciseStates: {},
       isTrainingComplete: false,
     });
+    setShowCongratulation(false);
   };
 
   const updateExerciseState = (exerciseName: string, updates: Partial<ExerciseState>) => {
@@ -165,7 +178,7 @@ function App() {
         currentExerciseIndex: nextIndex,
       }));
     } else {
-      // Check if all exercises are completed
+      // Check if all exercises are completed (this will be called after last exercise feedback)
       const allCompleted = trainingState.exercises.every(
         exerciseName => trainingState.exerciseStates[exerciseName].completed
       );
@@ -174,26 +187,14 @@ function App() {
           ...prev,
           isTrainingComplete: true,
         }));
+        setShowCongratulation(true); // Show congratulation only for fresh completions
       }
     }
   };
 
-  // Check if training is complete whenever exercise states change
-  useEffect(() => {
-    if (trainingState.exercises.length > 0) {
-      const allCompleted = trainingState.exercises.every(
-        exerciseName => trainingState.exerciseStates[exerciseName].completed
-      );
-      if (allCompleted && !trainingState.isTrainingComplete) {
-        setTrainingState(prev => ({
-          ...prev,
-          isTrainingComplete: true,
-        }));
-      }
-    }
-  }, [trainingState.exerciseStates, trainingState.exercises, trainingState.isTrainingComplete]);
+  // Note: Removed automatic training completion check - now handled manually after last exercise feedback
 
-  if (trainingState.isTrainingComplete) {
+  if (trainingState.isTrainingComplete && showCongratulation) {
     return (
       <div className="app">
         {/* Hidden debug button - top right corner */}
