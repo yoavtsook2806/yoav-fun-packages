@@ -361,9 +361,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
             {currentExerciseState.isActive && !currentExerciseState.completed && !(currentExerciseState.isResting && currentExerciseState.timeLeft > 0) && (
               <button
-                className="green-button"
+                className="orange-button"
                 onClick={finishSet}
-                style={{ padding: '15px 30px', fontSize: '18px' }}
+                style={{ fontSize: '18px' }}
               >
                 סיים סט
               </button>
