@@ -56,7 +56,7 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
               <div className="info-value">
                 {exercise.minimumNumberOfRepeasts === exercise.maximumNumberOfRepeasts 
                   ? exercise.minimumNumberOfRepeasts 
-                  : `${exercise.minimumNumberOfRepeasts}-${exercise.maximumNumberOfRepeasts}`}
+                  : `${exercise.minimumNumberOfRepeasts} - ${exercise.maximumNumberOfRepeasts}`}
               </div>
             </div>
             

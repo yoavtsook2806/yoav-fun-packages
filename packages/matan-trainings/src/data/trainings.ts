@@ -7,7 +7,7 @@ export const trainings: Trainings = {
       link: "https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation",
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
-      minimumNumberOfRepeasts: 6,
+      minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
       note: ""
     },
@@ -43,7 +43,7 @@ export const trainings: Trainings = {
       link: "https://www.youtube.com/watch?v=DA2QGI0NPWU&ab_channel=TestosteroneNation",
       minimumTimeToRest: 60,
       maximumTimeToRest: 60,
-      minimumNumberOfRepeasts: 8,
+      minimumNumberOfRepeasts: 6,
       maximumNumberOfRepeasts: 8,
       note: "לשים לב שהאגן והתחת לא קופצים החוצה. להשאיר אגן מגולגל פנימה מעט"
     }
