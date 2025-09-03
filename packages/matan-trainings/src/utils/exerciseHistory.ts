@@ -3,6 +3,7 @@ import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingP
 const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
 const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
 const EXERCISE_DEFAULTS_KEY = 'matan-trainings-exercise-defaults';
+const SOUND_SETTINGS_KEY = 'matan-trainings-sound-settings';
 
 export const getExerciseHistory = (): ExerciseHistory => {
   try {
@@ -252,4 +253,29 @@ export const calculateDefaultRestTime = (exercise: Exercise): number => {
 
 export const calculateDefaultRepeats = (exercise: Exercise): number => {
   return Math.floor((exercise.minimumNumberOfRepeasts + exercise.maximumNumberOfRepeasts) / 2);
+};
+
+// Sound Settings Functions
+export const getSoundSettings = (): { enabled: boolean } => {
+  try {
+    const stored = localStorage.getItem(SOUND_SETTINGS_KEY);
+    return stored ? JSON.parse(stored) : { enabled: true }; // Default to enabled
+  } catch (error) {
+    console.error('Error loading sound settings:', error);
+    return { enabled: true };
+  }
+};
+
+export const saveSoundSettings = (enabled: boolean): void => {
+  try {
+    const settings = { enabled };
+    localStorage.setItem(SOUND_SETTINGS_KEY, JSON.stringify(settings));
+  } catch (error) {
+    console.error('Error saving sound settings:', error);
+  }
+};
+
+export const isSoundEnabled = (): boolean => {
+  const settings = getSoundSettings();
+  return settings.enabled;
 };

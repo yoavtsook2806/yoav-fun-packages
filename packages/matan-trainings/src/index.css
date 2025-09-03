@@ -1120,10 +1120,11 @@ button:disabled {
   .header-actions-row {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     justify-content: center;
     width: 100%;
+    flex-wrap: wrap;
   }
   
   .header-rest-time, .header-weight, .header-repeats {

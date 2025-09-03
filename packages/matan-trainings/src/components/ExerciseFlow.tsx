@@ -3,7 +3,8 @@ import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
-import { saveExerciseDefaults } from '../utils/exerciseHistory';
+import { saveExerciseDefaults, isSoundEnabled } from '../utils/exerciseHistory';
+import { soundManager } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
   trainingState: TrainingState;
@@ -26,6 +27,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [historyModal, setHistoryModal] = useState<string | null>(null);
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
   const [infoModal, setInfoModal] = useState<string | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(() => isSoundEnabled());
 
   // Helper function to create short exercise names
   const getShortExerciseName = (exerciseName: string): string => {
@@ -58,8 +60,20 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   useEffect(() => {
     if (currentExerciseState?.isResting && currentExerciseState.timeLeft > 0) {
       const id = setInterval(() => {
+        const newTimeLeft = Math.max(0, currentExerciseState.timeLeft - 1);
+        
+        // Play countdown sound for last 5 seconds
+        if (currentExerciseState.timeLeft <= 5 && currentExerciseState.timeLeft > 0) {
+          soundManager.playCountdownBeep(currentExerciseState.timeLeft);
+        }
+        
+        // Play completion sound when timer reaches 0
+        if (newTimeLeft === 0) {
+          soundManager.playTimerComplete();
+        }
+        
         onUpdateExerciseState(currentExerciseName, {
-          timeLeft: Math.max(0, currentExerciseState.timeLeft - 1),
+          timeLeft: newTimeLeft,
         });
       }, 1000);
       setTimerId(id);
@@ -144,6 +158,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeInfo = () => {
     setInfoModal(currentExerciseName);
+  };
+
+  const toggleSound = () => {
+    const newSoundEnabled = !soundEnabled;
+    setSoundEnabled(newSoundEnabled);
+    soundManager.setEnabled(newSoundEnabled);
   };
 
   const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
@@ -283,6 +303,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               title="פרטי תרגיל"
             >
               ℹ️
+            </button>
+            <button
+              className={`header-action-btn ${soundEnabled ? '' : 'disabled'}`}
+              onClick={toggleSound}
+              title={soundEnabled ? "השתק צלילים" : "הפעל צלילים"}
+            >
+              {soundEnabled ? '🔊' : '🔇'}
             </button>
           </div>
         </div>
