@@ -242,8 +242,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                 type="number"
                 inputMode="numeric"
                 pattern="[0-9]*"
-                value={currentExerciseState?.customRestTime || trainingState.restTime}
+                value={currentExerciseState?.customRestTime || ''}
                 onChange={(e) => updateCustomRestTime(Number(e.target.value))}
+                placeholder={trainingState.restTime.toString()}
                 min="10"
                 max="300"
                 step="5"

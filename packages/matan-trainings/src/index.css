@@ -157,29 +157,9 @@ button:disabled {
   color: white;
 }
 
-.rest-time-input {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  direction: rtl;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
 
-.rest-time-input input {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #555;
-  background-color: transparent;
-  color: #ffffff;
-  width: 100px;
-  text-align: center;
-}
+
+
 
 /* New Exercise Flow Layout */
 .exercise-flow-container {
@@ -574,7 +554,7 @@ button:disabled {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
-.weight-input::placeholder, .repeats-input::placeholder {
+.rest-time-input::placeholder, .weight-input::placeholder, .repeats-input::placeholder {
   font-size: 12px;
   color: #999;
   font-weight: 500;
@@ -1141,7 +1121,7 @@ button:disabled {
     min-height: 40px;
   }
   
-  .weight-input::placeholder, .repeats-input::placeholder {
+  .rest-time-input::placeholder, .weight-input::placeholder, .repeats-input::placeholder {
     font-size: 14px;
   }
   
