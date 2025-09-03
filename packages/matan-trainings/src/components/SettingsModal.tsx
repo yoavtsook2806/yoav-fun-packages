@@ -9,13 +9,13 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onClearAllHistory }) => {
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useState(250);
 
   useEffect(() => {
     // Load current sound settings
     const settings = getSoundSettings();
     setSoundEnabled(settings.enabled);
-    setVolume(settings.volume || 50);
+    setVolume(settings.volume || 250);
   }, []);
 
   const handleSoundToggle = () => {
@@ -27,7 +27,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onClearAllHistor
 
   const handleVolumeChange = (newVolume: number) => {
     setVolume(newVolume);
-    soundManager.setVolume(newVolume / 100); // Convert to 0-1 range
+    soundManager.setVolume(newVolume / 100); // Convert to 0-5 range (500/100 = 5)
     saveSoundSettings(soundEnabled, newVolume);
     
     // Play a test beep when adjusting volume
@@ -84,14 +84,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onClearAllHistor
                   <input
                     type="range"
                     min="0"
-                    max="100"
+                    max="500"
                     value={volume}
                     onChange={(e) => handleVolumeChange(Number(e.target.value))}
                     disabled={!soundEnabled}
                     className="volume-slider"
                   />
                   <span className="volume-icon">🔊</span>
-                  <span className="volume-value">{volume}%</span>
+                  <span className="volume-value">{Math.round((volume / 500) * 100)}%</span>
                 </div>
               </label>
             </div>

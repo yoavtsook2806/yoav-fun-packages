@@ -259,10 +259,10 @@ export const calculateDefaultRepeats = (exercise: Exercise): number => {
 export const getSoundSettings = (): { enabled: boolean; volume: number } => {
   try {
     const stored = localStorage.getItem(SOUND_SETTINGS_KEY);
-    return stored ? JSON.parse(stored) : { enabled: true, volume: 50 }; // Default to enabled with 50% volume
+    return stored ? JSON.parse(stored) : { enabled: true, volume: 250 }; // Default to enabled with 250/500 volume (50%)
   } catch (error) {
     console.error('Error loading sound settings:', error);
-    return { enabled: true, volume: 50 };
+    return { enabled: true, volume: 250 };
   }
 };
 

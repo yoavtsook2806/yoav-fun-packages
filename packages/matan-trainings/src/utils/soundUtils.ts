@@ -4,12 +4,12 @@ import { isSoundEnabled, getSoundVolume, saveSoundSettings } from './exerciseHis
 class SoundManager {
   private audioContext: AudioContext | null = null;
   private isEnabled = true;
-  private volume = 0.5; // 0-1 range
+  private volume = 2.5; // 0-5 range (default 250/100 = 2.5)
 
   constructor() {
     // Load sound preferences from storage
     this.isEnabled = isSoundEnabled();
-    this.volume = getSoundVolume() / 100; // Convert from 0-100 to 0-1 range
+    this.volume = getSoundVolume() / 100; // Convert from 0-500 to 0-5 range
     // Initialize AudioContext on first user interaction
     this.initAudioContext();
   }
@@ -89,9 +89,9 @@ class SoundManager {
     saveSoundSettings(enabled, this.volume * 100);
   }
 
-  // Set volume (0-1 range)
+  // Set volume (0-5 range)
   setVolume(volume: number): void {
-    this.volume = Math.max(0, Math.min(1, volume)); // Clamp between 0 and 1
+    this.volume = Math.max(0, Math.min(5, volume)); // Clamp between 0 and 5
   }
 
   // Play a test beep for volume adjustment
