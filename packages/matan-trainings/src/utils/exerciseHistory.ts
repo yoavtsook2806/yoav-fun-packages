@@ -111,15 +111,7 @@ export const removeDuplicateHistoryEntries = (): void => {
 
 // Training Progress Functions
 const getTodayDateString = (): string => {
-  // For testing: Change cooldown from 24 hours to 1 minute
-  // Include hours and minutes so "today" changes every minute
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hour = String(now.getHours()).padStart(2, '0');
-  const minute = String(now.getMinutes()).padStart(2, '0');
-  return `${year}-${month}-${day}-${hour}:${minute}`; // YYYY-MM-DD-HH:MM format
+  return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 };
 
 export const getTrainingProgress = (): TrainingProgressStorage => {
