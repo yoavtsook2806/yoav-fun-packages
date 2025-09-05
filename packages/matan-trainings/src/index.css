@@ -28,6 +28,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* Prevent zoom on input focus on iOS */
+  -webkit-text-size-adjust: 100%;
 }
 
 h1 {
@@ -545,7 +547,7 @@ button:disabled {
 
 .rest-time-input, .weight-input, .repeats-input {
   padding: 6px;
-  font-size: 14px;
+  font-size: 16px; /* Prevents mobile zoom */
   width: 70px;
   text-align: center;
   border-radius: 4px;
@@ -562,7 +564,7 @@ button:disabled {
 }
 
 .rest-time-input::placeholder, .weight-input::placeholder, .repeats-input::placeholder {
-  font-size: 12px;
+  font-size: 16px; /* Prevents mobile zoom */
   color: #999;
   font-weight: 500;
 }
@@ -1597,13 +1599,13 @@ button:disabled {
   .rest-time-input, .weight-input, .repeats-input {
     width: 55px;
     background-color: transparent;
-    font-size: 14px;
+    font-size: 16px; /* Prevents mobile zoom */
     padding: 8px 4px;
     min-height: 40px;
   }
   
   .rest-time-input::placeholder, .weight-input::placeholder, .repeats-input::placeholder {
-    font-size: 14px;
+    font-size: 16px; /* Prevents mobile zoom */
   }
   
   .header-action-btn {
@@ -1644,7 +1646,7 @@ button:disabled {
   
   .rest-time-input, .weight-input, .repeats-input {
     width: 70px;
-    font-size: 14px;
+    font-size: 16px; /* Prevents mobile zoom */
     padding: 6px;
     min-height: auto;
   }
