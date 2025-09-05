@@ -1119,9 +1119,10 @@ button:disabled {
   padding: 20px;
   border-radius: 12px 12px 0 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-bottom: 1px solid #333;
+  position: relative;
 }
 
 .info-header h2 {
@@ -1396,6 +1397,8 @@ button:disabled {
 }
 
 .close-button {
+  position: absolute;
+  right: 20px;
   background: none;
   border: none;
   color: #ccc;
