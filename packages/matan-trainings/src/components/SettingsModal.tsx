@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { getSoundSettings, saveSoundSettings } from '../utils/exerciseHistory';
 import { soundManager } from '../utils/soundUtils';
+import { getAvailableVersions } from '../data/trainingPlans';
 
 interface SettingsModalProps {
   onClose: () => void;
   onClearAllHistory: () => void;
+  currentTrainingPlanVersion: string;
+  onTrainingPlanChange: (version: string) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onClearAllHistory }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ 
+  onClose, 
+  onClearAllHistory, 
+  currentTrainingPlanVersion, 
+  onTrainingPlanChange 
+}) => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [volume, setVolume] = useState(250);
+  const availableVersions = getAvailableVersions();
 
   useEffect(() => {
     // Load current sound settings
@@ -56,6 +65,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, onClearAllHistor
         </div>
         
         <div className="modal-body">
+          {/* Training Plan Selection */}
+          <div className="settings-section">
+            <div className="settings-item">
+              <label className="settings-label">
+                <span>תוכנית אימונים</span>
+                <select
+                  value={currentTrainingPlanVersion}
+                  onChange={(e) => onTrainingPlanChange(e.target.value)}
+                  className="training-plan-select"
+                >
+                  {availableVersions.map(version => (
+                    <option key={version} value={version}>
+                      גרסה {version}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+
           {/* Sound Toggle */}
           <div className="settings-section">
             <div className="settings-item">

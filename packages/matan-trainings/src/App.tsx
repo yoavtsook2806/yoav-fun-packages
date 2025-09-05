@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { trainings } from './data/trainings';
 import { TrainingState, ExerciseState } from './types';
+import { getLatestTrainingPlan, getTrainingPlanByVersion } from './data/trainingPlans';
 import TrainingSelection from './components/TrainingSelection';
 import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
@@ -23,6 +23,12 @@ import {
 } from './utils/exerciseHistory';
 
 function App() {
+  // Get the latest training plan as default
+  const latestPlan = getLatestTrainingPlan();
+  
+  // Current training plan (session-only, not saved to localStorage)
+  const [currentTrainingPlan, setCurrentTrainingPlan] = useState(latestPlan);
+  
   const [trainingState, setTrainingState] = useState<TrainingState>({
     selectedTraining: null,
     restTime: 60,
@@ -30,6 +36,7 @@ function App() {
     exercises: [],
     exerciseStates: {},
     isTrainingComplete: false,
+    trainingPlanVersion: latestPlan.version,
   });
   
   // Track if this is a fresh completion (to show congratulation only once)
@@ -42,6 +49,25 @@ function App() {
   useEffect(() => {
     removeDuplicateHistoryEntries();
   }, []);
+
+  // Handle training plan change (session-only)
+  const handleTrainingPlanChange = (version: string) => {
+    const newPlan = getTrainingPlanByVersion(version);
+    if (newPlan) {
+      setCurrentTrainingPlan(newPlan);
+      // Reset training state when changing plans
+      setTrainingState(prev => ({
+        ...prev,
+        selectedTraining: null,
+        currentExerciseIndex: 0,
+        exercises: [],
+        exerciseStates: {},
+        isTrainingComplete: false,
+        trainingPlanVersion: version,
+      }));
+      setShowCongratulation(false);
+    }
+  };
 
   const handleClearAllHistory = () => {
     const confirmed = window.confirm(
@@ -60,12 +86,12 @@ function App() {
   };
 
   const initializeTraining = (trainingType: string) => {
-    const exercises = Object.keys(trainings[trainingType]);
+    const exercises = Object.keys(currentTrainingPlan.trainings[trainingType]);
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
     let allCompleted = true;
     exercises.forEach(exerciseName => {
-      const exercise = trainings[trainingType][exerciseName];
+      const exercise = currentTrainingPlan.trainings[trainingType][exerciseName];
       
       // Priority: default weight > last used weight from history
       const defaultWeight = getDefaultWeight(exerciseName);
@@ -110,6 +136,7 @@ function App() {
       exercises,
       exerciseStates,
       isTrainingComplete: allCompleted, // Set to true if all exercises were already completed today
+      trainingPlanVersion: currentTrainingPlan.version,
     });
     
     // Don't show congratulation when loading a previously completed training
@@ -124,6 +151,7 @@ function App() {
       exercises: [],
       exerciseStates: {},
       isTrainingComplete: false,
+      trainingPlanVersion: currentTrainingPlan.version,
     });
     setShowCongratulation(false);
   };
@@ -142,7 +170,7 @@ function App() {
       
       // If exercise is being completed for the first time, save to history
       if (!currentState.completed && updates.completed === true) {
-        const exercise = trainings[prev.selectedTraining!][exerciseName];
+        const exercise = currentTrainingPlan.trainings[prev.selectedTraining!][exerciseName];
         const historyEntry = {
           date: new Date().toISOString(),
           weight: newState.weight && newState.weight > 0 ? newState.weight : undefined,
@@ -216,6 +244,8 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onClearAllHistory={handleClearAllHistory}
+            currentTrainingPlanVersion={currentTrainingPlan.version}
+            onTrainingPlanChange={handleTrainingPlanChange}
           />
         )}
       </div>
@@ -235,7 +265,8 @@ function App() {
         </button>
         <TrainingSelection
           onSelectTraining={initializeTraining}
-          availableTrainings={Object.keys(trainings)}
+          availableTrainings={Object.keys(currentTrainingPlan.trainings)}
+          trainingPlanVersion={currentTrainingPlan.version}
         />
         
         {/* Settings Modal */}
@@ -243,6 +274,8 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onClearAllHistory={handleClearAllHistory}
+            currentTrainingPlanVersion={currentTrainingPlan.version}
+            onTrainingPlanChange={handleTrainingPlanChange}
           />
         )}
       </div>
@@ -252,7 +285,7 @@ function App() {
   return (
     <ExerciseFlow
       trainingState={trainingState}
-      trainings={trainings}
+      trainings={currentTrainingPlan.trainings}
       onUpdateExerciseState={updateExerciseState}
       onGoToExercise={goToExercise}
       onNextExercise={nextExercise}

@@ -34,15 +34,22 @@ export interface TrainingState {
   exercises: string[];
   exerciseStates: { [exerciseName: string]: ExerciseState };
   isTrainingComplete: boolean;
+  trainingPlanVersion?: string; // Current training plan version
+}
+
+export interface SetData {
+  weight?: number;
+  repeats?: number;
 }
 
 export interface ExerciseHistoryEntry {
   date: string; // ISO date string
-  weight?: number;
+  weight?: number; // First set weight (for backward compatibility and display)
   restTime: number;
   completedSets: number;
   totalSets: number;
-  repeats?: number;
+  repeats?: number; // First set repeats (for backward compatibility and display)
+  setsData?: SetData[]; // Per-set data (weight and repeats for each set)
 }
 
 export interface ExerciseHistory {

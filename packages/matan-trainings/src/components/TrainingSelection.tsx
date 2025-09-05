@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
   availableTrainings: string[];
+  trainingPlanVersion: string;
 }
 
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   onSelectTraining,
   availableTrainings,
+  trainingPlanVersion,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
 
@@ -20,6 +22,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   return (
     <div className="training-selection">
       <h1>קדי לא פראייר</h1>
+      <div className="training-plan-version">{trainingPlanVersion}</div>
       
       <div className="training-buttons">
         {availableTrainings.map((training) => (

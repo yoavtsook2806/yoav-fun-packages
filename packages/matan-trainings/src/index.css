@@ -129,6 +129,13 @@ button:disabled {
   align-items: center;
 }
 
+.training-plan-version {
+  font-size: 1rem;
+  color: #ccc;
+  font-weight: 400;
+  margin-top: -10px;
+}
+
 .training-buttons {
   display: flex;
   gap: 15px;
@@ -729,6 +736,7 @@ button:disabled {
   background: #555;
   outline: none;
   -webkit-appearance: none;
+  appearance: none;
 }
 
 .volume-slider::-webkit-slider-thumb {
@@ -798,6 +806,27 @@ button:disabled {
   .volume-control {
     min-width: 200px;
   }
+}
+
+/* Training Plan Select */
+.training-plan-select {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 8px 12px;
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.training-plan-select:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.training-plan-select option {
+  background: #2a2a2a;
+  color: #ffffff;
 }
 
 /* Exercise Info Modal */

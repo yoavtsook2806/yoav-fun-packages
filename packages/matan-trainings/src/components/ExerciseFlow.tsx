@@ -145,12 +145,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     });
   };
 
-  const handleSeeVideo = () => {
-    const exercise = trainings[trainingState.selectedTraining!][currentExerciseName];
-    if (exercise.link && exercise.link.trim() !== '') {
-      window.open(exercise.link, '_blank');
-    }
-  };
 
   const handleSeeHistory = () => {
     setHistoryModal(currentExerciseName);
@@ -283,14 +277,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             </div>
           </div>
           <div className="header-actions-row">
-            <button
-              className={`header-action-btn ${!currentExercise?.link || currentExercise?.link.trim() === '' ? 'disabled' : ''}`}
-              onClick={handleSeeVideo}
-              disabled={!currentExercise?.link || currentExercise?.link.trim() === ''}
-              title="צפה בסרטון"
-            >
-              📹
-            </button>
             <button
               className="header-action-btn"
               onClick={handleSeeHistory}
