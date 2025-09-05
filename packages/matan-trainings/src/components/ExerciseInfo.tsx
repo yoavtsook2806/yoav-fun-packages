@@ -5,12 +5,14 @@ interface ExerciseInfoProps {
   exerciseName: string;
   exercise: Exercise;
   onClose: () => void;
+  onEdit?: (exerciseName: string) => void;
 }
 
 const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
   exerciseName,
   exercise,
   onClose,
+  onEdit,
 }) => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -28,6 +30,15 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
     <div className="info-overlay">
       <div className="info-modal">
         <div className="info-header">
+          {onEdit && (
+            <button 
+              className="edit-button" 
+              onClick={() => onEdit(exerciseName)}
+              title="ערוך תרגיל"
+            >
+              ✏️
+            </button>
+          )}
           <h2>פרטי תרגיל</h2>
           <button className="close-button" onClick={onClose}>
             ✕

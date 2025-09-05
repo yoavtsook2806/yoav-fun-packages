@@ -3,8 +3,9 @@ import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
+import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
-import { saveExerciseDefaults, isSoundEnabled } from '../utils/exerciseHistory';
+import { saveExerciseDefaults, isSoundEnabled, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote } from '../utils/exerciseHistory';
 import { soundManager } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
@@ -28,6 +29,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [historyModal, setHistoryModal] = useState<string | null>(null);
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
   const [infoModal, setInfoModal] = useState<string | null>(null);
+  const [editModal, setEditModal] = useState<string | null>(null);
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(() => isSoundEnabled());
 
@@ -169,6 +171,16 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeLastTraining = () => {
     setLastTrainingModal(currentExerciseName);
+  };
+
+  const handleEditExercise = (exerciseName: string) => {
+    setInfoModal(null); // Close info modal
+    setEditModal(exerciseName);
+  };
+
+  const handleSaveExerciseEdit = (exerciseName: string, customTitle: string, customNote: string) => {
+    saveCustomExerciseData(exerciseName, customTitle, customNote);
+    setEditModal(null);
   };
 
   const toggleSound = () => {
@@ -363,7 +375,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
         {/* Main Content */}
         <div className="exercise-main">
-          <div className="exercise-name">{currentExerciseName}</div>
+          <div className="exercise-name">{getCustomExerciseTitle(currentExerciseName)}</div>
 
           {/* Sets Progress with Visual Slider */}
           <div className="sets-progress-container">
@@ -461,9 +473,26 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {/* Exercise Info Modal */}
       {infoModal && (
         <ExerciseInfo
-          exerciseName={infoModal}
-          exercise={trainings[trainingState.selectedTraining!][infoModal]}
+          exerciseName={getCustomExerciseTitle(infoModal)}
+          exercise={{
+            ...trainings[trainingState.selectedTraining!][infoModal],
+            note: getCustomExerciseNote(infoModal, trainings[trainingState.selectedTraining!][infoModal].note)
+          }}
           onClose={() => setInfoModal(null)}
+          onEdit={handleEditExercise}
+        />
+      )}
+      
+      {/* Exercise Edit Modal */}
+      {editModal && (
+        <ExerciseEdit
+          exerciseName={editModal}
+          exercise={{
+            ...trainings[trainingState.selectedTraining!][editModal],
+            note: getCustomExerciseNote(editModal, trainings[trainingState.selectedTraining!][editModal].note)
+          }}
+          onSave={handleSaveExerciseEdit}
+          onClose={() => setEditModal(null)}
         />
       )}
       

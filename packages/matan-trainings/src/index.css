@@ -776,6 +776,23 @@ button:disabled {
   color: #ccc;
 }
 
+.refresh-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+  margin-bottom: 16px;
+}
+
+.refresh-button:hover {
+  background: #0056b3;
+}
+
 .danger-button {
   background: #dc3545;
   color: white;
@@ -1200,6 +1217,141 @@ button:disabled {
 
 .info-close-btn:hover {
   background-color: #777;
+}
+
+/* Exercise Edit Modal */
+.exercise-edit-modal {
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.edit-form {
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 16px; /* Prevents mobile zoom */
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  background-color: #333;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 16px; /* Prevents mobile zoom */
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #4CAF50;
+  background-color: #333;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-button {
+  background: #666;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background: #777;
+}
+
+.save-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background: #45a049;
+}
+
+.save-button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.edit-button {
+  position: absolute;
+  left: 20px;
+  background: none;
+  border: none;
+  color: #4CAF50;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+@media (max-width: 768px) {
+  .exercise-edit-modal {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cancel-button,
+  .save-button {
+    width: 100%;
+  }
 }
 
 /* Exercise History Modal */

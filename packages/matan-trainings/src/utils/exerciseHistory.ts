@@ -4,6 +4,7 @@ const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
 const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
 const EXERCISE_DEFAULTS_KEY = 'matan-trainings-exercise-defaults';
 const SOUND_SETTINGS_KEY = 'matan-trainings-sound-settings';
+const CUSTOM_EXERCISE_DATA_KEY = 'matan-trainings-custom-exercise-data';
 
 export const getExerciseHistory = (): ExerciseHistory => {
   try {
@@ -287,4 +288,53 @@ export const isSoundEnabled = (): boolean => {
 export const getSoundVolume = (): number => {
   const settings = getSoundSettings();
   return settings.volume;
+};
+
+// Custom Exercise Data Functions
+interface CustomExerciseData {
+  [exerciseName: string]: {
+    customTitle?: string;
+    customNote?: string;
+  };
+}
+
+export const getCustomExerciseData = (): CustomExerciseData => {
+  try {
+    const stored = localStorage.getItem(CUSTOM_EXERCISE_DATA_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch (error) {
+    console.error('Error loading custom exercise data:', error);
+    return {};
+  }
+};
+
+export const saveCustomExerciseData = (exerciseName: string, customTitle: string, customNote: string): void => {
+  try {
+    const customData = getCustomExerciseData();
+    customData[exerciseName] = {
+      customTitle: customTitle || undefined,
+      customNote: customNote || undefined,
+    };
+    localStorage.setItem(CUSTOM_EXERCISE_DATA_KEY, JSON.stringify(customData));
+  } catch (error) {
+    console.error('Error saving custom exercise data:', error);
+  }
+};
+
+export const getCustomExerciseTitle = (exerciseName: string): string => {
+  const customData = getCustomExerciseData();
+  return customData[exerciseName]?.customTitle || exerciseName;
+};
+
+export const getCustomExerciseNote = (exerciseName: string, originalNote?: string): string => {
+  const customData = getCustomExerciseData();
+  return customData[exerciseName]?.customNote || originalNote || '';
+};
+
+export const clearCustomExerciseData = (): void => {
+  try {
+    localStorage.removeItem(CUSTOM_EXERCISE_DATA_KEY);
+  } catch (error) {
+    console.error('Error clearing custom exercise data:', error);
+  }
 };
