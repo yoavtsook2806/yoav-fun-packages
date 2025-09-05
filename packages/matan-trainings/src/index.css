@@ -829,6 +829,140 @@ button:disabled {
   color: #ffffff;
 }
 
+/* Last Training Details Modal */
+.last-training-modal {
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+}
+
+.training-info {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #444;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #ccc;
+}
+
+.info-value {
+  font-weight: 600;
+  color: #fff;
+}
+
+.sets-details h3 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 18px;
+}
+
+.sets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.set-card {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #444;
+}
+
+.set-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4CAF50;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.set-data {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data-item.no-data {
+  justify-content: center;
+  color: #888;
+  font-style: italic;
+}
+
+.data-label {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.data-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
+
+.no-sets-data {
+  text-align: center;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  color: #888;
+}
+
+.legacy-data {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background: #333;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .last-training-modal {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .sets-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
 /* Exercise Info Modal */
 .info-overlay {
   position: fixed;

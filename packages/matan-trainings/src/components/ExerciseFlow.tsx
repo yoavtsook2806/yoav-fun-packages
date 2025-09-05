@@ -3,6 +3,7 @@ import { TrainingState, ExerciseState, Trainings } from '../types';
 import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
+import LastTrainingDetails from './LastTrainingDetails';
 import { saveExerciseDefaults, isSoundEnabled } from '../utils/exerciseHistory';
 import { soundManager } from '../utils/soundUtils';
 
@@ -27,6 +28,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [historyModal, setHistoryModal] = useState<string | null>(null);
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
   const [infoModal, setInfoModal] = useState<string | null>(null);
+  const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(() => isSoundEnabled());
 
   // Helper function to create short exercise names
@@ -107,12 +109,22 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     const newSetCount = currentExerciseState.currentSet + 1;
     const isExerciseComplete = newSetCount >= currentExercise.numberOfSets;
 
+    // Capture current set data (weight and repeats)
+    const currentSetData = {
+      weight: currentExerciseState.weight && currentExerciseState.weight > 0 ? currentExerciseState.weight : undefined,
+      repeats: currentExerciseState.repeats && currentExerciseState.repeats > 0 ? currentExerciseState.repeats : undefined,
+    };
+
+    // Add current set data to the sets array
+    const updatedSetsData = [...(currentExerciseState.setsData || []), currentSetData];
+
     if (isExerciseComplete) {
       onUpdateExerciseState(currentExerciseName, {
         currentSet: newSetCount,
         completed: true,
         isActive: false,
         isResting: false,
+        setsData: updatedSetsData,
       });
       
       // Show feedback modal when exercise is completed
@@ -123,6 +135,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         currentSet: newSetCount,
         isResting: true,
         timeLeft: restTime,
+        setsData: updatedSetsData,
       });
     }
   };
@@ -152,6 +165,10 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeInfo = () => {
     setInfoModal(currentExerciseName);
+  };
+
+  const handleSeeLastTraining = () => {
+    setLastTrainingModal(currentExerciseName);
   };
 
   const toggleSound = () => {
@@ -283,6 +300,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               title="היסטוריית תרגיל"
             >
               📊
+            </button>
+            <button
+              className="header-action-btn"
+              onClick={handleSeeLastTraining}
+              title="אימון אחרון"
+            >
+              📋
             </button>
             <button
               className="header-action-btn"
@@ -440,6 +464,14 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           exerciseName={infoModal}
           exercise={trainings[trainingState.selectedTraining!][infoModal]}
           onClose={() => setInfoModal(null)}
+        />
+      )}
+      
+      {/* Last Training Details Modal */}
+      {lastTrainingModal && (
+        <LastTrainingDetails
+          exerciseName={lastTrainingModal}
+          onClose={() => setLastTrainingModal(null)}
         />
       )}
     </div>

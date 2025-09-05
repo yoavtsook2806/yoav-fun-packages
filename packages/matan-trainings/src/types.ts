@@ -25,6 +25,7 @@ export interface ExerciseState {
   customRestTime?: number; // Optional custom rest time for this exercise
   weight?: number; // Current weight being used for this exercise
   repeats?: number; // Current repeats being used for this exercise
+  setsData?: SetData[]; // Track weight/reps for each completed set
 }
 
 export interface TrainingState {

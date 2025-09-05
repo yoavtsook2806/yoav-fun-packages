@@ -1,7 +1,5 @@
 import { Trainings } from '../types';
-import { trainings as v35 } from './trainingPlan-v3.5';
 import { trainings as v36 } from './trainingPlan-v3.6';
-import { trainings as v37 } from './trainingPlan-v3.7';
 
 export interface TrainingPlan {
   version: string;
@@ -11,19 +9,9 @@ export interface TrainingPlan {
 
 export const trainingPlans: TrainingPlan[] = [
   {
-    version: '3.5',
-    name: 'תוכנית אימונים 3.5',
-    trainings: v35
-  },
-  {
     version: '3.6',
     name: 'תוכנית אימונים 3.6',
     trainings: v36
-  },
-  {
-    version: '3.7',
-    name: 'תוכנית אימונים 3.7',
-    trainings: v37
   }
 ];
 

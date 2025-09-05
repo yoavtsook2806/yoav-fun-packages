@@ -19,7 +19,8 @@ import {
   getDefaultRepeats,
   clearExerciseDefaults,
   calculateDefaultRestTime,
-  calculateDefaultRepeats
+  calculateDefaultRepeats,
+  getExerciseLastEntry
 } from './utils/exerciseHistory';
 
 function App() {
@@ -93,21 +94,24 @@ function App() {
     exercises.forEach(exerciseName => {
       const exercise = currentTrainingPlan.trainings[trainingType][exerciseName];
       
-      // Priority: default weight > last used weight from history
+      // Priority: default weight > first set from last workout > last used weight from history
       const defaultWeight = getDefaultWeight(exerciseName);
+      const lastExerciseEntry = getExerciseLastEntry(exerciseName);
+      const firstSetWeight = lastExerciseEntry?.setsData?.[0]?.weight;
       const lastUsedWeight = getLastUsedWeight(exerciseName);
-      const weight = defaultWeight || lastUsedWeight;
+      const weight = defaultWeight || firstSetWeight || lastUsedWeight;
       
       // Priority: default rest time > calculated default from exercise data
       const defaultRestTime = getDefaultRestTime(exerciseName);
       const calculatedRestTime = calculateDefaultRestTime(exercise);
       const customRestTime = defaultRestTime || calculatedRestTime;
       
-      // Priority: default repeats > last used repeats > calculated default from exercise data
+      // Priority: default repeats > first set from last workout > last used repeats > calculated default from exercise data
       const defaultRepeats = getDefaultRepeats(exerciseName);
+      const firstSetRepeats = lastExerciseEntry?.setsData?.[0]?.repeats;
       const lastUsedRepeats = getLastUsedRepeats(exerciseName);
       const calculatedRepeats = calculateDefaultRepeats(exercise);
-      const repeats = defaultRepeats || lastUsedRepeats || calculatedRepeats;
+      const repeats = defaultRepeats || firstSetRepeats || lastUsedRepeats || calculatedRepeats;
       
       const savedProgress = getExerciseProgress(trainingType, exerciseName);
       const totalSets = exercise.numberOfSets;
@@ -171,13 +175,20 @@ function App() {
       // If exercise is being completed for the first time, save to history
       if (!currentState.completed && updates.completed === true) {
         const exercise = currentTrainingPlan.trainings[prev.selectedTraining!][exerciseName];
+        
+        // Get first set data for backward compatibility (weight/repeats display in history)
+        const firstSetData = newState.setsData?.[0];
+        const firstSetWeight = firstSetData?.weight;
+        const firstSetRepeats = firstSetData?.repeats;
+        
         const historyEntry = {
           date: new Date().toISOString(),
-          weight: newState.weight && newState.weight > 0 ? newState.weight : undefined,
+          weight: firstSetWeight, // First set weight for display
           restTime: newState.customRestTime || prev.restTime,
           completedSets: newState.currentSet,
           totalSets: exercise.numberOfSets,
-          repeats: newState.repeats && newState.repeats > 0 ? newState.repeats : undefined,
+          repeats: firstSetRepeats, // First set repeats for display
+          setsData: newState.setsData, // Complete per-set data
         };
         // Use setTimeout to avoid potential React batching issues
         setTimeout(() => {
