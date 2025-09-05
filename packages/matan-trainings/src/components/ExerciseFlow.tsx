@@ -450,9 +450,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {feedbackModal && (
         <ExerciseFeedback
           exerciseName={feedbackModal}
-          currentWeight={trainingState.exerciseStates[feedbackModal]?.weight}
+          currentWeight={trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.weight || trainingState.exerciseStates[feedbackModal]?.weight}
           currentRestTime={trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
-          currentRepeats={trainingState.exerciseStates[feedbackModal]?.repeats}
+          currentRepeats={trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.repeats || trainingState.exerciseStates[feedbackModal]?.repeats}
           onSave={handleFeedbackSave}
           onClose={handleFeedbackClose}
         />

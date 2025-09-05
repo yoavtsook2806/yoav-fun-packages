@@ -30,12 +30,9 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
     onClose();
   };
 
-  const handleSkip = () => {
-    onClose();
-  };
 
   return (
-    <div className="feedback-overlay" onClick={handleSkip}>
+    <div className="feedback-overlay">
       <div className="feedback-modal" onClick={(e) => e.stopPropagation()}>
         <div className="feedback-header">
           <h2>איך היה?</h2>
@@ -87,9 +84,6 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
         </div>
         
         <div className="feedback-actions">
-          <button className="feedback-skip-btn" onClick={handleSkip}>
-            דלג
-          </button>
           <button className="feedback-save-btn" onClick={handleSave}>
             שמור
           </button>
