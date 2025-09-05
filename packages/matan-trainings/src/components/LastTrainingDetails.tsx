@@ -54,17 +54,17 @@ const LastTrainingDetails: React.FC<LastTrainingDetailsProps> = ({ exerciseName,
         </div>
         
         <div className="modal-body">
-          <div className="training-info">
-            <div className="info-row">
-              <span className="info-label">תאריך:</span>
+          <div className="training-info-compact">
+            <div className="info-column">
+              <span className="info-label">תאריך</span>
               <span className="info-value">{formatDate(lastEntry.date)}</span>
             </div>
-            <div className="info-row">
-              <span className="info-label">זמן מנוחה:</span>
+            <div className="info-column">
+              <span className="info-label">זמן מנוחה</span>
               <span className="info-value">{formatTime(lastEntry.restTime)}</span>
             </div>
-            <div className="info-row">
-              <span className="info-label">סטים שהושלמו:</span>
+            <div className="info-column">
+              <span className="info-label">סטים</span>
               <span className="info-value">{lastEntry.completedSets}/{lastEntry.totalSets}</span>
             </div>
           </div>
