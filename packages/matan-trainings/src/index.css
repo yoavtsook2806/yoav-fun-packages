@@ -776,22 +776,6 @@ button:disabled {
   color: #ccc;
 }
 
-.refresh-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.2s;
-  margin-bottom: 16px;
-}
-
-.refresh-button:hover {
-  background: #0056b3;
-}
 
 .danger-button {
   background: #dc3545;

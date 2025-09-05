@@ -56,28 +56,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   };
 
-  const handleForceRefresh = async () => {
-    const confirmed = window.confirm(
-      'האם אתה בטוח שברצונך לרענן את האפליקציה?\n\nזה יטען את הגרסה החדשה ביותר ויאפס את המטמון.'
-    );
-    
-    if (confirmed) {
-      try {
-        // Clear service worker cache
-        if ('serviceWorker' in navigator && 'caches' in window) {
-          const cacheNames = await caches.keys();
-          await Promise.all(cacheNames.map(name => caches.delete(name)));
-        }
-        
-        // Force reload to get fresh content
-        window.location.reload();
-      } catch (error) {
-        console.error('Error clearing cache:', error);
-        // Fallback: just reload
-        window.location.reload();
-      }
-    }
-  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -151,18 +129,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* App Actions */}
           <div className="settings-section">
-            <div className="settings-item">
-              <button 
-                className="refresh-button"
-                onClick={handleForceRefresh}
-              >
-                🔄 רענן אפליקציה
-              </button>
-              <p className="settings-description">
-                טוען את הגרסה החדשה ביותר ומנקה את המטמון
-              </p>
-            </div>
-            
             <div className="settings-item">
               <button 
                 className="danger-button"
