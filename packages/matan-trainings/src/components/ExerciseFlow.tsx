@@ -33,28 +33,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(() => isSoundEnabled());
 
-  // Helper function to create short exercise names
-  const getShortExerciseName = (exerciseName: string): string => {
-    const exerciseMap: { [key: string]: string } = {
-      "לחיצת חזה, מ. יד, שיפוע 30*": "חזה",
-      "פרפר, מ. יד/מכונה": "פרפר", 
-      "לחיצת רגליים": "רגליים",
-      "פשיטת מרפק, פולי עליון, חבל": "טריצפס",
-      "AB ROLLOUT": "בטן",
-      "משיכה בפולי עליון, ניטרלי": "משיכה",
-      "חתירה בכבל, רחב": "חתירה",
-      "הרחקות אופקיות, שיפוע 30*, מ. יד": "הרחקות",
-      "כפיפת מרפק בשיפוע 60*, סופינציה": "ביצפס",
-      "תאומים (לחיצת רגליים/סמית' משין)": "תאומים",
-      "לחיצת כתפיים בישיבה, מ. יד": "כתפיים",
-      "הרחקת כתפיים בשיפוע 60*, מ. יד, בשכיבה על החזה": "הרחקות כתף",
-      "חתירה במכונה": "חתירה מכונה",
-      "כפיפת ברכיים בישיבה": "ברכיים",
-      "כפיפות בטן, רגליים מקובעות": "בטן"
-    };
-    
-    return exerciseMap[exerciseName] || exerciseName.split(' ')[0];
-  };
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
   const currentExercise = trainings[trainingState.selectedTraining!][currentExerciseName];
@@ -353,7 +331,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                 className += ' current';
               }
 
-              const shortName = getShortExerciseName(exerciseName);
+              const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
 
               return (
                 <div

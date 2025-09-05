@@ -6,6 +6,7 @@ export interface Exercise {
   minimumNumberOfRepeasts: number;
   maximumNumberOfRepeasts: number;
   note: string;
+  short: string;
 }
 
 export interface Training {
