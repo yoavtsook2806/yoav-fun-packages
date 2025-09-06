@@ -18,6 +18,8 @@ import {
   getDefaultRestTime,
   getDefaultRepeats,
   clearExerciseDefaults,
+  clearCustomExerciseData,
+  clearSoundSettings,
   calculateDefaultRestTime,
   calculateDefaultRepeats,
   getExerciseLastEntry
@@ -76,9 +78,13 @@ function App() {
     );
     
     if (confirmed) {
+      console.log('Clearing all storage data...');
       clearExerciseHistory();
       clearTrainingProgress();
       clearExerciseDefaults();
+      clearCustomExerciseData();
+      clearSoundSettings();
+      console.log('All storage data cleared successfully');
       alert('כל ההיסטוריה נמחקה בהצלחה!');
       
       // Optionally reload the page to reset the app state

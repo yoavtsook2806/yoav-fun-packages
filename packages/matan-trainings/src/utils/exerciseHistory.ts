@@ -290,6 +290,14 @@ export const getSoundVolume = (): number => {
   return settings.volume;
 };
 
+export const clearSoundSettings = (): void => {
+  try {
+    localStorage.removeItem(SOUND_SETTINGS_KEY);
+  } catch (error) {
+    console.error('Error clearing sound settings:', error);
+  }
+};
+
 // Custom Exercise Data Functions
 interface CustomExerciseData {
   [exerciseName: string]: {
