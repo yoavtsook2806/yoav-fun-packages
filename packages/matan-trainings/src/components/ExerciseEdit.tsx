@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Exercise } from '../types';
+import { getCustomExerciseTitle } from '../utils/exerciseHistory';
 
 interface ExerciseEditProps {
   exerciseName: string;
@@ -14,8 +15,21 @@ const ExerciseEdit: React.FC<ExerciseEditProps> = ({
   onSave,
   onClose,
 }) => {
-  const [customTitle, setCustomTitle] = useState(exerciseName);
-  const [customNote, setCustomNote] = useState(exercise.note || '');
+  const [customTitle, setCustomTitle] = useState('');
+  const [customNote, setCustomNote] = useState('');
+
+  useEffect(() => {
+    // Initialize with existing custom title or fall back to original name
+    const existingTitle = getCustomExerciseTitle(exerciseName);
+    setCustomTitle(existingTitle);
+    setCustomNote(exercise.note || '');
+    
+    console.log('ExerciseEdit initialized with:', {
+      exerciseName,
+      existingTitle,
+      exerciseNote: exercise.note
+    });
+  }, [exerciseName, exercise]);
 
   const handleSave = () => {
     onSave(exerciseName, customTitle.trim(), customNote.trim());

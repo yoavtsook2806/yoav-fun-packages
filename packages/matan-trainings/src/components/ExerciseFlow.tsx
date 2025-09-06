@@ -152,6 +152,11 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const handleEditExercise = (exerciseName: string) => {
+    console.log('=== handleEditExercise DEBUG ===');
+    console.log('exerciseName passed:', exerciseName);
+    console.log('Available exercises in training:', Object.keys(trainings[trainingState.selectedTraining!]));
+    console.log('Does exercise exist?', !!trainings[trainingState.selectedTraining!][exerciseName]);
+    
     setInfoModal(null); // Close info modal
     setEditModal(exerciseName);
   };
@@ -451,7 +456,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {/* Exercise Info Modal */}
       {infoModal && (
         <ExerciseInfo
-          exerciseName={getCustomExerciseTitle(infoModal)}
+          exerciseName={infoModal}
           exercise={{
             ...trainings[trainingState.selectedTraining!][infoModal],
             note: getCustomExerciseNote(infoModal, trainings[trainingState.selectedTraining!][infoModal].note)
@@ -462,7 +467,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       )}
       
       {/* Exercise Edit Modal */}
-      {editModal && (
+      {editModal && trainings[trainingState.selectedTraining!][editModal] && (
         <ExerciseEdit
           exerciseName={editModal}
           exercise={{

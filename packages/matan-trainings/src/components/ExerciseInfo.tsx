@@ -1,5 +1,6 @@
 import React from 'react';
 import { Exercise } from '../types';
+import { getCustomExerciseTitle } from '../utils/exerciseHistory';
 
 interface ExerciseInfoProps {
   exerciseName: string;
@@ -46,7 +47,7 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
         </div>
         
         <div className="info-exercise-name">
-          {exerciseName}
+          {getCustomExerciseTitle(exerciseName)}
         </div>
 
         {exercise.note && exercise.note.trim() !== '' && (
