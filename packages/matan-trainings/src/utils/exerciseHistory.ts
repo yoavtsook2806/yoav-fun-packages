@@ -249,11 +249,11 @@ export const clearExerciseDefaults = (): void => {
 
 // Helper functions to calculate defaults from exercise data
 export const calculateDefaultRestTime = (exercise: Exercise): number => {
-  return Math.floor((exercise.minimumTimeToRest + exercise.maximumTimeToRest) / 2);
+  return exercise.maximumTimeToRest; // Use maximum rest time as default
 };
 
 export const calculateDefaultRepeats = (exercise: Exercise): number => {
-  return Math.floor((exercise.minimumNumberOfRepeasts + exercise.maximumNumberOfRepeasts) / 2);
+  return exercise.minimumNumberOfRepeasts; // Use minimum repeats as default
 };
 
 // Sound Settings Functions

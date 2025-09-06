@@ -5,7 +5,7 @@ export const trainings: Trainings = {
     "לחיצת חזה, מ. יד, שיפוע 30*": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16&ab_channel=KILOPersonalTrainer%26StrengthCoachEducation",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -15,7 +15,7 @@ export const trainings: Trainings = {
     "פרפר, מ. יד/מכונה": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=JFm8KbhjibM&ab_channel=RenaissancePeriodization",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -25,7 +25,7 @@ export const trainings: Trainings = {
     "לחיצת רגליים": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=yZmx_Ac3880&ab_channel=RenaissancePeriodization",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -35,7 +35,7 @@ export const trainings: Trainings = {
     "פשיטת מרפק, פולי עליון, חבל": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=-xa-6cQaZKY&ab_channel=RenaissancePeriodization",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -57,7 +57,7 @@ export const trainings: Trainings = {
     "משיכה בפולי עליון, ניטרלי": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=kxeklf1Tkhw&ab_channel=JohnRusin",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -67,7 +67,7 @@ export const trainings: Trainings = {
     "חתירה בכבל, רחב": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=iXGHN-MWFfY&ab_channel=HockeyTrainingExerciseDemonstrations",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -77,7 +77,7 @@ export const trainings: Trainings = {
     "הרחקות אופקיות, שיפוע 30*, מ. יד": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=Z__dp9rhlcw&ab_channel=FunctionalBodybuilding",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -87,7 +87,7 @@ export const trainings: Trainings = {
     "כפיפת מרפק בשיפוע 60*, סופינציה": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=aG7CXiKxepw&ab_channel=OPEXFitness",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -97,7 +97,7 @@ export const trainings: Trainings = {
     "תאומים (לחיצת רגליים/סמית' משין)": {
       "numberOfSets": 8,
       link: "",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -109,7 +109,7 @@ export const trainings: Trainings = {
     "לחיצת כתפיים בישיבה, מ. יד": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=HzIiNhHhhtA&ab_channel=RenaissancePeriodization",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -119,7 +119,7 @@ export const trainings: Trainings = {
     "הרחקת כתפיים בשיפוע 60*, מ. יד, בשכיבה על החזה": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=nvGTvUiaEOs&ab_channel=FunctionalAF",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -129,7 +129,7 @@ export const trainings: Trainings = {
     "חתירה במכונה": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=TeFo51Q_Nsc&ab_channel=PureGym",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
@@ -139,7 +139,7 @@ export const trainings: Trainings = {
     "כפיפת ברכיים בישיבה": {
       "numberOfSets": 8,
       link: "https://www.youtube.com/watch?v=Orxowest56U&ab_channel=RenaissancePeriodization",
-      minimumTimeToRest: 60,
+      minimumTimeToRest: 15,
       maximumTimeToRest: 60,
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
