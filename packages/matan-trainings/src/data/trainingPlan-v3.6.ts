@@ -134,7 +134,7 @@ export const trainings: Trainings = {
       minimumNumberOfRepeasts: 8,
       maximumNumberOfRepeasts: 8,
       note: "אחיזה שנוחה לכם, פחות משנה במקרה הזה",
-      short: "חתירה מכונה"
+      short: "חתירה"
     },
     "כפיפת ברכיים בישיבה": {
       "numberOfSets": 8,
