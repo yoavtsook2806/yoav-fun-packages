@@ -50,7 +50,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         if (newTimeLeft <= 5 && newTimeLeft > 0 && currentExerciseState.timeLeft > 5) {
           soundManager.playCountdownBeep(newTimeLeft);
         }
-        
+        ``
         // Play completion sound when timer reaches 0
         if (newTimeLeft === 0 && currentExerciseState.timeLeft > 0) {
           soundManager.playTimerComplete();
@@ -186,14 +186,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const handleFeedbackClose = () => {
-    const wasLastExercise = feedbackModal && 
-      trainingState.currentExerciseIndex === trainingState.exercises.length - 1 &&
-      trainingState.exerciseStates[feedbackModal]?.completed;
+    const completedExercise = feedbackModal && trainingState.exerciseStates[feedbackModal]?.completed;
     
     setFeedbackModal(null);
     
-    // If this was the last exercise, trigger training completion after feedback is closed
-    if (wasLastExercise) {
+    // If an exercise was just completed, check if training is now complete
+    if (completedExercise) {
       // Check if all exercises are completed
       const allCompleted = trainingState.exercises.every(
         exerciseName => trainingState.exerciseStates[exerciseName].completed
