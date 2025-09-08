@@ -23,6 +23,8 @@ export interface ExerciseState {
   isActive: boolean;
   isResting: boolean;
   timeLeft: number;
+  startTimestamp?: number; // Timestamp when rest timer started (for accurate background timing)
+  restDuration?: number; // Duration of the rest period in seconds
   customRestTime?: number; // Optional custom rest time for this exercise
   weight?: number; // Current weight being used for this exercise
   repeats?: number; // Current repeats being used for this exercise

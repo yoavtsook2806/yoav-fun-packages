@@ -133,6 +133,8 @@ function App() {
         isActive: false,
         isResting: false,
         timeLeft: 0,
+        startTimestamp: undefined,
+        restDuration: undefined,
         weight: weight,
         customRestTime: customRestTime,
         repeats: repeats,

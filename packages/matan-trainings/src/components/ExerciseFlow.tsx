@@ -38,19 +38,21 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const currentExercise = trainings[trainingState.selectedTraining!][currentExerciseName];
   const currentExerciseState = trainingState.exerciseStates[currentExerciseName];
 
-  // Timer effect
+  // Timer effect - uses startTimestamp for accurate timing
   useEffect(() => {
-    if (currentExerciseState?.isResting && currentExerciseState.timeLeft > 0) {
+    if (currentExerciseState?.isResting && currentExerciseState.startTimestamp && currentExerciseState.restDuration) {
       const id = setInterval(() => {
-        const newTimeLeft = Math.max(0, currentExerciseState.timeLeft - 1);
+        const now = Date.now();
+        const elapsed = Math.floor((now - currentExerciseState.startTimestamp!) / 1000);
+        const newTimeLeft = Math.max(0, currentExerciseState.restDuration! - elapsed);
         
         // Play countdown sound for last 5 seconds
-        if (currentExerciseState.timeLeft <= 5 && currentExerciseState.timeLeft > 0) {
-          soundManager.playCountdownBeep(currentExerciseState.timeLeft);
+        if (newTimeLeft <= 5 && newTimeLeft > 0 && currentExerciseState.timeLeft > 5) {
+          soundManager.playCountdownBeep(newTimeLeft);
         }
         
         // Play completion sound when timer reaches 0
-        if (newTimeLeft === 0) {
+        if (newTimeLeft === 0 && currentExerciseState.timeLeft > 0) {
           soundManager.playTimerComplete();
         }
         
@@ -68,13 +70,15 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       clearInterval(timerId);
       setTimerId(null);
     }
-  }, [currentExerciseState?.isResting, currentExerciseState?.timeLeft, currentExerciseName, onUpdateExerciseState]);
+  }, [currentExerciseState?.isResting, currentExerciseState?.startTimestamp, currentExerciseState?.restDuration, currentExerciseName, onUpdateExerciseState]);
 
   // Auto-enable finish set button when timer finishes
   useEffect(() => {
     if (currentExerciseState?.isResting && currentExerciseState.timeLeft === 0) {
       onUpdateExerciseState(currentExerciseName, {
         isResting: false,
+        startTimestamp: undefined,
+        restDuration: undefined,
       });
     }
   }, [currentExerciseState?.timeLeft, currentExerciseState?.isResting, currentExerciseName, onUpdateExerciseState]);
@@ -111,10 +115,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       setFeedbackModal(currentExerciseName);
     } else {
       const restTime = currentExerciseState.customRestTime || trainingState.restTime;
+      const now = Date.now();
       onUpdateExerciseState(currentExerciseName, {
         currentSet: newSetCount,
         isResting: true,
         timeLeft: restTime,
+        startTimestamp: now,
+        restDuration: restTime,
         setsData: updatedSetsData,
       });
     }
