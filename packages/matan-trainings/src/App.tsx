@@ -222,25 +222,50 @@ function App() {
   };
 
   const nextExercise = () => {
-    const nextIndex = trainingState.currentExerciseIndex + 1;
-    if (nextIndex < trainingState.exercises.length) {
+    // First, check if all exercises are completed (regardless of current index)
+    const allCompleted = trainingState.exercises.every(
+      exerciseName => trainingState.exerciseStates[exerciseName].completed
+    );
+    
+    if (allCompleted) {
+      // Training is complete! Show congratulations
       setTrainingState(prev => ({
         ...prev,
-        currentExerciseIndex: nextIndex,
+        isTrainingComplete: true,
       }));
-    } else {
-      // Check if all exercises are completed (this will be called after last exercise feedback)
-      const allCompleted = trainingState.exercises.every(
-        exerciseName => trainingState.exerciseStates[exerciseName].completed
-      );
-      if (allCompleted) {
+      setShowCongratulation(true);
+      return; // Don't navigate to next exercise
+    }
+    
+    // Find the next incomplete exercise (with wraparound)
+    const currentIndex = trainingState.currentExerciseIndex;
+    const totalExercises = trainingState.exercises.length;
+    
+    // Search from current+1 to end of list
+    for (let i = currentIndex + 1; i < totalExercises; i++) {
+      const exerciseName = trainingState.exercises[i];
+      if (!trainingState.exerciseStates[exerciseName].completed) {
         setTrainingState(prev => ({
           ...prev,
-          isTrainingComplete: true,
+          currentExerciseIndex: i,
         }));
-        setShowCongratulation(true); // Show congratulation only for fresh completions
+        return;
       }
     }
+    
+    // If no incomplete exercise found after current, search from beginning to current
+    for (let i = 0; i < currentIndex; i++) {
+      const exerciseName = trainingState.exercises[i];
+      if (!trainingState.exerciseStates[exerciseName].completed) {
+        setTrainingState(prev => ({
+          ...prev,
+          currentExerciseIndex: i,
+        }));
+        return;
+      }
+    }
+    
+    // If we reach here, all exercises are completed (shouldn't happen due to check above)
   };
 
   // Note: Removed automatic training completion check - now handled manually after last exercise feedback
