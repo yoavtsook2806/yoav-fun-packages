@@ -3,7 +3,6 @@ import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingP
 const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
 const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
 const EXERCISE_DEFAULTS_KEY = 'matan-trainings-exercise-defaults';
-const SOUND_SETTINGS_KEY = 'matan-trainings-sound-settings';
 const CUSTOM_EXERCISE_DATA_KEY = 'matan-trainings-custom-exercise-data';
 
 export const getExerciseHistory = (): ExerciseHistory => {
@@ -256,47 +255,6 @@ export const calculateDefaultRepeats = (exercise: Exercise): number => {
   return exercise.minimumNumberOfRepeasts; // Use minimum repeats as default
 };
 
-// Sound Settings Functions
-export const getSoundSettings = (): { enabled: boolean; volume: number } => {
-  try {
-    const stored = localStorage.getItem(SOUND_SETTINGS_KEY);
-    return stored ? JSON.parse(stored) : { enabled: true, volume: 250 }; // Default to enabled with 250/500 volume (50%)
-  } catch (error) {
-    console.error('Error loading sound settings:', error);
-    return { enabled: true, volume: 250 };
-  }
-};
-
-export const saveSoundSettings = (enabled: boolean, volume?: number): void => {
-  try {
-    const currentSettings = getSoundSettings();
-    const settings = { 
-      enabled, 
-      volume: volume !== undefined ? volume : currentSettings.volume 
-    };
-    localStorage.setItem(SOUND_SETTINGS_KEY, JSON.stringify(settings));
-  } catch (error) {
-    console.error('Error saving sound settings:', error);
-  }
-};
-
-export const isSoundEnabled = (): boolean => {
-  const settings = getSoundSettings();
-  return settings.enabled;
-};
-
-export const getSoundVolume = (): number => {
-  const settings = getSoundSettings();
-  return settings.volume;
-};
-
-export const clearSoundSettings = (): void => {
-  try {
-    localStorage.removeItem(SOUND_SETTINGS_KEY);
-  } catch (error) {
-    console.error('Error clearing sound settings:', error);
-  }
-};
 
 // Custom Exercise Data Functions
 interface CustomExerciseData {
