@@ -47,8 +47,8 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
             <label className="feedback-label">משקל (ק"ג):</label>
             <input
               type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
               className="feedback-input"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
@@ -60,8 +60,8 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
             <label className="feedback-label">זמן מנוחה (שניות):</label>
             <input
               type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
               className="feedback-input"
               value={restTime}
               onChange={(e) => setRestTime(e.target.value)}
@@ -73,8 +73,8 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
             <label className="feedback-label">חזרות:</label>
             <input
               type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
               className="feedback-input"
               value={repeats}
               onChange={(e) => setRepeats(e.target.value)}

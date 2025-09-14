@@ -162,6 +162,16 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     setEditModal(null);
   };
 
+  const handleMainAreaClick = () => {
+    if (!currentExerciseState.isActive && !currentExerciseState.completed) {
+      startExercise();
+    } else if (currentExerciseState.isActive && !currentExerciseState.completed && !(currentExerciseState.isResting && currentExerciseState.timeLeft > 0)) {
+      finishSet();
+    } else if (currentExerciseState.completed) {
+      onNextExercise();
+    }
+  };
+
 
   const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
     if (feedbackModal) {
@@ -229,14 +239,14 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         </button>
         
         {/* Forms and Action Buttons - Top Center */}
-        <div className="header-controls">
+        <div className="header-controls" onClick={(e) => e.stopPropagation()}>
           <div className="header-forms-row">
             <div className="header-rest-time">
               <div className="rest-time-label">זמן מנוחה</div>
               <input
                 type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
                 value={currentExerciseState?.customRestTime || ''}
                 onChange={(e) => updateCustomRestTime(Number(e.target.value))}
                 placeholder={trainingState.restTime.toString()}
@@ -250,8 +260,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               <div className="weight-label">משקל</div>
               <input
                 type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
                 value={currentExerciseState?.weight || ''}
                 onChange={(e) => updateWeight(Number(e.target.value))}
                 placeholder="יאללה"
@@ -265,8 +275,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               <div className="repeats-label">חזרות</div>
               <input
                 type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
                 value={currentExerciseState?.repeats || ''}
                 onChange={(e) => updateRepeats(Number(e.target.value))}
                 placeholder="חזרות"
@@ -339,7 +349,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         </div>
 
         {/* Main Content */}
-        <div className="exercise-main">
+        <div className="exercise-main clickable-area" onClick={handleMainAreaClick}>
           <div className="exercise-name">{getCustomExerciseTitle(currentExerciseName)}</div>
 
           {/* Sets Progress with Visual Slider */}
@@ -376,7 +386,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="exercise-actions">
+          <div className="exercise-actions" onClick={(e) => e.stopPropagation()}>
             {!currentExerciseState.isActive && !currentExerciseState.completed && (
               <button
                 className="green-button"
