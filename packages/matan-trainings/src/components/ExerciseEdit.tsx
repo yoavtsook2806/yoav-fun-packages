@@ -41,54 +41,60 @@ const ExerciseEdit: React.FC<ExerciseEditProps> = ({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content exercise-edit-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="info-overlay">
+      <div className="info-modal">
+        <div className="info-header">
           <h2>ערוך תרגיל</h2>
-          <button className="modal-close-btn" onClick={onClose}>×</button>
+          <button className="close-button" onClick={onClose}>
+            ✕
+          </button>
         </div>
-        
-        <div className="modal-body">
+
+        <div className="info-exercise-name">
+          {getCustomExerciseTitle(exerciseName)}
+        </div>
+
+        <div className="info-content">
           <div className="edit-form">
-            <div className="form-group">
-              <label className="form-label">שם התרגיל:</label>
+            <div className="edit-input-group">
+              <label className="edit-input-label">שם התרגיל</label>
               <input
                 type="text"
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
-                className="form-input"
+                className="edit-input-field"
                 placeholder="הכנס שם תרגיל"
                 autoFocus
               />
             </div>
-            
-            <div className="form-group">
-              <label className="form-label">הערות:</label>
+
+            <div className="edit-input-group">
+              <label className="edit-input-label">הערות</label>
               <textarea
                 value={customNote}
                 onChange={(e) => setCustomNote(e.target.value)}
-                className="form-textarea"
+                className="edit-textarea-field"
                 placeholder="הכנס הערות לתרגיל (אופציונלי)"
                 rows={4}
               />
             </div>
           </div>
-          
-          <div className="edit-actions">
-            <button 
-              className="cancel-button"
-              onClick={handleCancel}
-            >
-              ביטול
-            </button>
-            <button 
-              className="save-button"
-              onClick={handleSave}
-              disabled={!customTitle.trim()}
-            >
-              שמור
-            </button>
-          </div>
+        </div>
+
+        <div className="info-footer">
+          <button
+            className="setup-nav-btn cancel-edit-btn"
+            onClick={handleCancel}
+          >
+            ביטול
+          </button>
+          <button
+            className="setup-nav-btn save-edit-btn"
+            onClick={handleSave}
+            disabled={!customTitle.trim()}
+          >
+            שמור
+          </button>
         </div>
       </div>
     </div>

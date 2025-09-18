@@ -239,77 +239,75 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         </button>
         
         {/* Forms and Action Buttons - Top Center */}
-        <div className="header-controls" onClick={(e) => e.stopPropagation()}>
-          <div className="header-forms-row">
-            <div className="header-rest-time">
-              <div className="rest-time-label">זמן מנוחה</div>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentExerciseState?.customRestTime || ''}
-                onChange={(e) => updateCustomRestTime(Number(e.target.value))}
-                placeholder={trainingState.restTime.toString()}
-                min="10"
-                max="300"
-                step="5"
-                className="rest-time-input"
-              />
-            </div>
-            <div className="header-weight">
-              <div className="weight-label">משקל</div>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentExerciseState?.weight || ''}
-                onChange={(e) => updateWeight(Number(e.target.value))}
-                placeholder="יאללה"
-                min="0"
-                max="500"
-                step="0.5"
-                className="weight-input"
-              />
-            </div>
-            <div className="header-repeats">
-              <div className="repeats-label">חזרות</div>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentExerciseState?.repeats || ''}
-                onChange={(e) => updateRepeats(Number(e.target.value))}
-                placeholder="חזרות"
-                min="1"
-                max="50"
-                step="1"
-                className="repeats-input"
-              />
-            </div>
+        <div className="header-forms-row" onClick={(e) => e.stopPropagation()}>
+          <div className="header-rest-time">
+            <div className="rest-time-label">זמן מנוחה</div>
+            <input
+              type="number"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
+              value={currentExerciseState?.customRestTime || ''}
+              onChange={(e) => updateCustomRestTime(Number(e.target.value))}
+              placeholder={trainingState.restTime.toString()}
+              min="10"
+              max="300"
+              step="5"
+              className="rest-time-input"
+            />
           </div>
-          <div className="header-actions-row">
-            <button
-              className="header-action-btn"
-              onClick={handleSeeHistory}
-              title="היסטוריית תרגיל"
-            >
-              📊
-            </button>
-            <button
-              className="header-action-btn"
-              onClick={handleSeeLastTraining}
-              title="אימון אחרון"
-            >
-              📋
-            </button>
-            <button
-              className="header-action-btn"
-              onClick={handleSeeInfo}
-              title="פרטי תרגיל"
-            >
-              ℹ️
-            </button>
+          <div className="header-weight">
+            <div className="weight-label">משקל</div>
+            <input
+              type="number"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
+              value={currentExerciseState?.weight || ''}
+              onChange={(e) => updateWeight(Number(e.target.value))}
+              placeholder="יאללה"
+              min="0"
+              max="500"
+              step="0.5"
+              className="weight-input"
+            />
           </div>
+          <div className="header-repeats">
+            <div className="repeats-label">חזרות</div>
+            <input
+              type="number"
+              inputMode="decimal"
+              pattern="[0-9]*\.?[0-9]*"
+              value={currentExerciseState?.repeats || ''}
+              onChange={(e) => updateRepeats(Number(e.target.value))}
+              placeholder="חזרות"
+              min="1"
+              max="50"
+              step="1"
+              className="repeats-input"
+            />
+          </div>
+        </div>
+        <div className="header-actions-row">
+          <button
+            className="header-action-btn"
+            onClick={handleSeeHistory}
+            title="היסטוריית תרגיל"
+          >
+            📊
+          </button>
+          <button
+            className="header-action-btn"
+            onClick={handleSeeLastTraining}
+            title="אימון אחרון"
+          >
+            📋
+          </button>
+          <button
+            className="header-action-btn"
+            onClick={handleSeeInfo}
+            title="פרטי תרגיל"
+          >
+            ℹ️
+          </button>
         </div>
       </div>
 

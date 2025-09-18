@@ -590,7 +590,7 @@ button:disabled {
   flex-direction: column;
   gap: var(--space-6);
   flex: 1;
-  margin-top: var(--space-6);
+  margin-top: var(--space-3);
   position: relative;
   z-index: 1;
 }
@@ -993,29 +993,34 @@ button:disabled {
 .exercise-header {
   position: relative;
   text-align: center;
-  padding: 5px 0;
-  margin-bottom: 5px;
-}
-
-/* Modern Header Controls - 1.25x larger for ExerciseFlow */
-.header-controls {
-  position: absolute;
-  top: calc(var(--space-4) + 20px);
-  left: 50%;
-  transform: translateX(-50%) scale(1.25);
-  transform-origin: top center;
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   align-items: center;
   background: var(--bg-glass);
-  padding: var(--space-4);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-lg);
+  transform: scale(1.25);
+  transform-origin: top center;
   z-index: 10;
+  overflow: hidden;
 }
+
+.exercise-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
 
 .header-forms-row {
   display: flex;
@@ -1940,105 +1945,102 @@ button:disabled {
   box-shadow: var(--shadow-lg);
 }
 
-/* Exercise Edit Modal */
-.exercise-edit-modal {
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
+/* Exercise Edit Modal - Modern styling */
 .edit-form {
-  margin-bottom: 24px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #fff;
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  background-color: #2a2a2a;
-  color: #fff;
-  font-size: 16px; /* Prevents mobile zoom */
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #4CAF50;
-  background-color: #333;
-}
-
-.form-textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  background-color: #2a2a2a;
-  color: #fff;
-  font-size: 16px; /* Prevents mobile zoom */
-  resize: vertical;
-  min-height: 100px;
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-.form-textarea:focus {
-  outline: none;
-  border-color: #4CAF50;
-  background-color: #333;
-}
-
-.edit-actions {
   display: flex;
-  gap: 12px;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: var(--space-6);
 }
 
-.cancel-button {
-  background: #666;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.edit-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.cancel-button:hover {
-  background: #777;
+.edit-input-label {
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  direction: rtl;
+  text-align: right;
 }
 
-.save-button {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.edit-input-field {
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  direction: rtl;
+  text-align: right;
 }
 
-.save-button:hover {
-  background: #45a049;
+.edit-input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-.save-button:disabled {
-  background: #555;
-  cursor: not-allowed;
+.edit-textarea-field {
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  direction: rtl;
+  text-align: right;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.edit-textarea-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.cancel-edit-btn {
+  background: var(--bg-secondary) !important;
+  color: var(--text-muted) !important;
+}
+
+.cancel-edit-btn:hover {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  transform: translateY(-2px) !important;
+}
+
+.save-edit-btn {
+  background: var(--gradient-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.save-edit-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.save-edit-btn:disabled {
+  background: var(--bg-secondary) !important;
+  color: var(--text-muted) !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.5;
 }
 
 .edit-button {
@@ -2058,22 +2060,6 @@ button:disabled {
   background-color: rgba(76, 175, 80, 0.1);
 }
 
-@media (max-width: 768px) {
-  .exercise-edit-modal {
-    width: 95%;
-    margin: 10px;
-  }
-  
-  .edit-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .cancel-button,
-  .save-button {
-    width: 100%;
-  }
-}
 
 /* Stunning Exercise History Modal */
 .history-overlay {
@@ -2512,7 +2498,7 @@ button:disabled {
 
   .exercise-layout {
     gap: var(--space-4);
-    margin-top: var(--space-4);
+    margin-top: var(--space-2);
   }
 
   .exercise-header {
@@ -2639,6 +2625,7 @@ button:disabled {
   .exercise-layout {
     flex-direction: column;
     gap: 10px;
+    margin-top: 10px;
   }
 
   .exercise-sidebar {
@@ -2726,16 +2713,9 @@ button:disabled {
     font-size: 10px;
   }
 
-  .header-controls {
-    position: static;
-    margin-top: var(--space-4);
-    align-self: center;
-    left: auto;
+  .exercise-header {
     transform: scale(1.1);
-    transform-origin: center;
-    flex-direction: column;
-    gap: var(--space-3);
-    justify-content: center;
+    margin-top: var(--space-4);
     width: 100%;
     padding: var(--space-3);
   }
@@ -2791,15 +2771,11 @@ button:disabled {
 
 /* Desktop styles - ensure proper layout on larger screens */
 @media (min-width: 769px) {
-  .header-controls {
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    padding: 0;
+  .exercise-header {
+    transform: scale(1);
+    padding: var(--space-4);
   }
-  
+
   .header-rest-time, .header-weight, .header-repeats {
     width: 80px;
     min-width: 80px;
