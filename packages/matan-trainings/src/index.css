@@ -1397,6 +1397,26 @@ button:disabled {
   background: #c82333;
 }
 
+.whatsapp-button {
+  background: #25d366;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.whatsapp-button:hover {
+  background: #20c157;
+}
+
 .settings-description {
   font-size: 14px;
   color: #ccc;

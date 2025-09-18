@@ -8,11 +8,11 @@ interface SettingsModalProps {
   onTrainingPlanChange: (version: string) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ 
-  onClose, 
-  onClearAllHistory, 
-  currentTrainingPlanVersion, 
-  onTrainingPlanChange 
+const SettingsModal: React.FC<SettingsModalProps> = ({
+  onClose,
+  onClearAllHistory,
+  currentTrainingPlanVersion,
+  onTrainingPlanChange
 }) => {
   const availableVersions = getAvailableVersions();
 
@@ -20,11 +20,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     const confirmed = window.confirm(
       'האם אתה בטוח שברצונך למחוק את כל ההיסטוריה של התרגילים?\n\nפעולה זו לא ניתנת לביטול.'
     );
-    
+
     if (confirmed) {
       onClearAllHistory();
       onClose();
     }
+  };
+
+  const handleSendLoveMessage = () => {
+    const phoneNumber = '972546989899';
+    const message = 'היי מתן! שלח לך הודעת אהבה מהאפליקציה 💪❤️';
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
 
@@ -57,6 +64,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
+          {/* WhatsApp Integration */}
+          <div className="settings-section">
+            <div className="settings-item">
+              <button
+                className="whatsapp-button"
+                onClick={handleSendLoveMessage}
+              >
+                📱 💚 שלח למתן הודעת אהבה
+              </button>
+              <p className="settings-description">
+                שלח הודעת תמיכה ואהבה למתן דרך וואטסאפ
+              </p>
+            </div>
+          </div>
 
           {/* App Actions */}
           <div className="settings-section">
