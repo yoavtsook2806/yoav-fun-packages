@@ -57,45 +57,52 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
         )}
 
         <div className="info-content">
-          <div className="info-section">
-            <div className="info-row">
-              <div className="info-label">מספר סטים:</div>
-              <div className="info-value">{exercise.numberOfSets}</div>
+          <div className="info-recommendations">
+            <div className="info-recommendation-box">
+              <div className="info-recommendation-label">סטים</div>
+              <div className="info-recommendation-value">{exercise.numberOfSets}</div>
             </div>
-            
-            <div className="info-row">
-              <div className="info-label">טווח חזרות:</div>
-              <div className="info-value">
-                {exercise.minimumNumberOfRepeasts === exercise.maximumNumberOfRepeasts 
-                  ? exercise.minimumNumberOfRepeasts 
-                  : `${exercise.minimumNumberOfRepeasts} - ${exercise.maximumNumberOfRepeasts}`}
+            <div className="info-recommendation-box">
+              <div className="info-recommendation-label">חזרות</div>
+              <div className="info-recommendation-value">
+                {exercise.minimumNumberOfRepeasts === exercise.maximumNumberOfRepeasts
+                  ? exercise.minimumNumberOfRepeasts
+                  : (
+                    <>
+                      <span>{exercise.minimumNumberOfRepeasts}</span>
+                      <span>-</span>
+                      <span>{exercise.maximumNumberOfRepeasts}</span>
+                    </>
+                  )}
               </div>
             </div>
-            
-            <div className="info-row">
-              <div className="info-label">זמן מנוחה:</div>
-              <div className="info-value">
-                {exercise.minimumTimeToRest === exercise.maximumTimeToRest 
-                  ? `${formatTime(exercise.minimumTimeToRest)}` 
-                  : `${formatTime(exercise.minimumTimeToRest)}-${formatTime(exercise.maximumTimeToRest)}`}
+            <div className="info-recommendation-box">
+              <div className="info-recommendation-label">מנוחה</div>
+              <div className="info-recommendation-value">
+                {exercise.minimumTimeToRest === exercise.maximumTimeToRest
+                  ? `${formatTime(exercise.minimumTimeToRest)}`
+                  : (
+                    <>
+                      <span>{formatTime(exercise.minimumTimeToRest)}</span>
+                      <span>-</span>
+                      <span>{formatTime(exercise.maximumTimeToRest)}</span>
+                    </>
+                  )}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="info-footer">
-          {exercise.link && exercise.link.trim() !== '' && (
+        {exercise.link && exercise.link.trim() !== '' && (
+          <div className="info-footer">
             <button
               className="setup-nav-btn setup-video-btn"
               onClick={handleVideoClick}
             >
               📹 צפה בסרטון
             </button>
-          )}
-          <button className="info-close-btn" onClick={onClose}>
-            סגור
-          </button>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
