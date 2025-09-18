@@ -41,8 +41,8 @@ const ExerciseEdit: React.FC<ExerciseEditProps> = ({
   };
 
   return (
-    <div className="info-overlay">
-      <div className="info-modal">
+    <div className="info-overlay" onClick={onClose}>
+      <div className="info-modal" onClick={(e) => e.stopPropagation()}>
         <div className="info-header">
           <h2>ערוך תרגיל</h2>
           <button className="close-button" onClick={onClose}>

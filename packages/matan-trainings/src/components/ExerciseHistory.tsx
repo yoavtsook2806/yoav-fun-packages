@@ -31,8 +31,8 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
   };
 
   return (
-    <div className="history-overlay">
-      <div className="history-modal">
+    <div className="history-overlay" onClick={onClose}>
+      <div className="history-modal" onClick={(e) => e.stopPropagation()}>
         <div className="history-header">
           <h2>היסטוריית תרגיל</h2>
           <button className="close-button" onClick={onClose}>
