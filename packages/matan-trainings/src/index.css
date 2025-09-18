@@ -864,6 +864,25 @@ button:disabled {
   pointer-events: none;
 }
 
+/* Ensure clickable area covers entire exercise-main */
+.exercise-main.clickable-area {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.exercise-main.clickable-area > *:not(.exercise-actions) {
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.exercise-main.clickable-area .exercise-actions {
+  pointer-events: auto;
+  z-index: 2;
+}
+
 .exercise-name {
   font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl));
   font-weight: 800;
