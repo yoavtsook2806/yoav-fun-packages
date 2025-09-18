@@ -380,7 +380,10 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
           {/* Timer */}
           {currentExerciseState.isResting && (
-            <div className={`timer ${currentExerciseState.timeLeft === 0 ? 'finished' : ''}`}>
+            <div className={`timer ${
+              currentExerciseState.timeLeft === 0 ? 'finished' :
+              currentExerciseState.timeLeft <= 5 && currentExerciseState.timeLeft > 0 ? 'urgent' : ''
+            }`}>
               {currentExerciseState.timeLeft === 0 ? 'זמן!' : formatTime(currentExerciseState.timeLeft)}
             </div>
           )}

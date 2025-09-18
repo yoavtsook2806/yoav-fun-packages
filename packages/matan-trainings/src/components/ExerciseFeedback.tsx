@@ -37,55 +37,57 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
         <div className="feedback-header">
           <h2>איך היה?</h2>
         </div>
-        
+
         <div className="feedback-exercise-name">{exerciseName}</div>
-        
+
         <div className="feedback-content">
-          <p>שמור הגדרות לפעם הבאה:</p>
-          
-          <div className="feedback-input-group">
-            <label className="feedback-label">משקל (ק"ג):</label>
-            <input
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9]*\.?[0-9]*"
-              className="feedback-input"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              placeholder="הכנס משקל"
-            />
-          </div>
-          
-          <div className="feedback-input-group">
-            <label className="feedback-label">זמן מנוחה (שניות):</label>
-            <input
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9]*\.?[0-9]*"
-              className="feedback-input"
-              value={restTime}
-              onChange={(e) => setRestTime(e.target.value)}
-              placeholder="הכנס זמן מנוחה"
-            />
-          </div>
-          
-          <div className="feedback-input-group">
-            <label className="feedback-label">חזרות:</label>
-            <input
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9]*\.?[0-9]*"
-              className="feedback-input"
-              value={repeats}
-              onChange={(e) => setRepeats(e.target.value)}
-              placeholder="הכנס מספר חזרות"
-            />
+          <div className="feedback-subtitle">שמור הגדרות לפעם הבאה:</div>
+
+          <div className="feedback-inputs-grid">
+            <div className="feedback-input-box">
+              <label className="feedback-label">משקל</label>
+              <input
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
+                className="feedback-input"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="ק״ג"
+              />
+            </div>
+
+            <div className="feedback-input-box">
+              <label className="feedback-label">זמן מנוחה</label>
+              <input
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
+                className="feedback-input"
+                value={restTime}
+                onChange={(e) => setRestTime(e.target.value)}
+                placeholder="שניות"
+              />
+            </div>
+
+            <div className="feedback-input-box">
+              <label className="feedback-label">חזרות</label>
+              <input
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
+                className="feedback-input"
+                value={repeats}
+                onChange={(e) => setRepeats(e.target.value)}
+                placeholder="מספר"
+              />
+            </div>
           </div>
         </div>
-        
+
         <div className="feedback-actions">
           <button className="feedback-save-btn" onClick={handleSave}>
-            שמור
+            שמור לפעם הבאה
           </button>
         </div>
       </div>

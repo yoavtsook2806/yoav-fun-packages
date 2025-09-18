@@ -2277,11 +2277,30 @@ button:disabled {
   backdrop-filter: blur(10px);
   z-index: 2;
   animation: pulse 1s infinite alternate;
+  transition: all var(--transition-normal);
 }
 
 @keyframes pulse {
   0% { box-shadow: var(--shadow-lg), 0 0 30px rgba(245, 158, 11, 0.3); }
   100% { box-shadow: var(--shadow-xl), 0 0 40px rgba(245, 158, 11, 0.5); }
+}
+
+@keyframes urgentPulse {
+  0% {
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(239, 68, 68, 0.4);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: var(--shadow-xl), 0 0 50px rgba(239, 68, 68, 0.7);
+    transform: scale(1.02);
+  }
+}
+
+.timer.urgent {
+  color: var(--error);
+  border-color: var(--error);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(239, 68, 68, 0.4);
+  animation: urgentPulse 0.5s infinite alternate;
 }
 
 .timer.finished {
@@ -2767,149 +2786,273 @@ button:disabled {
     padding: 12px 15px;
   }
 
-/* Exercise Feedback Modal */
+/* Stunning Exercise Feedback Modal */
 .feedback-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: rgba(15, 15, 35, 0.85);
+  backdrop-filter: blur(15px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 20px;
+  padding: var(--space-4);
+  animation: fadeIn 0.4s ease-out;
 }
 
 .feedback-modal {
-  background: #1a1a1a;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
+  background: var(--bg-glass);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  max-width: 500px;
   width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  border: 1px solid #333;
+  backdrop-filter: blur(30px);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-xl), 0 0 50px rgba(16, 185, 129, 0.2);
+  animation: slideUp 0.4s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.feedback-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-success);
+  z-index: 1;
 }
 
 .feedback-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-6);
+  position: relative;
+}
+
+.feedback-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .feedback-header h2 {
   margin: 0;
-  color: #fff;
-  font-size: 1.5em;
-  font-weight: bold;
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  background: var(--gradient-success);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  direction: rtl;
+  position: relative;
+  z-index: 1;
 }
 
 .feedback-exercise-name {
   text-align: center;
-  font-size: 1.1em;
-  color: #4CAF50;
-  margin-bottom: 24px;
-  font-weight: 500;
+  font-size: var(--text-xl);
+  background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-6);
+  font-weight: 800;
+  direction: rtl;
+  position: relative;
+}
+
+.feedback-exercise-name::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-success);
+  border-radius: var(--radius-full);
 }
 
 .feedback-content {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-8);
+  direction: rtl;
 }
 
-.feedback-content p {
+.feedback-subtitle {
   text-align: center;
-  margin-bottom: 20px;
-  color: #ccc;
-  font-size: 1em;
+  margin-bottom: var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  direction: rtl;
 }
 
-.feedback-input-group {
-  margin-bottom: 16px;
+.feedback-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.feedback-input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.feedback-input-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
 }
 
 .feedback-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #fff;
-  font-weight: 500;
-  font-size: 1em;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  text-align: center;
+  direction: rtl;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .feedback-input {
   width: 100%;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #2d2d2d;
-  color: #fff;
-  font-size: 1em;
+  padding: var(--space-3);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  text-align: center;
   box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+  min-height: 48px;
+  direction: rtl;
 }
 
 .feedback-input:focus {
   outline: none;
-  background-color: #3d3d3d;
+  border-color: var(--success);
+  box-shadow: var(--shadow-md), 0 0 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+  background: var(--bg-tertiary);
 }
 
 .feedback-input::placeholder {
-  color: #888;
-  font-size: 1em;
+  color: var(--text-muted);
+  font-weight: 600;
+  direction: rtl;
 }
 
 .feedback-actions {
   display: flex;
-  gap: 12px;
   justify-content: center;
+  direction: rtl;
 }
 
-.feedback-skip-btn,
 .feedback-save-btn {
-  padding: 12px 24px;
+  padding: var(--space-4) var(--space-8);
   border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 500;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-lg);
+  font-weight: 700;
   cursor: pointer;
-  min-width: 100px;
-  height: auto;
-  margin: 0;
+  background: var(--gradient-success);
+  color: white;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  direction: rtl;
 }
 
-.feedback-skip-btn {
-  background-color: #666;
-  color: #fff;
+.feedback-save-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
 }
 
-.feedback-skip-btn:hover {
-  background-color: #777;
-}
-
-.feedback-save-btn {
-  background-color: #4CAF50;
-  color: #fff;
+.feedback-save-btn:hover:before {
+  left: 100%;
 }
 
 .feedback-save-btn:hover {
-  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl), 0 0 25px rgba(16, 185, 129, 0.4);
 }
 
+/* Mobile Responsive for Feedback Modal */
 @media (max-width: 768px) {
   .feedback-modal {
-    margin: 10px;
-    padding: 16px;
-    max-width: 95%;
-    max-height: 85vh;
+    padding: var(--space-6);
+    max-width: 90vw;
   }
-  
+
+  .feedback-inputs-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .feedback-input-box {
+    padding: var(--space-4);
+  }
+
+  .feedback-label {
+    font-size: var(--text-base);
+  }
+
+  .feedback-input {
+    padding: var(--space-3);
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 48px;
+  }
+
+  .feedback-save-btn {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    width: 100%;
+  }
+
   .feedback-header h2 {
-    font-size: 1.3em;
+    font-size: var(--text-2xl);
   }
-  
+
   .feedback-exercise-name {
-    font-size: 1em;
-    margin-bottom: 16px;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
   }
+
+  .feedback-subtitle {
+    font-size: var(--text-base);
+  }
+}
   
   .feedback-content {
     margin-bottom: 20px;
