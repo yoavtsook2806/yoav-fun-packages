@@ -1000,7 +1000,7 @@ button:disabled {
 /* Modern Header Controls - 1.25x larger for ExerciseFlow */
 .header-controls {
   position: absolute;
-  top: var(--space-4);
+  top: calc(var(--space-4) + 20px);
   left: 50%;
   transform: translateX(-50%) scale(1.25);
   transform-origin: top center;
@@ -1014,6 +1014,7 @@ button:disabled {
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-lg);
+  z-index: 10;
 }
 
 .header-forms-row {
@@ -1760,14 +1761,6 @@ button:disabled {
   position: relative;
 }
 
-.info-description::before {
-  content: '💡';
-  position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
-  font-size: var(--text-xl);
-  opacity: 0.6;
-}
 
 .info-description-text {
   color: var(--text-primary);
@@ -2295,6 +2288,10 @@ button:disabled {
 }
 
 /* Back Arrow Button */
+.back-arrow-button {
+  z-index: 20;
+}
+
 .back-arrow-button:hover {
   background-color: #3a3a3a !important;
   border-color: #666 !important;
