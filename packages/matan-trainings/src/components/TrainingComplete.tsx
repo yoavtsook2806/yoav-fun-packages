@@ -1,4 +1,5 @@
 import React from 'react';
+import whatsappImage from '../images/whatsapp.jpg';
 
 interface TrainingCompleteProps {
   onRestart: () => void;
@@ -7,7 +8,7 @@ interface TrainingCompleteProps {
 const TrainingComplete: React.FC<TrainingCompleteProps> = ({ onRestart }) => {
   const handleSendLoveMessage = () => {
     const phoneNumber = '972546989899';
-    const message = 'מתן, אתה גבר שבגברים, פסיכונאוט אמיתי. אנחנו מתגעגעים אליך!';
+    const message = 'קדי, אתה גבר שבגברים, פסיכונאוט אמיתי. אנחנו מתגעגעים אליך!';
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -47,8 +48,8 @@ const TrainingComplete: React.FC<TrainingCompleteProps> = ({ onRestart }) => {
             className="whatsapp-celebration-button"
             onClick={handleSendLoveMessage}
           >
-            <span className="button-icon">💚</span>
-            שלח למתן הודעת אהבה
+            <img src={whatsappImage} alt="WhatsApp" className="whatsapp-icon" />
+            שלח לקדי הודעת אהבה
           </button>
         </div>
 

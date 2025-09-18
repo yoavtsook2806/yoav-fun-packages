@@ -2637,6 +2637,13 @@ button:disabled {
   animation: iconFloat 2s ease-in-out infinite;
 }
 
+.whatsapp-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
 .celebration-footer {
   margin-top: var(--space-8);
   animation: fadeIn 1s ease-out 1.3s both;
@@ -2896,6 +2903,11 @@ button:disabled {
 
   .button-icon {
     font-size: var(--text-lg);
+  }
+
+  .whatsapp-icon {
+    width: 20px;
+    height: 20px;
   }
 
   .encouragement {
