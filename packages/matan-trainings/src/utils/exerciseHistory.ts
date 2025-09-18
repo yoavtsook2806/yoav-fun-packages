@@ -304,3 +304,16 @@ export const clearCustomExerciseData = (): void => {
     console.error('Error clearing custom exercise data:', error);
   }
 };
+
+export const isFirstTimeExperience = (_trainingType: string, exercises: string[]): boolean => {
+  for (const exerciseName of exercises) {
+    const defaultWeight = getDefaultWeight(exerciseName);
+    const defaultRestTime = getDefaultRestTime(exerciseName);
+    const defaultRepeats = getDefaultRepeats(exerciseName);
+
+    if (defaultWeight !== undefined || defaultRestTime !== undefined || defaultRepeats !== undefined) {
+      return false;
+    }
+  }
+  return true;
+};

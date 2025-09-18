@@ -5,11 +5,12 @@ import TrainingSelection from './components/TrainingSelection';
 import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
-import { 
-  getLastUsedWeight, 
+import FirstTimeSetup from './components/FirstTimeSetup';
+import {
+  getLastUsedWeight,
   getLastUsedRepeats,
-  saveExerciseEntry, 
-  removeDuplicateHistoryEntries, 
+  saveExerciseEntry,
+  removeDuplicateHistoryEntries,
   clearExerciseHistory,
   getExerciseProgress,
   saveTrainingProgress,
@@ -21,7 +22,9 @@ import {
   clearCustomExerciseData,
   calculateDefaultRestTime,
   calculateDefaultRepeats,
-  getExerciseLastEntry
+  getExerciseLastEntry,
+  isFirstTimeExperience,
+  saveExerciseDefaults
 } from './utils/exerciseHistory';
 
 function App() {
@@ -46,6 +49,10 @@ function App() {
   
   // Settings modal state
   const [showSettings, setShowSettings] = useState(false);
+
+  // First-time setup state
+  const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
+  const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
   // Clean up duplicate history entries on app initialization
   useEffect(() => {
@@ -92,6 +99,14 @@ function App() {
 
   const initializeTraining = (trainingType: string) => {
     const exercises = Object.keys(currentTrainingPlan.trainings[trainingType]);
+
+    // Check if this is a first-time experience
+    if (isFirstTimeExperience(trainingType, exercises)) {
+      setFirstTimeTrainingType(trainingType);
+      setShowFirstTimeSetup(true);
+      return;
+    }
+
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
     let allCompleted = true;
@@ -164,6 +179,30 @@ function App() {
       trainingPlanVersion: currentTrainingPlan.version,
     });
     setShowCongratulation(false);
+    setShowFirstTimeSetup(false);
+    setFirstTimeTrainingType(null);
+  };
+
+  const handleFirstTimeSetupComplete = (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
+    // Save all exercise defaults
+    Object.entries(exerciseDefaults).forEach(([exerciseName, defaults]) => {
+      saveExerciseDefaults(exerciseName, defaults.weight, defaults.timeToRest, defaults.repeats);
+    });
+
+    // Close first-time setup
+    setShowFirstTimeSetup(false);
+
+    // Initialize training normally now that defaults are set
+    if (firstTimeTrainingType) {
+      const trainingType = firstTimeTrainingType;
+      setFirstTimeTrainingType(null);
+      initializeTraining(trainingType);
+    }
+  };
+
+  const handleFirstTimeSetupCancel = () => {
+    setShowFirstTimeSetup(false);
+    setFirstTimeTrainingType(null);
   };
 
   const updateExerciseState = (exerciseName: string, updates: Partial<ExerciseState>) => {
@@ -294,6 +333,20 @@ function App() {
     );
   }
 
+  if (showFirstTimeSetup && firstTimeTrainingType) {
+    return (
+      <div className="app">
+        <FirstTimeSetup
+          trainingType={firstTimeTrainingType}
+          exercises={Object.keys(currentTrainingPlan.trainings[firstTimeTrainingType])}
+          trainings={currentTrainingPlan.trainings}
+          onComplete={handleFirstTimeSetupComplete}
+          onCancel={handleFirstTimeSetupCancel}
+        />
+      </div>
+    );
+  }
+
   if (!trainingState.selectedTraining) {
     return (
       <div className="app">
@@ -310,7 +363,7 @@ function App() {
           availableTrainings={Object.keys(currentTrainingPlan.trainings)}
           trainingPlanVersion={currentTrainingPlan.version}
         />
-        
+
         {/* Settings Modal */}
         {showSettings && (
           <SettingsModal
