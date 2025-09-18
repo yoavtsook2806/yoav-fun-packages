@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(yarn workspace matan-trainings:*)"
+      "Bash(yarn workspace matan-trainings:*)",
+      "Bash(npx stylelint:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

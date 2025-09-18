@@ -67,11 +67,6 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
     }
   };
 
-  const handlePrevious = () => {
-    if (currentExerciseIndex > 0) {
-      setCurrentExerciseIndex(prev => prev - 1);
-    }
-  };
 
   return (
     <div className="info-overlay">
