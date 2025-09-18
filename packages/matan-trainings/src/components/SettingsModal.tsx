@@ -27,12 +27,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   };
 
-  const handleSendLoveMessage = () => {
-    const phoneNumber = '972546989899';
-    const message = 'היי מתן! שלח לך הודעת אהבה מהאפליקציה 💪❤️';
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
 
 
   return (
@@ -64,20 +58,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* WhatsApp Integration */}
-          <div className="settings-section">
-            <div className="settings-item">
-              <button
-                className="whatsapp-button"
-                onClick={handleSendLoveMessage}
-              >
-                📱 💚 שלח למתן הודעת אהבה
-              </button>
-              <p className="settings-description">
-                שלח הודעת תמיכה ואהבה למתן דרך וואטסאפ
-              </p>
-            </div>
-          </div>
 
           {/* App Actions */}
           <div className="settings-section">
