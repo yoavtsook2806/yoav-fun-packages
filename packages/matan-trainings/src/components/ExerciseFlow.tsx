@@ -212,7 +212,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     <div className="exercise-flow-container">
       {/* Header */}
       <div className="exercise-header">
-        <h2>אימון {trainingState.selectedTraining}</h2>
+        <h2>{trainingState.selectedTraining} אימון</h2>
         <button 
           className="back-arrow-button" 
           onClick={onResetTraining}
