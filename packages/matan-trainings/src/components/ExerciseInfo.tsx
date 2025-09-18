@@ -85,10 +85,9 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
 
         <div className="info-footer">
           {exercise.link && exercise.link.trim() !== '' && (
-            <button 
-              className="green-button"
+            <button
+              className="setup-nav-btn setup-video-btn"
               onClick={handleVideoClick}
-              style={{ marginLeft: '10px' }}
             >
               📹 צפה בסרטון
             </button>

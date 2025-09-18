@@ -100,78 +100,96 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
         </div>
 
         <div className="info-content">
-          {/* Exercise recommendations line */}
-          <div className="setup-recommendations">
-            <div className="setup-recommendation-item">
-              <div className="setup-recommendation-label">סטים</div>
-              <div className="setup-recommendation-value">{currentExercise.numberOfSets}</div>
-            </div>
-            <div className="setup-recommendation-item">
-              <div className="setup-recommendation-label">חזרות מומלצות</div>
-              <div className="setup-recommendation-value">
-                {currentExercise.minimumNumberOfRepeasts === currentExercise.maximumNumberOfRepeasts
-                  ? currentExercise.minimumNumberOfRepeasts
-                  : `${currentExercise.minimumNumberOfRepeasts}-${currentExercise.maximumNumberOfRepeasts}`}
+          {/* Exercise recommendations section */}
+          <div className="setup-section">
+            <div className="setup-section-title">המלצת הקדי</div>
+            <div className="setup-recommendations">
+              <div className="setup-recommendation-box">
+                <div className="setup-recommendation-label">סטים</div>
+                <div className="setup-recommendation-value">{currentExercise.numberOfSets}</div>
               </div>
-            </div>
-            <div className="setup-recommendation-item">
-              <div className="setup-recommendation-label">מנוחה מומלצת</div>
-              <div className="setup-recommendation-value">
-                {currentExercise.minimumTimeToRest === currentExercise.maximumTimeToRest
-                  ? `${formatTime(currentExercise.minimumTimeToRest)}`
-                  : `${formatTime(currentExercise.minimumTimeToRest)}-${formatTime(currentExercise.maximumTimeToRest)}`}
+              <div className="setup-recommendation-box">
+                <div className="setup-recommendation-label">חזרות</div>
+                <div className="setup-recommendation-value">
+                  {currentExercise.minimumNumberOfRepeasts === currentExercise.maximumNumberOfRepeasts
+                    ? currentExercise.minimumNumberOfRepeasts
+                    : (
+                      <>
+                        <span>{currentExercise.minimumNumberOfRepeasts}</span>
+                        <span>-</span>
+                        <span>{currentExercise.maximumNumberOfRepeasts}</span>
+                      </>
+                    )}
+                </div>
+              </div>
+              <div className="setup-recommendation-box">
+                <div className="setup-recommendation-label">מנוחה</div>
+                <div className="setup-recommendation-value">
+                  {currentExercise.minimumTimeToRest === currentExercise.maximumTimeToRest
+                    ? `${formatTime(currentExercise.minimumTimeToRest)}`
+                    : (
+                      <>
+                        <span>{formatTime(currentExercise.minimumTimeToRest)}</span>
+                        <span>-</span>
+                        <span>{formatTime(currentExercise.maximumTimeToRest)}</span>
+                      </>
+                    )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* User inputs line */}
-          <div className="setup-inputs">
-            <div className="setup-input-item">
-              <label className="setup-input-label">המשקל שלי</label>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentDefaults.weight || ''}
-                onChange={(e) => updateExerciseDefault('weight', Number(e.target.value))}
-                placeholder="ק״ג"
-                min="0"
-                max="500"
-                step="0.5"
-                className="setup-input-field"
-              />
-            </div>
+          {/* User inputs section */}
+          <div className="setup-section">
+            <div className="setup-section-title">ההגדרות שלי</div>
+            <div className="setup-inputs">
+              <div className="setup-input-item">
+                <label className="setup-input-label">משקל</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  pattern="[0-9]*\.?[0-9]*"
+                  value={currentDefaults.weight || ''}
+                  onChange={(e) => updateExerciseDefault('weight', Number(e.target.value))}
+                  placeholder="ק״ג"
+                  min="0"
+                  max="500"
+                  step="0.5"
+                  className="setup-input-field"
+                />
+              </div>
 
-            <div className="setup-input-item">
-              <label className="setup-input-label">החזרות שלי</label>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentDefaults.repeats || ''}
-                onChange={(e) => updateExerciseDefault('repeats', Number(e.target.value))}
-                placeholder={`${calculateDefaultRepeats(currentExercise)}`}
-                min="1"
-                max="50"
-                step="1"
-                className="setup-input-field"
-              />
-            </div>
+              <div className="setup-input-item">
+                <label className="setup-input-label">חזרות</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  pattern="[0-9]*\.?[0-9]*"
+                  value={currentDefaults.repeats || ''}
+                  onChange={(e) => updateExerciseDefault('repeats', Number(e.target.value))}
+                  placeholder={`${calculateDefaultRepeats(currentExercise)}`}
+                  min="1"
+                  max="50"
+                  step="1"
+                  className="setup-input-field"
+                />
+              </div>
 
-            <div className="setup-input-item">
-              <label className="setup-input-label">המנוחה שלי</label>
-              <input
-                type="number"
-                inputMode="decimal"
-                pattern="[0-9]*\.?[0-9]*"
-                value={currentDefaults.timeToRest || ''}
-                onChange={(e) => updateExerciseDefault('timeToRest', Number(e.target.value))}
-                placeholder={`${calculateDefaultRestTime(currentExercise)}`}
-                min="10"
-                max="300"
-                step="5"
-                className="setup-input-field"
-              />
+              <div className="setup-input-item">
+                <label className="setup-input-label">מנוחה</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  pattern="[0-9]*\.?[0-9]*"
+                  value={currentDefaults.timeToRest || ''}
+                  onChange={(e) => updateExerciseDefault('timeToRest', Number(e.target.value))}
+                  placeholder={`${calculateDefaultRestTime(currentExercise)}`}
+                  min="10"
+                  max="300"
+                  step="5"
+                  className="setup-input-field"
+                />
+              </div>
             </div>
           </div>
 
