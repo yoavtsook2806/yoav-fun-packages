@@ -1,5 +1,5 @@
 import React from 'react';
-import { getExerciseLastEntry } from '../utils/exerciseHistory';
+import { getExerciseLastEntry, getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
 
 interface LastTrainingDetailsProps {
   exerciseName: string;
@@ -73,30 +73,56 @@ const LastTrainingDetails: React.FC<LastTrainingDetailsProps> = ({ exerciseName,
             <h3>פירוט סטים</h3>
             {lastEntry.setsData && lastEntry.setsData.length > 0 ? (
               <div className="sets-grid">
-                {lastEntry.setsData.map((setData, index) => (
-                  <div key={index} className="set-card">
-                    <div className="set-number">סט {index + 1}</div>
-                    <div className="set-data">
-                      {setData.weight && (
-                        <div className="data-item">
-                          <span className="data-label">משקל:</span>
-                          <span className="data-value">{setData.weight} ק"ג</span>
+                {lastEntry.setsData.map((setData, index) => {
+                  // Get the target values that were used for this training
+                  const targetWeight = getDefaultWeight(exerciseName) || lastEntry.weight;
+                  const targetRepeats = getDefaultRepeats(exerciseName) || lastEntry.repeats;
+
+                  // Check if this set met the targets
+                  const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;
+                  const repeatsSuccess = !targetRepeats || !setData.repeats || setData.repeats >= targetRepeats;
+                  const setSuccess = weightSuccess && repeatsSuccess;
+
+                  return (
+                    <div key={index} className={`set-card ${setSuccess ? 'set-success' : 'set-incomplete'}`}>
+                      <div className="set-header">
+                        <div className="set-number">סט {index + 1}</div>
+                        <div className={`set-status-indicator ${setSuccess ? 'success' : 'incomplete'}`}>
+                          {setSuccess ? '✅' : '⚠️'}
                         </div>
-                      )}
-                      {setData.repeats && (
-                        <div className="data-item">
-                          <span className="data-label">חזרות:</span>
-                          <span className="data-value">{setData.repeats}</span>
-                        </div>
-                      )}
-                      {!setData.weight && !setData.repeats && (
-                        <div className="data-item no-data">
-                          <span className="data-value">אין נתונים</span>
-                        </div>
-                      )}
+                      </div>
+                      <div className="set-data">
+                        {setData.weight && (
+                          <div className={`data-item ${weightSuccess ? 'success' : 'incomplete'}`}>
+                            <span className="data-label">משקל:</span>
+                            <span className="data-value">{setData.weight} ק"ג</span>
+                            {targetWeight && (
+                              <span className="target-comparison">
+                                ({targetWeight} ק"ג מטרה)
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        {setData.repeats && (
+                          <div className={`data-item ${repeatsSuccess ? 'success' : 'incomplete'}`}>
+                            <span className="data-label">חזרות:</span>
+                            <span className="data-value">{setData.repeats}</span>
+                            {targetRepeats && (
+                              <span className="target-comparison">
+                                ({targetRepeats} מטרה)
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        {!setData.weight && !setData.repeats && (
+                          <div className="data-item no-data">
+                            <span className="data-value">אין נתונים</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="no-sets-data">

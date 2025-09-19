@@ -5,6 +5,7 @@ import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
+import ExerciseTargetModal from './ExerciseTargetModal';
 import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
@@ -30,6 +31,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
+  const [targetModal, setTargetModal] = useState<string | null>(null);
 
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
@@ -71,6 +73,20 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       });
     }
   }, [currentExerciseState?.timeLeft, currentExerciseState?.isResting, currentExerciseName, onUpdateExerciseState]);
+
+  const openTargetModal = () => {
+    setTargetModal(currentExerciseName);
+  };
+
+  const handleTargetConfirm = (weight?: number, restTime?: number, repeats?: number) => {
+    // Update the exercise state with the new target values
+    onUpdateExerciseState(currentExerciseName, {
+      weight: weight,
+      customRestTime: restTime,
+      repeats: repeats,
+      isActive: true,
+    });
+  };
 
   const startExercise = () => {
     onUpdateExerciseState(currentExerciseName, {
@@ -390,11 +406,11 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           <div className="exercise-actions" onClick={(e) => e.stopPropagation()}>
             {!currentExerciseState.isActive && !currentExerciseState.completed && (
               <button
-                className="green-button"
-                onClick={startExercise}
+                className="target-set-button"
+                onClick={openTargetModal}
                 style={{ padding: '15px 30px', fontSize: '18px' }}
               >
-                התחל תרגיל
+                🎯 הגדר מטרה והתחל
               </button>
             )}
 
@@ -438,9 +454,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {feedbackModal && (
         <ExerciseFeedback
           exerciseName={feedbackModal}
-          currentWeight={trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.weight || trainingState.exerciseStates[feedbackModal]?.weight}
+          currentWeight={trainingState.exerciseStates[feedbackModal]?.weight}
           currentRestTime={trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
-          currentRepeats={trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.repeats || trainingState.exerciseStates[feedbackModal]?.repeats}
+          currentRepeats={trainingState.exerciseStates[feedbackModal]?.repeats}
+          exercise={trainings[trainingState.selectedTraining!][feedbackModal]}
+          completedSetsData={trainingState.exerciseStates[feedbackModal]?.setsData || []}
+          totalSets={trainings[trainingState.selectedTraining!][feedbackModal].numberOfSets}
           onSave={handleFeedbackSave}
           onClose={handleFeedbackClose}
         />
@@ -477,6 +496,19 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <LastTrainingDetails
           exerciseName={lastTrainingModal}
           onClose={() => setLastTrainingModal(null)}
+        />
+      )}
+
+      {/* Exercise Target Modal */}
+      {targetModal && (
+        <ExerciseTargetModal
+          exerciseName={targetModal}
+          exercise={trainings[trainingState.selectedTraining!][targetModal]}
+          currentWeight={trainingState.exerciseStates[targetModal]?.weight}
+          currentRestTime={trainingState.exerciseStates[targetModal]?.customRestTime || trainingState.restTime}
+          currentRepeats={trainingState.exerciseStates[targetModal]?.repeats}
+          onConfirm={handleTargetConfirm}
+          onClose={() => setTargetModal(null)}
         />
       )}
     </div>
