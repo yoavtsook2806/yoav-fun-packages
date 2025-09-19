@@ -91,40 +91,6 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
             )}
           </div>
 
-          <div className="sets-performance-summary">
-            <h4>סיכום ביצועים:</h4>
-            <div className="sets-grid">
-              {completedSetsData.map((setData, index) => {
-                const weightOk = !currentWeight || !setData.weight || setData.weight >= currentWeight;
-                const repeatsOk = !currentRepeats || !setData.repeats || setData.repeats >= Math.max(currentRepeats, exercise.minimumNumberOfRepeasts);
-                const setSuccess = weightOk && repeatsOk;
-
-                return (
-                  <div key={index} className={`set-performance-card ${setSuccess ? 'success' : 'needs-work'}`}>
-                    <div className="set-number">סט {index + 1}</div>
-                    <div className="set-details">
-                      {setData.weight && (
-                        <div className={`detail-item ${weightOk ? 'good' : 'needs-work'}`}>
-                          <span>משקל: {setData.weight} ק"ג</span>
-                          {currentWeight && <span className="target">({currentWeight} ק"ג מטרה)</span>}
-                        </div>
-                      )}
-                      {setData.repeats && (
-                        <div className={`detail-item ${repeatsOk ? 'good' : 'needs-work'}`}>
-                          <span>חזרות: {setData.repeats}</span>
-                          {currentRepeats && <span className="target">({currentRepeats} מטרה)</span>}
-                        </div>
-                      )}
-                    </div>
-                    <div className={`set-status-icon ${setSuccess ? 'success' : 'needs-work'}`}>
-                      {setSuccess ? '✅' : '⚠️'}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
           <div className="feedback-subtitle">
             {targetAchieved ? 'הגדר מטרה חדשה לפעם הבאה:' : 'שנה את המטרה לפעם הבאה:'}
           </div>
