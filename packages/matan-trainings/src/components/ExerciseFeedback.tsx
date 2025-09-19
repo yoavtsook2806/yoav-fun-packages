@@ -45,6 +45,17 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
 
   const targetAchieved = checkIfTargetAchieved();
 
+  // Count successful sets
+  const successfulSets = completedSetsData.filter(setData => {
+    const targetWeight = currentWeight;
+    const targetRepeats = currentRepeats;
+    const minRepeats = exercise.minimumNumberOfRepeasts;
+
+    const weightMatch = !targetWeight || !setData.weight || setData.weight >= targetWeight;
+    const repeatsMatch = !targetRepeats || !setData.repeats || setData.repeats >= Math.max(targetRepeats, minRepeats);
+    return weightMatch && repeatsMatch;
+  }).length;
+
   const handleSave = () => {
     const weightValue = weight.trim() !== '' ? parseFloat(weight) : undefined;
     const restTimeValue = restTime.trim() !== '' ? parseInt(restTime) : undefined;
@@ -61,7 +72,7 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
         <div className="feedback-header">
           <div className={`completion-status ${targetAchieved ? 'success' : 'needs-improvement'}`}>
             <div className="completion-circle">
-              <span className="completion-ratio">{completedSetsData.length}/{totalSets}</span>
+              <span className="completion-ratio">{successfulSets}/{totalSets}</span>
               <span className="completion-label">סטים</span>
             </div>
             <div className={`status-message ${targetAchieved ? 'success' : 'needs-improvement'}`}>
