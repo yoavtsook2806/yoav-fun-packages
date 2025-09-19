@@ -57,43 +57,32 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
 
   return (
     <div className="feedback-overlay" onClick={onClose}>
-      <div className={`feedback-modal ${targetAchieved ? 'success' : 'needs-improvement'}`} onClick={(e) => e.stopPropagation()}>
+      <div className="feedback-modal" onClick={(e) => e.stopPropagation()}>
         <div className="feedback-header">
-          <div className={`feedback-status-icon ${targetAchieved ? 'success' : 'needs-improvement'}`}>
-            {targetAchieved ? '🎯' : '🔄'}
-          </div>
-          <h2 className="feedback-title">איך היה?</h2>
-          <div className="feedback-exercise-name">{exerciseName}</div>
-        </div>
-
-        <div className="feedback-content">
-          <div className="sets-completion-display">
+          <div className={`completion-status ${targetAchieved ? 'success' : 'needs-improvement'}`}>
             <div className="completion-circle">
               <span className="completion-ratio">{completedSetsData.length}/{totalSets}</span>
               <span className="completion-label">סטים</span>
             </div>
-            <div className="completion-percentage">
-              {Math.round((completedSetsData.length / totalSets) * 100)}% הושלמו
+            <div className={`status-message ${targetAchieved ? 'success' : 'needs-improvement'}`}>
+              {targetAchieved ? (
+                <div className="success-text">
+                  <h3>🎉 מעולה! השגת את המטרה!</h3>
+                  <p>סיימת את כל הסטים בהצלחה</p>
+                </div>
+              ) : (
+                <div className="improvement-text">
+                  <h3>💪 כמעט שם! המשך לשפר</h3>
+                  <p>לא השגת את המטרה המלאה</p>
+                </div>
+              )}
             </div>
           </div>
+          <div className="feedback-exercise-name">{exerciseName}</div>
+        </div>
 
-          <div className={`feedback-message ${targetAchieved ? 'success' : 'needs-improvement'}`}>
-            {targetAchieved ? (
-              <div className="success-message">
-                <h3>🎉 מעולה! השגת את המטרה שלך!</h3>
-                <p>סיימת את כל הסטים ({completedSetsData.length}/{totalSets}) כפי שתכננת. זה הזמן להעלות רף!</p>
-              </div>
-            ) : (
-              <div className="improvement-message">
-                <h3>💪 כמעט שם! המשך לשפר</h3>
-                <p>השלמת {completedSetsData.length} מתוך {totalSets} סטים לפי המטרה. אנחנו ממליצים לנסות את אותה מטרה או להוריד מעט בפעם הבאה.</p>
-              </div>
-            )}
-          </div>
-
-          <div className="feedback-subtitle">
-            {targetAchieved ? 'הגדר מטרה חדשה לפעם הבאה:' : 'שנה את המטרה לפעם הבאה:'}
-          </div>
+        <div className="feedback-content">
+          <div className="feedback-subtitle">שמור הגדרות לפעם הבאה:</div>
 
           <div className="feedback-inputs-grid">
             <div className="feedback-input-box">
@@ -107,9 +96,6 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder="ק״ג"
               />
-              {targetAchieved && (
-                <div className="suggestion">💡 נסה +2.5 ק"ג</div>
-              )}
             </div>
 
             <div className="feedback-input-box">
@@ -136,16 +122,13 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
                 onChange={(e) => setRepeats(e.target.value)}
                 placeholder="מספר"
               />
-              {targetAchieved && (
-                <div className="suggestion">💡 נסה +1-2 חזרות</div>
-              )}
             </div>
           </div>
         </div>
 
         <div className="feedback-actions">
-          <button className={`feedback-save-btn ${targetAchieved ? 'success' : 'improvement'}`} onClick={handleSave}>
-            {targetAchieved ? '🚀 עדכן מטרה חדשה' : '🔄 שמור לניסיון הבא'}
+          <button className="feedback-save-btn" onClick={handleSave}>
+            שמור לפעם הבאה
           </button>
         </div>
       </div>

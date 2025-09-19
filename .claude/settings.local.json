@@ -3,7 +3,9 @@
     "allow": [
       "Bash(yarn workspace matan-trainings:*)",
       "Bash(npx stylelint:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
