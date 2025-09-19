@@ -5,7 +5,6 @@ import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
-import ExerciseTargetModal from './ExerciseTargetModal';
 import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
@@ -31,7 +30,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
-  const [targetModal, setTargetModal] = useState<string | null>(null);
 
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
@@ -73,20 +71,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       });
     }
   }, [currentExerciseState?.timeLeft, currentExerciseState?.isResting, currentExerciseName, onUpdateExerciseState]);
-
-  const openTargetModal = () => {
-    setTargetModal(currentExerciseName);
-  };
-
-  const handleTargetConfirm = (weight?: number, restTime?: number, repeats?: number) => {
-    // Update the exercise state with the new target values
-    onUpdateExerciseState(currentExerciseName, {
-      weight: weight,
-      customRestTime: restTime,
-      repeats: repeats,
-      isActive: true,
-    });
-  };
 
   const startExercise = () => {
     onUpdateExerciseState(currentExerciseName, {
@@ -406,11 +390,11 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           <div className="exercise-actions" onClick={(e) => e.stopPropagation()}>
             {!currentExerciseState.isActive && !currentExerciseState.completed && (
               <button
-                className="target-set-button"
-                onClick={openTargetModal}
+                className="green-button"
+                onClick={startExercise}
                 style={{ padding: '15px 30px', fontSize: '18px' }}
               >
-                🎯 הגדר מטרה והתחל
+                התחל תרגיל
               </button>
             )}
 
@@ -496,19 +480,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <LastTrainingDetails
           exerciseName={lastTrainingModal}
           onClose={() => setLastTrainingModal(null)}
-        />
-      )}
-
-      {/* Exercise Target Modal */}
-      {targetModal && (
-        <ExerciseTargetModal
-          exerciseName={targetModal}
-          exercise={trainings[trainingState.selectedTraining!][targetModal]}
-          currentWeight={trainingState.exerciseStates[targetModal]?.weight}
-          currentRestTime={trainingState.exerciseStates[targetModal]?.customRestTime || trainingState.restTime}
-          currentRepeats={trainingState.exerciseStates[targetModal]?.repeats}
-          onConfirm={handleTargetConfirm}
-          onClose={() => setTargetModal(null)}
         />
       )}
     </div>
