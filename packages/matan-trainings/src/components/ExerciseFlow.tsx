@@ -5,7 +5,7 @@ import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
-import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote } from '../utils/exerciseHistory';
+import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
   trainingState: TrainingState;
@@ -438,9 +438,17 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {feedbackModal && (
         <ExerciseFeedback
           exerciseName={feedbackModal}
-          currentWeight={trainingState.exerciseStates[feedbackModal]?.weight}
-          currentRestTime={trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
-          currentRepeats={trainingState.exerciseStates[feedbackModal]?.repeats}
+          currentWeight={
+            trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.weight ||
+            getDefaultWeight(feedbackModal) ||
+            trainingState.exerciseStates[feedbackModal]?.weight
+          }
+          currentRestTime={getDefaultRestTime(feedbackModal) || trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
+          currentRepeats={
+            trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.repeats ||
+            getDefaultRepeats(feedbackModal) ||
+            trainingState.exerciseStates[feedbackModal]?.repeats
+          }
           exercise={trainings[trainingState.selectedTraining!][feedbackModal]}
           completedSetsData={trainingState.exerciseStates[feedbackModal]?.setsData || []}
           totalSets={trainings[trainingState.selectedTraining!][feedbackModal].numberOfSets}
