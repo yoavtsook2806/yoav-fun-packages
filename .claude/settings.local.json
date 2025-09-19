@@ -5,7 +5,8 @@
       "Bash(npx stylelint:*)",
       "Bash(grep:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

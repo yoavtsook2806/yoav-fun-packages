@@ -5,6 +5,7 @@ import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
+import WhatsAppModal from './WhatsAppModal';
 import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime } from '../utils/exerciseHistory';
 
 interface ExerciseFlowProps {
@@ -30,6 +31,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
+  const [whatsappModal, setWhatsappModal] = useState<string | null>(null);
 
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
@@ -145,6 +147,10 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeLastTraining = () => {
     setLastTrainingModal(currentExerciseName);
+  };
+
+  const handleWhatsAppShare = () => {
+    setWhatsappModal(currentExerciseName);
   };
 
   const handleEditExercise = (exerciseName: string) => {
@@ -307,6 +313,17 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             title="פרטי תרגיל"
           >
             ℹ️
+          </button>
+          <button
+            className="header-action-btn whatsapp-btn"
+            onClick={handleWhatsAppShare}
+            title="שלח שאלה לקבוצת האימונים"
+          >
+            <img
+              src="/src/images/whatsapp.jpg"
+              alt="WhatsApp"
+              className="whatsapp-header-icon"
+            />
           </button>
         </div>
       </div>
@@ -488,6 +505,15 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <LastTrainingDetails
           exerciseName={lastTrainingModal}
           onClose={() => setLastTrainingModal(null)}
+        />
+      )}
+
+      {/* WhatsApp Share Modal */}
+      {whatsappModal && (
+        <WhatsAppModal
+          exerciseName={getCustomExerciseTitle(whatsappModal)}
+          trainingNumber={trainingState.selectedTraining!}
+          onClose={() => setWhatsappModal(null)}
         />
       )}
     </div>

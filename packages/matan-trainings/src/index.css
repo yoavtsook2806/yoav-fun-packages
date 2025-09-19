@@ -1089,6 +1089,26 @@ button:disabled {
   box-shadow: var(--shadow-lg);
 }
 
+.header-action-btn.whatsapp-btn {
+  background: var(--bg-card);
+  border-color: var(--border-primary);
+  color: var(--text-primary);
+}
+
+.header-action-btn.whatsapp-btn:hover:not(.disabled) {
+  background: var(--bg-tertiary);
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.whatsapp-header-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .header-action-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -1422,6 +1442,181 @@ button:disabled {
   color: #ccc;
   margin: 10px 0 0 0;
   text-align: center;
+}
+
+/* WhatsApp Modal Specific Styles */
+.whatsapp-modal .modal-header h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: linear-gradient(135deg, #25d366 0%, #20c458 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.whatsapp-icon-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.exercise-info-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.exercise-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.exercise-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+}
+
+.info-value {
+  background: linear-gradient(135deg, #25d366 0%, #20c458 100%);
+  color: white;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
+.message-input-section {
+  margin-bottom: var(--space-6);
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-base);
+}
+
+.message-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-family: inherit;
+  resize: vertical;
+  transition: all var(--transition-normal);
+  box-sizing: border-box;
+}
+
+.message-textarea:focus {
+  outline: none;
+  border-color: #25d366;
+  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2);
+}
+
+.message-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.character-count {
+  text-align: right;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+.message-preview-section {
+  margin-bottom: var(--space-6);
+}
+
+.message-preview {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  direction: rtl;
+  text-align: right;
+}
+
+.preview-hashtags {
+  color: #25d366;
+  font-weight: 500;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+}
+
+.whatsapp-send-button {
+  background: linear-gradient(135deg, #25d366 0%, #20c458 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: white;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 140px;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-send-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-send-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 768px) {
