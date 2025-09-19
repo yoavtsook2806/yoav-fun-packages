@@ -67,16 +67,26 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
         </div>
 
         <div className="feedback-content">
+          <div className="sets-completion-display">
+            <div className="completion-circle">
+              <span className="completion-ratio">{completedSetsData.length}/{totalSets}</span>
+              <span className="completion-label">סטים</span>
+            </div>
+            <div className="completion-percentage">
+              {Math.round((completedSetsData.length / totalSets) * 100)}% הושלמו
+            </div>
+          </div>
+
           <div className={`feedback-message ${targetAchieved ? 'success' : 'needs-improvement'}`}>
             {targetAchieved ? (
               <div className="success-message">
                 <h3>🎉 מעולה! השגת את המטרה שלך!</h3>
-                <p>סיימת את כל הסטים כפי שתכננת. זה הזמן להעלות רף!</p>
+                <p>סיימת את כל הסטים ({completedSetsData.length}/{totalSets}) כפי שתכננת. זה הזמן להעלות רף!</p>
               </div>
             ) : (
               <div className="improvement-message">
                 <h3>💪 כמעט שם! המשך לשפר</h3>
-                <p>לא הצלחת להשלים את כל הסטים לפי המטרה. אנחנו ממליצים לנסות את אותה מטרה או להוריד מעט בפעם הבאה.</p>
+                <p>השלמת {completedSetsData.length} מתוך {totalSets} סטים לפי המטרה. אנחנו ממליצים לנסות את אותה מטרה או להוריד מעט בפעם הבאה.</p>
               </div>
             )}
           </div>
