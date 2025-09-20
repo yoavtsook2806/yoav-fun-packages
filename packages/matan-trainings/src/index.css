@@ -610,12 +610,14 @@ button:disabled {
 .exercise-flow-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   padding: 0;
+  margin: 0;
   background: var(--gradient-bg);
   position: relative;
   direction: rtl;
+  box-sizing: border-box;
 }
 
 /* Section Dividers */
@@ -625,29 +627,41 @@ button:disabled {
   margin: 0;
 }
 
-/* 1. Training Header Section */
+/* 1. Training Header Section - Constant small size */
 .section-training-header {
-  padding: var(--space-4);
+  flex: 0 0 8vh;
+  padding: var(--space-2);
   text-align: center;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .section-training-header h2 {
   margin: 0;
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--text-primary);
 }
 
 /* 3. All Exercises Section */
 .section-all-exercises {
+  flex: 1;
   padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 4. Exercise Title Section */
+/* 4. Exercise Title Section - 1/8 of screen */
 .section-exercise-title {
+  flex: 0 0 12.5vh;
   padding: var(--space-4);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .section-exercise-title .exercise-name {
@@ -659,19 +673,25 @@ button:disabled {
 
 /* 2. Exercise Controls Section */
 .section-exercise-controls {
+  flex: 1;
   padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .section-exercise-controls .header-actions-row {
   margin-bottom: var(--space-6);
 }
 
-/* 5. Main Action Area Section - Clickable */
+/* 5. Main Action Area Section - Clickable - 1/4 of screen */
 .section-main-action-area {
+  flex: 0 0 25vh;
   padding: var(--space-3);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
 }
 
@@ -706,26 +726,44 @@ button:disabled {
 
 /* exercise-layout removed - using flat hierarchy now */
 
-/* Mobile responsive layout - 3 equal vertical parts with flat hierarchy */
+/* Mobile responsive layout - Full screen with margins */
 @media (max-width: 768px) {
   .exercise-flow-container {
-    padding: 0 !important;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0 var(--space-3);
+    box-sizing: border-box;
   }
 
-  .section-training-header,
-  .section-all-exercises,
-  .section-exercise-title,
+  .section-training-header {
+    flex: 0 0 8vh;
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .section-all-exercises {
+    flex: 1;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .section-exercise-title {
+    flex: 0 0 12.5vh;
+    padding: var(--space-2) var(--space-3);
+  }
+
   .section-exercise-controls {
-    padding: var(--space-3) !important;
+    flex: 1;
+    padding: var(--space-2) var(--space-3);
   }
 
   .section-main-action-area {
-    padding: var(--space-2) !important;
-    gap: var(--space-1) !important;
+    flex: 0 0 25vh;
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-1);
   }
 
   .section-exercise-controls .header-actions-row {
-    margin-bottom: var(--space-4) !important;
+    margin-bottom: var(--space-4);
   }
 
 }
@@ -2911,9 +2949,7 @@ button:disabled {
     padding: 3px 6px;
   }
 
-  .exercise-flow-container {
-    padding: var(--space-3);
-  }
+  /* exercise-flow-container styles moved to main mobile section */
 
   /* exercise-layout removed - using flat hierarchy now */
 
@@ -3083,15 +3119,7 @@ button:disabled {
     max-width: 120px;
   }
 
-  /* New layout responsive design */
-  .exercise-flow-container {
-    height: 100vh;
-    width: 100vw;
-    max-width: 100%;
-    margin: 0;
-    padding: 5px;
-    box-sizing: border-box;
-  }
+  /* New layout responsive design - removed, using main mobile styles */
 
   /* exercise-layout removed - grid applied to container now */
 
