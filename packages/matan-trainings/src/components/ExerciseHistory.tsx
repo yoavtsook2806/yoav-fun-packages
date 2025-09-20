@@ -67,12 +67,6 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
           ))}
         </div>
       )}
-
-      <div className="info-footer">
-        <button className="setup-nav-btn setup-video-btn" onClick={onClose}>
-          סגור
-        </button>
-      </div>
     </ExerciseModal>
   );
 };
