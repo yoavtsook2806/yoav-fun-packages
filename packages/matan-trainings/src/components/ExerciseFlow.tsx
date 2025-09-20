@@ -6,6 +6,7 @@ import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
 import LastTrainingDetails from './LastTrainingDetails';
 import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime } from '../utils/exerciseHistory';
+import { playEndSetBeep, playCountdownBeep } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
   trainingState: TrainingState;
@@ -61,6 +62,18 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     }
   }, [currentExerciseState?.isResting, currentExerciseState?.startTimestamp, currentExerciseState?.restDuration, currentExerciseName, onUpdateExerciseState]);
 
+  // Countdown sound effect for last 5 seconds
+  useEffect(() => {
+    if (currentExerciseState?.isResting && currentExerciseState.timeLeft !== undefined) {
+      const timeLeft = currentExerciseState.timeLeft;
+      
+      // Play countdown sounds for last 5 seconds (5, 4, 3, 2, 1, 0)
+      if (timeLeft <= 5 && timeLeft >= 0) {
+        playCountdownBeep(timeLeft);
+      }
+    }
+  }, [currentExerciseState?.timeLeft]);
+
   // Auto-enable finish set button when timer finishes
   useEffect(() => {
     if (currentExerciseState?.isResting && currentExerciseState.timeLeft === 0) {
@@ -79,6 +92,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const finishSet = () => {
+    // Play end set beep sound
+    playEndSetBeep();
+    
     const newSetCount = currentExerciseState.currentSet + 1;
     const isExerciseComplete = newSetCount >= currentExercise.numberOfSets;
 

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAvailableVersions } from '../data/trainingPlans';
+import { getVolume, saveVolume, internalToDisplayVolume, displayToInternalVolume, testSound } from '../utils/soundUtils';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -15,6 +16,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   onTrainingPlanChange
 }) => {
   const availableVersions = getAvailableVersions();
+  const [volume, setVolume] = useState(0);
+
+  useEffect(() => {
+    // Load current volume setting
+    const currentVolume = getVolume();
+    setVolume(internalToDisplayVolume(currentVolume));
+  }, []);
+
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    const internalVolume = displayToInternalVolume(newVolume);
+    saveVolume(internalVolume);
+  };
+
+  const handleTestSound = () => {
+    testSound();
+  };
 
   const handleClearHistory = () => {
     const confirmed = window.confirm(
@@ -58,6 +76,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
+          {/* Sound Settings */}
+          <div className="settings-section">
+            <div className="settings-item">
+              <label className="settings-label">
+                <span>עוצמת קול ({volume}%)</span>
+                <div className="volume-control">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={volume}
+                    onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
+                    className="volume-slider"
+                  />
+                  <button 
+                    className="test-sound-btn"
+                    onClick={handleTestSound}
+                    disabled={volume === 0}
+                  >
+                    🔊
+                  </button>
+                </div>
+              </label>
+              <p className="settings-description">
+                עוצמת הקול עבור צלילי האימון (סיום סט וספירה לאחור)
+              </p>
+            </div>
+          </div>
 
           {/* App Actions */}
           <div className="settings-section">
