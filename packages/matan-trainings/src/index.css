@@ -585,15 +585,7 @@ button:disabled {
   z-index: -1;
 }
 
-.exercise-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  flex: 1;
-  margin-top: var(--space-6);
-  position: relative;
-  z-index: 1;
-}
+/* exercise-layout removed - using flat hierarchy now */
 
 /* Mobile responsive layout - 3 equal vertical parts with flat hierarchy */
 @media (max-width: 768px) {
@@ -1121,7 +1113,7 @@ button:disabled {
 .header-actions-row {
   display: flex;
   flex-direction: row;
-  gap: var(--space-3);
+  gap: var(--space-5);
   align-items: center;
 }
 
@@ -1140,10 +1132,10 @@ button:disabled {
   border-radius: var(--radius-full);
   color: var(--text-primary);
   cursor: pointer;
-  font-size: var(--text-lg);
-  padding: var(--space-3);
-  width: 48px;
-  height: 48px;
+  font-size: var(--text-xl);
+  padding: var(--space-4);
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2823,10 +2815,7 @@ button:disabled {
     padding: var(--space-3);
   }
 
-  .exercise-layout {
-    gap: var(--space-4);
-    margin-top: var(--space-2);
-  }
+  /* exercise-layout removed - using flat hierarchy now */
 
   .exercise-header {
     padding: var(--space-4) 0;
@@ -3004,18 +2993,7 @@ button:disabled {
     box-sizing: border-box;
   }
 
-  .exercise-layout {
-    display: grid !important;
-    grid-template-areas:
-      "header"
-      "sidebar"
-      "main" !important;
-    grid-template-columns: 1fr !important;
-    grid-template-rows: 1fr 1fr 1fr !important;
-    gap: 8px !important;
-    margin-top: 5px !important;
-    height: calc(100vh - 60px) !important;
-  }
+  /* exercise-layout removed - grid applied to container now */
 
   .exercise-header {
     grid-area: header !important;
@@ -3142,7 +3120,7 @@ button:disabled {
   .header-actions-row {
     display: flex;
     flex-direction: row;
-    gap: var(--space-2);
+    gap: var(--space-4);
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -3167,10 +3145,10 @@ button:disabled {
   }
 
   .header-action-btn {
-    width: 44px;
-    height: 44px;
-    font-size: var(--text-base);
-    padding: var(--space-2);
+    width: 52px;
+    height: 52px;
+    font-size: var(--text-lg);
+    padding: var(--space-3);
   }
 
   .rest-time-label, .weight-label, .repeats-label {
@@ -3200,10 +3178,10 @@ button:disabled {
   }
   
   .header-action-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    padding: 8px;
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    padding: 10px;
     min-height: auto;
     min-width: auto;
   }
