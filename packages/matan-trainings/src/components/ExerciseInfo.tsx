@@ -1,6 +1,6 @@
 import React from 'react';
 import { Exercise } from '../types';
-import { getCustomExerciseTitle } from '../utils/exerciseHistory';
+import ExerciseModal from './ExerciseModal';
 
 interface ExerciseInfoProps {
   exerciseName: string;
@@ -28,83 +28,64 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
   };
 
   return (
-    <div className="info-overlay" onClick={onClose}>
-      <div className="info-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="info-header">
-          {onEdit && (
-            <button 
-              className="edit-button" 
-              onClick={() => onEdit(exerciseName)}
-              title="ערוך תרגיל"
-            >
-              ✏️
-            </button>
-          )}
-          <h2>פרטי תרגיל</h2>
-          <button className="close-button" onClick={onClose}>
-            ✕
+    <ExerciseModal
+      exerciseName={exerciseName}
+      title="פרטי תרגיל"
+      onClose={onClose}
+      onEdit={onEdit}
+    >
+      {exercise.note && exercise.note.trim() !== '' && (
+        <div className="info-description">
+          <div className="info-description-text">{exercise.note}</div>
+        </div>
+      )}
+
+      <div className="info-recommendations">
+        <div className="info-recommendation-box">
+          <div className="info-recommendation-label">סטים</div>
+          <div className="info-recommendation-value">{exercise.numberOfSets}</div>
+        </div>
+        <div className="info-recommendation-box">
+          <div className="info-recommendation-label">חזרות</div>
+          <div className="info-recommendation-value">
+            {exercise.minimumNumberOfRepeasts === exercise.maximumNumberOfRepeasts
+              ? exercise.minimumNumberOfRepeasts
+              : (
+                <>
+                  <span>{exercise.minimumNumberOfRepeasts}</span>
+                  <span>-</span>
+                  <span>{exercise.maximumNumberOfRepeasts}</span>
+                </>
+              )}
+          </div>
+        </div>
+        <div className="info-recommendation-box">
+          <div className="info-recommendation-label">מנוחה</div>
+          <div className="info-recommendation-value">
+            {exercise.minimumTimeToRest === exercise.maximumTimeToRest
+              ? `${formatTime(exercise.minimumTimeToRest)}`
+              : (
+                <>
+                  <span>{formatTime(exercise.minimumTimeToRest)}</span>
+                  <span>-</span>
+                  <span>{formatTime(exercise.maximumTimeToRest)}</span>
+                </>
+              )}
+          </div>
+        </div>
+      </div>
+
+      {exercise.link && exercise.link.trim() !== '' && (
+        <div className="info-footer">
+          <button
+            className="setup-nav-btn setup-video-btn"
+            onClick={handleVideoClick}
+          >
+            📹 צפה בסרטון
           </button>
         </div>
-        
-        <div className="info-exercise-name">
-          {getCustomExerciseTitle(exerciseName)}
-        </div>
-
-        {exercise.note && exercise.note.trim() !== '' && (
-          <div className="info-description">
-            <div className="info-description-text">{exercise.note}</div>
-          </div>
-        )}
-
-        <div className="info-content">
-          <div className="info-recommendations">
-            <div className="info-recommendation-box">
-              <div className="info-recommendation-label">סטים</div>
-              <div className="info-recommendation-value">{exercise.numberOfSets}</div>
-            </div>
-            <div className="info-recommendation-box">
-              <div className="info-recommendation-label">חזרות</div>
-              <div className="info-recommendation-value">
-                {exercise.minimumNumberOfRepeasts === exercise.maximumNumberOfRepeasts
-                  ? exercise.minimumNumberOfRepeasts
-                  : (
-                    <>
-                      <span>{exercise.minimumNumberOfRepeasts}</span>
-                      <span>-</span>
-                      <span>{exercise.maximumNumberOfRepeasts}</span>
-                    </>
-                  )}
-              </div>
-            </div>
-            <div className="info-recommendation-box">
-              <div className="info-recommendation-label">מנוחה</div>
-              <div className="info-recommendation-value">
-                {exercise.minimumTimeToRest === exercise.maximumTimeToRest
-                  ? `${formatTime(exercise.minimumTimeToRest)}`
-                  : (
-                    <>
-                      <span>{formatTime(exercise.minimumTimeToRest)}</span>
-                      <span>-</span>
-                      <span>{formatTime(exercise.maximumTimeToRest)}</span>
-                    </>
-                  )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {exercise.link && exercise.link.trim() !== '' && (
-          <div className="info-footer">
-            <button
-              className="setup-nav-btn setup-video-btn"
-              onClick={handleVideoClick}
-            >
-              📹 צפה בסרטון
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+      )}
+    </ExerciseModal>
   );
 };
 

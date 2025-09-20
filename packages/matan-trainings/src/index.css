@@ -1401,11 +1401,13 @@ button:disabled {
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: var(--space-6);
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-primary);
+  position: relative;
+  text-align: center;
 }
 
 .modal-header h2 {
@@ -1413,13 +1415,16 @@ button:disabled {
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--text-primary);
-  background: var(--gradient-primary);
+  background: var(--gradient-success);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .modal-close-btn {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
@@ -1433,6 +1438,7 @@ button:disabled {
   justify-content: center;
   border-radius: var(--radius-full);
   transition: all var(--transition-fast);
+  z-index: 10;
 }
 
 .modal-close-btn:hover {
@@ -1945,7 +1951,7 @@ button:disabled {
   margin: 0;
   font-size: var(--text-2xl);
   font-weight: 800;
-  background: var(--gradient-primary);
+  background: var(--gradient-success);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2145,24 +2151,30 @@ button:disabled {
 }
 
 .info-close-btn {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
   background: var(--bg-secondary);
-  color: var(--text-primary);
   border: 1px solid var(--border-primary);
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-xl);
+  color: var(--text-secondary);
+  font-size: var(--text-xl);
   cursor: pointer;
-  font-size: var(--text-base);
-  font-weight: 600;
-  transition: all var(--transition-normal);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-md);
+  padding: var(--space-2);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  z-index: 10;
 }
 
 .info-close-btn:hover {
   background: var(--bg-tertiary);
   border-color: var(--border-accent);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  transform: scale(1.1);
 }
 
 /* Exercise Edit Modal - Modern styling */
@@ -2327,12 +2339,13 @@ button:disabled {
 
 .history-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: var(--space-6);
   border-bottom: 1px solid var(--border-primary);
   background: var(--bg-card);
   position: relative;
+  text-align: center;
 }
 
 .history-header::before {
@@ -2350,7 +2363,7 @@ button:disabled {
   margin: 0;
   font-size: var(--text-2xl);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  background: var(--gradient-success);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2360,6 +2373,7 @@ button:disabled {
 
 .close-button {
   position: absolute;
+  top: var(--space-4);
   right: var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
@@ -2374,7 +2388,7 @@ button:disabled {
   justify-content: center;
   border-radius: var(--radius-full);
   transition: all var(--transition-fast);
-  z-index: 2;
+  z-index: 10;
 }
 
 .close-button:hover {
