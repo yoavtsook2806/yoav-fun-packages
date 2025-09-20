@@ -612,10 +612,81 @@ button:disabled {
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  padding: var(--space-4);
+  padding: 0;
   background: var(--gradient-bg);
   position: relative;
   direction: rtl;
+}
+
+/* Section Dividers */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-primary), transparent);
+  margin: 0;
+}
+
+/* 1. Training Header Section */
+.section-training-header {
+  padding: var(--space-4);
+  text-align: center;
+  position: relative;
+}
+
+.section-training-header h2 {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* 3. All Exercises Section */
+.section-all-exercises {
+  padding: var(--space-4);
+}
+
+/* 4. Exercise Title Section */
+.section-exercise-title {
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.section-exercise-title .exercise-name {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* 2. Exercise Controls Section */
+.section-exercise-controls {
+  padding: var(--space-4);
+}
+
+.section-exercise-controls .header-actions-row {
+  margin-bottom: var(--space-6);
+}
+
+/* 5. Main Action Area Section - Clickable */
+.section-main-action-area {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.main-exercise-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.section-main-action-area .sets-progress-container {
+  margin-top: var(--space-2);
+}
+
+.section-main-action-area .sets-counter {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-2);
 }
 
 .exercise-flow-container::before {
@@ -638,73 +709,25 @@ button:disabled {
 /* Mobile responsive layout - 3 equal vertical parts with flat hierarchy */
 @media (max-width: 768px) {
   .exercise-flow-container {
-    display: grid !important;
-    grid-template-areas:
-      "header"
-      "sidebar"
-      "main" !important;
-    grid-template-columns: 1fr !important;
-    grid-template-rows: 1fr 1fr 1fr !important;
-    gap: 10px !important;
-    padding: 10px !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: hidden !important;
+    padding: 0 !important;
   }
 
-  .exercise-header {
-    grid-area: header !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    overflow-y: auto !important;
-    padding: 8px !important;
-    margin: 0 !important;
-    transform: scale(1) !important;
+  .section-training-header,
+  .section-all-exercises,
+  .section-exercise-title,
+  .section-exercise-controls {
+    padding: var(--space-3) !important;
   }
 
-  .exercise-sidebar {
-    grid-area: sidebar !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    overflow-y: auto !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
-    padding: 8px !important;
-    margin: 0 !important;
+  .section-main-action-area {
+    padding: var(--space-2) !important;
+    gap: var(--space-1) !important;
   }
 
-  .exercise-row {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    grid-template-rows: auto !important;
-    gap: 6px !important;
-    height: auto !important;
-    width: 100% !important;
-    justify-items: center !important;
-    align-items: stretch !important;
-    padding: 6px !important;
-    box-sizing: border-box !important;
-    justify-content: center !important;
+  .section-exercise-controls .header-actions-row {
+    margin-bottom: var(--space-4) !important;
   }
 
-  .exercise-main {
-    grid-area: main !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    overflow-y: auto !important;
-    padding: 8px !important;
-    margin: 0 !important;
-    gap: 10px !important;
-  }
 }
 
 /* Exercise Header */

@@ -210,8 +210,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   return (
     <div className="exercise-flow-container">
-      {/* Header */}
-      <div className="exercise-header">
+      {/* 1. Training Header */}
+      <div className="section-training-header">
         <h2>{trainingState.selectedTraining} אימון</h2>
         <button
           className="back-arrow-button"
@@ -237,11 +237,82 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         >
           ←
         </button>
+      </div>
 
-        {/* Forms and Action Buttons - Top Center */}
+      <div className="section-divider"></div>
+
+      {/* 3. All Exercises */}
+      <div className="section-all-exercises">
+        <div className="exercise-row">
+          {trainingState.exercises.map((exerciseName, index) => {
+            const exerciseState = trainingState.exerciseStates[exerciseName];
+            const exercise = trainings[trainingState.selectedTraining!][exerciseName];
+            let className = 'exercise-row-item';
+
+            if (exerciseState.completed) {
+              className += ' completed';
+            } else if (index === trainingState.currentExerciseIndex) {
+              className += ' current';
+            }
+
+            const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
+
+            return (
+              <div
+                key={exerciseName}
+                className={className}
+                onClick={() => onGoToExercise(index)}
+                title={exerciseName} // Show full name on hover
+              >
+                <div className="exercise-row-number">{index + 1}</div>
+                <div className="exercise-row-name">{shortName}</div>
+                <div className="exercise-row-sets">
+                  {exerciseState.currentSet}/{exercise.numberOfSets}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="section-divider"></div>
+
+      {/* 4. Exercise Title */}
+      <div className="section-exercise-title">
+        <div className="exercise-name">{getCustomExerciseTitle(currentExerciseName)}</div>
+      </div>
+
+      <div className="section-divider"></div>
+
+      {/* 2. Exercise Inputs and Buttons */}
+      <div className="section-exercise-controls">
+        <div className="header-actions-row">
+          <button
+            className="header-action-btn"
+            onClick={handleSeeHistory}
+            title="היסטוריית תרגיל"
+          >
+            📊
+          </button>
+          <button
+            className="header-action-btn"
+            onClick={handleSeeLastTraining}
+            title="אימון אחרון"
+          >
+            📋
+          </button>
+          <button
+            className="header-action-btn"
+            onClick={handleSeeInfo}
+            title="פרטי תרגיל"
+          >
+            ℹ️
+          </button>
+        </div>
+        
         <div className="header-forms-row" onClick={(e) => e.stopPropagation()}>
           <div className="header-rest-time">
-            <div className="rest-time-label">זמן מנוחה</div>
+            <div className="rest-time-label">מנוחה</div>
             <input
               type="number"
               inputMode="decimal"
@@ -286,143 +357,89 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             />
           </div>
         </div>
-        <div className="header-actions-row">
-          <button
-            className="header-action-btn"
-            onClick={handleSeeHistory}
-            title="היסטוריית תרגיל"
-          >
-            📊
-          </button>
-          <button
-            className="header-action-btn"
-            onClick={handleSeeLastTraining}
-            title="אימון אחרון"
-          >
-            📋
-          </button>
-          <button
-            className="header-action-btn"
-            onClick={handleSeeInfo}
-            title="פרטי תרגיל"
-          >
-            ℹ️
-          </button>
-        </div>
       </div>
 
-      {/* Exercise Sidebar */}
-      <div className="exercise-sidebar">
-        <div className="exercise-row">
-          {trainingState.exercises.map((exerciseName, index) => {
-            const exerciseState = trainingState.exerciseStates[exerciseName];
-            const exercise = trainings[trainingState.selectedTraining!][exerciseName];
-            let className = 'exercise-row-item';
+      <div className="section-divider"></div>
 
-            if (exerciseState.completed) {
-              className += ' completed';
-            } else if (index === trainingState.currentExerciseIndex) {
-              className += ' current';
-            }
-
-            const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
-
-            return (
-              <div
-                key={exerciseName}
-                className={className}
-                onClick={() => onGoToExercise(index)}
-                title={exerciseName} // Show full name on hover
-              >
-                <div className="exercise-row-number">{index + 1}</div>
-                <div className="exercise-row-name">{shortName}</div>
-                <div className="exercise-row-sets">
-                  {exerciseState.currentSet}/{exercise.numberOfSets}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="exercise-main clickable-area" onClick={handleMainAreaClick}>
-          <div className="exercise-name">{getCustomExerciseTitle(currentExerciseName)}</div>
-
-          {/* Sets Progress with Visual Slider */}
-          <div className="sets-progress-container">
-            <div className="sets-counter">
-              {currentExerciseState.currentSet}/{currentExercise.numberOfSets} סטים
-            </div>
-            <div className="sets-progress-bar">
-              <div 
-                className="sets-progress-fill" 
-                style={{ width: `${(currentExerciseState.currentSet / currentExercise.numberOfSets) * 100}%` }}
-              />
-              <div className="sets-markers">
-                {Array.from({ length: currentExercise.numberOfSets }, (_, i) => (
-                  <div 
-                    key={i} 
-                    className={`set-marker ${i < currentExerciseState.currentSet ? 'completed' : ''}`}
-                    style={{ left: `${((i + 0.5) / currentExercise.numberOfSets) * 100}%` }}
-                  >
-                    {i + 1}
-                  </div>
-                ))}
-              </div>
-            </div>
+      {/* 5. Main Action Area and Progress - Clickable */}
+      <div className="section-main-action-area clickable-area" onClick={handleMainAreaClick}>
+        {/* Timer */}
+        {currentExerciseState.isResting && (
+          <div className={`timer ${
+            currentExerciseState.timeLeft === 0 ? 'finished' :
+            currentExerciseState.timeLeft <= 5 && currentExerciseState.timeLeft > 0 ? 'urgent' : ''
+          }`}>
+            {currentExerciseState.timeLeft === 0 ? 'זמן!' : formatTime(currentExerciseState.timeLeft)}
           </div>
+        )}
 
-
-
-          {/* Timer */}
-          {currentExerciseState.isResting && (
-            <div className={`timer ${
-              currentExerciseState.timeLeft === 0 ? 'finished' :
-              currentExerciseState.timeLeft <= 5 && currentExerciseState.timeLeft > 0 ? 'urgent' : ''
-            }`}>
-              {currentExerciseState.timeLeft === 0 ? 'זמן!' : formatTime(currentExerciseState.timeLeft)}
-            </div>
+        {/* Main Action Buttons */}
+        <div className="main-exercise-actions" onClick={(e) => e.stopPropagation()}>
+          {!currentExerciseState.isActive && !currentExerciseState.completed && (
+            <button
+              className="green-button"
+              onClick={startExercise}
+              style={{ padding: '15px 30px', fontSize: '18px' }}
+            >
+              התחל תרגיל
+            </button>
           )}
 
-          {/* Action Buttons */}
-          <div className="exercise-actions" onClick={(e) => e.stopPropagation()}>
-            {!currentExerciseState.isActive && !currentExerciseState.completed && (
+          {currentExerciseState.isActive && !currentExerciseState.completed && !(currentExerciseState.isResting && currentExerciseState.timeLeft > 0) && (
+            <button
+              className="orange-button"
+              onClick={finishSet}
+              style={{ fontSize: '18px' }}
+            >
+              סיים סט
+            </button>
+          )}
+
+          {currentExerciseState.completed && (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '24px', color: '#4CAF50', marginBottom: '20px' }}>
+                ✅ תרגיל הושלם!
+              </div>
               <button
                 className="green-button"
-                onClick={startExercise}
+                onClick={onNextExercise}
                 style={{ padding: '15px 30px', fontSize: '18px' }}
               >
-                התחל תרגיל
+                המשך לתרגיל הבא
               </button>
-            )}
+            </div>
+          )}
+        </div>
 
-            {currentExerciseState.isActive && !currentExerciseState.completed && !(currentExerciseState.isResting && currentExerciseState.timeLeft > 0) && (
-              <button
-                className="orange-button"
-                onClick={finishSet}
-                style={{ fontSize: '18px' }}
-              >
-                סיים סט
-              </button>
-            )}
-
-            {currentExerciseState.completed && (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px', color: '#4CAF50', marginBottom: '20px' }}>
-                  ✅ תרגיל הושלם!
-                </div>
-                <button
-                  className="green-button"
-                  onClick={onNextExercise}
-                  style={{ padding: '15px 30px', fontSize: '18px' }}
+        {/* Progress */}
+        <div className="sets-progress-container">
+          <div className="sets-counter">
+            {currentExerciseState.isResting ? 
+              `סיימת ${currentExerciseState.currentSet} מתוך ${currentExercise.numberOfSets} סטים` :
+              currentExerciseState.isActive ? 
+                `סט מספר ${currentExerciseState.currentSet + 1}` :
+                `${currentExerciseState.currentSet}/${currentExercise.numberOfSets} סטים`
+            }
+          </div>
+          <div className="sets-progress-bar">
+            <div 
+              className="sets-progress-fill" 
+              style={{ width: `${(currentExerciseState.currentSet / currentExercise.numberOfSets) * 100}%` }}
+            />
+            <div className="sets-markers">
+              {Array.from({ length: currentExercise.numberOfSets }, (_, i) => (
+                <div 
+                  key={i} 
+                  className={`set-marker ${i < currentExerciseState.currentSet ? 'completed' : ''}`}
+                  style={{ left: `${((i + 0.5) / currentExercise.numberOfSets) * 100}%` }}
                 >
-                  המשך לתרגיל הבא
-                </button>
-              </div>
-            )}
+                  {i + 1}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+      </div>
 
       {/* Exercise History Modal */}
       {historyModal && (
