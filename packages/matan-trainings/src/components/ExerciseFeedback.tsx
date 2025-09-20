@@ -108,7 +108,7 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
             </div>
 
             <div className="feedback-input-box">
-              <label className="feedback-label">זמן מנוחה</label>
+              <label className="feedback-label">מנוחה</label>
               <input
                 type="text"
                 inputMode="decimal"

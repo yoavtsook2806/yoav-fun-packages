@@ -632,14 +632,16 @@ button:disabled {
 
   .exercise-row {
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(80px, 1fr)) !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
     gap: 6px !important;
-    height: 100% !important;
+    height: auto !important;
     width: 100% !important;
     justify-items: center !important;
-    align-items: center !important;
+    align-items: stretch !important;
     padding: 6px !important;
     box-sizing: border-box !important;
+    justify-content: center !important;
   }
 
   .exercise-main {
@@ -697,12 +699,20 @@ button:disabled {
 /* Modern Exercise Grid */
 .exercise-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-3);
   width: 100%;
   padding: var(--space-4);
   min-height: 200px;
+  justify-content: center;
+  align-items: start;
+}
+
+/* Ensure max 3 items per row and center when fewer items */
+@supports (grid-template-columns: subgrid) {
+  .exercise-row {
+    grid-template-columns: repeat(auto-fit, minmax(120px, calc(33.333% - var(--space-3))));
+  }
 }
 
 .exercise-row-item {
@@ -3030,15 +3040,17 @@ button:disabled {
   }
 
   .exercise-row {
-    grid-template-columns: repeat(3, minmax(80px, 1fr)) !important;
-    gap: 6px;
-    height: 100% !important;
-    width: 100%;
-    justify-items: center;
-    align-items: center;
-    padding: 6px;
-    box-sizing: border-box;
     display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 6px !important;
+    height: auto !important;
+    width: 100% !important;
+    justify-items: center !important;
+    align-items: stretch !important;
+    padding: 6px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
   }
 
   .exercise-row-item {
@@ -3436,49 +3448,52 @@ button:disabled {
 /* Mobile Responsive for Feedback Modal */
 @media (max-width: 768px) {
   .feedback-modal {
-    padding: 16px;
-    max-width: 95vw;
-    max-height: 85vh;
+    padding: 20px !important;
+    max-width: 85vw !important;
+    width: 85vw !important;
+    max-height: 85vh !important;
   }
 
   .feedback-header {
-    margin-bottom: 12px;
+    margin-bottom: 8px !important;
   }
 
   .feedback-inputs-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 16px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 10px !important;
+    margin-bottom: 16px !important;
   }
 
   .feedback-input-box {
-    padding: 8px;
+    padding: 4px !important;
   }
 
   .feedback-label {
-    font-size: 12px;
-    margin-bottom: 4px;
+    font-size: 11px !important;
+    margin-bottom: 2px !important;
   }
 
   .feedback-input {
-    padding: 8px;
-    font-size: 16px; /* Prevents zoom on iOS */
-    min-height: 40px;
+    padding: 6px !important;
+    font-size: 14px !important; /* Prevents zoom on iOS */
+    min-height: 32px !important;
   }
 
   .feedback-content {
-    margin-bottom: 16px;
+    margin-bottom: 10px !important;
   }
 
   .feedback-subtitle {
-    font-size: 14px;
-    margin-bottom: 12px;
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
   }
 
   .feedback-save-btn {
-    padding: 12px 20px;
-    font-size: 16px;
-    width: 100%;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    width: 100% !important;
   }
 
   .feedback-header h2 {
@@ -3486,21 +3501,21 @@ button:disabled {
   }
 
   .success-text h3, .improvement-text h3 {
-    font-size: 16px;
-    margin: 0;
+    font-size: 14px !important;
+    margin: 0 !important;
   }
 
   .completion-circle {
-    width: 50px;
-    height: 50px;
+    width: 40px !important;
+    height: 40px !important;
   }
 
   .completion-ratio {
-    font-size: 14px;
+    font-size: 12px !important;
   }
 
   .completion-label {
-    font-size: 10px;
+    font-size: 8px !important;
   }
 
   /* Info screen mobile styles */
