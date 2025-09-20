@@ -70,9 +70,36 @@ export const playBeep = (frequency: number = 800, duration: number = 200): void 
   }
 };
 
-// Play end set beep (single beep)
+// Play end set beep (single beep) - at 1/10 volume
 export const playEndSetBeep = (): void => {
-  playBeep(800, 300); // 800Hz for 300ms
+  try {
+    const context = initAudioContext();
+    if (!context) return;
+
+    const volume = getVolume();
+    if (volume === 0) return;
+
+    // Calculate actual volume at 1/10 of configured volume (0-1 scale)
+    const actualVolume = (volume / MAX_INTERNAL_VOLUME) * 0.1; // 1/10 of normal volume
+
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    oscillator.frequency.value = 800; // 800Hz
+    oscillator.type = 'sine';
+
+    gainNode.gain.setValueAtTime(0, context.currentTime);
+    gainNode.gain.linearRampToValueAtTime(actualVolume, context.currentTime + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.3); // 300ms duration
+
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.3);
+  } catch (error) {
+    console.warn('Could not play end set beep sound:', error);
+  }
 };
 
 // Play countdown beep (higher pitch for urgency)
