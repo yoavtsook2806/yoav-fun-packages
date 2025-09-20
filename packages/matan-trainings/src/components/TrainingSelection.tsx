@@ -1,19 +1,63 @@
 import React, { useState } from 'react';
-import { getTrainingCompletionCount, getNextRecommendedTraining } from '../utils/trainingHistory';
+import { getExerciseHistory } from '../utils/exerciseHistory';
 
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
   availableTrainings: string[];
   trainingPlanVersion: string;
+  trainings: any; // Training data to get exercise lists
 }
 
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   onSelectTraining,
   availableTrainings,
   trainingPlanVersion,
+  trainings,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
-  const nextRecommended = getNextRecommendedTraining(availableTrainings);
+  
+  // Helper function to count training completions based on exercise history
+  const getTrainingCompletionCount = (trainingType: string): number => {
+    if (!trainings[trainingType]) return 0;
+    
+    const exerciseHistory = getExerciseHistory();
+    const exerciseNames = Object.keys(trainings[trainingType]);
+    
+    if (exerciseNames.length === 0) return 0;
+    
+    // Get the minimum count across all exercises in this training
+    let minCompletions = Infinity;
+    
+    for (const exerciseName of exerciseNames) {
+      const exerciseEntries = exerciseHistory[exerciseName] || [];
+      const count = exerciseEntries.length;
+      minCompletions = Math.min(minCompletions, count);
+    }
+    
+    return minCompletions === Infinity ? 0 : minCompletions;
+  };
+  
+  // Helper function to get next recommended training
+  const getNextRecommendedTraining = (): string | null => {
+    if (availableTrainings.length === 0) return null;
+    if (availableTrainings.length === 1) return availableTrainings[0];
+    
+    // Find the training with the least completions
+    let minCompletions = Infinity;
+    let recommendedTraining = availableTrainings[0];
+    
+    for (const training of availableTrainings) {
+      const count = getTrainingCompletionCount(training);
+      if (count < minCompletions) {
+        minCompletions = count;
+        recommendedTraining = training;
+      }
+    }
+    
+    return recommendedTraining;
+  };
+  
+  const nextRecommended = getNextRecommendedTraining();
 
   const handleStartTraining = () => {
     if (selectedTraining) {
