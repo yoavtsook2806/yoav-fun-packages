@@ -3436,42 +3436,71 @@ button:disabled {
 /* Mobile Responsive for Feedback Modal */
 @media (max-width: 768px) {
   .feedback-modal {
-    padding: var(--space-6);
-    max-width: 90vw;
+    padding: 16px;
+    max-width: 95vw;
+    max-height: 85vh;
+  }
+
+  .feedback-header {
+    margin-bottom: 12px;
   }
 
   .feedback-inputs-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
   }
 
   .feedback-input-box {
-    padding: var(--space-4);
+    padding: 8px;
   }
 
   .feedback-label {
-    font-size: var(--text-base);
+    font-size: 12px;
+    margin-bottom: 4px;
   }
 
   .feedback-input {
-    padding: var(--space-3);
+    padding: 8px;
     font-size: 16px; /* Prevents zoom on iOS */
-    min-height: 48px;
+    min-height: 40px;
+  }
+
+  .feedback-content {
+    margin-bottom: 16px;
+  }
+
+  .feedback-subtitle {
+    font-size: 14px;
+    margin-bottom: 12px;
   }
 
   .feedback-save-btn {
-    padding: var(--space-3) var(--space-6);
-    font-size: var(--text-base);
+    padding: 12px 20px;
+    font-size: 16px;
     width: 100%;
   }
 
   .feedback-header h2 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
   }
 
+  .success-text h3, .improvement-text h3 {
+    font-size: 16px;
+    margin: 0;
+  }
 
-  .feedback-subtitle {
-    font-size: var(--text-base);
+  .completion-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .completion-ratio {
+    font-size: 14px;
+  }
+
+  .completion-label {
+    font-size: 10px;
   }
 
   /* Info screen mobile styles */
@@ -3538,33 +3567,52 @@ button:disabled {
   }
 
   .feedback-header {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   .feedback-header h2 {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 
   .feedback-exercise-name {
     font-size: 0.9em;
+    margin-bottom: 8px;
+  }
+
+  .feedback-content {
     margin-bottom: 12px;
   }
 
-  .feedback-content p {
-    font-size: 14px;
-    margin-bottom: 16px;
+  .feedback-subtitle {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .feedback-inputs-grid {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .feedback-input-box {
+    padding: 6px;
+  }
+
+  .feedback-label {
+    font-size: 11px;
+    margin-bottom: 3px;
   }
 
   .feedback-input {
-    padding: 8px 10px;
+    padding: 6px 8px;
+    min-height: 36px;
   }
 
   .feedback-actions {
     position: sticky;
     bottom: 0;
     background: var(--bg-glass);
-    padding: 12px 0;
-    margin: 12px -12px -12px -12px;
+    padding: 10px 0;
+    margin: 10px -12px -12px -12px;
     border-top: 1px solid var(--border-primary);
     backdrop-filter: blur(20px);
     z-index: 10;
@@ -3573,9 +3621,22 @@ button:disabled {
   .feedback-save-btn {
     width: 100% !important;
     max-width: none !important;
-    padding: 14px 20px !important;
-    font-size: 16px !important;
-    min-height: 48px !important;
+    padding: 12px 18px !important;
+    font-size: 15px !important;
+    min-height: 44px !important;
+  }
+
+  .completion-circle {
+    width: 45px;
+    height: 45px;
+  }
+
+  .completion-ratio {
+    font-size: 12px;
+  }
+
+  .completion-label {
+    font-size: 9px;
   }
 }
 

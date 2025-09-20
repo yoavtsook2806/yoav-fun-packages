@@ -79,12 +79,10 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
               {targetAchieved ? (
                 <div className="success-text">
                   <h3>🎉 מעולה! השגת את המטרה!</h3>
-                  <p>סיימת את כל הסטים בהצלחה</p>
                 </div>
               ) : (
                 <div className="improvement-text">
                   <h3>💪 כמעט שם! המשך לשפר</h3>
-                  <p>לא השגת את המטרה המלאה</p>
                 </div>
               )}
             </div>
