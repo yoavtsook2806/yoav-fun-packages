@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getTrainingCompletionCount, getNextRecommendedTraining } from '../utils/trainingHistory';
 
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
@@ -12,6 +13,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   trainingPlanVersion,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
+  const nextRecommended = getNextRecommendedTraining(availableTrainings);
 
   const handleStartTraining = () => {
     if (selectedTraining) {
@@ -25,15 +27,26 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
       <div className="training-plan-version">{trainingPlanVersion}</div>
       
       <div className="training-buttons">
-        {availableTrainings.map((training) => (
-          <button
-            key={training}
-            className={`training-button ${selectedTraining === training ? 'selected' : ''}`}
-            onClick={() => setSelectedTraining(training)}
-          >
-            אימון {training}
-          </button>
-        ))}
+        {availableTrainings.map((training) => {
+          const completionCount = getTrainingCompletionCount(training);
+          const isRecommended = training === nextRecommended;
+          
+          return (
+            <button
+              key={training}
+              className={`training-button ${selectedTraining === training ? 'selected' : ''} ${isRecommended ? 'recommended' : ''}`}
+              onClick={() => setSelectedTraining(training)}
+            >
+              <div className="training-button-content">
+                <span className="training-name">אימון {training}</span>
+                <div className="training-indicators">
+                  <span className="completion-count">{completionCount}×</span>
+                  {isRecommended && <span className="next-indicator">הבא</span>}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <button

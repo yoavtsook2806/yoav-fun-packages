@@ -110,6 +110,7 @@ body {
   background-attachment: fixed;
   -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
+  direction: rtl;
 }
 
 a {
@@ -439,6 +440,7 @@ button:disabled {
   gap: var(--space-8);
   text-align: center;
   position: relative;
+  direction: rtl;
 }
 
 .training-selection::before {
@@ -555,6 +557,51 @@ button:disabled {
   opacity: 0.3;
 }
 
+.training-button.recommended {
+  border-color: #ff9800;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 152, 0, 0.3);
+}
+
+.training-button-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.training-name {
+  font-size: var(--text-xl);
+  font-weight: 700;
+}
+
+.training-indicators {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.completion-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-weight: 600;
+  min-width: 32px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.next-indicator {
+  background: #ff9800;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
 
 
 
@@ -568,6 +615,7 @@ button:disabled {
   padding: var(--space-4);
   background: var(--gradient-bg);
   position: relative;
+  direction: rtl;
 }
 
 .exercise-flow-container::before {
@@ -2819,6 +2867,25 @@ button:disabled {
     padding: var(--space-6) var(--space-4);
     font-size: var(--text-lg);
     min-height: 100px;
+  }
+
+  .training-name {
+    font-size: var(--text-lg);
+  }
+
+  .training-indicators {
+    gap: 4px;
+  }
+
+  .completion-count {
+    font-size: 12px;
+    padding: 3px 8px;
+    min-width: 28px;
+  }
+
+  .next-indicator {
+    font-size: 11px;
+    padding: 3px 6px;
   }
 
   .exercise-flow-container {

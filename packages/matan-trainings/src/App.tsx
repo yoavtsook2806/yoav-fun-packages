@@ -26,6 +26,7 @@ import {
   isFirstTimeExperience,
   saveExerciseDefaults
 } from './utils/exerciseHistory';
+import { saveTrainingCompletion } from './utils/trainingHistory';
 
 function App() {
   // Get the latest training plan as default
@@ -265,6 +266,11 @@ function App() {
     );
     
     if (allCompleted) {
+      // Save training completion to history
+      if (trainingState.selectedTraining) {
+        saveTrainingCompletion(trainingState.selectedTraining, trainingState.exercises);
+      }
+      
       // Training is complete! Show congratulations
       setTrainingState(prev => ({
         ...prev,
