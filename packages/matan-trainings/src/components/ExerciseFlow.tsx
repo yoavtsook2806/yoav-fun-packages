@@ -212,6 +212,37 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     }
   };
 
+  const handleClearTodayTraining = () => {
+    const confirmed = window.confirm(
+      `האם אתה בטוח שברצונך למחוק את נתוני האימון של היום עבור "${trainingState.selectedTraining}"?\n\nפעולה זו תמחק את כל ההתקדמות של האימון הנוכחי ולא ניתן לבטל אותה.`
+    );
+
+    if (confirmed) {
+      // Reset all exercise states for current training
+      trainingState.exercises.forEach(exerciseName => {
+        onUpdateExerciseState(exerciseName, {
+          currentSet: 0,
+          completed: false,
+          isActive: false,
+          isResting: false,
+          timeLeft: undefined,
+          startTimestamp: undefined,
+          restDuration: undefined,
+          weight: undefined,
+          repeats: undefined,
+          customRestTime: undefined,
+          setsData: []
+        });
+      });
+
+      // Show confirmation message
+      alert(`נתוני האימון "${trainingState.selectedTraining}" של היום נמחקו בהצלחה.`);
+      
+      // Reset to first exercise
+      onGoToExercise(0);
+    }
+  };
+
 
 
   const formatTime = (seconds: number) => {
@@ -252,6 +283,24 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           title="חזור להתחלה"
         >
           ←
+        </button>
+        {/* Hidden clear training data button */}
+        <button
+          onClick={handleClearTodayTraining}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            width: '40px',
+            height: '40px',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            opacity: 0,
+            zIndex: 10
+          }}
+          title="מחק נתוני אימון של היום"
+        >
         </button>
       </div>
 
