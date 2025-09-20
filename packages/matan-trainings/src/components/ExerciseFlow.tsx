@@ -213,14 +213,14 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       {/* Header */}
       <div className="exercise-header">
         <h2>{trainingState.selectedTraining} אימון</h2>
-        <button 
-          className="back-arrow-button" 
+        <button
+          className="back-arrow-button"
           onClick={onResetTraining}
-          style={{ 
-            position: 'absolute', 
-            top: '20px', 
-            left: '20px', 
-            padding: '10px', 
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            padding: '10px',
             background: '#2a2a2a',
             border: '1px solid #555',
             borderRadius: '6px',
@@ -237,7 +237,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         >
           ←
         </button>
-        
+
         {/* Forms and Action Buttons - Top Center */}
         <div className="header-forms-row" onClick={(e) => e.stopPropagation()}>
           <div className="header-rest-time">
@@ -311,43 +311,42 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         </div>
       </div>
 
-      <div className="exercise-layout">
-        {/* Side Panel */}
-        <div className="exercise-sidebar">
-          <div className="exercise-row">
-            {trainingState.exercises.map((exerciseName, index) => {
-              const exerciseState = trainingState.exerciseStates[exerciseName];
-              const exercise = trainings[trainingState.selectedTraining!][exerciseName];
-              let className = 'exercise-row-item';
-              
-              if (exerciseState.completed) {
-                className += ' completed';
-              } else if (index === trainingState.currentExerciseIndex) {
-                className += ' current';
-              }
+      {/* Exercise Sidebar */}
+      <div className="exercise-sidebar">
+        <div className="exercise-row">
+          {trainingState.exercises.map((exerciseName, index) => {
+            const exerciseState = trainingState.exerciseStates[exerciseName];
+            const exercise = trainings[trainingState.selectedTraining!][exerciseName];
+            let className = 'exercise-row-item';
 
-              const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
+            if (exerciseState.completed) {
+              className += ' completed';
+            } else if (index === trainingState.currentExerciseIndex) {
+              className += ' current';
+            }
 
-              return (
-                <div
-                  key={exerciseName}
-                  className={className}
-                  onClick={() => onGoToExercise(index)}
-                  title={exerciseName} // Show full name on hover
-                >
-                  <div className="exercise-row-number">{index + 1}</div>
-                  <div className="exercise-row-name">{shortName}</div>
-                  <div className="exercise-row-sets">
-                    {exerciseState.currentSet}/{exercise.numberOfSets}
-                  </div>
+            const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
+
+            return (
+              <div
+                key={exerciseName}
+                className={className}
+                onClick={() => onGoToExercise(index)}
+                title={exerciseName} // Show full name on hover
+              >
+                <div className="exercise-row-number">{index + 1}</div>
+                <div className="exercise-row-name">{shortName}</div>
+                <div className="exercise-row-sets">
+                  {exerciseState.currentSet}/{exercise.numberOfSets}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
+      </div>
 
-        {/* Main Content */}
-        <div className="exercise-main clickable-area" onClick={handleMainAreaClick}>
+      {/* Main Content */}
+      <div className="exercise-main clickable-area" onClick={handleMainAreaClick}>
           <div className="exercise-name">{getCustomExerciseTitle(currentExerciseName)}</div>
 
           {/* Sets Progress with Visual Slider */}
@@ -424,8 +423,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             )}
           </div>
         </div>
-      </div>
-      
+
       {/* Exercise History Modal */}
       {historyModal && (
         <ExerciseHistory
