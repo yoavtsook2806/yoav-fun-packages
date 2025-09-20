@@ -3451,7 +3451,8 @@ button:disabled {
     padding: 20px !important;
     max-width: 85vw !important;
     width: 85vw !important;
-    max-height: 85vh !important;
+    max-height: 75vh !important;
+    height: 75vh !important;
   }
 
   .feedback-header {
@@ -3471,14 +3472,14 @@ button:disabled {
   }
 
   .feedback-label {
-    font-size: 11px !important;
-    margin-bottom: 2px !important;
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
   }
 
   .feedback-input {
-    padding: 6px !important;
-    font-size: 14px !important; /* Prevents zoom on iOS */
-    min-height: 32px !important;
+    padding: 8px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 40px !important;
   }
 
   .feedback-content {
@@ -3486,13 +3487,13 @@ button:disabled {
   }
 
   .feedback-subtitle {
-    font-size: 12px !important;
-    margin-bottom: 8px !important;
+    font-size: 16px !important;
+    margin-bottom: 12px !important;
   }
 
   .feedback-save-btn {
-    padding: 10px 16px !important;
-    font-size: 14px !important;
+    padding: 12px 20px !important;
+    font-size: 18px !important;
     width: 100% !important;
   }
 
@@ -3501,21 +3502,21 @@ button:disabled {
   }
 
   .success-text h3, .improvement-text h3 {
-    font-size: 14px !important;
+    font-size: 18px !important;
     margin: 0 !important;
   }
 
   .completion-circle {
-    width: 40px !important;
-    height: 40px !important;
+    width: 50px !important;
+    height: 50px !important;
   }
 
   .completion-ratio {
-    font-size: 12px !important;
+    font-size: 16px !important;
   }
 
   .completion-label {
-    font-size: 8px !important;
+    font-size: 12px !important;
   }
 
   /* Info screen mobile styles */

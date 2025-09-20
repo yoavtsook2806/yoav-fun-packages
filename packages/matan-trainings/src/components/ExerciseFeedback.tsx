@@ -67,7 +67,7 @@ const ExerciseFeedback: React.FC<ExerciseFeedbackProps> = ({
 
 
   return (
-    <div className="feedback-overlay" onClick={onClose}>
+    <div className="feedback-overlay">
       <div className="feedback-modal" onClick={(e) => e.stopPropagation()}>
         <div className="feedback-header">
           <div className={`completion-status ${targetAchieved ? 'success' : 'needs-improvement'}`}>
