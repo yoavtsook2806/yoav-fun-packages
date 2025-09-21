@@ -2001,7 +2001,7 @@ button:disabled {
 
 .info-header {
   background: var(--bg-card);
-  padding: var(--space-6);
+  padding: var(--space-4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2022,8 +2022,8 @@ button:disabled {
 
 .info-header h2 {
   margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: 800;
+  font-size: var(--text-lg);
+  font-weight: 700;
   background: var(--gradient-success);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2032,10 +2032,91 @@ button:disabled {
   z-index: 1;
 }
 
+.exercise-video-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-left: 8px;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
+}
+
+.exercise-video-btn:hover {
+  background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.exercise-video-btn:active {
+  transform: translateY(0);
+}
+
+/* Exercise info section - description and video */
+.exercise-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exercise-description {
+  flex: 1;
+}
+
+.exercise-description-text {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.exercise-video {
+  display: flex;
+  justify-content: center;
+}
+
+.exercise-video-button {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.exercise-video-button:hover {
+  background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.exercise-video-button:active {
+  transform: translateY(0);
+}
+
 .info-exercise-name {
-  padding: var(--space-6);
-  font-size: var(--text-2xl);
-  font-weight: 900;
+  padding: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 700;
   background: var(--gradient-success);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -2446,16 +2527,16 @@ button:disabled {
 
 .close-button {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-2);
+  right: var(--space-2);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
   cursor: pointer;
-  padding: var(--space-2);
-  width: 40px;
-  height: 40px;
+  padding: var(--space-1);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3863,14 +3944,14 @@ button:disabled {
 
 /* First Time Setup Styles */
 .setup-progress {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   text-align: center;
 }
 
 .progress-text {
   color: #ffffff;
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 12px;
+  margin-bottom: 4px;
 }
 
 .progress-bar {
@@ -3889,16 +3970,16 @@ button:disabled {
 
 /* Modern Setup Sections */
 .setup-section {
-  margin: var(--space-6) 0;
+  margin: var(--space-1) 0;
   direction: rtl;
 }
 
 .setup-section-title {
-  font-size: var(--text-xl);
-  font-weight: 800;
+  font-size: var(--text-base);
+  font-weight: 700;
   color: var(--text-primary);
   text-align: center;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-1);
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3999,15 +4080,15 @@ button:disabled {
 /* User inputs line */
 .setup-inputs {
   display: flex;
-  justify-content: space-around;
-  margin: var(--space-4) 0;
-  padding: var(--space-4);
+  flex-direction: column;
+  margin: var(--space-1) 0;
+  padding: var(--space-2);
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-accent);
-  gap: var(--space-3);
+  gap: var(--space-1);
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .setup-input-item {
@@ -4017,9 +4098,9 @@ button:disabled {
 
 .setup-input-label {
   color: var(--text-primary);
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-2);
-  font-weight: 700;
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-1);
+  font-weight: 600;
   display: block;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -4028,19 +4109,19 @@ button:disabled {
 
 .setup-input-field {
   width: 100%;
-  padding: var(--space-3) var(--space-3);
-  border: 2px solid var(--border-primary);
-  border-radius: var(--radius-xl);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
   background: var(--bg-glass);
   color: var(--text-primary);
-  font-size: var(--text-lg);
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: 600;
   text-align: center;
   box-sizing: border-box;
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-normal);
-  min-height: 48px;
+  min-height: 32px;
 }
 
 .setup-input-field:focus {
@@ -4063,17 +4144,63 @@ button:disabled {
   max-height: 95vh !important;
 }
 
+/* Exercise title with video icon */
+.exercise-title-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.video-icon-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  color: white;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.video-icon-btn:hover {
+  background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+.video-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.exercise-sets-info {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: var(--space-1);
+  font-weight: 500;
+}
+
 .setup-modal .info-content {
   flex: 0 0 auto;
   overflow: visible;
   max-height: none;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-2) var(--space-3);
 }
 
 /* Footer */
 .setup-footer {
-  margin-top: var(--space-6);
-  padding: var(--space-6) 0;
+  margin-top: var(--space-2);
+  padding: var(--space-2) 0;
   border-top: 1px solid var(--border-primary);
   background: var(--bg-card);
   flex-shrink: 0;
@@ -4088,15 +4215,15 @@ button:disabled {
 }
 
 .setup-nav-btn {
-  padding: var(--space-4) var(--space-8);
+  padding: var(--space-3) var(--space-5);
   border: none;
-  border-radius: var(--radius-xl);
-  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-normal);
   min-width: 120px;
-  min-height: 56px;
+  min-height: 44px;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
@@ -4284,24 +4411,34 @@ button:disabled {
 
   .setup-modal {
     max-height: 90vh !important;
+    height: auto !important;
+    width: 90vw !important;
+    max-width: 400px !important;
+    margin: 5vh auto !important;
     display: flex !important;
     flex-direction: column !important;
+    overflow: hidden !important;
   }
 
   .setup-modal .info-content {
     overflow: visible !important;
     max-height: none !important;
-    padding: var(--space-3) var(--space-4);
-    flex: 1 1 auto;
+    padding: var(--space-2) var(--space-3);
+    flex: 0 0 auto;
   }
 
   .setup-footer {
     flex-shrink: 0 !important;
+    position: sticky !important;
+    bottom: 0 !important;
+    background: var(--bg-card) !important;
+    border-top: 1px solid var(--border-primary) !important;
+    z-index: 10 !important;
   }
 
   .setup-footer {
     padding: var(--space-4) 0;
-    margin-top: var(--space-4);
+    margin-top: 0 !important;
   }
 
   .setup-navigation {
@@ -4316,6 +4453,67 @@ button:disabled {
     font-size: 16px;
     min-height: 48px;
     min-width: 100px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .setup-modal {
+    max-height: 95vh !important;
+    height: auto !important;
+    width: 95vw !important;
+    max-width: 380px !important;
+    margin: 2.5vh auto !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .setup-modal .info-content {
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .setup-recommendations {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .setup-recommendation-box {
+    padding: var(--space-1);
+    min-height: 60px;
+  }
+
+  .setup-recommendation-label {
+    font-size: 9px;
+  }
+
+  .setup-recommendation-value {
+    font-size: 12px;
+  }
+
+  .setup-inputs {
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .setup-input-field {
+    padding: var(--space-2);
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .setup-nav-btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  .setup-navigation {
+    padding: 0 var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .setup-footer {
+    padding: var(--space-3) 0;
   }
 }
 

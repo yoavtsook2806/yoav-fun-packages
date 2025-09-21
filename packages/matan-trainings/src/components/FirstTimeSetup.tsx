@@ -70,9 +70,9 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
 
   return (
     <div className="info-overlay">
-      <div className="info-modal setup-modal" style={{ maxWidth: '600px', maxHeight: '95vh' }}>
+      <div className="info-modal setup-modal">
         <div className="info-header">
-          <h2>הגדרת אימון ראשונה</h2>
+          <h2>הגדרה ראשונה</h2>
           <button className="close-button" onClick={onCancel}>
             ✕
           </button>
@@ -91,55 +91,43 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
         </div>
 
         <div className="info-exercise-name">
-          {getCustomExerciseTitle(currentExerciseName)}
+          <div className="exercise-title-container">
+            {getCustomExerciseTitle(currentExerciseName)}
+          </div>
+          <div className="exercise-sets-info">
+            {currentExercise.numberOfSets} סטים
+          </div>
         </div>
 
         <div className="info-content">
-          {/* Exercise recommendations section */}
-          <div className="setup-section">
-            <div className="setup-section-title">המלצת הקדי</div>
-            <div className="setup-recommendations">
-              <div className="setup-recommendation-box">
-                <div className="setup-recommendation-label">סטים</div>
-                <div className="setup-recommendation-value">{currentExercise.numberOfSets}</div>
-              </div>
-              <div className="setup-recommendation-box">
-                <div className="setup-recommendation-label">חזרות</div>
-                <div className="setup-recommendation-value">
-                  {currentExercise.minimumNumberOfRepeasts === currentExercise.maximumNumberOfRepeasts
-                    ? currentExercise.minimumNumberOfRepeasts
-                    : (
-                      <>
-                        <span>{currentExercise.minimumNumberOfRepeasts}</span>
-                        <span>-</span>
-                        <span>{currentExercise.maximumNumberOfRepeasts}</span>
-                      </>
-                    )}
+          {/* Exercise description and video section */}
+          {((currentExercise.note && currentExercise.note.trim() !== '') || (currentExercise.link && currentExercise.link.trim() !== '')) && (
+            <div className="exercise-info-section">
+              {currentExercise.note && currentExercise.note.trim() !== '' && (
+                <div className="exercise-description">
+                  <div className="exercise-description-text">{currentExercise.note}</div>
                 </div>
-              </div>
-              <div className="setup-recommendation-box">
-                <div className="setup-recommendation-label">מנוחה</div>
-                <div className="setup-recommendation-value">
-                  {currentExercise.minimumTimeToRest === currentExercise.maximumTimeToRest
-                    ? `${formatTime(currentExercise.minimumTimeToRest)}`
-                    : (
-                      <>
-                        <span>{formatTime(currentExercise.minimumTimeToRest)}</span>
-                        <span>-</span>
-                        <span>{formatTime(currentExercise.maximumTimeToRest)}</span>
-                      </>
-                    )}
+              )}
+              {currentExercise.link && currentExercise.link.trim() !== '' && (
+                <div className="exercise-video">
+                  <button
+                    className="exercise-video-button"
+                    onClick={handleVideoClick}
+                    title="צפה בסרטון"
+                  >
+                    📹 צפה בסרטון
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
-          </div>
+          )}
 
-          {/* User inputs section */}
+          {/* Combined settings section */}
           <div className="setup-section">
             <div className="setup-section-title">ההגדרות שלי</div>
             <div className="setup-inputs">
               <div className="setup-input-item">
-                <label className="setup-input-label">משקל</label>
+                <label className="setup-input-label">משקל (ק״ג)</label>
                 <input
                   type="number"
                   inputMode="decimal"
@@ -155,7 +143,11 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
               </div>
 
               <div className="setup-input-item">
-                <label className="setup-input-label">חזרות</label>
+                <label className="setup-input-label">
+                  חזרות ({currentExercise.minimumNumberOfRepeasts === currentExercise.maximumNumberOfRepeasts
+                    ? currentExercise.minimumNumberOfRepeasts
+                    : `${currentExercise.minimumNumberOfRepeasts}-${currentExercise.maximumNumberOfRepeasts}`})
+                </label>
                 <input
                   type="number"
                   inputMode="decimal"
@@ -171,7 +163,11 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
               </div>
 
               <div className="setup-input-item">
-                <label className="setup-input-label">מנוחה</label>
+                <label className="setup-input-label">
+                  מנוחה ({currentExercise.minimumTimeToRest === currentExercise.maximumTimeToRest
+                    ? `${formatTime(currentExercise.minimumTimeToRest)}`
+                    : `${formatTime(currentExercise.minimumTimeToRest)}-${formatTime(currentExercise.maximumTimeToRest)}`})
+                </label>
                 <input
                   type="number"
                   inputMode="decimal"
@@ -187,27 +183,10 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
               </div>
             </div>
           </div>
-
-          {/* Exercise note if exists */}
-          {currentExercise.note && currentExercise.note.trim() !== '' && (
-            <div className="setup-note">
-              <div className="setup-note-text">{currentExercise.note}</div>
-            </div>
-          )}
         </div>
 
         <div className="setup-footer">
           <div className="setup-navigation">
-            {/* Video button (if available) */}
-            {currentExercise.link && currentExercise.link.trim() !== '' && (
-              <button
-                className="setup-nav-btn setup-video-btn"
-                onClick={handleVideoClick}
-              >
-                📹 צפה בסרטון
-              </button>
-            )}
-
             <button
               className={`setup-nav-btn ${isLastExercise ? 'setup-start-btn' : 'setup-next-btn'}`}
               onClick={handleNext}
