@@ -45,7 +45,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     // Get exercise history to find the last completed training
     const exerciseHistory = getExerciseHistory();
     
-    // Find the most recent COMPLETE training (all exercises completed)
+    // Find the most recent COMPLETE training (all exercises completed in same session)
     let lastCompletedTraining: string | null = null;
     let mostRecentTrainingDate: Date | null = null;
     
@@ -55,38 +55,37 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
       const exerciseNames = Object.keys(trainings[trainingType]);
       if (exerciseNames.length === 0) continue;
       
-      // Find completion dates for all exercises in this training
-      const exerciseCompletionDates: Date[] = [];
+      // Group exercise completions by date to find complete training sessions
+      const completionsByDate: { [dateStr: string]: string[] } = {};
       
       for (const exerciseName of exerciseNames) {
         const exerciseEntries = exerciseHistory[exerciseName] || [];
         
-        // Find the most recent completion for this exercise
-        let latestCompletion: Date | null = null;
-        
         for (const entry of exerciseEntries) {
           if (entry.completedSets >= entry.totalSets) {
-            const entryDate = new Date(entry.date);
-            if (!latestCompletion || entryDate > latestCompletion) {
-              latestCompletion = entryDate;
+            const dateStr = entry.date.split('T')[0]; // Get just the date part (YYYY-MM-DD)
+            
+            if (!completionsByDate[dateStr]) {
+              completionsByDate[dateStr] = [];
+            }
+            
+            if (!completionsByDate[dateStr].includes(exerciseName)) {
+              completionsByDate[dateStr].push(exerciseName);
             }
           }
         }
-        
-        if (latestCompletion) {
-          exerciseCompletionDates.push(latestCompletion);
-        }
       }
       
-      // Training is only completed if ALL exercises have been completed
-      if (exerciseCompletionDates.length === exerciseNames.length) {
-        // The training completion date is the latest date among all exercises
-        // (when the last exercise of the training was completed)
-        const trainingCompletionDate = new Date(Math.max(...exerciseCompletionDates.map(d => d.getTime())));
-        
-        if (!mostRecentTrainingDate || trainingCompletionDate > mostRecentTrainingDate) {
-          mostRecentTrainingDate = trainingCompletionDate;
-          lastCompletedTraining = trainingType;
+      // Find the most recent date where ALL exercises were completed
+      for (const [dateStr, completedExercises] of Object.entries(completionsByDate)) {
+        if (completedExercises.length === exerciseNames.length) {
+          // All exercises completed on this date - this is a complete training
+          const trainingDate = new Date(dateStr);
+          
+          if (!mostRecentTrainingDate || trainingDate > mostRecentTrainingDate) {
+            mostRecentTrainingDate = trainingDate;
+            lastCompletedTraining = trainingType;
+          }
         }
       }
     }
