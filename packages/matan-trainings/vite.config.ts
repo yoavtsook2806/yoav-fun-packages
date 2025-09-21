@@ -32,7 +32,14 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Aggressive update strategy - activates new SW immediately
+        skipWaiting: true,
+        clientsClaim: true,
+        // Clean up old caches automatically  
+        cleanupOutdatedCaches: true,
+        // Disable navigation fallback to avoid caching issues
+        navigateFallback: null
       }
     })
   ],
