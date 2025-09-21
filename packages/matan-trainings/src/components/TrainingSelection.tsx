@@ -37,24 +37,53 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     return minCompletions === Infinity ? 0 : minCompletions;
   };
   
-  // Helper function to get next recommended training
+  // Helper function to get next recommended training based on circular sequence
   const getNextRecommendedTraining = (): string | null => {
     if (availableTrainings.length === 0) return null;
     if (availableTrainings.length === 1) return availableTrainings[0];
     
-    // Find the training with the least completions
-    let minCompletions = Infinity;
-    let recommendedTraining = availableTrainings[0];
+    // Get exercise history to find the last completed training
+    const exerciseHistory = getExerciseHistory();
     
-    for (const training of availableTrainings) {
-      const count = getTrainingCompletionCount(training);
-      if (count < minCompletions) {
-        minCompletions = count;
-        recommendedTraining = training;
+    // Find the most recent training completion across all trainings
+    let lastCompletedTraining: string | null = null;
+    let mostRecentDate: Date | null = null;
+    
+    for (const trainingType of availableTrainings) {
+      if (!trainings[trainingType]) continue;
+      
+      const exerciseNames = Object.keys(trainings[trainingType]);
+      
+      // Check if this training was completed by looking at all exercises
+      for (const exerciseName of exerciseNames) {
+        const exerciseEntries = exerciseHistory[exerciseName] || [];
+        
+        // Find the most recent entry for this exercise
+        for (const entry of exerciseEntries) {
+          const entryDate = new Date(entry.date);
+          
+          // Check if this exercise was completed (completed all sets)
+          if (entry.completedSets >= entry.totalSets) {
+            if (!mostRecentDate || entryDate > mostRecentDate) {
+              mostRecentDate = entryDate;
+              lastCompletedTraining = trainingType;
+            }
+          }
+        }
       }
     }
     
-    return recommendedTraining;
+    // If we found a last completed training, get the next one in circular order
+    if (lastCompletedTraining) {
+      const currentIndex = availableTrainings.indexOf(lastCompletedTraining);
+      if (currentIndex !== -1) {
+        const nextIndex = (currentIndex + 1) % availableTrainings.length;
+        return availableTrainings[nextIndex];
+      }
+    }
+    
+    // Fallback: if no completed training found, recommend the first one
+    return availableTrainings[0];
   };
   
   const nextRecommended = getNextRecommendedTraining();
