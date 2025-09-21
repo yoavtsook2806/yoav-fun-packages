@@ -2065,10 +2065,39 @@ button:disabled {
   flex-direction: column;
   gap: var(--space-3);
   margin: var(--space-4) 0;
-  padding: var(--space-3);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+  padding: var(--space-4);
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.15) 0%, 
+    rgba(99, 102, 241, 0.12) 50%,
+    rgba(236, 72, 153, 0.08) 100%);
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.exercise-info-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(16, 185, 129, 0.8) 50%, 
+    transparent 100%);
+  animation: topShine 3s ease-in-out infinite;
+}
+
+@keyframes topShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .exercise-description {
@@ -2088,29 +2117,65 @@ button:disabled {
 }
 
 .exercise-video-button {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: linear-gradient(135deg, 
+    #10b981 0%, 
+    #059669 50%, 
+    #047857 100%);
   color: white;
   border: none;
   border-radius: var(--radius-lg);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 15px rgba(16, 185, 129, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.exercise-video-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%);
+  transition: left 0.6s ease;
+}
+
+.exercise-video-button:hover::before {
+  left: 100%;
 }
 
 .exercise-video-button:hover {
-  background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(135deg, 
+    #059669 0%, 
+    #047857 50%, 
+    #065f46 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .exercise-video-button:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 
+    0 4px 15px rgba(16, 185, 129, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .info-exercise-name {
@@ -3944,28 +4009,76 @@ button:disabled {
 
 /* First Time Setup Styles */
 .setup-progress {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-align: center;
+  position: relative;
 }
 
 .progress-text {
-  color: #ffffff;
-  font-size: 12px;
-  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background-color: #333;
-  border-radius: 4px;
+  height: 10px;
+  background: linear-gradient(90deg, 
+    rgba(51, 51, 51, 0.8) 0%, 
+    rgba(68, 68, 68, 0.6) 100%);
+  border-radius: 10px;
   overflow: hidden;
+  position: relative;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%);
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #4CAF50;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, 
+    #10b981 0%, 
+    #34d399 50%, 
+    #6366f1 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.progress-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 /* Modern Setup Sections */
@@ -4142,6 +4255,41 @@ button:disabled {
   display: flex !important;
   flex-direction: column !important;
   max-height: 95vh !important;
+  background: linear-gradient(145deg, 
+    rgba(30, 41, 59, 0.95) 0%, 
+    rgba(15, 23, 42, 0.98) 50%, 
+    rgba(30, 41, 59, 0.95) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 2px solid rgba(99, 102, 241, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.setup-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg, 
+    rgba(16, 185, 129, 0.08) 0%, 
+    rgba(99, 102, 241, 0.06) 25%,
+    rgba(236, 72, 153, 0.04) 50%,
+    rgba(99, 102, 241, 0.06) 75%,
+    rgba(16, 185, 129, 0.08) 100%);
+  z-index: -1;
+  border-radius: inherit;
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
 }
 
 /* Exercise title with video icon */
@@ -4259,25 +4407,93 @@ button:disabled {
 }
 
 .setup-next-btn {
-  background: var(--gradient-warning);
+  background: linear-gradient(135deg, 
+    #6366f1 0%, 
+    #8b5cf6 50%, 
+    #a855f7 100%);
   color: white;
   border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 15px rgba(99, 102, 241, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.setup-next-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  border-radius: 50%;
+}
+
+.setup-next-btn:hover:not(:disabled)::after {
+  width: 300px;
+  height: 300px;
 }
 
 .setup-next-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+  background: linear-gradient(135deg, 
+    #5b21b6 0%, 
+    #7c3aed 50%, 
+    #9333ea 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(99, 102, 241, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .setup-start-btn {
-  background: var(--gradient-success);
+  background: linear-gradient(135deg, 
+    #10b981 0%, 
+    #059669 50%, 
+    #047857 100%);
   color: white;
   border: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 15px rgba(16, 185, 129, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.setup-start-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  border-radius: 50%;
+}
+
+.setup-start-btn:hover:not(:disabled)::after {
+  width: 300px;
+  height: 300px;
 }
 
 .setup-start-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+  background: linear-gradient(135deg, 
+    #059669 0%, 
+    #047857 50%, 
+    #065f46 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .setup-nav-btn:disabled {
