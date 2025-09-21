@@ -1611,6 +1611,17 @@ button:disabled {
   text-align: center;
 }
 
+.app-version {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 11px;
+  color: #aaa;
+  opacity: 0.6;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
 @media (max-width: 768px) {
   .settings-modal {
     width: 95%;

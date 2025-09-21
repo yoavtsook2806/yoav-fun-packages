@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAvailableVersions } from '../data/trainingPlans';
 import { getVolume, saveVolume, internalToDisplayVolume, displayToInternalVolume, testSound } from '../utils/soundUtils';
+import { APP_VERSION } from '../constants';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -119,6 +120,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </p>
             </div>
           </div>
+        </div>
+        
+        {/* App Version */}
+        <div className="app-version">
+          v{APP_VERSION}
         </div>
       </div>
 
