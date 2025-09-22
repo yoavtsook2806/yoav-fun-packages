@@ -31,6 +31,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
   const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
+  const [showEndExerciseConfirm, setShowEndExerciseConfirm] = useState(false);
 
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
@@ -157,6 +158,45 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleSeeInfo = () => {
     setInfoModal(currentExerciseName);
+  };
+
+  const handleEndExercise = () => {
+    setShowEndExerciseConfirm(true);
+  };
+
+  const handleConfirmEndExercise = () => {
+    // Mark exercise as completed with all sets done at target values
+    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName) || 0;
+    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts;
+    
+    // Create sets data for all remaining sets with target values
+    const completedSetsData = [];
+    for (let i = 0; i < currentExercise.numberOfSets; i++) {
+      completedSetsData.push({
+        weight: targetWeight,
+        repeats: targetRepeats,
+      });
+    }
+
+    // Mark as completed
+    onUpdateExerciseState(currentExerciseName, {
+      currentSet: currentExercise.numberOfSets,
+      completed: true,
+      isActive: false,
+      isResting: false,
+      timeLeft: undefined,
+      startTimestamp: undefined,
+      restDuration: undefined,
+      setsData: completedSetsData,
+    });
+
+    setShowEndExerciseConfirm(false);
+    // Show feedback modal when exercise is completed
+    setFeedbackModal(currentExerciseName);
+  };
+
+  const handleCancelEndExercise = () => {
+    setShowEndExerciseConfirm(false);
   };
 
   const handleSeeLastTraining = () => {
@@ -373,6 +413,18 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           >
             ℹ️
           </button>
+          <button
+            className="header-action-btn"
+            onClick={handleEndExercise}
+            title="סיים תרגיל"
+            style={{ 
+              background: !currentExerciseState.completed ? '#ff6b6b' : '#2a2a2a',
+              borderColor: !currentExerciseState.completed ? '#ff5252' : '#555'
+            }}
+            disabled={currentExerciseState.completed}
+          >
+            ⏹️
+          </button>
         </div>
         
         <div className="header-forms-row" onClick={(e) => e.stopPropagation()}>
@@ -569,6 +621,36 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           exerciseName={lastTrainingModal}
           onClose={() => setLastTrainingModal(null)}
         />
+      )}
+
+      {/* End Exercise Confirmation Modal */}
+      {showEndExerciseConfirm && (
+        <div className="modal-overlay" onClick={handleCancelEndExercise}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>סיום תרגיל</h3>
+            </div>
+            <div className="modal-body">
+              <p>האם אתה בטוח שברצונך לסיים את התרגיל?</p>
+              <p>התרגיל יסומן כמושלם עם כל הסטים בערכי היעד.</p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="red-button"
+                onClick={handleConfirmEndExercise}
+                style={{ marginLeft: '10px' }}
+              >
+                כן, סיים תרגיל
+              </button>
+              <button
+                className="gray-button"
+                onClick={handleCancelEndExercise}
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
