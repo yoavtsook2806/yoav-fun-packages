@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getExerciseHistory } from '../utils/exerciseHistory';
+import { getExerciseHistory, getDailyTrainingProgress } from '../utils/exerciseHistory';
 
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
@@ -45,7 +45,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     // Get exercise history to find the last completed training
     const exerciseHistory = getExerciseHistory();
     
-    // Find the most recent COMPLETE training (all exercises completed in same session)
+    // Find the most recent training with SOME exercises completed in same session
     let lastCompletedTraining: string | null = null;
     let mostRecentTrainingDate: Date | null = null;
     
@@ -76,10 +76,10 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
         }
       }
       
-      // Find the most recent date where ALL exercises were completed
+      // Find the most recent date where SOME exercises were completed
       for (const [dateStr, completedExercises] of Object.entries(completionsByDate)) {
-        if (completedExercises.length === exerciseNames.length) {
-          // All exercises completed on this date - this is a complete training
+        if (completedExercises.length > 0) {
+          // Some exercises completed on this date - this is a partial/complete training
           const trainingDate = new Date(dateStr);
           
           if (!mostRecentTrainingDate || trainingDate > mostRecentTrainingDate) {
@@ -103,7 +103,19 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     return availableTrainings[0];
   };
   
-  const nextRecommended = getNextRecommendedTraining();
+  // Helper function to get current training (training with progress today)
+  const getCurrentTraining = (): string | null => {
+    for (const trainingType of availableTrainings) {
+      const dailyProgress = getDailyTrainingProgress(trainingType);
+      if (dailyProgress && Object.keys(dailyProgress.exerciseProgress).length > 0) {
+        return trainingType;
+      }
+    }
+    return null;
+  };
+
+  const currentTraining = getCurrentTraining();
+  const nextRecommended = currentTraining ? null : getNextRecommendedTraining();
 
   const handleStartTraining = () => {
     if (selectedTraining) {
@@ -120,18 +132,20 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
         {availableTrainings.map((training) => {
           const completionCount = getTrainingCompletionCount(training);
           const isRecommended = training === nextRecommended;
+          const isCurrent = training === currentTraining;
           
           return (
             <button
               key={training}
-              className={`training-button ${selectedTraining === training ? 'selected' : ''} ${isRecommended ? 'recommended' : ''}`}
+              className={`training-button ${selectedTraining === training ? 'selected' : ''} ${isRecommended ? 'recommended' : ''} ${isCurrent ? 'current' : ''}`}
               onClick={() => setSelectedTraining(training)}
             >
               <div className="training-button-content">
                 <span className="training-name">אימון {training}</span>
                 <div className="training-indicators">
                   <span className="completion-count">{completionCount}×</span>
-                  {isRecommended && <span className="next-indicator">הבא</span>}
+                  {isCurrent && <span className="current-indicator">נוכחי</span>}
+                  {isRecommended && !isCurrent && <span className="next-indicator">הבא</span>}
                 </div>
               </div>
             </button>

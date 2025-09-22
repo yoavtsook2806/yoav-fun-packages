@@ -562,6 +562,11 @@ button:disabled {
   box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 152, 0, 0.3);
 }
 
+.training-button.current {
+  border-color: #4caf50;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
 .training-button-content {
   display: flex;
   justify-content: space-between;
@@ -595,6 +600,15 @@ button:disabled {
 
 .next-indicator {
   background: #ff9800;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.current-indicator {
+  background: #4caf50;
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
