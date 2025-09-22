@@ -5108,3 +5108,229 @@ button:disabled {
     font-size: var(--text-base);
   }
 }
+
+/* Video Modal Styles */
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+  backdrop-filter: blur(4px);
+}
+
+.video-modal {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-primary);
+}
+
+.video-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+}
+
+.video-modal-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.video-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--text-xl);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.video-modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.video-modal-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--bg-primary);
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+}
+
+.video-error {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--text-secondary);
+}
+
+.video-error p {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-lg);
+}
+
+.video-external-btn {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: 8px;
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.video-external-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.video-modal-footer {
+  padding: var(--space-4);
+  border-top: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+  display: flex;
+  justify-content: center;
+}
+
+.video-app-btn {
+  background: var(--gradient-danger);
+  color: white;
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: 8px;
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.video-app-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+}
+
+/* Mobile responsive styles for video modal */
+@media (max-width: 768px) {
+  .video-modal-overlay {
+    padding: var(--space-2);
+  }
+
+  .video-modal {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: 8px;
+  }
+
+  .video-modal-header {
+    padding: var(--space-3);
+  }
+
+  .video-modal-title {
+    font-size: var(--text-base);
+  }
+
+  .video-modal-content {
+    padding: var(--space-3);
+  }
+
+  .video-container {
+    aspect-ratio: 16/9;
+  }
+
+  .video-modal-footer {
+    padding: var(--space-3);
+  }
+
+  .video-app-btn {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .video-modal-overlay {
+    padding: var(--space-1);
+  }
+
+  .video-modal {
+    border-radius: 6px;
+  }
+
+  .video-modal-header {
+    padding: var(--space-2);
+  }
+
+  .video-modal-title {
+    font-size: var(--text-sm);
+  }
+
+  .video-modal-content {
+    padding: var(--space-2);
+  }
+
+  .video-container {
+    border-radius: 6px;
+  }
+
+  .video-app-btn {
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-3);
+  }
+}

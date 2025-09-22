@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Exercise } from '../types';
 import ExerciseModal from './ExerciseModal';
+import VideoModal from './VideoModal';
 
 interface ExerciseInfoProps {
   exerciseName: string;
@@ -15,6 +16,8 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
   onClose,
   onEdit,
 }) => {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -23,7 +26,7 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
 
   const handleVideoClick = () => {
     if (exercise.link && exercise.link.trim() !== '') {
-      window.open(exercise.link, '_blank');
+      setIsVideoModalOpen(true);
     }
   };
 
@@ -85,6 +88,13 @@ const ExerciseInfo: React.FC<ExerciseInfoProps> = ({
           </button>
         </div>
       )}
+
+      <VideoModal
+        videoUrl={exercise.link || ''}
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        exerciseName={exerciseName}
+      />
     </ExerciseModal>
   );
 };

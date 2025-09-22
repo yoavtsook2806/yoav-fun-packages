@@ -5,7 +5,9 @@
       "Bash(npx stylelint:*)",
       "Bash(grep:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

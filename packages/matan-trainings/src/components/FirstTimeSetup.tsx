@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Trainings } from '../types';
 import { getCustomExerciseTitle } from '../utils/exerciseHistory';
 import { calculateDefaultRestTime, calculateDefaultRepeats } from '../utils/exerciseHistory';
+import VideoModal from './VideoModal';
 
 interface FirstTimeSetupProps {
   trainingType: string;
@@ -26,6 +27,7 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
 }) => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [exerciseDefaults, setExerciseDefaults] = useState<{ [exerciseName: string]: ExerciseDefaults }>({});
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const currentExerciseName = exercises[currentExerciseIndex];
   const currentExercise = trainings[trainingType][currentExerciseName];
@@ -45,7 +47,7 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
 
   const handleVideoClick = () => {
     if (currentExercise.link && currentExercise.link.trim() !== '') {
-      window.open(currentExercise.link, '_blank');
+      setIsVideoModalOpen(true);
     }
   };
 
@@ -200,6 +202,13 @@ const FirstTimeSetup: React.FC<FirstTimeSetupProps> = ({
             </button>
           </div>
         </div>
+
+        <VideoModal
+          videoUrl={currentExercise.link || ''}
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+          exerciseName={currentExerciseName}
+        />
       </div>
     </div>
   );
