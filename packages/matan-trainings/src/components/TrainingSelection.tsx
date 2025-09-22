@@ -103,12 +103,25 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     return availableTrainings[0];
   };
   
-  // Helper function to get current training (training with progress today)
+  // Helper function to get current training (training with progress today but not fully completed)
   const getCurrentTraining = (): string | null => {
     for (const trainingType of availableTrainings) {
       const dailyProgress = getDailyTrainingProgress(trainingType);
       if (dailyProgress && Object.keys(dailyProgress.exerciseProgress).length > 0) {
-        return trainingType;
+        // Check if the training is not fully completed
+        if (!trainings[trainingType]) continue;
+        
+        const exerciseNames = Object.keys(trainings[trainingType]);
+        const isFullyCompleted = exerciseNames.every(exerciseName => {
+          const exercise = trainings[trainingType][exerciseName];
+          const completedSets = dailyProgress.exerciseProgress[exerciseName] || 0;
+          return completedSets >= exercise.numberOfSets;
+        });
+        
+        // Only return as current training if it's not fully completed
+        if (!isFullyCompleted) {
+          return trainingType;
+        }
       }
     }
     return null;
