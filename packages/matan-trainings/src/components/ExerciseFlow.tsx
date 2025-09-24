@@ -110,12 +110,17 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     const updatedSetsData = [...(currentExerciseState.setsData || []), currentSetData];
 
     if (isExerciseComplete) {
-      // Instead of immediately completing, show finish options
+      // Complete the exercise automatically when all sets are done naturally
       onUpdateExerciseState(currentExerciseName, {
         currentSet: newSetCount,
+        completed: true,
+        isActive: false,
+        isResting: false,
         setsData: updatedSetsData,
       });
-      setShowFinishExerciseOptions(true);
+      
+      // Show feedback modal when exercise is completed naturally
+      setFeedbackModal(currentExerciseName);
     } else {
       const restTime = currentExerciseState.customRestTime || trainingState.restTime;
       const now = Date.now();
@@ -248,18 +253,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const handleCancelFinishOptions = () => {
-    // Only reset if we came from the last set completion
-    // Check if current set equals total sets (meaning we just finished the last set)
-    if (currentExerciseState.currentSet >= currentExercise.numberOfSets) {
-      // Reset the exercise state back to active (undo the last set)
-      onUpdateExerciseState(currentExerciseName, {
-        currentSet: currentExerciseState.currentSet - 1,
-        setsData: currentExerciseState.setsData?.slice(0, -1) || [],
-        isActive: true,
-        isResting: false,
-      });
-    }
-    // If we came from header button, just close the modal without changing state
+    // Since this modal only appears when manually triggered, just close it
     setShowFinishExerciseOptions(false);
   };
 
