@@ -1,24 +1,24 @@
 import React from 'react';
-import { getExerciseLastEntry, getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
+import { getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
+import { ExerciseHistoryEntry } from '../types';
 import ExerciseModal from './ExerciseModal';
 
 interface TrainingDetailedProps {
   exerciseName: string;
+  trainingEntry: ExerciseHistoryEntry;
   onClose: () => void;
 }
 
-const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, onClose }) => {
-  const lastEntry = getExerciseLastEntry(exerciseName);
-
-  if (!lastEntry) {
+const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, trainingEntry, onClose }) => {
+  if (!trainingEntry) {
     return (
       <ExerciseModal
         exerciseName={exerciseName}
-        title="אימון אחרון"
+        title="פרטי אימון"
         onClose={onClose}
       >
         <div className="no-data-message">
-          <p>לא נמצא מידע על אימון קודם לתרגיל זה</p>
+          <p>לא נמצא מידע על האימון</p>
         </div>
       </ExerciseModal>
     );
@@ -42,32 +42,32 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, onClo
   return (
     <ExerciseModal
       exerciseName={exerciseName}
-      title="אימון אחרון"
+      title="פרטי אימון"
       onClose={onClose}
     >
       <div className="info-recommendations">
         <div className="info-recommendation-box">
           <div className="info-recommendation-label">תאריך</div>
-          <div className="info-recommendation-value">{formatDate(lastEntry.date)}</div>
+          <div className="info-recommendation-value">{formatDate(trainingEntry.date)}</div>
         </div>
         <div className="info-recommendation-box">
           <div className="info-recommendation-label">מנוחה</div>
-          <div className="info-recommendation-value">{formatTime(lastEntry.restTime)}</div>
+          <div className="info-recommendation-value">{formatTime(trainingEntry.restTime)}</div>
         </div>
         <div className="info-recommendation-box">
           <div className="info-recommendation-label">סטים</div>
-          <div className="info-recommendation-value">{lastEntry.completedSets}/{lastEntry.totalSets}</div>
+          <div className="info-recommendation-value">{trainingEntry.completedSets}/{trainingEntry.totalSets}</div>
         </div>
       </div>
 
       <div className="sets-details">
         <h3>פירוט סטים</h3>
-        {lastEntry.setsData && lastEntry.setsData.length > 0 ? (
+        {trainingEntry.setsData && trainingEntry.setsData.length > 0 ? (
           <div className="sets-grid">
-            {lastEntry.setsData.map((setData, index) => {
+            {trainingEntry.setsData.map((setData, index) => {
               // Get the target values that were used for this training
-              const targetWeight = getDefaultWeight(exerciseName) || lastEntry.weight;
-              const targetRepeats = getDefaultRepeats(exerciseName) || lastEntry.repeats;
+              const targetWeight = getDefaultWeight(exerciseName) || trainingEntry.weight;
+              const targetRepeats = getDefaultRepeats(exerciseName) || trainingEntry.repeats;
 
               // Check if this set met the targets
               const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;
@@ -118,14 +118,14 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, onClo
         ) : (
           <div className="no-sets-data">
             <p>אין פירוט סטים זמין (אימון ישן)</p>
-            {lastEntry.weight && (
+            {trainingEntry.weight && (
               <div className="legacy-data">
-                <span>משקל: {lastEntry.weight} ק"ג</span>
+                <span>משקל: {trainingEntry.weight} ק"ג</span>
               </div>
             )}
-            {lastEntry.repeats && (
+            {trainingEntry.repeats && (
               <div className="legacy-data">
-                <span>חזרות: {lastEntry.repeats}</span>
+                <span>חזרות: {trainingEntry.repeats}</span>
               </div>
             )}
           </div>

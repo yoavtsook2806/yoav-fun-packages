@@ -4,7 +4,6 @@ import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
-import LastTrainingDetails from './LastTrainingDetails';
 import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime } from '../utils/exerciseHistory';
 import { playEndSetBeep, playCountdownBeep } from '../utils/soundUtils';
 
@@ -30,7 +29,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [feedbackModal, setFeedbackModal] = useState<string | null>(null);
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
-  const [lastTrainingModal, setLastTrainingModal] = useState<string | null>(null);
   const [showEndExerciseConfirm, setShowEndExerciseConfirm] = useState(false);
 
 
@@ -199,9 +197,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     setShowEndExerciseConfirm(false);
   };
 
-  const handleSeeLastTraining = () => {
-    setLastTrainingModal(currentExerciseName);
-  };
 
   const handleEditExercise = (exerciseName: string) => {
     console.log('=== handleEditExercise DEBUG ===');
@@ -398,13 +393,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             title="היסטוריית תרגיל"
           >
             📊
-          </button>
-          <button
-            className="header-action-btn"
-            onClick={handleSeeLastTraining}
-            title="אימון אחרון"
-          >
-            📋
           </button>
           <button
             className="header-action-btn"
@@ -615,13 +603,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         />
       )}
       
-      {/* Last Training Details Modal */}
-      {lastTrainingModal && (
-        <LastTrainingDetails
-          exerciseName={lastTrainingModal}
-          onClose={() => setLastTrainingModal(null)}
-        />
-      )}
 
       {/* End Exercise Confirmation Modal */}
       {showEndExerciseConfirm && (
