@@ -50,6 +50,49 @@ export const saveExerciseEntry = (
   }
 };
 
+// New function to update today's exercise entry
+export const updateTodaysExerciseEntry = (
+  exerciseName: string,
+  updatedSetsData: {weight?: number, repeats?: number}[]
+): void => {
+  try {
+    const history = getExerciseHistory();
+    
+    if (!history[exerciseName] || history[exerciseName].length === 0) {
+      return; // No history to update
+    }
+    
+    // Find today's entry (most recent entry should be today's)
+    const today = new Date().toDateString();
+    const entryIndex = history[exerciseName].findIndex(entry => {
+      const entryDate = new Date(entry.date).toDateString();
+      return entryDate === today;
+    });
+    
+    if (entryIndex !== -1) {
+      // Update the existing entry with new sets data
+      const existingEntry = history[exerciseName][entryIndex];
+      
+      // Get first set data for backward compatibility (weight/repeats display in history)
+      const firstSetData = updatedSetsData[0];
+      const firstSetWeight = firstSetData?.weight;
+      const firstSetRepeats = firstSetData?.repeats;
+      
+      const updatedEntry = {
+        ...existingEntry,
+        weight: firstSetWeight, // First set weight for display
+        repeats: firstSetRepeats, // First set repeats for display
+        setsData: updatedSetsData, // Complete per-set data
+      };
+      
+      history[exerciseName][entryIndex] = updatedEntry;
+      localStorage.setItem(EXERCISE_HISTORY_KEY, JSON.stringify(history));
+    }
+  } catch (error) {
+    console.error('Error updating exercise history:', error);
+  }
+};
+
 export const getExerciseLastEntry = (exerciseName: string): ExerciseHistoryEntry | null => {
   const history = getExerciseHistory();
   const exerciseHistory = history[exerciseName];

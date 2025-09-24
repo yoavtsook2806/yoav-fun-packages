@@ -4,7 +4,7 @@ import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
-import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime } from '../utils/exerciseHistory';
+import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime, updateTodaysExerciseEntry } from '../utils/exerciseHistory';
 import { playEndSetBeep, playCountdownBeep } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
@@ -30,6 +30,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const [infoModal, setInfoModal] = useState<string | null>(null);
   const [editModal, setEditModal] = useState<string | null>(null);
   const [showEndExerciseConfirm, setShowEndExerciseConfirm] = useState(false);
+  const [showFinishExerciseOptions, setShowFinishExerciseOptions] = useState(false);
+  const [showEditSetsModal, setShowEditSetsModal] = useState(false);
+  const [editingSetsData, setEditingSetsData] = useState<{weight?: number, repeats?: number}[]>([]);
 
 
   const currentExerciseName = trainingState.exercises[trainingState.currentExerciseIndex];
@@ -107,16 +110,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     const updatedSetsData = [...(currentExerciseState.setsData || []), currentSetData];
 
     if (isExerciseComplete) {
+      // Instead of immediately completing, show finish options
       onUpdateExerciseState(currentExerciseName, {
         currentSet: newSetCount,
-        completed: true,
-        isActive: false,
-        isResting: false,
         setsData: updatedSetsData,
       });
-      
-      // Show feedback modal when exercise is completed
-      setFeedbackModal(currentExerciseName);
+      setShowFinishExerciseOptions(true);
     } else {
       const restTime = currentExerciseState.customRestTime || trainingState.restTime;
       const now = Date.now();
@@ -195,6 +194,107 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleCancelEndExercise = () => {
     setShowEndExerciseConfirm(false);
+  };
+
+  // New finish exercise options handlers
+  const handleFinishAsSuccess = () => {
+    // Mark exercise as completed
+    onUpdateExerciseState(currentExerciseName, {
+      completed: true,
+      isActive: false,
+      isResting: false,
+    });
+    
+    setShowFinishExerciseOptions(false);
+    // Show feedback modal when exercise is completed
+    setFeedbackModal(currentExerciseName);
+  };
+
+  const handleFinishAndEditData = () => {
+    // Initialize editing data with current sets data
+    const currentSetsData = currentExerciseState.setsData || [];
+    const editingData = [];
+    
+    for (let i = 0; i < currentExercise.numberOfSets; i++) {
+      if (i < currentSetsData.length) {
+        editingData.push({ ...currentSetsData[i] });
+      } else {
+        // Fill missing sets with default values
+        editingData.push({
+          weight: currentExerciseState.weight || getDefaultWeight(currentExerciseName),
+          repeats: currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts
+        });
+      }
+    }
+    
+    setEditingSetsData(editingData);
+    setShowFinishExerciseOptions(false);
+    setShowEditSetsModal(true);
+  };
+
+  const handleCancelFinishOptions = () => {
+    // Reset the exercise state back to active
+    onUpdateExerciseState(currentExerciseName, {
+      currentSet: currentExerciseState.currentSet - 1,
+      setsData: currentExerciseState.setsData?.slice(0, -1) || [],
+    });
+    setShowFinishExerciseOptions(false);
+  };
+
+  const handleSaveEditedSets = () => {
+    // Update exercise state with edited sets data
+    onUpdateExerciseState(currentExerciseName, {
+      completed: true,
+      isActive: false,
+      isResting: false,
+      setsData: editingSetsData,
+    });
+    
+    setShowEditSetsModal(false);
+    setEditingSetsData([]);
+    // Show feedback modal when exercise is completed
+    setFeedbackModal(currentExerciseName);
+  };
+
+  const handleCancelEditSets = () => {
+    setShowEditSetsModal(false);
+    setEditingSetsData([]);
+    // Go back to finish options
+    setShowFinishExerciseOptions(true);
+  };
+
+  // Handler for editing completed exercises
+  const handleEditCompletedExercise = () => {
+    // Initialize editing data with current sets data
+    const currentSetsData = currentExerciseState.setsData || [];
+    const editingData = [];
+    
+    for (let i = 0; i < currentExercise.numberOfSets; i++) {
+      if (i < currentSetsData.length) {
+        editingData.push({ ...currentSetsData[i] });
+      } else {
+        editingData.push({
+          weight: getDefaultWeight(currentExerciseName),
+          repeats: getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts
+        });
+      }
+    }
+    
+    setEditingSetsData(editingData);
+    setShowEditSetsModal(true);
+  };
+
+  const handleSaveEditedCompletedExercise = () => {
+    // Update exercise state with edited sets data
+    onUpdateExerciseState(currentExerciseName, {
+      setsData: editingSetsData,
+    });
+    
+    // Also update today's history entry
+    updateTodaysExerciseEntry(currentExerciseName, editingSetsData);
+    
+    setShowEditSetsModal(false);
+    setEditingSetsData([]);
   };
 
 
@@ -505,13 +605,22 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               <div style={{ fontSize: '24px', color: '#4CAF50', marginBottom: '20px' }}>
                 ✅ תרגיל הושלם!
               </div>
-              <button
-                className="green-button"
-                onClick={onNextExercise}
-                style={{ padding: '15px 30px', fontSize: '18px' }}
-              >
-                המשך לתרגיל הבא
-              </button>
+              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button
+                  className="orange-button"
+                  onClick={handleEditCompletedExercise}
+                  style={{ padding: '12px 24px', fontSize: '16px' }}
+                >
+                  ✏️ ערוך נתונים
+                </button>
+                <button
+                  className="green-button"
+                  onClick={onNextExercise}
+                  style={{ padding: '15px 30px', fontSize: '18px' }}
+                >
+                  המשך לתרגיל הבא
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -626,6 +735,130 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               <button
                 className="gray-button"
                 onClick={handleCancelEndExercise}
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Finish Exercise Options Modal */}
+      {showFinishExerciseOptions && (
+        <div className="modal-overlay" onClick={handleCancelFinishOptions}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>סיום תרגיל</h3>
+            </div>
+            <div className="modal-body">
+              <p>איך תרצה לסיים את התרגיל?</p>
+            </div>
+            <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
+              <button
+                className="green-button"
+                onClick={handleFinishAsSuccess}
+                style={{ width: '100%', padding: '15px' }}
+              >
+                ✅ סיים בהצלחה
+              </button>
+              <button
+                className="orange-button"
+                onClick={handleFinishAndEditData}
+                style={{ width: '100%', padding: '15px' }}
+              >
+                ✏️ סיים וערוך נתונים
+              </button>
+              <button
+                className="gray-button"
+                onClick={handleCancelFinishOptions}
+                style={{ width: '100%', padding: '15px' }}
+              >
+                ❌ ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Sets Data Modal */}
+      {showEditSetsModal && (
+        <div className="modal-overlay" onClick={currentExerciseState.completed ? handleCancelEditSets : handleCancelEditSets}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', maxHeight: '80vh', overflow: 'auto' }}>
+            <div className="modal-header">
+              <h3>ערוך נתוני סטים</h3>
+            </div>
+            <div className="modal-body">
+              <div style={{ display: 'grid', gap: '15px' }}>
+                {editingSetsData.map((setData, index) => (
+                  <div key={index} style={{ 
+                    background: 'var(--bg-card)', 
+                    padding: '15px', 
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-primary)'
+                  }}>
+                    <h4 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>סט {index + 1}</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>משקל (ק"ג)</label>
+                        <input
+                          type="number"
+                          value={setData.weight || ''}
+                          onChange={(e) => {
+                            const newData = [...editingSetsData];
+                            newData[index] = { ...newData[index], weight: parseFloat(e.target.value) || undefined };
+                            setEditingSetsData(newData);
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '8px',
+                            border: '1px solid var(--border-primary)',
+                            borderRadius: '4px',
+                            background: 'var(--bg-primary)',
+                            color: 'var(--text-primary)',
+                            fontSize: '16px'
+                          }}
+                          placeholder="משקל"
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>חזרות</label>
+                        <input
+                          type="number"
+                          value={setData.repeats || ''}
+                          onChange={(e) => {
+                            const newData = [...editingSetsData];
+                            newData[index] = { ...newData[index], repeats: parseInt(e.target.value) || undefined };
+                            setEditingSetsData(newData);
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '8px',
+                            border: '1px solid var(--border-primary)',
+                            borderRadius: '4px',
+                            background: 'var(--bg-primary)',
+                            color: 'var(--text-primary)',
+                            fontSize: '16px'
+                          }}
+                          placeholder="חזרות"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="green-button"
+                onClick={currentExerciseState.completed ? handleSaveEditedCompletedExercise : handleSaveEditedSets}
+                style={{ marginLeft: '10px', padding: '12px 24px' }}
+              >
+                💾 שמור שינויים
+              </button>
+              <button
+                className="gray-button"
+                onClick={handleCancelEditSets}
+                style={{ padding: '12px 24px' }}
               >
                 ביטול
               </button>
