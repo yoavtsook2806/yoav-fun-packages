@@ -267,7 +267,7 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
         <div className="formula-modal-overlay" onClick={() => setShowFormulaInfo(false)}>
           <div className="formula-modal" onClick={(e) => e.stopPropagation()}>
             <div className="formula-modal-header">
-              <h3>איך מחושב הנפח המתואם?</h3>
+              <h3>איך מחושב</h3>
               <button 
                 className="formula-close-btn"
                 onClick={() => setShowFormulaInfo(false)}

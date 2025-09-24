@@ -4080,12 +4080,12 @@ button:disabled {
 }
 
 .history-tab:hover {
-  background: var(--bg-glass);
+  background: transparent;
   color: var(--text-primary);
 }
 
 .history-tab.active {
-  background: var(--bg-glass);
+  background: transparent;
   color: var(--primary-light);
   border-bottom: 3px solid var(--primary);
 }
@@ -4094,10 +4094,12 @@ button:disabled {
   content: '';
   position: absolute;
   bottom: -1px;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
   height: 3px;
   background: var(--gradient-primary);
+  border-radius: 2px 2px 0 0;
 }
 
 .history-tab-content {
@@ -4265,9 +4267,10 @@ button:disabled {
   box-shadow: var(--shadow-xl);
   width: 100%;
   max-width: 600px;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
+  margin: var(--space-4) 0;
 }
 
 .formula-modal-header {
@@ -4312,8 +4315,9 @@ button:disabled {
 
 .formula-modal-content {
   padding: var(--space-6);
+  padding-bottom: var(--space-8);
   overflow-y: auto;
-  max-height: 60vh;
+  max-height: 65vh;
 }
 
 .formula-explanation {
@@ -4372,11 +4376,21 @@ button:disabled {
   
   .formula-modal {
     max-width: 95vw;
-    margin: var(--space-4);
+    max-height: 90vh;
+    margin: var(--space-2);
   }
   
   .formula-modal-content {
     padding: var(--space-4);
+    padding-bottom: var(--space-6);
+    max-height: 70vh;
+  }
+  
+  .formula-modal-overlay {
+    padding: var(--space-2);
+    align-items: flex-start;
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
   }
 }
 
