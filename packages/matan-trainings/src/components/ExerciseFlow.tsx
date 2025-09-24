@@ -850,38 +850,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               animation: 'shimmer 8s ease-in-out infinite'
             }} />
             
-            <div className="info-header" style={{
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
-              borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
-              position: 'relative'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '4px',
-                background: 'linear-gradient(90deg, #10b981, #6366f1, #ec4899, #6366f1, #10b981)',
-                backgroundSize: '300% 100%',
-                animation: 'gradientFlow 3s ease-in-out infinite'
-              }} />
-              <h2 style={{
-                background: 'linear-gradient(135deg, #10b981, #6366f1)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontSize: 'var(--text-2xl)',
-                fontWeight: '800',
-                textShadow: '0 0 30px rgba(99, 102, 241, 0.3)'
-              }}>
-                ✏️ ערוך נתוני סטים
-              </h2>
-              <button className="close-button" onClick={handleCancelEditSets} style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                borderColor: 'rgba(239, 68, 68, 0.3)',
-                color: '#ef4444',
-                transition: 'all 0.3s ease'
-              }}>
+            <div className="info-header">
+              <h2>ערוך נתוני סטים</h2>
+              <button className="close-button" onClick={handleCancelEditSets}>
                 ✕
               </button>
             </div>
@@ -905,27 +876,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                       transition: 'all 0.3s ease',
                       animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                     }}>
-                      {/* Set number with gradient background */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '-10px',
-                        right: '-10px',
-                        width: '60px',
-                        height: '60px',
-                        background: 'linear-gradient(135deg, #6366f1, #10b981)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 'var(--text-sm)',
-                        fontWeight: '800',
-                        color: 'white',
-                        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
-                        transform: 'rotate(15deg)'
-                      }}>
-                        {index + 1}
-                      </div>
-                      
                       <h4 style={{ 
                         margin: '0 0 var(--space-4) 0', 
                         fontSize: 'var(--text-xl)', 
@@ -934,8 +884,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
-                        textAlign: 'right',
-                        paddingRight: '50px'
+                        textAlign: 'right'
                       }}>
                         סט {index + 1}
                       </h4>
