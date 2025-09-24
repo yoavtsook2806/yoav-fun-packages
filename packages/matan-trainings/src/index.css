@@ -2735,197 +2735,38 @@ button:disabled {
   opacity: 1;
 }
 
-/* Modern History List Design */
-.modern-history-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
-}
-
-.modern-history-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
+.history-entry.clickable-date {
   cursor: pointer;
-  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.03) 0%, rgba(16, 185, 129, 0.02) 100%);
   position: relative;
-  overflow: hidden;
 }
 
-.modern-history-card::before {
-  content: '';
+.history-entry.clickable-date::after {
+  content: '👆 לחץ לפירוט';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-.modern-history-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-light);
-}
-
-.modern-history-card:hover::before {
-  transform: scaleX(1);
-}
-
-.modern-history-card:active {
-  transform: translateY(0);
-}
-
-.history-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--space-3);
-}
-
-.history-date {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.date-text {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.date-day {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.history-arrow {
-  color: var(--text-muted);
-  transition: all 0.2s ease;
-  opacity: 0.6;
-}
-
-.modern-history-card:hover .history-arrow {
-  color: var(--primary);
-  opacity: 1;
-  transform: translateX(4px);
-}
-
-.history-card-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
-}
-
-.history-stat {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
-  background: var(--background);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-}
-
-.stat-icon {
-  font-size: var(--text-lg);
-  flex-shrink: 0;
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.stat-label {
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
   font-size: var(--text-xs);
   color: var(--text-muted);
-  font-weight: 500;
-}
-
-.stat-value {
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.history-card-footer {
-  border-top: 1px solid var(--border-light);
-  padding-top: var(--space-2);
-  text-align: center;
-}
-
-.click-hint {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  font-style: italic;
   opacity: 0.7;
-  transition: opacity 0.2s ease;
+  transition: all var(--transition-fast);
+  pointer-events: none;
 }
 
-.modern-history-card:hover .click-hint {
+.history-entry.clickable-date:hover {
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%);
+  transform: translateX(-4px) translateY(-2px);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.history-entry.clickable-date:hover::after {
   opacity: 1;
   color: var(--primary-light);
-}
-
-/* Empty state */
-.no-history-message {
-  text-align: center;
-  padding: var(--space-8) var(--space-4);
-  color: var(--text-muted);
-}
-
-.no-history-icon {
-  font-size: 3rem;
-  margin-bottom: var(--space-3);
-}
-
-.no-history-message h3 {
-  margin: 0 0 var(--space-2) 0;
-  color: var(--text-primary);
-  font-size: var(--text-lg);
-}
-
-.no-history-message p {
-  margin: 0;
-  font-size: var(--text-sm);
-}
-
-/* Mobile optimizations */
-@media (max-width: 480px) {
-  .modern-history-card {
-    padding: var(--space-3);
-  }
-  
-  .history-card-stats {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
-  }
-  
-  .history-stat {
-    padding: var(--space-2);
-  }
-  
-  .stat-info {
-    gap: 2px;
-  }
-  
-  .date-text {
-    font-size: var(--text-base);
-  }
+  transform: translateY(-50%) scale(1.1);
 }
 
 .history-col {
@@ -4897,6 +4738,7 @@ button:disabled {
     font-size: var(--text-base);
     margin-top: var(--space-3);
   }
+}
   
   .feedback-content {
     margin-bottom: 20px;

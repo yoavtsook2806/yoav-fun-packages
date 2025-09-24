@@ -203,74 +203,35 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
           {/* Tab Content */}
           <div className="history-tab-content">
             {activeTab === 'history' ? (
-              <div className="modern-history-list">
-                {exerciseHistory.length === 0 ? (
-                  <div className="no-history-message">
-                    <div className="no-history-icon">📊</div>
-                    <h3>אין היסטוריית אימונים</h3>
-                    <p>התחל להתאמן כדי לראות את ההיסטוריה שלך כאן</p>
-                  </div>
-                ) : (
-                  exerciseHistory.map((entry, index) => (
-                    <div 
-                      key={index} 
-                      className="modern-history-card"
-                      onClick={() => handleEntryClick(entry)}
-                    >
-                      <div className="history-card-header">
-                        <div className="history-date">
-                          <span className="date-text">{formatDate(entry.date)}</span>
-                          <span className="date-day">{formatDateTime(entry.date).split(',')[0]}</span>
-                        </div>
-                        <div className="history-arrow">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M8 4L16 12L8 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="history-card-stats">
-                        <div className="history-stat">
-                          <div className="stat-icon">🏋️</div>
-                          <div className="stat-info">
-                            <span className="stat-label">משקל</span>
-                            <span className="stat-value">{entry.weight ? `${entry.weight} ק"ג` : 'לא נרשם'}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="history-stat">
-                          <div className="stat-icon">🔢</div>
-                          <div className="stat-info">
-                            <span className="stat-label">חזרות</span>
-                            <span className="stat-value">{entry.repeats ? entry.repeats : 'לא נרשם'}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="history-stat">
-                          <div className="stat-icon">⏱️</div>
-                          <div className="stat-info">
-                            <span className="stat-label">מנוחה</span>
-                            <span className="stat-value">{formatRestTime(entry.restTime)}</span>
-                          </div>
-                        </div>
-                        
-                        {entry.setsData && entry.setsData.length > 0 && (
-                          <div className="history-stat">
-                            <div className="stat-icon">📊</div>
-                            <div className="stat-info">
-                              <span className="stat-label">סטים</span>
-                              <span className="stat-value">{entry.setsData.length} סטים</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className="history-card-footer">
-                        <span className="click-hint">לחץ לפירוט מלא</span>
-                      </div>
+              <div className="history-list">
+                <div className="history-list-header">
+                  <div className="history-col">תאריך</div>
+                  <div className="history-col">משקל</div>
+                  <div className="history-col">מנוחה</div>
+                  <div className="history-col">חזרות</div>
+                </div>
+                
+                {exerciseHistory.map((entry, index) => (
+                  <div 
+                    key={index} 
+                    className="history-entry clickable-date"
+                    onClick={() => handleEntryClick(entry)}
+                    title="לחץ לפירוט מלא של האימון"
+                  >
+                    <div className="history-col">
+                      {formatDate(entry.date)}
                     </div>
-                  ))
-                )}
+                    <div className="history-col">
+                      {entry.weight ? `${entry.weight} ק"ג` : '-'}
+                    </div>
+                    <div className="history-col">
+                      {formatRestTime(entry.restTime)}
+                    </div>
+                    <div className="history-col">
+                      {entry.repeats ? entry.repeats : '-'}
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <ExercisePerformanceGraph 
