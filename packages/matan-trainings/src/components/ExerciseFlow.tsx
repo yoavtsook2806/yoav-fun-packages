@@ -778,18 +778,39 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                 <p style={{ marginBottom: 'var(--space-6)', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
                   איך תרצה לסיים את התרגיל?
                 </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: 'var(--space-4)',
+                  alignItems: 'stretch'
+                }}>
                   <button
                     className="green-button"
                     onClick={handleFinishAsSuccess}
-                    style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+                    style={{ 
+                      width: '100%', 
+                      padding: '15px', 
+                      fontSize: '16px',
+                      minHeight: '56px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     ✅ סיים בהצלחה
                   </button>
                   <button
                     className="orange-button"
                     onClick={handleFinishAndEditData}
-                    style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+                    style={{ 
+                      width: '100%', 
+                      padding: '15px', 
+                      fontSize: '16px',
+                      minHeight: '56px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     ✏️ סיים וערוך נתונים
                   </button>
