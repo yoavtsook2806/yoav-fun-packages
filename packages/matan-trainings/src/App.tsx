@@ -69,12 +69,18 @@ function App() {
     // Fetch new trainings on app load
     const initializeApp = async () => {
       try {
-        const response = await fetchNewTrainings();
-        if (response.success && response.data) {
-          // Update current training plan if we got new data from server
-          if (response.data.version !== currentTrainingPlan.version) {
-            setCurrentTrainingPlan(response.data);
-            console.log('Updated to new training plan:', response.data.version);
+        const response = await fetchNewTrainings(currentTrainingPlan.version);
+        if (response.success && response.data && response.data.length > 0) {
+          // Get the latest training plan from the newer ones
+          const latestNewPlan = response.data[response.data.length - 1];
+          
+          // Update current training plan if we got newer data
+          if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
+            setCurrentTrainingPlan(latestNewPlan);
+            console.log('Updated to new training plan:', latestNewPlan.version);
+            console.log('Available newer versions:', response.data.map(p => p.version));
+          } else {
+            console.log('No newer training plans available');
           }
         }
       } catch (error) {

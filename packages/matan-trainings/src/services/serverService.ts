@@ -1,4 +1,4 @@
-import { TrainingPlan, getLatestTrainingPlan } from '../data/trainingPlans';
+import { TrainingPlan, getLatestTrainingPlan, getLatestTrainingUpdates } from '../data/trainingPlans';
 import { getAppConfig } from '../utils/urlParams';
 
 /**
@@ -51,17 +51,19 @@ const markTrainingsFetched = (): void => {
 
 /**
  * Fetch new trainings from server or local data
- * This function gets the latest training and updates local storage/state
+ * This function gets trainings newer than the current version
  */
-export const fetchNewTrainings = async (): Promise<ServerResponse<TrainingPlan>> => {
+export const fetchNewTrainings = async (currentVersion?: string): Promise<ServerResponse<TrainingPlan[]>> => {
   const config = getAppConfig();
   
   // Check if we already fetched today
   if (!shouldFetchTrainings()) {
     console.log('Trainings already fetched today, skipping...');
+    // Return newer trainings based on current version
+    const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
     return {
       success: true,
-      data: getLatestTrainingPlan()
+      data: newerTrainings
     };
   }
   
@@ -84,33 +86,33 @@ export const fetchNewTrainings = async (): Promise<ServerResponse<TrainingPlan>>
       console.log('Simulating server call for fetchNewTrainings...');
       await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
       
-      const latestPlan = getLatestTrainingPlan();
+      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
       markTrainingsFetched();
       
       return {
         success: true,
-        data: latestPlan
+        data: newerTrainings
       };
     } else {
       // Use local data
-      const latestPlan = getLatestTrainingPlan();
+      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
       markTrainingsFetched();
       
       return {
         success: true,
-        data: latestPlan
+        data: newerTrainings
       };
     }
   } catch (error) {
     console.error('Error fetching trainings:', error);
     
     // Fallback to local data
-    const latestPlan = getLatestTrainingPlan();
+    const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
     
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-      data: latestPlan // Return local data as fallback
+      data: newerTrainings // Return local data as fallback
     };
   }
 };
