@@ -1,5 +1,56 @@
-import { TrainingPlan, getLatestTrainingPlan, getLatestTrainingUpdates } from '../data/trainingPlans';
+import { TrainingPlan, getLatestTrainingPlan, getLatestTrainingUpdates, getAllTrainingPlans } from '../data/trainingPlans';
 import { getAppConfig } from '../utils/urlParams';
+import { 
+  LAST_FETCH_DATE_KEY, 
+  SERVER_TRAINING_PLAN_KEY, 
+  USER_EXERCISE_DATA_KEY, 
+  USER_ID_KEY,
+  EXERCISE_HISTORY_KEY,
+  clearAllLocalStorageData 
+} from '../constants/localStorage';
+
+/**
+ * Get the version of the currently stored training plan
+ */
+const getCurrentStoredVersion = (): string | undefined => {
+  try {
+    const storedPlan = localStorage.getItem(SERVER_TRAINING_PLAN_KEY);
+    console.log(`🔍 Looking for stored plan in key: ${SERVER_TRAINING_PLAN_KEY}`);
+    console.log(`🔍 Found stored plan: ${storedPlan ? 'YES' : 'NO'}`);
+    
+    if (storedPlan) {
+      const plan: TrainingPlan = JSON.parse(storedPlan);
+      console.log(`🔍 Stored plan version: ${plan.version}`);
+      return plan.version;
+    }
+  } catch (error) {
+    console.error('Error getting stored training plan version:', error);
+  }
+  console.log(`🔍 Returning undefined - no stored plan found`);
+  return undefined;
+};
+
+/**
+ * Save the latest training plan to local storage
+ */
+const saveLatestTrainingPlan = (trainingPlans: TrainingPlan[]): void => {
+  console.log(`💾 saveLatestTrainingPlan called with ${trainingPlans.length} plans`);
+  if (trainingPlans.length > 0) {
+    const latestPlan = trainingPlans[trainingPlans.length - 1];
+    try {
+      localStorage.setItem(SERVER_TRAINING_PLAN_KEY, JSON.stringify(latestPlan));
+      console.log(`💾 Saved training plan v${latestPlan.version} to key: ${SERVER_TRAINING_PLAN_KEY}`);
+      
+      // Verify it was saved
+      const verification = localStorage.getItem(SERVER_TRAINING_PLAN_KEY);
+      console.log(`💾 Verification - plan saved successfully: ${verification ? 'YES' : 'NO'}`);
+    } catch (error) {
+      console.error('Error saving training plan:', error);
+    }
+  } else {
+    console.log(`💾 No training plans to save`);
+  }
+};
 
 /**
  * Interface for exercise completion data
@@ -25,28 +76,27 @@ export interface ServerResponse<T = any> {
   error?: string;
 }
 
-/**
- * Local storage keys for server-related data
- */
-const LAST_FETCH_DATE_KEY = 'lastTrainingsFetchDate';
 
 /**
- * Check if we need to fetch new trainings (once per day)
+ * Check if we need to fetch new trainings (once per minute for testing - will be changed back to 24 hours)
  */
 const shouldFetchTrainings = (): boolean => {
-  const lastFetchDate = localStorage.getItem(LAST_FETCH_DATE_KEY);
-  if (!lastFetchDate) return true;
+  const lastFetchTimestamp = localStorage.getItem(LAST_FETCH_DATE_KEY);
+  if (!lastFetchTimestamp) return true;
   
-  const today = new Date().toDateString();
-  return lastFetchDate !== today;
+  const lastFetch = new Date(parseInt(lastFetchTimestamp));
+  const now = new Date();
+  const oneMinute = 60 * 1000; // 1 minute in milliseconds
+  
+  return (now.getTime() - lastFetch.getTime()) >= oneMinute;
 };
 
 /**
- * Mark trainings as fetched today
+ * Mark trainings as fetched now
  */
 const markTrainingsFetched = (): void => {
-  const today = new Date().toDateString();
-  localStorage.setItem(LAST_FETCH_DATE_KEY, today);
+  const now = new Date().getTime().toString();
+  localStorage.setItem(LAST_FETCH_DATE_KEY, now);
 };
 
 /**
@@ -56,11 +106,21 @@ const markTrainingsFetched = (): void => {
 export const fetchNewTrainings = async (currentVersion?: string): Promise<ServerResponse<TrainingPlan[]>> => {
   const config = getAppConfig();
   
+  console.log(`🔄 fetchNewTrainings called with currentVersion: ${currentVersion || 'undefined'}`);
+  
   // Check if we already fetched today
   if (!shouldFetchTrainings()) {
     console.log('Trainings already fetched today, skipping...');
-    // Return newer trainings based on current version
-    const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
+    // Return newer trainings based on current version, or all trainings if no version specified
+    const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : getAllTrainingPlans();
+    
+    // Save the latest training plan even in cached path (in case it wasn't saved before)
+    saveLatestTrainingPlan(newerTrainings);
+    
+    console.log(`📦 Returning cached data: ${newerTrainings.length} training plan(s) ${currentVersion ? `(newer than ${currentVersion})` : '(all available)'}`);
+    if (newerTrainings.length > 0) {
+      console.log(`📋 Training plans returned:`, newerTrainings.map(tp => `${tp.name} (v${tp.version})`));
+    }
     return {
       success: true,
       data: newerTrainings
@@ -75,7 +135,7 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
       // 
       // if (response.ok) {
       //   // Update local storage with server data
-      //   localStorage.setItem('serverTrainingPlan', JSON.stringify(data));
+      //   localStorage.setItem(SERVER_TRAINING_PLAN_KEY, JSON.stringify(data));
       //   markTrainingsFetched();
       //   return { success: true, data };
       // } else {
@@ -83,11 +143,25 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
       // }
       
       // For now, simulate server call with local data
-      console.log('Simulating server call for fetchNewTrainings...');
+      console.log('🔄 Fetching new trainings from server...');
       await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
       
-      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
+      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : getAllTrainingPlans();
       markTrainingsFetched();
+      
+      // Save the latest training plan to local storage
+      saveLatestTrainingPlan(newerTrainings);
+      
+      console.log(`✅ Successfully fetched ${newerTrainings.length} training plan(s) ${currentVersion ? `(newer than ${currentVersion})` : '(all available)'}`);
+      if (newerTrainings.length > 0) {
+        console.log(`📋 Training plans fetched:`, newerTrainings.map(tp => ({
+          name: tp.name,
+          version: tp.version,
+          trainingTypes: Object.keys(tp.trainings).length
+        })));
+      } else {
+        console.log(`📭 No ${currentVersion ? 'newer' : ''} training plans available`);
+      }
       
       return {
         success: true,
@@ -95,8 +169,23 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
       };
     } else {
       // Use local data
-      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
+      console.log(`🔄 Fetching new trainings from local data...currentVersion: ${currentVersion}`);
+      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : getAllTrainingPlans();
       markTrainingsFetched();
+      
+      // Save the latest training plan to local storage
+      saveLatestTrainingPlan(newerTrainings);
+      
+      console.log(`✅ Successfully fetched ${newerTrainings.length} training plan(s) from local data ${currentVersion ? `(newer than ${currentVersion})` : '(all available)'}`);
+      if (newerTrainings.length > 0) {
+        console.log(`📋 Training plans from local data:`, newerTrainings.map(tp => ({
+          name: tp.name,
+          version: tp.version,
+          trainingTypes: Object.keys(tp.trainings).length
+        })));
+      } else {
+        console.log(`📭 No ${currentVersion ? 'newer' : ''} training plans available in local data`);
+      }
       
       return {
         success: true,
@@ -104,10 +193,20 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
       };
     }
   } catch (error) {
-    console.error('Error fetching trainings:', error);
+    console.error('❌ Error fetching trainings:', error);
     
     // Fallback to local data
+    console.log('🔄 Falling back to local data...');
     const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : [getLatestTrainingPlan()];
+    
+    console.log(`⚠️ Fallback: returning ${newerTrainings.length} training plan(s) from local data`);
+    if (newerTrainings.length > 0) {
+      console.log(`📋 Fallback training plans:`, newerTrainings.map(tp => ({
+        name: tp.name,
+        version: tp.version,
+        trainingTypes: Object.keys(tp.trainings).length
+      })));
+    }
     
     return {
       success: false,
@@ -148,12 +247,12 @@ export const updateUserData = async (exerciseData: ExerciseCompletionData): Prom
       await new Promise(resolve => setTimeout(resolve, 200)); // Simulate network delay
       
       // Also save to local storage as backup
-      const existingData = JSON.parse(localStorage.getItem('userExerciseData') || '[]');
+      const existingData = JSON.parse(localStorage.getItem(USER_EXERCISE_DATA_KEY) || '[]');
       existingData.push({
         ...exerciseData,
         timestamp: new Date().toISOString()
       });
-      localStorage.setItem('userExerciseData', JSON.stringify(existingData));
+      localStorage.setItem(USER_EXERCISE_DATA_KEY, JSON.stringify(existingData));
       
       return {
         success: true,
@@ -161,12 +260,12 @@ export const updateUserData = async (exerciseData: ExerciseCompletionData): Prom
       };
     } else {
       // Save to local storage only
-      const existingData = JSON.parse(localStorage.getItem('userExerciseData') || '[]');
+      const existingData = JSON.parse(localStorage.getItem(USER_EXERCISE_DATA_KEY) || '[]');
       existingData.push({
         ...exerciseData,
         timestamp: new Date().toISOString()
       });
-      localStorage.setItem('userExerciseData', JSON.stringify(existingData));
+      localStorage.setItem(USER_EXERCISE_DATA_KEY, JSON.stringify(existingData));
       
       return {
         success: true,
@@ -178,13 +277,13 @@ export const updateUserData = async (exerciseData: ExerciseCompletionData): Prom
     
     // Fallback: save to local storage
     try {
-      const existingData = JSON.parse(localStorage.getItem('userExerciseData') || '[]');
+      const existingData = JSON.parse(localStorage.getItem(USER_EXERCISE_DATA_KEY) || '[]');
       existingData.push({
         ...exerciseData,
         timestamp: new Date().toISOString(),
         fallback: true
       });
-      localStorage.setItem('userExerciseData', JSON.stringify(existingData));
+      localStorage.setItem(USER_EXERCISE_DATA_KEY, JSON.stringify(existingData));
       
       return {
         success: false,
@@ -201,13 +300,42 @@ export const updateUserData = async (exerciseData: ExerciseCompletionData): Prom
 };
 
 /**
+ * Get the current version to use for fetching new trainings
+ * Returns undefined for first time, stored version for subsequent times
+ */
+export const getCurrentVersionForFetch = (): string | undefined => {
+  // Check if we have a stored training plan to determine if this is first time
+  try {
+    console.log('🔍 Getting stored version...');
+    const storedVersion = getCurrentStoredVersion();
+    
+    if (!storedVersion) {
+      console.log('🆕 First time user (no stored training plan) - will fetch all training plans');
+      return undefined;
+    }
+    
+    console.log(`🔄 Returning user - will check for plans newer than: ${storedVersion}`);
+    return storedVersion;
+  } catch (error) {
+    console.error('Error determining current version:', error);
+    return undefined;
+  }
+};
+
+/**
+ * Clear all app data from local storage
+ * This is now just an alias to the centralized clearing function
+ */
+export const clearServerData = clearAllLocalStorageData;
+
+/**
  * Get user ID from local storage or generate one
  */
 export const getUserId = (): string => {
-  let userId = localStorage.getItem('userId');
+  let userId = localStorage.getItem(USER_ID_KEY);
   if (!userId) {
     userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('userId', userId);
+    localStorage.setItem(USER_ID_KEY, userId);
   }
   return userId;
 };

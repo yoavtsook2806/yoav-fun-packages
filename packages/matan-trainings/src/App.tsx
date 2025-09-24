@@ -7,21 +7,18 @@ import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import { getAppConfig } from './utils/urlParams';
-import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData } from './services/serverService';
+import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData, getCurrentVersionForFetch } from './services/serverService';
+import { clearAllLocalStorageData } from './constants/localStorage';
 import {
   getLastUsedWeight,
   getLastUsedRepeats,
   saveExerciseEntry,
   removeDuplicateHistoryEntries,
-  clearExerciseHistory,
   getExerciseProgress,
   saveTrainingProgress,
-  clearTrainingProgress,
   getDefaultWeight,
   getDefaultRestTime,
   getDefaultRepeats,
-  clearExerciseDefaults,
-  clearCustomExerciseData,
   calculateDefaultRestTime,
   calculateDefaultRepeats,
   getExerciseLastEntry,
@@ -69,16 +66,21 @@ function App() {
     // Fetch new trainings on app load
     const initializeApp = async () => {
       try {
-        const response = await fetchNewTrainings(currentTrainingPlan.version);
+        // Get the appropriate version to check for updates
+        const versionToCheck = getCurrentVersionForFetch();
+        
+        console.log(`🚀 Initializing app - Version to check: ${versionToCheck || 'undefined'}`);
+        
+        const response = await fetchNewTrainings(versionToCheck);
         if (response.success && response.data && response.data.length > 0) {
-          // Get the latest training plan from the newer ones
+          // Get the latest training plan from the response
           const latestNewPlan = response.data[response.data.length - 1];
           
           // Update current training plan if we got newer data
           if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
             setCurrentTrainingPlan(latestNewPlan);
             console.log('Updated to new training plan:', latestNewPlan.version);
-            console.log('Available newer versions:', response.data.map(p => p.version));
+            console.log('Available versions:', response.data.map(p => p.version));
           } else {
             console.log('No newer training plans available');
           }
@@ -127,10 +129,7 @@ function App() {
     
     if (confirmed) {
       console.log('Clearing all storage data...');
-      clearExerciseHistory();
-      clearTrainingProgress();
-      clearExerciseDefaults();
-      clearCustomExerciseData();
+      clearAllLocalStorageData();
       console.log('All storage data cleared successfully');
       alert('כל ההיסטוריה נמחקה בהצלחה!');
       

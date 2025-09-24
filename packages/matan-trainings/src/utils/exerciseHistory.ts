@@ -1,9 +1,10 @@
 import { ExerciseHistory, ExerciseHistoryEntry, DailyTrainingProgress, TrainingProgressStorage, ExerciseDefaults, ExerciseDefaultsStorage, Exercise } from '../types';
-
-const EXERCISE_HISTORY_KEY = 'matan-trainings-exercise-history';
-const TRAINING_PROGRESS_KEY = 'matan-trainings-daily-progress';
-const EXERCISE_DEFAULTS_KEY = 'matan-trainings-exercise-defaults';
-const CUSTOM_EXERCISE_DATA_KEY = 'matan-trainings-custom-exercise-data';
+import { 
+  EXERCISE_HISTORY_KEY, 
+  TRAINING_PROGRESS_KEY, 
+  EXERCISE_DEFAULTS_KEY, 
+  CUSTOM_EXERCISE_DATA_KEY 
+} from '../constants/localStorage';
 
 export const getExerciseHistory = (): ExerciseHistory => {
   try {

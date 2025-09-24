@@ -65,6 +65,11 @@ export const getTrainingPlanByVersion = (version: string): TrainingPlan | undefi
   return trainingPlans.find(plan => plan.version === version);
 };
 
+// Get all training plans sorted by version
+export const getAllTrainingPlans = (): TrainingPlan[] => {
+  return getSortedTrainingPlans();
+};
+
 // Get all available training plan versions sorted
 export const getAvailableVersions = (): string[] => {
   return getSortedTrainingPlans().map(plan => plan.version);

@@ -1,7 +1,7 @@
 // Sound utility functions for the training app
+import { VOLUME_STORAGE_KEY } from '../constants/localStorage';
 
 // Volume settings
-const VOLUME_STORAGE_KEY = 'matan-trainings-volume';
 const DEFAULT_VOLUME = 300; // Internal volume (0-600)
 const MAX_INTERNAL_VOLUME = 600;
 const MAX_DISPLAY_VOLUME = 100;
