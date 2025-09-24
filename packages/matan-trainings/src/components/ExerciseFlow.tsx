@@ -765,36 +765,36 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
       {/* Finish Exercise Options Modal */}
       {showFinishExerciseOptions && (
-        <div className="modal-overlay" onClick={handleCancelFinishOptions}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>סיום תרגיל</h3>
+        <div className="info-overlay" onClick={handleCancelFinishOptions}>
+          <div className="info-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="info-header">
+              <h2>סיום תרגיל</h2>
+              <button className="close-button" onClick={handleCancelFinishOptions}>
+                ✕
+              </button>
             </div>
-            <div className="modal-body">
-              <p>איך תרצה לסיים את התרגיל?</p>
-            </div>
-            <div className="modal-footer" style={{ flexDirection: 'column', gap: '10px' }}>
-              <button
-                className="green-button"
-                onClick={handleFinishAsSuccess}
-                style={{ width: '100%', padding: '15px' }}
-              >
-                ✅ סיים בהצלחה
-              </button>
-              <button
-                className="orange-button"
-                onClick={handleFinishAndEditData}
-                style={{ width: '100%', padding: '15px' }}
-              >
-                ✏️ סיים וערוך נתונים
-              </button>
-              <button
-                className="gray-button"
-                onClick={handleCancelFinishOptions}
-                style={{ width: '100%', padding: '15px' }}
-              >
-                ❌ ביטול
-              </button>
+            <div className="info-content">
+              <div style={{ padding: 'var(--space-6)', textAlign: 'center' }}>
+                <p style={{ marginBottom: 'var(--space-6)', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                  איך תרצה לסיים את התרגיל?
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                  <button
+                    className="green-button"
+                    onClick={handleFinishAsSuccess}
+                    style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+                  >
+                    ✅ סיים בהצלחה
+                  </button>
+                  <button
+                    className="orange-button"
+                    onClick={handleFinishAndEditData}
+                    style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+                  >
+                    ✏️ סיים וערוך נתונים
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -802,86 +802,118 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
       {/* Edit Sets Data Modal */}
       {showEditSetsModal && (
-        <div className="modal-overlay" onClick={currentExerciseState.completed ? handleCancelEditSets : handleCancelEditSets}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', maxHeight: '80vh', overflow: 'auto' }}>
-            <div className="modal-header">
-              <h3>ערוך נתוני סטים</h3>
+        <div className="info-overlay" onClick={handleCancelEditSets}>
+          <div className="info-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '650px' }}>
+            <div className="info-header">
+              <h2>ערוך נתוני סטים</h2>
+              <button className="close-button" onClick={handleCancelEditSets}>
+                ✕
+              </button>
             </div>
-            <div className="modal-body">
-              <div style={{ display: 'grid', gap: '15px' }}>
-                {editingSetsData.map((setData, index) => (
-                  <div key={index} style={{ 
-                    background: 'var(--bg-card)', 
-                    padding: '15px', 
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-primary)'
-                  }}>
-                    <h4 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>סט {index + 1}</h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>משקל (ק"ג)</label>
-                        <input
-                          type="number"
-                          value={setData.weight || ''}
-                          onChange={(e) => {
-                            const newData = [...editingSetsData];
-                            newData[index] = { ...newData[index], weight: parseFloat(e.target.value) || undefined };
-                            setEditingSetsData(newData);
-                          }}
-                          style={{
-                            width: '100%',
-                            padding: '8px',
-                            border: '1px solid var(--border-primary)',
-                            borderRadius: '4px',
-                            background: 'var(--bg-primary)',
-                            color: 'var(--text-primary)',
-                            fontSize: '16px'
-                          }}
-                          placeholder="משקל"
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>חזרות</label>
-                        <input
-                          type="number"
-                          value={setData.repeats || ''}
-                          onChange={(e) => {
-                            const newData = [...editingSetsData];
-                            newData[index] = { ...newData[index], repeats: parseInt(e.target.value) || undefined };
-                            setEditingSetsData(newData);
-                          }}
-                          style={{
-                            width: '100%',
-                            padding: '8px',
-                            border: '1px solid var(--border-primary)',
-                            borderRadius: '4px',
-                            background: 'var(--bg-primary)',
-                            color: 'var(--text-primary)',
-                            fontSize: '16px'
-                          }}
-                          placeholder="חזרות"
-                        />
+            <div className="info-content" style={{ maxHeight: '70vh', overflow: 'auto' }}>
+              <div style={{ padding: 'var(--space-6)' }}>
+                <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+                  {editingSetsData.map((setData, index) => (
+                    <div key={index} style={{ 
+                      background: 'var(--bg-card)', 
+                      padding: 'var(--space-4)', 
+                      borderRadius: 'var(--radius-lg)',
+                      border: '1px solid var(--border-primary)',
+                      boxShadow: 'var(--shadow-sm)'
+                    }}>
+                      <h4 style={{ 
+                        margin: '0 0 var(--space-3) 0', 
+                        fontSize: 'var(--text-lg)', 
+                        fontWeight: '700',
+                        color: 'var(--primary-light)'
+                      }}>
+                        סט {index + 1}
+                      </h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)' }}>
+                        <div>
+                          <label style={{ 
+                            display: 'block', 
+                            marginBottom: 'var(--space-2)', 
+                            fontSize: 'var(--text-sm)',
+                            fontWeight: '600',
+                            color: 'var(--text-secondary)'
+                          }}>
+                            משקל (ק"ג)
+                          </label>
+                          <input
+                            type="number"
+                            value={setData.weight || ''}
+                            onChange={(e) => {
+                              const newData = [...editingSetsData];
+                              newData[index] = { ...newData[index], weight: parseFloat(e.target.value) || undefined };
+                              setEditingSetsData(newData);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: 'var(--space-3)',
+                              border: '1px solid var(--border-primary)',
+                              borderRadius: 'var(--radius-md)',
+                              background: 'var(--bg-glass)',
+                              color: 'var(--text-primary)',
+                              fontSize: 'var(--text-base)',
+                              fontWeight: '600',
+                              textAlign: 'center',
+                              transition: 'all var(--transition-fast)'
+                            }}
+                            placeholder="משקל"
+                          />
+                        </div>
+                        <div>
+                          <label style={{ 
+                            display: 'block', 
+                            marginBottom: 'var(--space-2)', 
+                            fontSize: 'var(--text-sm)',
+                            fontWeight: '600',
+                            color: 'var(--text-secondary)'
+                          }}>
+                            חזרות
+                          </label>
+                          <input
+                            type="number"
+                            value={setData.repeats || ''}
+                            onChange={(e) => {
+                              const newData = [...editingSetsData];
+                              newData[index] = { ...newData[index], repeats: parseInt(e.target.value) || undefined };
+                              setEditingSetsData(newData);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: 'var(--space-3)',
+                              border: '1px solid var(--border-primary)',
+                              borderRadius: 'var(--radius-md)',
+                              background: 'var(--bg-glass)',
+                              color: 'var(--text-primary)',
+                              fontSize: 'var(--text-base)',
+                              fontWeight: '600',
+                              textAlign: 'center',
+                              transition: 'all var(--transition-fast)'
+                            }}
+                            placeholder="חזרות"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div style={{ 
+                  marginTop: 'var(--space-6)', 
+                  display: 'flex', 
+                  justifyContent: 'center' 
+                }}>
+                  <button
+                    className="green-button"
+                    onClick={currentExerciseState.completed ? handleSaveEditedCompletedExercise : handleSaveEditedSets}
+                    style={{ padding: '15px 30px', fontSize: '16px' }}
+                  >
+                    💾 שמור שינויים
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                className="green-button"
-                onClick={currentExerciseState.completed ? handleSaveEditedCompletedExercise : handleSaveEditedSets}
-                style={{ marginLeft: '10px', padding: '12px 24px' }}
-              >
-                💾 שמור שינויים
-              </button>
-              <button
-                className="gray-button"
-                onClick={handleCancelEditSets}
-                style={{ padding: '12px 24px' }}
-              >
-                ביטול
-              </button>
             </div>
           </div>
         </div>
