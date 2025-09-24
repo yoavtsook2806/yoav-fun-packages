@@ -825,45 +825,133 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         </div>
       )}
 
-      {/* Edit Sets Data Modal */}
+      {/* Edit Sets Data Modal - Stunning Enhanced Version */}
       {showEditSetsModal && (
         <div className="info-overlay" onClick={handleCancelEditSets}>
-          <div className="info-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '650px' }}>
-            <div className="info-header">
-              <h2>ערוך נתוני סטים</h2>
-              <button className="close-button" onClick={handleCancelEditSets}>
+          <div className="info-modal" onClick={(e) => e.stopPropagation()} style={{ 
+            maxWidth: '700px',
+            background: 'linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 50%, rgba(30, 41, 59, 0.95) 100%)',
+            backdropFilter: 'blur(30px)',
+            border: '2px solid rgba(99, 102, 241, 0.3)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 60px rgba(99, 102, 241, 0.4)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Gradient overlay */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.06) 25%, rgba(236, 72, 153, 0.04) 50%, rgba(99, 102, 241, 0.06) 75%, rgba(16, 185, 129, 0.08) 100%)',
+              zIndex: -1,
+              borderRadius: 'inherit',
+              animation: 'shimmer 8s ease-in-out infinite'
+            }} />
+            
+            <div className="info-header" style={{
+              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
+              borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
+              position: 'relative'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '4px',
+                background: 'linear-gradient(90deg, #10b981, #6366f1, #ec4899, #6366f1, #10b981)',
+                backgroundSize: '300% 100%',
+                animation: 'gradientFlow 3s ease-in-out infinite'
+              }} />
+              <h2 style={{
+                background: 'linear-gradient(135deg, #10b981, #6366f1)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                fontSize: 'var(--text-2xl)',
+                fontWeight: '800',
+                textShadow: '0 0 30px rgba(99, 102, 241, 0.3)'
+              }}>
+                ✏️ ערוך נתוני סטים
+              </h2>
+              <button className="close-button" onClick={handleCancelEditSets} style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                borderColor: 'rgba(239, 68, 68, 0.3)',
+                color: '#ef4444',
+                transition: 'all 0.3s ease'
+              }}>
                 ✕
               </button>
             </div>
+            
             <div className="info-content" style={{ maxHeight: '70vh', overflow: 'auto' }}>
               <div style={{ padding: 'var(--space-6)' }}>
-                <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+                <div style={{ 
+                  display: 'grid', 
+                  gap: 'var(--space-5)',
+                  animation: 'fadeInUp 0.6s ease-out'
+                }}>
                   {editingSetsData.map((setData, index) => (
                     <div key={index} style={{ 
-                      background: 'var(--bg-card)', 
-                      padding: 'var(--space-4)', 
-                      borderRadius: 'var(--radius-lg)',
-                      border: '1px solid var(--border-primary)',
-                      boxShadow: 'var(--shadow-sm)'
+                      background: 'linear-gradient(145deg, rgba(55, 65, 81, 0.8) 0%, rgba(31, 41, 55, 0.9) 100%)', 
+                      padding: 'var(--space-5)', 
+                      borderRadius: 'var(--radius-xl)',
+                      border: '1px solid rgba(99, 102, 241, 0.2)',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.1)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      transition: 'all 0.3s ease',
+                      animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                     }}>
+                      {/* Set number with gradient background */}
+                      <div style={{
+                        position: 'absolute',
+                        top: '-10px',
+                        right: '-10px',
+                        width: '60px',
+                        height: '60px',
+                        background: 'linear-gradient(135deg, #6366f1, #10b981)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 'var(--text-sm)',
+                        fontWeight: '800',
+                        color: 'white',
+                        boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
+                        transform: 'rotate(15deg)'
+                      }}>
+                        {index + 1}
+                      </div>
+                      
                       <h4 style={{ 
-                        margin: '0 0 var(--space-3) 0', 
-                        fontSize: 'var(--text-lg)', 
-                        fontWeight: '700',
-                        color: 'var(--primary-light)'
+                        margin: '0 0 var(--space-4) 0', 
+                        fontSize: 'var(--text-xl)', 
+                        fontWeight: '800',
+                        background: 'linear-gradient(135deg, #10b981, #6366f1)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        textAlign: 'right',
+                        paddingRight: '50px'
                       }}>
                         סט {index + 1}
                       </h4>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)' }}>
+                      
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                         <div>
                           <label style={{ 
                             display: 'block', 
-                            marginBottom: 'var(--space-2)', 
+                            marginBottom: 'var(--space-3)', 
                             fontSize: 'var(--text-sm)',
-                            fontWeight: '600',
-                            color: 'var(--text-secondary)'
+                            fontWeight: '700',
+                            color: '#10b981',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em'
                           }}>
-                            משקל (ק"ג)
+                            🏋️ משקל (ק"ג)
                           </label>
                           <input
                             type="number"
@@ -875,28 +963,44 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                             }}
                             style={{
                               width: '100%',
-                              padding: 'var(--space-3)',
-                              border: '1px solid var(--border-primary)',
-                              borderRadius: 'var(--radius-md)',
-                              background: 'var(--bg-glass)',
+                              padding: 'var(--space-4)',
+                              border: '2px solid rgba(16, 185, 129, 0.2)',
+                              borderRadius: 'var(--radius-lg)',
+                              background: 'linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%)',
                               color: 'var(--text-primary)',
-                              fontSize: 'var(--text-base)',
-                              fontWeight: '600',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: '700',
                               textAlign: 'center',
-                              transition: 'all var(--transition-fast)'
+                              transition: 'all 0.3s ease',
+                              outline: 'none',
+                              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.1)',
                             }}
                             placeholder="משקל"
+                            onFocus={(e) => {
+                              const target = e.target as HTMLInputElement;
+                              target.style.borderColor = '#10b981';
+                              target.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3), 0 4px 12px rgba(16, 185, 129, 0.2)';
+                              target.style.transform = 'translateY(-2px)';
+                            }}
+                            onBlur={(e) => {
+                              const target = e.target as HTMLInputElement;
+                              target.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                              target.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.1)';
+                              target.style.transform = 'translateY(0)';
+                            }}
                           />
                         </div>
                         <div>
                           <label style={{ 
                             display: 'block', 
-                            marginBottom: 'var(--space-2)', 
+                            marginBottom: 'var(--space-3)', 
                             fontSize: 'var(--text-sm)',
-                            fontWeight: '600',
-                            color: 'var(--text-secondary)'
+                            fontWeight: '700',
+                            color: '#6366f1',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em'
                           }}>
-                            חזרות
+                            🔢 חזרות
                           </label>
                           <input
                             type="number"
@@ -908,32 +1012,70 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                             }}
                             style={{
                               width: '100%',
-                              padding: 'var(--space-3)',
-                              border: '1px solid var(--border-primary)',
-                              borderRadius: 'var(--radius-md)',
-                              background: 'var(--bg-glass)',
+                              padding: 'var(--space-4)',
+                              border: '2px solid rgba(99, 102, 241, 0.2)',
+                              borderRadius: 'var(--radius-lg)',
+                              background: 'linear-gradient(145deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%)',
                               color: 'var(--text-primary)',
-                              fontSize: 'var(--text-base)',
-                              fontWeight: '600',
+                              fontSize: 'var(--text-lg)',
+                              fontWeight: '700',
                               textAlign: 'center',
-                              transition: 'all var(--transition-fast)'
+                              transition: 'all 0.3s ease',
+                              outline: 'none',
+                              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.1)',
                             }}
                             placeholder="חזרות"
+                            onFocus={(e) => {
+                              const target = e.target as HTMLInputElement;
+                              target.style.borderColor = '#6366f1';
+                              target.style.boxShadow = '0 0 20px rgba(99, 102, 241, 0.3), 0 4px 12px rgba(99, 102, 241, 0.2)';
+                              target.style.transform = 'translateY(-2px)';
+                            }}
+                            onBlur={(e) => {
+                              const target = e.target as HTMLInputElement;
+                              target.style.borderColor = 'rgba(99, 102, 241, 0.2)';
+                              target.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.1)';
+                              target.style.transform = 'translateY(0)';
+                            }}
                           />
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
+                
                 <div style={{ 
-                  marginTop: 'var(--space-6)', 
+                  marginTop: 'var(--space-8)', 
                   display: 'flex', 
-                  justifyContent: 'center' 
+                  justifyContent: 'center',
+                  animation: 'fadeInUp 0.6s ease-out 0.3s both'
                 }}>
                   <button
                     className="green-button"
                     onClick={currentExerciseState.completed ? handleSaveEditedCompletedExercise : handleSaveEditedSets}
-                    style={{ padding: '15px 30px', fontSize: '16px' }}
+                    style={{ 
+                      padding: '18px 40px', 
+                      fontSize: '18px',
+                      fontWeight: '800',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      border: 'none',
+                      borderRadius: 'var(--radius-xl)',
+                      color: 'white',
+                      boxShadow: '0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2)',
+                      transition: 'all 0.3s ease',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                    onMouseEnter={(e) => {
+                      const target = e.target as HTMLButtonElement;
+                      target.style.transform = 'translateY(-3px) scale(1.05)';
+                      target.style.boxShadow = '0 15px 35px -5px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const target = e.target as HTMLButtonElement;
+                      target.style.transform = 'translateY(0) scale(1)';
+                      target.style.boxShadow = '0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2)';
+                    }}
                   >
                     💾 שמור שינויים
                   </button>
