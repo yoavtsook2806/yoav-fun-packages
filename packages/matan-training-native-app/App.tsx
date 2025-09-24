@@ -7,7 +7,8 @@ import TrainingSelection from './src/components/TrainingSelection';
 import TrainingComplete from './src/components/TrainingComplete';
 import ExerciseFlow from './src/components/ExerciseFlow';
 import SettingsModal from './src/components/SettingsModal';
-import { clearExerciseHistory, clearTrainingProgress, clearExerciseDefaults, clearCustomExerciseData } from './src/utils/exerciseHistory';
+import FirstTimeSetup from './src/components/FirstTimeSetup';
+import { clearExerciseHistory, clearTrainingProgress, clearExerciseDefaults, clearCustomExerciseData, isFirstTimeExperience, saveExerciseDefaults } from './src/utils/exerciseHistory';
 
 export default function App() {
   const latestPlan = getLatestTrainingPlan();
@@ -24,9 +25,20 @@ export default function App() {
 
   const [showCongratulation, setShowCongratulation] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
+  const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
-  const initializeTraining = (trainingType: string) => {
+  const initializeTraining = async (trainingType: string) => {
     const exercises = Object.keys(latestPlan.trainings[trainingType]);
+
+    // Check if this is a first-time experience
+    const isFirstTime = await isFirstTimeExperience(trainingType, exercises);
+    if (isFirstTime) {
+      setFirstTimeTrainingType(trainingType);
+      setShowFirstTimeSetup(true);
+      return;
+    }
+
     const exerciseStates: { [exerciseName: string]: ExerciseState } = {};
 
     exercises.forEach(exerciseName => {
@@ -159,6 +171,28 @@ export default function App() {
     );
   };
 
+  const handleFirstTimeSetupComplete = async (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
+    // Save all exercise defaults
+    for (const [exerciseName, defaults] of Object.entries(exerciseDefaults)) {
+      await saveExerciseDefaults(exerciseName, defaults.weight, defaults.timeToRest, defaults.repeats);
+    }
+
+    // Close first-time setup
+    setShowFirstTimeSetup(false);
+
+    // Initialize training normally now that defaults are set
+    if (firstTimeTrainingType) {
+      const trainingType = firstTimeTrainingType;
+      setFirstTimeTrainingType(null);
+      await initializeTraining(trainingType);
+    }
+  };
+
+  const handleFirstTimeSetupCancel = () => {
+    setShowFirstTimeSetup(false);
+    setFirstTimeTrainingType(null);
+  };
+
   const resetTraining = () => {
     setTrainingState({
       selectedTraining: null,
@@ -170,12 +204,41 @@ export default function App() {
       trainingPlanVersion: latestPlan.version,
     });
     setShowCongratulation(false);
+    setShowFirstTimeSetup(false);
+    setFirstTimeTrainingType(null);
   };
 
   if (trainingState.isTrainingComplete && showCongratulation) {
     return (
       <View style={styles.container}>
-        <TrainingComplete onRestart={resetTraining} />
+        <TrainingComplete 
+          onRestart={resetTraining}
+          onShowSettings={() => setShowSettings(true)}
+        />
+        
+        {/* Settings Modal */}
+        <SettingsModal
+          visible={showSettings}
+          onClose={() => setShowSettings(false)}
+          onClearAllHistory={handleClearAllHistory}
+          currentTrainingPlanVersion={latestPlan.version}
+        />
+        
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
+
+  if (showFirstTimeSetup && firstTimeTrainingType) {
+    return (
+      <View style={styles.container}>
+        <FirstTimeSetup
+          trainingType={firstTimeTrainingType}
+          exercises={Object.keys(latestPlan.trainings[firstTimeTrainingType])}
+          trainings={latestPlan.trainings}
+          onComplete={handleFirstTimeSetupComplete}
+          onCancel={handleFirstTimeSetupCancel}
+        />
         <StatusBar style="auto" />
       </View>
     );
@@ -223,6 +286,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23', // --bg-primary from PWA
   },
 });

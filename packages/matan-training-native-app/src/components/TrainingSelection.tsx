@@ -38,7 +38,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
         <Text style={styles.settingsButtonText}>⚙️</Text>
       </TouchableOpacity>
       
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <Text style={styles.title}>בחר אימון</Text>
         <Text style={styles.versionText}>גרסה {trainingPlanVersion}</Text>
 
@@ -83,87 +83,116 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23', // --bg-primary from PWA
+  },
+  scrollView: {
+    flex: 1,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 100,
+    paddingHorizontal: 24,
+    paddingTop: 120,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100%',
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 48,
+    fontWeight: '800',
     textAlign: 'center',
-    marginBottom: 10,
-    color: '#333',
+    marginBottom: 16,
+    color: '#f8fafc', // --text-primary
+    letterSpacing: -0.5,
+    textShadowColor: 'rgba(99, 102, 241, 0.3)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 30,
   },
   versionText: {
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'center',
-    color: '#666',
-    marginBottom: 30,
+    color: '#94a3b8', // --text-muted
+    marginBottom: 48,
+    fontWeight: '500',
   },
   trainingList: {
-    marginBottom: 30,
+    width: '100%',
+    maxWidth: 400,
+    marginBottom: 32,
   },
   trainingOption: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 15,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)', // --bg-glass
+    padding: 24,
+    borderRadius: 24,
+    marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: '#334155', // --border-primary
   },
   trainingOptionSelected: {
-    borderColor: '#2196F3',
-    backgroundColor: '#f3f8ff',
+    borderColor: '#6366f1', // --primary
+    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    shadowColor: '#6366f1',
+    shadowOpacity: 0.3,
+    shadowRadius: 25,
+    elevation: 12,
   },
   trainingName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#f8fafc', // --text-primary
     marginBottom: 8,
+    textAlign: 'center',
   },
   trainingNameSelected: {
-    color: '#2196F3',
+    color: '#818cf8', // --primary-light
   },
   exerciseCount: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: 16,
+    color: '#cbd5e1', // --text-secondary
+    textAlign: 'center',
+    fontWeight: '500',
   },
   startButton: {
-    backgroundColor: '#4CAF50',
-    padding: 18,
-    borderRadius: 12,
-    marginBottom: 30,
+    backgroundColor: '#10b981', // --success
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 32,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: '#10b981',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
   },
   startButtonText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '700',
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
   settingsButton: {
     position: 'absolute',
     top: 60,
-    right: 20,
+    right: 24,
     zIndex: 10,
-    backgroundColor: '#2a2a2a',
+    backgroundColor: 'rgba(30, 41, 59, 0.9)',
     borderRadius: 25,
     width: 50,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: '#334155',
   },
   settingsButtonText: {
     fontSize: 20,

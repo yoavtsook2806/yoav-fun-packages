@@ -3,11 +3,19 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface TrainingCompleteProps {
   onRestart: () => void;
+  onShowSettings: () => void;
 }
 
-const TrainingComplete: React.FC<TrainingCompleteProps> = ({ onRestart }) => {
+const TrainingComplete: React.FC<TrainingCompleteProps> = ({ onRestart, onShowSettings }) => {
   return (
     <View style={styles.container}>
+      {/* Settings button - top right corner */}
+      <TouchableOpacity
+        style={styles.settingsButton}
+        onPress={onShowSettings}
+      >
+        <Text style={styles.settingsButtonText}>⚙️</Text>
+      </TouchableOpacity>
       <View style={styles.content}>
         <Text style={styles.emoji}>🎉</Text>
         <Text style={styles.title}>כל הכבוד!</Text>
@@ -25,60 +33,93 @@ const TrainingComplete: React.FC<TrainingCompleteProps> = ({ onRestart }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23', // --bg-primary
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 24,
   },
   content: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 40,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)', // --bg-glass
+    borderRadius: 24,
+    padding: 48,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
     width: '100%',
-    maxWidth: 350,
+    maxWidth: 400,
+    borderWidth: 1,
+    borderColor: '#334155', // --border-primary
   },
   emoji: {
-    fontSize: 80,
-    marginBottom: 20,
+    fontSize: 100,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    marginBottom: 15,
+    fontSize: 40,
+    fontWeight: '800',
+    color: '#10b981', // --success
+    marginBottom: 16,
     textAlign: 'center',
+    textShadowColor: 'rgba(16, 185, 129, 0.3)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 20,
   },
   message: {
-    fontSize: 20,
-    color: '#333',
-    marginBottom: 10,
+    fontSize: 24,
+    color: '#f8fafc', // --text-primary
+    marginBottom: 12,
     textAlign: 'center',
+    fontWeight: '600',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 40,
+    fontSize: 18,
+    color: '#cbd5e1', // --text-secondary
+    marginBottom: 48,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 28,
+    fontWeight: '500',
   },
   restartButton: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 12,
+    backgroundColor: '#10b981', // --success
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    borderRadius: 16,
     width: '100%',
+    shadowColor: '#10b981',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
   },
   restartButtonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
+    backgroundColor: '#2a2a2a',
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  settingsButtonText: {
+    fontSize: 20,
   },
 });
 

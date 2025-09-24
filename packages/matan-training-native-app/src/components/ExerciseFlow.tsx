@@ -182,6 +182,40 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
       {/* Exercise Controls */}
       <View style={styles.controlsSection}>
+        {/* Action Buttons Row */}
+        <View style={styles.actionButtonsRow}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => console.log('History pressed')}
+          >
+            <Text style={styles.actionButtonText}>📊</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => console.log('Last Training pressed')}
+          >
+            <Text style={styles.actionButtonText}>📋</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => console.log('Info pressed')}
+          >
+            <Text style={styles.actionButtonText}>ℹ️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[
+              styles.actionButton,
+              styles.finishButton,
+              currentExerciseState.completed && styles.finishButtonDisabled
+            ]}
+            onPress={() => console.log('Finish Exercise pressed')}
+            disabled={currentExerciseState.completed}
+          >
+            <Text style={styles.actionButtonText}>⏹️</Text>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Inputs Row */}
         <View style={styles.inputsRow}>
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>מנוחה</Text>

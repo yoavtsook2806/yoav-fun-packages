@@ -3,44 +3,51 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#0f0f23', // --bg-primary from PWA
   },
   loadingText: {
     textAlign: 'center',
     fontSize: 18,
-    color: '#333',
+    color: '#f8fafc', // --text-primary
     marginTop: 50,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    paddingVertical: 24,
+    paddingHorizontal: 24,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)', // --bg-glass
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#334155', // --border-primary
   },
   backButton: {
     position: 'absolute',
-    left: 20,
-    padding: 10,
-    backgroundColor: '#2a2a2a',
-    borderRadius: 6,
-    width: 40,
-    height: 40,
+    left: 24,
+    padding: 12,
+    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+    borderRadius: 12,
+    width: 48,
+    height: 48,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   backButtonText: {
-    color: '#ffffff',
-    fontSize: 18,
+    color: '#f8fafc',
+    fontSize: 20,
     fontWeight: 'bold',
   },
   trainingTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#f8fafc', // --text-primary
     textAlign: 'center',
   },
   exerciseRow: {
@@ -97,11 +104,44 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   controlsSection: {
-    backgroundColor: '#fff',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)', // --bg-glass
+    paddingVertical: 20,
+    paddingHorizontal: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#334155', // --border-primary
+  },
+  actionButtonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingHorizontal: 16,
+  },
+  actionButton: {
+    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+    borderRadius: 12,
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  finishButton: {
+    backgroundColor: '#ef4444', // --error
+    borderColor: '#dc2626', // --danger
+  },
+  finishButtonDisabled: {
+    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    borderColor: '#334155',
+    opacity: 0.5,
+  },
+  actionButtonText: {
+    fontSize: 20,
   },
   inputsRow: {
     flexDirection: 'row',
