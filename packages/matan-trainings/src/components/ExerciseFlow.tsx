@@ -157,9 +157,6 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     setInfoModal(currentExerciseName);
   };
 
-  const handleEndExercise = () => {
-    setShowEndExerciseConfirm(true);
-  };
 
   const handleConfirmEndExercise = () => {
     // Mark exercise as completed with all sets done at target values
@@ -198,11 +195,29 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   // New finish exercise options handlers
   const handleFinishAsSuccess = () => {
+    // If we're not at the last set, complete all remaining sets with target values
+    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName) || 0;
+    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts;
+    
+    // Get existing sets data and fill remaining sets
+    const existingSetsData = currentExerciseState.setsData || [];
+    const completedSetsData = [...existingSetsData];
+    
+    // Fill remaining sets with target values
+    for (let i = existingSetsData.length; i < currentExercise.numberOfSets; i++) {
+      completedSetsData.push({
+        weight: targetWeight,
+        repeats: targetRepeats,
+      });
+    }
+    
     // Mark exercise as completed
     onUpdateExerciseState(currentExerciseName, {
+      currentSet: currentExercise.numberOfSets,
       completed: true,
       isActive: false,
       isResting: false,
+      setsData: completedSetsData,
     });
     
     setShowFinishExerciseOptions(false);
@@ -233,11 +248,18 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   };
 
   const handleCancelFinishOptions = () => {
-    // Reset the exercise state back to active
-    onUpdateExerciseState(currentExerciseName, {
-      currentSet: currentExerciseState.currentSet - 1,
-      setsData: currentExerciseState.setsData?.slice(0, -1) || [],
-    });
+    // Only reset if we came from the last set completion
+    // Check if current set equals total sets (meaning we just finished the last set)
+    if (currentExerciseState.currentSet >= currentExercise.numberOfSets) {
+      // Reset the exercise state back to active (undo the last set)
+      onUpdateExerciseState(currentExerciseName, {
+        currentSet: currentExerciseState.currentSet - 1,
+        setsData: currentExerciseState.setsData?.slice(0, -1) || [],
+        isActive: true,
+        isResting: false,
+      });
+    }
+    // If we came from header button, just close the modal without changing state
     setShowFinishExerciseOptions(false);
   };
 
@@ -501,18 +523,31 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           >
             ℹ️
           </button>
-          <button
-            className="header-action-btn"
-            onClick={handleEndExercise}
-            title="סיים תרגיל"
-            style={{ 
-              background: !currentExerciseState.completed ? '#ff6b6b' : '#2a2a2a',
-              borderColor: !currentExerciseState.completed ? '#ff5252' : '#555'
-            }}
-            disabled={currentExerciseState.completed}
-          >
-            ⏹️
-          </button>
+          {!currentExerciseState.completed ? (
+            <button
+              className="header-action-btn"
+              onClick={() => setShowFinishExerciseOptions(true)}
+              title="סיים תרגיל"
+              style={{ 
+                background: '#ff6b6b',
+                borderColor: '#ff5252'
+              }}
+            >
+              ⏹️
+            </button>
+          ) : (
+            <button
+              className="header-action-btn"
+              onClick={handleEditCompletedExercise}
+              title="ערוך נתוני תרגיל"
+              style={{ 
+                background: '#ff9800',
+                borderColor: '#ff8f00'
+              }}
+            >
+              ✏️
+            </button>
+          )}
         </div>
         
         <div className="header-forms-row" onClick={(e) => e.stopPropagation()}>
@@ -605,22 +640,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               <div style={{ fontSize: '24px', color: '#4CAF50', marginBottom: '20px' }}>
                 ✅ תרגיל הושלם!
               </div>
-              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button
-                  className="orange-button"
-                  onClick={handleEditCompletedExercise}
-                  style={{ padding: '12px 24px', fontSize: '16px' }}
-                >
-                  ✏️ ערוך נתונים
-                </button>
-                <button
-                  className="green-button"
-                  onClick={onNextExercise}
-                  style={{ padding: '15px 30px', fontSize: '18px' }}
-                >
-                  המשך לתרגיל הבא
-                </button>
-              </div>
+              <button
+                className="green-button"
+                onClick={onNextExercise}
+                style={{ padding: '15px 30px', fontSize: '18px' }}
+              >
+                המשך לתרגיל הבא
+              </button>
             </div>
           )}
         </div>
