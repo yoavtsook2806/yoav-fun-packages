@@ -798,7 +798,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                       minHeight: '56px',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      margin: '0',
+                      minWidth: 'auto'
                     }}
                   >
                     ✅ סיים בהצלחה
@@ -813,7 +815,9 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                       minHeight: '56px',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      margin: '0',
+                      minWidth: 'auto'
                     }}
                   >
                     ✏️ סיים וערוך נתונים
