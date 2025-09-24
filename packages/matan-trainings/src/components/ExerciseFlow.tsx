@@ -275,8 +275,12 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   const handleCancelEditSets = () => {
     setShowEditSetsModal(false);
     setEditingSetsData([]);
-    // Go back to finish options
-    setShowFinishExerciseOptions(true);
+    // Only go back to finish options if exercise is not completed
+    // (meaning we came from the finish options modal)
+    if (!currentExerciseState.completed) {
+      setShowFinishExerciseOptions(true);
+    }
+    // If exercise is completed, just close the modal (we came from edit button)
   };
 
   // Handler for editing completed exercises
