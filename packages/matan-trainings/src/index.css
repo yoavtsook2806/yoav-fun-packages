@@ -2744,13 +2744,14 @@ button:disabled {
 }
 
 .history-entry.clickable-date::after {
-  content: '👆';
+  content: '›';
   position: absolute;
   right: var(--space-2);
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--text-base);
-  opacity: 0.6;
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  opacity: 0.5;
   transition: all var(--transition-fast);
   pointer-events: none;
 }
@@ -2764,7 +2765,8 @@ button:disabled {
 
 .history-entry.clickable-date:hover::after {
   opacity: 1;
-  transform: translateY(-50%) scale(1.2);
+  color: var(--primary);
+  transform: translateY(-50%) translateX(3px);
 }
 
 .history-col {
