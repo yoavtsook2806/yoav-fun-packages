@@ -10,7 +10,12 @@
     "dev": "yarn workspace matan-trainings dev",
     "build": "yarn workspace matan-trainings build",
     "preview": "yarn workspace matan-trainings preview",
-    "type-check": "yarn workspaces foreach run type-check"
+    "type-check": "yarn workspaces foreach --all run type-check",
+    "native:start": "yarn workspace matan-training-native-app start",
+    "native:android": "yarn workspace matan-training-native-app android",
+    "native:ios": "yarn workspace matan-training-native-app ios",
+    "native:ios-fix": "./packages/matan-training-native-app/run-ios.sh",
+    "native:web": "yarn workspace matan-training-native-app web"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
