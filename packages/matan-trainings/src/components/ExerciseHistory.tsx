@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getExerciseHistory, getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
 import { ExerciseHistoryEntry } from '../types';
 import ExerciseModal from './ExerciseModal';
+import ExercisePerformanceGraph from './ExercisePerformanceGraph';
 
 interface ExerciseHistoryProps {
   exerciseName: string;
@@ -15,6 +16,7 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
   const history = getExerciseHistory();
   const exerciseHistory = history[exerciseName] || [];
   const [selectedEntry, setSelectedEntry] = useState<ExerciseHistoryEntry | null>(null);
+  const [activeTab, setActiveTab] = useState<'history' | 'graph'>('history');
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -168,7 +170,7 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
     );
   }
 
-  // Main list view
+  // Main tabbed view
   return (
     <ExerciseModal
       exerciseName={exerciseName}
@@ -181,35 +183,63 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
           <p>השלם את התרגיל כדי לראות את ההיסטוריה כאן</p>
         </div>
       ) : (
-        <div className="history-list">
-          <div className="history-list-header">
-            <div className="history-col">תאריך</div>
-            <div className="history-col">משקל</div>
-            <div className="history-col">מנוחה</div>
-            <div className="history-col">חזרות</div>
-          </div>
-          
-          {exerciseHistory.map((entry, index) => (
-            <div 
-              key={index} 
-              className="history-entry clickable-date"
-              onClick={() => handleEntryClick(entry)}
-              title="לחץ לפירוט מלא של האימון"
+        <div className="history-tabs-container">
+          {/* Tab Navigation */}
+          <div className="history-tabs">
+            <button 
+              className={`history-tab ${activeTab === 'history' ? 'active' : ''}`}
+              onClick={() => setActiveTab('history')}
             >
-              <div className="history-col">
-                {formatDate(entry.date)}
+              📋 רשימה
+            </button>
+            <button 
+              className={`history-tab ${activeTab === 'graph' ? 'active' : ''}`}
+              onClick={() => setActiveTab('graph')}
+            >
+              📊 גרף
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="history-tab-content">
+            {activeTab === 'history' ? (
+              <div className="history-list">
+                <div className="history-list-header">
+                  <div className="history-col">תאריך</div>
+                  <div className="history-col">משקל</div>
+                  <div className="history-col">מנוחה</div>
+                  <div className="history-col">חזרות</div>
+                </div>
+                
+                {exerciseHistory.map((entry, index) => (
+                  <div 
+                    key={index} 
+                    className="history-entry clickable-date"
+                    onClick={() => handleEntryClick(entry)}
+                    title="לחץ לפירוט מלא של האימון"
+                  >
+                    <div className="history-col">
+                      {formatDate(entry.date)}
+                    </div>
+                    <div className="history-col">
+                      {entry.weight ? `${entry.weight} ק"ג` : '-'}
+                    </div>
+                    <div className="history-col">
+                      {formatRestTime(entry.restTime)}
+                    </div>
+                    <div className="history-col">
+                      {entry.repeats ? entry.repeats : '-'}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="history-col">
-                {entry.weight ? `${entry.weight} ק"ג` : '-'}
-              </div>
-              <div className="history-col">
-                {formatRestTime(entry.restTime)}
-              </div>
-              <div className="history-col">
-                {entry.repeats ? entry.repeats : '-'}
-              </div>
-            </div>
-          ))}
+            ) : (
+              <ExercisePerformanceGraph 
+                exerciseName={exerciseName}
+                exerciseHistory={exerciseHistory}
+              />
+            )}
+          </div>
         </div>
       )}
     </ExerciseModal>
