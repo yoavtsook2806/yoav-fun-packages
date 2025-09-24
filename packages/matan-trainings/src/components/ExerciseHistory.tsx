@@ -32,9 +32,6 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-    }) + ' ' + date.toLocaleTimeString('he-IL', {
-      hour: '2-digit',
-      minute: '2-digit',
     });
   };
 
@@ -60,22 +57,34 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
         exerciseName={exerciseName}
         title="פרטי אימון"
         onClose={onClose}
+        onBack={handleBackToList}
       >
         <div className="detailed-history-view">
-          <div className="detailed-header">
-            <button className="back-to-list-btn" onClick={handleBackToList}>
-              ← חזור לרשימה
-            </button>
-            <div className="detailed-date">
-              {formatDateTime(selectedEntry.date)}
-            </div>
+          <div className="detailed-date">
+            {formatDateTime(selectedEntry.date)}
           </div>
 
           <div className="workout-summary">
-            <div className="summary-item">
-              <span className="summary-label">סטים שהושלמו:</span>
-              <span className="summary-value">{selectedEntry.completedSets}/{selectedEntry.totalSets}</span>
-            </div>
+            {selectedEntry.setsData && selectedEntry.setsData.length > 0 && (() => {
+              const firstSet = selectedEntry.setsData[0];
+              const targetWeight = firstSet?.weight || selectedEntry.weight;
+              const targetRepeats = firstSet?.repeats || selectedEntry.repeats;
+              
+              const successfulSets = selectedEntry.setsData.filter(setData => {
+                const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;
+                const repeatsSuccess = !targetRepeats || !setData.repeats || setData.repeats >= targetRepeats;
+                return weightSuccess && repeatsSuccess;
+              }).length;
+              
+              return (
+                <div className="summary-item">
+                  <span className="summary-label">סטים מוצלחים:</span>
+                  <span className={`summary-value ${successfulSets === selectedEntry.completedSets ? 'success' : 'warning'}`}>
+                    {successfulSets}/{selectedEntry.completedSets}
+                  </span>
+                </div>
+              );
+            })()}
             <div className="summary-item">
               <span className="summary-label">זמן מנוחה:</span>
               <span className="summary-value">{formatRestTime(selectedEntry.restTime)}</span>
@@ -87,9 +96,10 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
               <h4>פירוט סטים:</h4>
               <div className="sets-grid">
                 {selectedEntry.setsData.map((setData, index) => {
-                  // Get the target values that were used for this training
-                  const targetWeight = getDefaultWeight(exerciseName) || selectedEntry.weight;
-                  const targetRepeats = getDefaultRepeats(exerciseName) || selectedEntry.repeats;
+                  // Get the target values from the first set of this specific workout
+                  const firstSet = selectedEntry.setsData[0];
+                  const targetWeight = firstSet?.weight || selectedEntry.weight;
+                  const targetRepeats = firstSet?.repeats || selectedEntry.repeats;
 
                   // Check if this set met the targets
                   const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;

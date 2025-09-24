@@ -6,6 +6,7 @@ interface ExerciseModalProps {
   title: string;
   onClose: () => void;
   onEdit?: (exerciseName: string) => void;
+  onBack?: () => void;
   children: React.ReactNode;
 }
 
@@ -14,12 +15,18 @@ const ExerciseModal: React.FC<ExerciseModalProps> = ({
   title,
   onClose,
   onEdit,
+  onBack,
   children,
 }) => {
   return (
     <div className="info-overlay" onClick={onClose}>
       <div className="info-modal" onClick={(e) => e.stopPropagation()}>
         <div className="info-header">
+          {onBack && (
+            <button className="back-button" onClick={onBack}>
+              ←
+            </button>
+          )}
           {onEdit && (
             <button 
               className="edit-button" 

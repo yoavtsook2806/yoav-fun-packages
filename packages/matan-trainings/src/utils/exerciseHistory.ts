@@ -111,7 +111,13 @@ export const removeDuplicateHistoryEntries = (): void => {
 
 // Training Progress Functions
 const getTodayDateString = (): string => {
-  return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  // TEMPORARY: Reset every 2 minutes for testing instead of daily
+  const now = new Date();
+  const minutes = Math.floor(now.getTime() / (2 * 60 * 1000)); // Every 2 minutes
+  return `test-${minutes}`; // Format: test-12345
+  
+  // Original daily reset (commented out for testing):
+  // return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 };
 
 export const getTrainingProgress = (): TrainingProgressStorage => {

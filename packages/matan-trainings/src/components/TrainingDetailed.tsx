@@ -54,10 +54,26 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, train
           <div className="info-recommendation-label">מנוחה</div>
           <div className="info-recommendation-value">{formatTime(trainingEntry.restTime)}</div>
         </div>
-        <div className="info-recommendation-box">
-          <div className="info-recommendation-label">סטים</div>
-          <div className="info-recommendation-value">{trainingEntry.completedSets}/{trainingEntry.totalSets}</div>
-        </div>
+        {trainingEntry.setsData && trainingEntry.setsData.length > 0 && (() => {
+          const firstSet = trainingEntry.setsData[0];
+          const targetWeight = firstSet?.weight || trainingEntry.weight;
+          const targetRepeats = firstSet?.repeats || trainingEntry.repeats;
+          
+          const successfulSets = trainingEntry.setsData.filter(setData => {
+            const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;
+            const repeatsSuccess = !targetRepeats || !setData.repeats || setData.repeats >= targetRepeats;
+            return weightSuccess && repeatsSuccess;
+          }).length;
+          
+          return (
+            <div className="info-recommendation-box">
+              <div className="info-recommendation-label">סטים מוצלחים</div>
+              <div className={`info-recommendation-value ${successfulSets === trainingEntry.completedSets ? 'success' : 'warning'}`}>
+                {successfulSets}/{trainingEntry.completedSets}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       <div className="sets-details">
@@ -65,9 +81,10 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, train
         {trainingEntry.setsData && trainingEntry.setsData.length > 0 ? (
           <div className="sets-grid">
             {trainingEntry.setsData.map((setData, index) => {
-              // Get the target values that were used for this training
-              const targetWeight = getDefaultWeight(exerciseName) || trainingEntry.weight;
-              const targetRepeats = getDefaultRepeats(exerciseName) || trainingEntry.repeats;
+              // Get the target values from the first set of this specific workout
+              const firstSet = trainingEntry.setsData[0];
+              const targetWeight = firstSet?.weight || trainingEntry.weight;
+              const targetRepeats = firstSet?.repeats || trainingEntry.repeats;
 
               // Check if this set met the targets
               const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;

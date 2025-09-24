@@ -1437,16 +1437,16 @@ button:disabled {
 
 .modal-close-btn {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-2);
+  right: var(--space-2);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
   cursor: pointer;
-  padding: var(--space-2);
-  width: 40px;
-  height: 40px;
+  padding: var(--space-1);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2374,6 +2374,14 @@ button:disabled {
   width: 100%;
 }
 
+.info-recommendation-value.success {
+  color: var(--success);
+}
+
+.info-recommendation-value.warning {
+  color: var(--warning);
+}
+
 .info-footer {
   padding: var(--space-6);
   display: flex;
@@ -2385,16 +2393,16 @@ button:disabled {
 
 .info-close-btn {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-2);
+  right: var(--space-2);
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
-  font-size: var(--text-xl);
+  font-size: var(--text-sm);
   cursor: pointer;
-  padding: var(--space-2);
-  width: 40px;
-  height: 40px;
+  padding: var(--space-1);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3711,33 +3719,39 @@ button:disabled {
 
 .detailed-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: var(--space-6);
   padding-bottom: var(--space-4);
   border-bottom: 1px solid var(--border-primary);
+  position: relative;
 }
 
-.back-to-list-btn {
-  background: var(--bg-card);
+.back-button {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
-  cursor: pointer;
   font-size: var(--text-sm);
-  font-weight: 600;
-  transition: all var(--transition-normal);
+  cursor: pointer;
+  padding: var(--space-1);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  z-index: 10;
 }
 
-.back-to-list-btn:hover {
-  background: var(--bg-glass);
+.back-button:hover {
+  background: var(--bg-tertiary);
   border-color: var(--border-accent);
   color: var(--text-primary);
-  transform: translateX(2px);
+  transform: scale(1.1);
 }
 
 .detailed-date {
@@ -3745,7 +3759,9 @@ button:disabled {
   font-weight: 700;
   color: var(--text-primary);
   text-align: center;
-  flex: 1;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .workout-summary {
@@ -3776,6 +3792,14 @@ button:disabled {
   font-size: var(--text-xl);
   font-weight: 800;
   color: var(--text-primary);
+}
+
+.summary-value.success {
+  color: var(--success);
+}
+
+.summary-value.warning {
+  color: var(--warning);
 }
 
 .sets-details {
