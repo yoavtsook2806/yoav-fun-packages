@@ -6,6 +6,8 @@ import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
+import { getAppConfig } from './utils/urlParams';
+import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData } from './services/serverService';
 import {
   getLastUsedWeight,
   getLastUsedRepeats,
@@ -34,6 +36,12 @@ function App() {
   // Current training plan (session-only, not saved to localStorage)
   const [currentTrainingPlan, setCurrentTrainingPlan] = useState(latestPlan);
   
+  // App configuration from URL parameters
+  const [appConfig, setAppConfig] = useState(() => getAppConfig());
+  
+  // Log config for debugging
+  console.log('App config:', appConfig);
+  
   const [trainingState, setTrainingState] = useState<TrainingState>({
     selectedTraining: null,
     restTime: 60,
@@ -54,9 +62,37 @@ function App() {
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
-  // Clean up duplicate history entries on app initialization
+  // Clean up duplicate history entries on app initialization and fetch new trainings
   useEffect(() => {
     removeDuplicateHistoryEntries();
+    
+    // Fetch new trainings on app load
+    const initializeApp = async () => {
+      try {
+        const response = await fetchNewTrainings();
+        if (response.success && response.data) {
+          // Update current training plan if we got new data from server
+          if (response.data.version !== currentTrainingPlan.version) {
+            setCurrentTrainingPlan(response.data);
+            console.log('Updated to new training plan:', response.data.version);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch new trainings:', error);
+      }
+    };
+    
+    initializeApp();
+  }, []);
+  
+  // Listen for URL parameter changes
+  useEffect(() => {
+    const handleUrlChange = () => {
+      setAppConfig(getAppConfig());
+    };
+    
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
   }, []);
 
   // Handle training plan change (session-only)
@@ -217,7 +253,7 @@ function App() {
         }, 0);
       }
       
-      // If exercise is being completed for the first time, save to history
+      // If exercise is being completed for the first time, save to history and server
       if (!currentState.completed && updates.completed === true) {
         const exercise = currentTrainingPlan.trainings[prev.selectedTraining!][exerciseName];
         
@@ -235,9 +271,35 @@ function App() {
           repeats: firstSetRepeats, // First set repeats for display
           setsData: newState.setsData, // Complete per-set data
         };
+        
         // Use setTimeout to avoid potential React batching issues
-        setTimeout(() => {
+        setTimeout(async () => {
+          // Save to local history
           saveExerciseEntry(exerciseName, historyEntry);
+          
+          // Send to server
+          try {
+            const exerciseData: ExerciseCompletionData = {
+              userId: getUserId(),
+              exerciseName,
+              trainingType: prev.selectedTraining!,
+              date: historyEntry.date,
+              weight: firstSetWeight,
+              repeats: firstSetRepeats,
+              restTime: historyEntry.restTime,
+              setsData: newState.setsData,
+              completed: true
+            };
+            
+            const response = await updateUserData(exerciseData);
+            if (response.success) {
+              console.log('Exercise data sent to server successfully');
+            } else {
+              console.warn('Failed to send exercise data to server:', response.error);
+            }
+          } catch (error) {
+            console.error('Error sending exercise data to server:', error);
+          }
         }, 0);
       }
       

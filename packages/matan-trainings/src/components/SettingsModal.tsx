@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAvailableVersions } from '../data/trainingPlans';
 import { getVolume, saveVolume, internalToDisplayVolume, displayToInternalVolume, testSound } from '../utils/soundUtils';
 import { APP_VERSION } from '../constants';
+import { getAppConfig } from '../utils/urlParams';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const availableVersions = getAvailableVersions();
   const [volume, setVolume] = useState(0);
+  const appConfig = getAppConfig();
 
   useEffect(() => {
     // Load current volume setting
@@ -44,6 +46,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       onClearAllHistory();
       onClose();
     }
+  };
+  
+  const handleOpenCoachApp = () => {
+    // TODO: Open coach app - for now just navigate to coach app URL
+    const currentUrl = new URL(window.location.href);
+    currentUrl.pathname = '/coach'; // This will be the coach app route
+    window.open(currentUrl.toString(), '_blank');
   };
 
 
@@ -105,6 +114,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </p>
             </div>
           </div>
+
+          {/* Coach App Access */}
+          {appConfig.showCoachApp && (
+            <div className="settings-section">
+              <div className="settings-item">
+                <button 
+                  className="coach-app-button"
+                  onClick={handleOpenCoachApp}
+                >
+                  🏋️‍♂️ פתח אפליקציית המאמן
+                </button>
+                <p className="settings-description">
+                  ניהול ויצירת תוכניות אימון חדשות
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* App Actions */}
           <div className="settings-section">
