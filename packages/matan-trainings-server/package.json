@@ -1,0 +1,44 @@
+{
+  "name": "matan-trainings-server",
+  "version": "1.0.0",
+  "description": "Server API for Matan Trainings app - AWS Lambda",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "serverless offline",
+    "dev:local": "concurrently \"yarn dynamodb:start\" \"wait-on tcp:8000 && yarn setup:local-tables && serverless offline --stage local\"",
+    "dynamodb:start": "dynamodb-local --port 8000 --inMemory",
+    "dynamodb:install": "dynamodb-local --install",
+    "setup:local-tables": "node scripts/setup-local-tables.js",
+    "build": "tsc",
+    "deploy": "serverless deploy",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
+    "logs": "serverless logs -f api",
+    "logs:dev": "serverless logs -f api --stage dev",
+    "logs:prod": "serverless logs -f api --stage prod",
+    "remove": "serverless remove",
+    "remove:dev": "serverless remove --stage dev",
+    "remove:prod": "serverless remove --stage prod",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.896.0",
+    "@aws-sdk/lib-dynamodb": "^3.896.0",
+    "cors": "^2.8.5",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.0",
+    "concurrently": "^9.2.1",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.3.0",
+    "wait-on": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,159 @@
+service: matan-trainings-server
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1  # Europe (Frankfurt) - Closest to Israel
+  stage: ${opt:stage, 'dev'}
+  
+  # Environment variables
+  environment:
+    STAGE: ${self:provider.stage}
+    DYNAMODB_TABLE_PREFIX: ${self:service}-${self:provider.stage}
+    # Local development uses DynamoDB Local
+    DYNAMODB_ENDPOINT: ${self:custom.dynamodb.endpoint.${self:provider.stage}, ''}
+    IS_LOCAL: ${self:custom.isLocal.${self:provider.stage}, 'false'}
+    
+  # IAM permissions for DynamoDB
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-${self:provider.stage}-*"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+package:
+  individually: true
+  patterns:
+    - '!node_modules/**'
+    - 'node_modules/@aws-sdk/**'
+    - 'node_modules/zod/**'
+
+custom:
+  # Environment-specific configurations
+  dynamodb:
+    endpoint:
+      local: 'http://localhost:8000'
+  isLocal:
+    local: 'true'
+  
+  # Serverless offline configuration
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3002
+
+functions:
+  # Health check
+  health:
+    handler: src/handlers/health.handler
+    events:
+      - http:
+          path: /health
+          method: get
+          cors: true
+
+  # Training plans
+  getTrainingPlans:
+    handler: src/handlers/trainings.getLatest
+    events:
+      - http:
+          path: /trainings/latest
+          method: get
+          cors: true
+
+  addTrainingPlan:
+    handler: src/handlers/trainings.addTrainingPlan
+    events:
+      - http:
+          path: /trainings
+          method: post
+          cors: true
+
+  # User exercise data
+  saveExerciseData:
+    handler: src/handlers/user.saveExerciseData
+    events:
+      - http:
+          path: /user/exercise-data
+          method: post
+          cors: true
+
+  getUserData:
+    handler: src/handlers/user.getUserData
+    events:
+      - http:
+          path: /user/exercise-data
+          method: get
+          cors: true
+
+  # Admin functions (WARNING: Should be protected in production!)
+  clearDatabase:
+    handler: src/handlers/admin.clearDatabase
+    events:
+      - http:
+          path: /admin/clear-database
+          method: delete
+          cors: true
+
+# DynamoDB tables
+resources:
+  Resources:
+    # Training Plans Table
+    TrainingPlansTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-training-plans
+        AttributeDefinitions:
+          - AttributeName: version
+            AttributeType: S
+        KeySchema:
+          - AttributeName: version
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        
+    # User Profiles Table
+    UserProfilesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-user-profiles
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        
+    # Exercise Data Table
+    ExerciseDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-exercise-data
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+
+# Custom domain (optional)
+# custom:
+#   domain: api.matan-trainings.com

@@ -8,8 +8,11 @@
   ],
   "scripts": {
     "dev": "yarn workspace matan-trainings dev",
+    "dev:server": "yarn workspace matan-trainings-server dev",
     "build": "yarn workspace matan-trainings build",
+    "build:server": "yarn workspace matan-trainings-server build",
     "preview": "yarn workspace matan-trainings preview",
+    "deploy:server": "yarn workspace matan-trainings-server deploy",
     "type-check": "yarn workspaces foreach run type-check"
   },
   "devDependencies": {
