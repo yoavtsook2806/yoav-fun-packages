@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getExerciseHistory, getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
+import { getExerciseHistory } from '../utils/exerciseHistory';
 import { ExerciseHistoryEntry } from '../types';
 import ExerciseModal from './ExerciseModal';
 import ExercisePerformanceGraph from './ExercisePerformanceGraph';
@@ -97,9 +97,9 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
             <div className="sets-details">
               <h4>פירוט סטים:</h4>
               <div className="sets-grid">
-                {selectedEntry.setsData.map((setData, index) => {
+                {selectedEntry.setsData?.map((setData, index) => {
                   // Get the target values from the first set of this specific workout
-                  const firstSet = selectedEntry.setsData[0];
+                  const firstSet = selectedEntry.setsData?.[0];
                   const targetWeight = firstSet?.weight || selectedEntry.weight;
                   const targetRepeats = firstSet?.repeats || selectedEntry.repeats;
 

@@ -8,7 +8,6 @@ interface ExercisePerformanceGraphProps {
 }
 
 const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
-  exerciseName,
   exerciseHistory,
 }) => {
   const [showFormulaInfo, setShowFormulaInfo] = useState(false);

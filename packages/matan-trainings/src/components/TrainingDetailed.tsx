@@ -1,5 +1,4 @@
 import React from 'react';
-import { getDefaultWeight, getDefaultRepeats } from '../utils/exerciseHistory';
 import { ExerciseHistoryEntry } from '../types';
 import ExerciseModal from './ExerciseModal';
 
@@ -82,7 +81,7 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, train
           <div className="sets-grid">
             {trainingEntry.setsData.map((setData, index) => {
               // Get the target values from the first set of this specific workout
-              const firstSet = trainingEntry.setsData[0];
+              const firstSet = trainingEntry.setsData?.[0];
               const targetWeight = firstSet?.weight || trainingEntry.weight;
               const targetRepeats = firstSet?.repeats || trainingEntry.repeats;
 
