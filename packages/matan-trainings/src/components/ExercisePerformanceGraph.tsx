@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ExerciseHistoryEntry } from '../types';
 import { calculateExerciseAdjustedVolumeHistory, getAdjustedVolumeFormulaExplanation } from '../utils/adjustedVolume';
 
@@ -12,6 +12,22 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
   exerciseHistory,
 }) => {
   const [showFormulaInfo, setShowFormulaInfo] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(320);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Update container width on mount and resize
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setContainerWidth(Math.max(280, rect.width - 24)); // Account for padding, min 280px
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
   
   // Calculate adjusted volume data
   const adjustedVolumeData = calculateExerciseAdjustedVolumeHistory(exerciseHistory);
@@ -35,10 +51,27 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
   const paddedMin = Math.max(0, minVolume - volumeRange * 0.1);
   const paddedRange = paddedMax - paddedMin;
 
-  // SVG dimensions - with proper margins to show everything
-  const svgWidth = 320; // Smaller width to fit on screen with margins
-  const svgHeight = 220; // Smaller height to fit on screen
-  const margin = { top: 15, right: 25, bottom: 35, left: 45 }; // Optimized margins
+  // SVG dimensions - responsive based on container width and number of data points
+  const dataPointCount = adjustedVolumeData.length;
+  const svgWidth = containerWidth;
+  const svgHeight = 220;
+  
+  // Adjust margins based on data density and screen size
+  const baseLeftMargin = 45;
+  const baseRightMargin = 25;
+  const baseBottomMargin = 35;
+  
+  // Reduce margins on smaller screens or when there are many data points
+  const isSmallScreen = containerWidth < 400;
+  const hasManyPoints = dataPointCount > 10;
+  
+  const margin = {
+    top: 15,
+    right: isSmallScreen ? 15 : baseRightMargin,
+    bottom: isSmallScreen ? 30 : baseBottomMargin,
+    left: isSmallScreen ? 35 : baseLeftMargin
+  };
+  
   const chartWidth = svgWidth - margin.left - margin.right;
   const chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -110,10 +143,12 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
             strokeWidth="2"
           />
 
-          {/* Y-axis labels */}
+          {/* Y-axis labels - adaptive for mobile */}
           {[0, 0.25, 0.5, 0.75, 1].map(ratio => {
             const value = Math.round(paddedMin + ratio * paddedRange);
             const y = margin.top + chartHeight - ratio * chartHeight;
+            const fontSize = isSmallScreen ? "10" : "12";
+            
             return (
               <g key={ratio}>
                 <line 
@@ -124,11 +159,11 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
                   stroke="var(--text-secondary)" 
                 />
                 <text 
-                  x={margin.left - 10} 
-                  y={y + 4} 
+                  x={margin.left - 8} 
+                  y={y + 3} 
                   textAnchor="end" 
                   fill="var(--text-secondary)"
-                  fontSize="12"
+                  fontSize={fontSize}
                 >
                   {value}
                 </text>
@@ -136,27 +171,40 @@ const ExercisePerformanceGraph: React.FC<ExercisePerformanceGraphProps> = ({
             );
           })}
 
-          {/* X-axis labels - show all training numbers with equal spacing */}
-          {points.map((point, index) => (
-            <g key={index}>
-              <line 
-                x1={point.x} 
-                y1={svgHeight - margin.bottom} 
-                x2={point.x} 
-                y2={svgHeight - margin.bottom + 5}
-                stroke="var(--text-secondary)" 
-              />
-              <text 
-                x={point.x} 
-                y={svgHeight - margin.bottom + 18} 
-                textAnchor="middle" 
-                fill="var(--text-secondary)"
-                fontSize="12"
-              >
-                {point.trainingNumber}
-              </text>
-            </g>
-          ))}
+          {/* X-axis labels - adaptive based on data density and screen size */}
+          {points.map((point, index) => {
+            // Show fewer labels on small screens or when there are many data points
+            const shouldShowLabel = hasManyPoints 
+              ? index % Math.ceil(dataPointCount / 8) === 0 || index === dataPointCount - 1
+              : isSmallScreen 
+                ? index % Math.ceil(dataPointCount / 6) === 0 || index === dataPointCount - 1
+                : true;
+            
+            const fontSize = isSmallScreen ? "10" : hasManyPoints ? "10" : "12";
+            
+            return (
+              <g key={index}>
+                <line 
+                  x1={point.x} 
+                  y1={svgHeight - margin.bottom} 
+                  x2={point.x} 
+                  y2={svgHeight - margin.bottom + 5}
+                  stroke="var(--text-secondary)" 
+                />
+                {shouldShowLabel && (
+                  <text 
+                    x={point.x} 
+                    y={svgHeight - margin.bottom + 18} 
+                    textAnchor="middle" 
+                    fill="var(--text-secondary)"
+                    fontSize={fontSize}
+                  >
+                    {point.trainingNumber}
+                  </text>
+                )}
+              </g>
+            );
+          })}
 
           {/* Line chart */}
           {points.length > 1 && (
