@@ -49,7 +49,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   
   const handleOpenCoachApp = () => {
     // Open trainerly coach app in a new tab
-    window.open('/trainerly-coach-app/', '_blank');
+    window.open('http://localhost:3001/coach/', '_blank');
   };
 
 
