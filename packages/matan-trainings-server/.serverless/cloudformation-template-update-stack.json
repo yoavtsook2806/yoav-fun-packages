@@ -74,37 +74,121 @@
     "HealthLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-health"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-health"
       }
     },
     "GetTrainingPlansLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTrainingPlans"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainingPlans"
       }
     },
     "AddTrainingPlanLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-addTrainingPlan"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-addTrainingPlan"
       }
     },
     "SaveExerciseDataLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-saveExerciseData"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-saveExerciseData"
       }
     },
     "GetUserDataLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getUserData"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getUserData"
+      }
+    },
+    "CheckNicknameLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-checkNickname"
+      }
+    },
+    "CreateCoachLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createCoach"
+      }
+    },
+    "LoginCoachLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-loginCoach"
+      }
+    },
+    "GetCoachLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getCoach"
+      }
+    },
+    "CreateTrainerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createTrainer"
+      }
+    },
+    "ListTrainersLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listTrainers"
+      }
+    },
+    "GetTrainerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainer"
+      }
+    },
+    "IdentifyTrainerLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-identifyTrainer"
+      }
+    },
+    "CreateExerciseLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createExercise"
+      }
+    },
+    "ListExercisesLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listExercises"
+      }
+    },
+    "CreatePlanLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createPlan"
+      }
+    },
+    "ListPlansLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listPlans"
+      }
+    },
+    "AssignPlanLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-assignPlan"
+      }
+    },
+    "GetTrainerPlansLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainerPlans"
       }
     },
     "ClearDatabaseLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/matan-trainings-server-prod-clearDatabase"
+        "LogGroupName": "/aws/lambda/matan-trainings-server-dev-clearDatabase"
       }
     },
     "IamRoleLambdaExecution": {
@@ -133,7 +217,7 @@
                 "-",
                 [
                   "matan-trainings-server",
-                  "prod",
+                  "dev",
                   "lambda"
                 ]
               ]
@@ -150,7 +234,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-prod*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-dev*:*"
                     }
                   ]
                 },
@@ -161,7 +245,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-prod*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-dev*:*:*"
                     }
                   ]
                 },
@@ -175,7 +259,7 @@
                     "dynamodb:UpdateItem",
                     "dynamodb:DeleteItem"
                   ],
-                  "Resource": "arn:aws:dynamodb:eu-central-1:*:table/matan-trainings-server-prod-*"
+                  "Resource": "arn:aws:dynamodb:eu-central-1:*:table/matan-trainings-server-dev-*"
                 }
               ]
             }
@@ -187,7 +271,7 @@
             "-",
             [
               "matan-trainings-server",
-              "prod",
+              "dev",
               {
                 "Ref": "AWS::Region"
               },
@@ -204,17 +288,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/health.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/health.zip"
         },
         "Handler": "src/handlers/health.handler",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-health",
+        "FunctionName": "matan-trainings-server-dev-health",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -237,17 +321,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/getTrainingPlans.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/getTrainingPlans.zip"
         },
         "Handler": "src/handlers/trainings.getLatest",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-getTrainingPlans",
+        "FunctionName": "matan-trainings-server-dev-getTrainingPlans",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -270,17 +354,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/addTrainingPlan.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/addTrainingPlan.zip"
         },
         "Handler": "src/handlers/trainings.addTrainingPlan",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-addTrainingPlan",
+        "FunctionName": "matan-trainings-server-dev-addTrainingPlan",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -303,17 +387,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/saveExerciseData.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/saveExerciseData.zip"
         },
         "Handler": "src/handlers/user.saveExerciseData",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-saveExerciseData",
+        "FunctionName": "matan-trainings-server-dev-saveExerciseData",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -336,17 +420,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/getUserData.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/getUserData.zip"
         },
         "Handler": "src/handlers/user.getUserData",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-getUserData",
+        "FunctionName": "matan-trainings-server-dev-getUserData",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -362,6 +446,468 @@
         "GetUserDataLogGroup"
       ]
     },
+    "CheckNicknameLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/checkNickname.zip"
+        },
+        "Handler": "src/handlers/coaches.checkNickname",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-checkNickname",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CheckNicknameLogGroup"
+      ]
+    },
+    "CreateCoachLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/createCoach.zip"
+        },
+        "Handler": "src/handlers/coaches.createCoach",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-createCoach",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CreateCoachLogGroup"
+      ]
+    },
+    "LoginCoachLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/loginCoach.zip"
+        },
+        "Handler": "src/handlers/coaches.loginCoach",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-loginCoach",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "LoginCoachLogGroup"
+      ]
+    },
+    "GetCoachLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/getCoach.zip"
+        },
+        "Handler": "src/handlers/coaches.getCoach",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-getCoach",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetCoachLogGroup"
+      ]
+    },
+    "CreateTrainerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/createTrainer.zip"
+        },
+        "Handler": "src/handlers/trainers.createTrainer",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-createTrainer",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CreateTrainerLogGroup"
+      ]
+    },
+    "ListTrainersLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/listTrainers.zip"
+        },
+        "Handler": "src/handlers/trainers.listTrainers",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-listTrainers",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ListTrainersLogGroup"
+      ]
+    },
+    "GetTrainerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/getTrainer.zip"
+        },
+        "Handler": "src/handlers/trainers.getTrainer",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-getTrainer",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetTrainerLogGroup"
+      ]
+    },
+    "IdentifyTrainerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/identifyTrainer.zip"
+        },
+        "Handler": "src/handlers/trainers.identifyTrainer",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-identifyTrainer",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "IdentifyTrainerLogGroup"
+      ]
+    },
+    "CreateExerciseLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/createExercise.zip"
+        },
+        "Handler": "src/handlers/exercises.createExercise",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-createExercise",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CreateExerciseLogGroup"
+      ]
+    },
+    "ListExercisesLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/listExercises.zip"
+        },
+        "Handler": "src/handlers/exercises.listExercises",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-listExercises",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ListExercisesLogGroup"
+      ]
+    },
+    "CreatePlanLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/createPlan.zip"
+        },
+        "Handler": "src/handlers/plans.createPlan",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-createPlan",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "CreatePlanLogGroup"
+      ]
+    },
+    "ListPlansLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/listPlans.zip"
+        },
+        "Handler": "src/handlers/plans.listPlans",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-listPlans",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ListPlansLogGroup"
+      ]
+    },
+    "AssignPlanLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/assignPlan.zip"
+        },
+        "Handler": "src/handlers/plans.assignPlan",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-assignPlan",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "AssignPlanLogGroup"
+      ]
+    },
+    "GetTrainerPlansLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/getTrainerPlans.zip"
+        },
+        "Handler": "src/handlers/plans.getTrainerPlans",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "matan-trainings-server-dev-getTrainerPlans",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
+            "DYNAMODB_ENDPOINT": "",
+            "IS_LOCAL": "false"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetTrainerPlansLogGroup"
+      ]
+    },
     "ClearDatabaseLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -369,17 +915,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matan-trainings-server/prod/1758748498775-2025-09-24T21:14:58.775Z/clearDatabase.zip"
+          "S3Key": "serverless/matan-trainings-server/dev/1758778958406-2025-09-25T05:42:38.406Z/clearDatabase.zip"
         },
         "Handler": "src/handlers/admin.clearDatabase",
         "Runtime": "nodejs18.x",
-        "FunctionName": "matan-trainings-server-prod-clearDatabase",
+        "FunctionName": "matan-trainings-server-dev-clearDatabase",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "STAGE": "prod",
-            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+            "STAGE": "dev",
+            "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
             "DYNAMODB_ENDPOINT": "",
             "IS_LOCAL": "false"
           }
@@ -395,70 +941,210 @@
         "ClearDatabaseLogGroup"
       ]
     },
-    "GetTrainingPlansLambdaVersionmf8pN7GxemeGGEQKVkMKeIso41ntLbPAiFWyh3He4": {
+    "GetTrainingPlansLambdaVersionAaCNUdiIEsLIkrtFaEbKxxdqaelayqfdpfFREzLugKk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetTrainingPlansLambdaFunction"
         },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
       }
     },
-    "HealthLambdaVersion6aN3UGTpxM5OLO3vxJJThDZUToUgf6c0PCEjODbARI": {
+    "HealthLambdaVersionmoCqX4Mvm82oXXOuo9z3ORyvpwjWUe6hMrAGxy5tpPQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HealthLambdaFunction"
         },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
       }
     },
-    "SaveExerciseDataLambdaVersioneC8cxvTIDnIqCjunEze9JAqphUVv83y7KaU0QKIj9g": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "SaveExerciseDataLambdaFunction"
-        },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
-      }
-    },
-    "AddTrainingPlanLambdaVersionbwIx5pVZwWCcVBy2wmD5zjxyun210afsUzYvcIqEQ": {
+    "AddTrainingPlanLambdaVersion3LHuC1nFzvGU4DMPiz0HQLcuxSe85irk0QZCdNkfI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AddTrainingPlanLambdaFunction"
         },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
       }
     },
-    "GetUserDataLambdaVersionrLMA9KsjZ3EXg05nxImEsQ4uyCG4lidNznUns4WYcw": {
+    "SaveExerciseDataLambdaVersionU04KvNLFvQbOwBbU78QFReNw3k5fXHxsRc4qarnY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SaveExerciseDataLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "CreateCoachLambdaVersionL3favcnKptI6qfdBgMQ43IYNQlEp79GiKyb0EkTGo": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreateCoachLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "GetUserDataLambdaVersionNmqXGKaT2w1ssBXTHQUhyKVpwjLweLeMR07ihq05rQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetUserDataLambdaFunction"
         },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
       }
     },
-    "ClearDatabaseLambdaVersionR4qMlg7fzZylTxLOeNhFTrdNApHggmFdl25X3aVSTHA": {
+    "CheckNicknameLambdaVersion8KNSENhul58HNK4gCqUnm6t96qkeQaXfoDc2xZRpMg": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CheckNicknameLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "LoginCoachLambdaVersionm8ByHHnrrVn1Ok9aPf13MZlZFpTW8qzf5rCu7tQIOcA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LoginCoachLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "CreateTrainerLambdaVersion9rQGPfDQ5Im3xKEJwP4eM1qWzduztpZvn58Bykn1mug": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreateTrainerLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "GetTrainerLambdaVersionJY7Fr5BUHq5VuLNmHpEFefQmjbgJaqK8dAnapNLw": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetTrainerLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "GetCoachLambdaVersion4jl17o8wgqoW36kLoL4FNr9uJalD2ZINnae6lP8hyNc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetCoachLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "IdentifyTrainerLambdaVersionEAHdezadK3yBv2esQCWzJDeO1mk45cYZkQlBDdlGJWk": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "IdentifyTrainerLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "CreateExerciseLambdaVersioneojxotEptuLrjPsn59HGlXYfl7ruxx49iZv5ey9NsE": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreateExerciseLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "ListTrainersLambdaVersionz0NnLTdieuxEzpzXp9p7nwZEQpPyYmXU3rskvNw1LI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ListTrainersLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "ListExercisesLambdaVersionudlungKiJTpXcl29hY1NCegtsPz0axrJYj7op1jyIUw": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ListExercisesLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "CreatePlanLambdaVersion9PVYtV9KAKRBzwvoeoxfjZVBDXs0AdieDhBwJP9mjQ": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CreatePlanLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "AssignPlanLambdaVersionDZqdY1n8WxlsO0Df01xzPjcE0jXv2OQ2XYnCidRmYU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AssignPlanLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "ListPlansLambdaVersionytC0eTSibEikf80qwPh9C7B8Jsq1CVP4X3dwFysu1B0": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ListPlansLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "ClearDatabaseLambdaVersiontajXNsQOx3qKiZDS095gMuGCGnb8yKPkBD76jyXS30": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ClearDatabaseLambdaFunction"
         },
-        "CodeSha256": "vl/L3UfMwE0F+GRs80CcA+I2f5pVn3Gw3M2ObqVdaLY="
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
+      }
+    },
+    "GetTrainerPlansLambdaVersionJ1qmt5zGh48BXndGcnL1OjU6uQHMCw02daVSsX3XwEc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetTrainerPlansLambdaFunction"
+        },
+        "CodeSha256": "OYjPbyReTZT24I/SL7AGp3BjX5X0xwe2Q8OC2zxXO3M="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "prod-matan-trainings-server",
+        "Name": "dev-matan-trainings-server",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -531,6 +1217,222 @@
           "Ref": "ApiGatewayResourceUser"
         },
         "PathPart": "exercise-data",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceNicknames": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "nicknames",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceNicknamesCheck": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceNicknames"
+        },
+        "PathPart": "check",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoaches": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "coaches",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoachesCoachidVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceCoaches"
+        },
+        "PathPart": "{coachId}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoachesCoachidVarTrainers": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVar"
+        },
+        "PathPart": "trainers",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoachesCoachidVarExercises": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVar"
+        },
+        "PathPart": "exercises",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceCoachesCoachidVarPlans": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVar"
+        },
+        "PathPart": "plans",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuth": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "auth",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthCoach": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuth"
+        },
+        "PathPart": "coach",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthCoachLogin": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuthCoach"
+        },
+        "PathPart": "login",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthTrainer": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuth"
+        },
+        "PathPart": "trainer",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceAuthTrainerIdentify": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceAuthTrainer"
+        },
+        "PathPart": "identify",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceTrainers": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "trainers",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceTrainersTraineridVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceTrainers"
+        },
+        "PathPart": "{trainerId}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceTrainersTraineridVarPlans": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVar"
+        },
+        "PathPart": "plans",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceTrainersTraineridVarPlansPlanidVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlans"
+        },
+        "PathPart": "{planId}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceTrainersTraineridVarPlansPlanidVarAssign": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlansPlanidVar"
+        },
+        "PathPart": "assign",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -737,6 +1639,501 @@
         },
         "ResourceId": {
           "Ref": "ApiGatewayResourceUserExerciseDashdata"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodNicknamesCheckOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceNicknamesCheck"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachesOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoaches"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAuthCoachLoginOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthCoachLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachesCoachidVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachesCoachidVarTrainersOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarTrainers"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodTrainersTraineridVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAuthTrainerIdentifyOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthTrainerIdentify"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachesCoachidVarExercisesOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarExercises"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodCoachesCoachidVarPlansOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarPlans"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodTrainersTraineridVarPlansPlanidVarAssignOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlansPlanidVarAssign"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodTrainersTraineridVarPlansOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlans"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -1018,6 +2415,650 @@
         "GetUserDataLambdaPermissionApiGateway"
       ]
     },
+    "ApiGatewayMethodNicknamesCheckGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceNicknamesCheck"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CheckNicknameLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CheckNicknameLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoaches"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CreateCoachLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CreateCoachLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodAuthCoachLoginPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthCoachLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "LoginCoachLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "LoginCoachLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetCoachLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "GetCoachLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarTrainersPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarTrainers"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CreateTrainerLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CreateTrainerLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarTrainersGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarTrainers"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ListTrainersLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "ListTrainersLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodTrainersTraineridVarGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetTrainerLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "GetTrainerLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodAuthTrainerIdentifyPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAuthTrainerIdentify"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "IdentifyTrainerLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "IdentifyTrainerLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarExercisesPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarExercises"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CreateExerciseLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CreateExerciseLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarExercisesGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarExercises"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ListExercisesLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "ListExercisesLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarPlansPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarPlans"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CreatePlanLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CreatePlanLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodCoachesCoachidVarPlansGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceCoachesCoachidVarPlans"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ListPlansLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "ListPlansLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodTrainersTraineridVarPlansPlanidVarAssignPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlansPlanidVarAssign"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AssignPlanLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "AssignPlanLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodTrainersTraineridVarPlansGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceTrainersTraineridVarPlans"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "GetTrainerPlansLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "GetTrainerPlansLambdaPermissionApiGateway"
+      ]
+    },
     "ApiGatewayMethodAdminClearDashdatabaseDelete": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
@@ -1064,25 +3105,50 @@
         "ClearDatabaseLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1758748493777": {
+    "ApiGatewayDeployment1758778952941": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "StageName": "prod"
+        "StageName": "dev"
       },
       "DependsOn": [
         "ApiGatewayMethodHealthOptions",
         "ApiGatewayMethodTrainingsLatestOptions",
         "ApiGatewayMethodTrainingsOptions",
         "ApiGatewayMethodUserExerciseDashdataOptions",
+        "ApiGatewayMethodNicknamesCheckOptions",
+        "ApiGatewayMethodCoachesOptions",
+        "ApiGatewayMethodAuthCoachLoginOptions",
+        "ApiGatewayMethodCoachesCoachidVarOptions",
+        "ApiGatewayMethodCoachesCoachidVarTrainersOptions",
+        "ApiGatewayMethodTrainersTraineridVarOptions",
+        "ApiGatewayMethodAuthTrainerIdentifyOptions",
+        "ApiGatewayMethodCoachesCoachidVarExercisesOptions",
+        "ApiGatewayMethodCoachesCoachidVarPlansOptions",
+        "ApiGatewayMethodTrainersTraineridVarPlansPlanidVarAssignOptions",
+        "ApiGatewayMethodTrainersTraineridVarPlansOptions",
         "ApiGatewayMethodAdminClearDashdatabaseOptions",
         "ApiGatewayMethodHealthGet",
         "ApiGatewayMethodTrainingsLatestGet",
         "ApiGatewayMethodTrainingsPost",
         "ApiGatewayMethodUserExerciseDashdataPost",
         "ApiGatewayMethodUserExerciseDashdataGet",
+        "ApiGatewayMethodNicknamesCheckGet",
+        "ApiGatewayMethodCoachesPost",
+        "ApiGatewayMethodAuthCoachLoginPost",
+        "ApiGatewayMethodCoachesCoachidVarGet",
+        "ApiGatewayMethodCoachesCoachidVarTrainersPost",
+        "ApiGatewayMethodCoachesCoachidVarTrainersGet",
+        "ApiGatewayMethodTrainersTraineridVarGet",
+        "ApiGatewayMethodAuthTrainerIdentifyPost",
+        "ApiGatewayMethodCoachesCoachidVarExercisesPost",
+        "ApiGatewayMethodCoachesCoachidVarExercisesGet",
+        "ApiGatewayMethodCoachesCoachidVarPlansPost",
+        "ApiGatewayMethodCoachesCoachidVarPlansGet",
+        "ApiGatewayMethodTrainersTraineridVarPlansPlanidVarAssignPost",
+        "ApiGatewayMethodTrainersTraineridVarPlansGet",
         "ApiGatewayMethodAdminClearDashdatabaseDelete"
       ]
     },
@@ -1271,6 +3337,524 @@
         }
       }
     },
+    "CheckNicknameLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CheckNicknameLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "CreateCoachLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreateCoachLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "LoginCoachLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LoginCoachLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetCoachLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetCoachLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "CreateTrainerLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreateTrainerLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ListTrainersLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ListTrainersLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetTrainerLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetTrainerLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "IdentifyTrainerLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "IdentifyTrainerLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "CreateExerciseLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreateExerciseLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ListExercisesLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ListExercisesLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "CreatePlanLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreatePlanLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ListPlansLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ListPlansLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "AssignPlanLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AssignPlanLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "GetTrainerPlansLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetTrainerPlansLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
     "ClearDatabaseLambdaPermissionApiGateway": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
@@ -1308,10 +3892,124 @@
         }
       }
     },
+    "CoachesTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-coaches",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "coachId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "coachId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "TrainersTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-trainers",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "trainerId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "trainerId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "ExercisesTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-exercises",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "exerciseId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "exerciseId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "PlansTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-plans",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "planId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "planId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "PlanAssignmentsTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-plan-assignments",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "assignmentId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "assignmentId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "ProgressTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "matan-trainings-server-dev-progress",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "progressId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "progressId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
     "TrainingPlansTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
-        "TableName": "matan-trainings-server-prod-training-plans",
+        "TableName": "matan-trainings-server-dev-training-plans",
         "AttributeDefinitions": [
           {
             "AttributeName": "version",
@@ -1330,7 +4028,7 @@
     "UserProfilesTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
-        "TableName": "matan-trainings-server-prod-user-profiles",
+        "TableName": "matan-trainings-server-dev-user-profiles",
         "AttributeDefinitions": [
           {
             "AttributeName": "userId",
@@ -1349,7 +4047,7 @@
     "ExerciseDataTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
-        "TableName": "matan-trainings-server-prod-exercise-data",
+        "TableName": "matan-trainings-server-dev-exercise-data",
         "AttributeDefinitions": [
           {
             "AttributeName": "userId",
@@ -1380,61 +4078,187 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-ServerlessDeploymentBucketName"
+        "Name": "sls-matan-trainings-server-dev-ServerlessDeploymentBucketName"
       }
     },
     "GetTrainingPlansLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetTrainingPlansLambdaVersionmf8pN7GxemeGGEQKVkMKeIso41ntLbPAiFWyh3He4"
+        "Ref": "GetTrainingPlansLambdaVersionAaCNUdiIEsLIkrtFaEbKxxdqaelayqfdpfFREzLugKk"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-GetTrainingPlansLambdaFunctionQualifiedArn"
+        "Name": "sls-matan-trainings-server-dev-GetTrainingPlansLambdaFunctionQualifiedArn"
       }
     },
     "HealthLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HealthLambdaVersion6aN3UGTpxM5OLO3vxJJThDZUToUgf6c0PCEjODbARI"
+        "Ref": "HealthLambdaVersionmoCqX4Mvm82oXXOuo9z3ORyvpwjWUe6hMrAGxy5tpPQ"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-HealthLambdaFunctionQualifiedArn"
-      }
-    },
-    "SaveExerciseDataLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "SaveExerciseDataLambdaVersioneC8cxvTIDnIqCjunEze9JAqphUVv83y7KaU0QKIj9g"
-      },
-      "Export": {
-        "Name": "sls-matan-trainings-server-prod-SaveExerciseDataLambdaFunctionQualifiedArn"
+        "Name": "sls-matan-trainings-server-dev-HealthLambdaFunctionQualifiedArn"
       }
     },
     "AddTrainingPlanLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddTrainingPlanLambdaVersionbwIx5pVZwWCcVBy2wmD5zjxyun210afsUzYvcIqEQ"
+        "Ref": "AddTrainingPlanLambdaVersion3LHuC1nFzvGU4DMPiz0HQLcuxSe85irk0QZCdNkfI"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-AddTrainingPlanLambdaFunctionQualifiedArn"
+        "Name": "sls-matan-trainings-server-dev-AddTrainingPlanLambdaFunctionQualifiedArn"
+      }
+    },
+    "SaveExerciseDataLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SaveExerciseDataLambdaVersionU04KvNLFvQbOwBbU78QFReNw3k5fXHxsRc4qarnY"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-SaveExerciseDataLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreateCoachLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreateCoachLambdaVersionL3favcnKptI6qfdBgMQ43IYNQlEp79GiKyb0EkTGo"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-CreateCoachLambdaFunctionQualifiedArn"
       }
     },
     "GetUserDataLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetUserDataLambdaVersionrLMA9KsjZ3EXg05nxImEsQ4uyCG4lidNznUns4WYcw"
+        "Ref": "GetUserDataLambdaVersionNmqXGKaT2w1ssBXTHQUhyKVpwjLweLeMR07ihq05rQ"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-GetUserDataLambdaFunctionQualifiedArn"
+        "Name": "sls-matan-trainings-server-dev-GetUserDataLambdaFunctionQualifiedArn"
+      }
+    },
+    "CheckNicknameLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CheckNicknameLambdaVersion8KNSENhul58HNK4gCqUnm6t96qkeQaXfoDc2xZRpMg"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-CheckNicknameLambdaFunctionQualifiedArn"
+      }
+    },
+    "LoginCoachLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "LoginCoachLambdaVersionm8ByHHnrrVn1Ok9aPf13MZlZFpTW8qzf5rCu7tQIOcA"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-LoginCoachLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreateTrainerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreateTrainerLambdaVersion9rQGPfDQ5Im3xKEJwP4eM1qWzduztpZvn58Bykn1mug"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-CreateTrainerLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetTrainerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetTrainerLambdaVersionJY7Fr5BUHq5VuLNmHpEFefQmjbgJaqK8dAnapNLw"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-GetTrainerLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetCoachLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetCoachLambdaVersion4jl17o8wgqoW36kLoL4FNr9uJalD2ZINnae6lP8hyNc"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-GetCoachLambdaFunctionQualifiedArn"
+      }
+    },
+    "IdentifyTrainerLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "IdentifyTrainerLambdaVersionEAHdezadK3yBv2esQCWzJDeO1mk45cYZkQlBDdlGJWk"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-IdentifyTrainerLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreateExerciseLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreateExerciseLambdaVersioneojxotEptuLrjPsn59HGlXYfl7ruxx49iZv5ey9NsE"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-CreateExerciseLambdaFunctionQualifiedArn"
+      }
+    },
+    "ListTrainersLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ListTrainersLambdaVersionz0NnLTdieuxEzpzXp9p7nwZEQpPyYmXU3rskvNw1LI"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-ListTrainersLambdaFunctionQualifiedArn"
+      }
+    },
+    "ListExercisesLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ListExercisesLambdaVersionudlungKiJTpXcl29hY1NCegtsPz0axrJYj7op1jyIUw"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-ListExercisesLambdaFunctionQualifiedArn"
+      }
+    },
+    "CreatePlanLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "CreatePlanLambdaVersion9PVYtV9KAKRBzwvoeoxfjZVBDXs0AdieDhBwJP9mjQ"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-CreatePlanLambdaFunctionQualifiedArn"
+      }
+    },
+    "AssignPlanLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AssignPlanLambdaVersionDZqdY1n8WxlsO0Df01xzPjcE0jXv2OQ2XYnCidRmYU"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-AssignPlanLambdaFunctionQualifiedArn"
+      }
+    },
+    "ListPlansLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ListPlansLambdaVersionytC0eTSibEikf80qwPh9C7B8Jsq1CVP4X3dwFysu1B0"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-ListPlansLambdaFunctionQualifiedArn"
       }
     },
     "ClearDatabaseLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ClearDatabaseLambdaVersionR4qMlg7fzZylTxLOeNhFTrdNApHggmFdl25X3aVSTHA"
+        "Ref": "ClearDatabaseLambdaVersiontajXNsQOx3qKiZDS095gMuGCGnb8yKPkBD76jyXS30"
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-ClearDatabaseLambdaFunctionQualifiedArn"
+        "Name": "sls-matan-trainings-server-dev-ClearDatabaseLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetTrainerPlansLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetTrainerPlansLambdaVersionJ1qmt5zGh48BXndGcnL1OjU6uQHMCw02daVSsX3XwEc"
+      },
+      "Export": {
+        "Name": "sls-matan-trainings-server-dev-GetTrainerPlansLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -1455,12 +4279,12 @@
             {
               "Ref": "AWS::URLSuffix"
             },
-            "/prod"
+            "/dev"
           ]
         ]
       },
       "Export": {
-        "Name": "sls-matan-trainings-server-prod-ServiceEndpoint"
+        "Name": "sls-matan-trainings-server-dev-ServiceEndpoint"
       }
     }
   }

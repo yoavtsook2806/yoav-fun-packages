@@ -65,37 +65,153 @@ functions:
           method: get
           cors: true
 
-  # Training plans
-  getTrainingPlans:
-    handler: src/handlers/trainings.getLatest
+  # Nickname validation
+  checkNickname:
+    handler: src/handlers/coaches.checkNickname
     events:
       - http:
-          path: /trainings/latest
+          path: /nicknames/check
           method: get
           cors: true
 
-  addTrainingPlan:
-    handler: src/handlers/trainings.addTrainingPlan
+  # Coach authentication
+  createCoach:
+    handler: src/handlers/coaches.createCoach
     events:
       - http:
-          path: /trainings
+          path: /coaches
           method: post
           cors: true
 
-  # User exercise data
-  saveExerciseData:
-    handler: src/handlers/user.saveExerciseData
+  loginCoach:
+    handler: src/handlers/coaches.loginCoach
     events:
       - http:
-          path: /user/exercise-data
+          path: /auth/coach/login
           method: post
           cors: true
 
-  getUserData:
-    handler: src/handlers/user.getUserData
+  getCoach:
+    handler: src/handlers/coaches.getCoach
     events:
       - http:
-          path: /user/exercise-data
+          path: /coaches/{coachId}
+          method: get
+          cors: true
+
+  updateCoach:
+    handler: src/handlers/coaches.updateCoach
+    events:
+      - http:
+          path: /coaches/{coachId}
+          method: put
+          cors: true
+
+  # Trainer management
+  createTrainer:
+    handler: src/handlers/trainers.createTrainer
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers
+          method: post
+          cors: true
+
+  listTrainers:
+    handler: src/handlers/trainers.listTrainers
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers
+          method: get
+          cors: true
+
+  getTrainer:
+    handler: src/handlers/trainers.getTrainer
+    events:
+      - http:
+          path: /trainers/{trainerId}
+          method: get
+          cors: true
+
+  identifyTrainer:
+    handler: src/handlers/trainers.identifyTrainer
+    events:
+      - http:
+          path: /auth/trainer/identify
+          method: post
+          cors: true
+
+  # Exercise management
+  createExercise:
+    handler: src/handlers/exercises.createExercise
+    events:
+      - http:
+          path: /coaches/{coachId}/exercises
+          method: post
+          cors: true
+
+  listExercises:
+    handler: src/handlers/exercises.listExercises
+    events:
+      - http:
+          path: /coaches/{coachId}/exercises
+          method: get
+          cors: true
+
+  # Training plan management
+  createPlan:
+    handler: src/handlers/plans.createPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/plans
+          method: post
+          cors: true
+
+  listPlans:
+    handler: src/handlers/plans.listPlans
+    events:
+      - http:
+          path: /coaches/{coachId}/plans
+          method: get
+          cors: true
+
+  assignPlan:
+    handler: src/handlers/plans.assignPlan
+    events:
+      - http:
+          path: /trainers/{trainerId}/plans/{planId}/assign
+          method: post
+          cors: true
+
+  getTrainerPlans:
+    handler: src/handlers/plans.getTrainerPlans
+    events:
+      - http:
+          path: /trainers/{trainerId}/plans
+          method: get
+          cors: true
+
+  # Progress tracking
+  createProgress:
+    handler: src/handlers/progress.createProgress
+    events:
+      - http:
+          path: /trainers/{trainerId}/progress
+          method: post
+          cors: true
+
+  getTrainerProgress:
+    handler: src/handlers/progress.getTrainerProgress
+    events:
+      - http:
+          path: /trainers/{trainerId}/progress
+          method: get
+          cors: true
+
+  getCoachViewProgress:
+    handler: src/handlers/progress.getCoachViewProgress
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers/{trainerId}/progress
           method: get
           cors: true
 
@@ -111,48 +227,84 @@ functions:
 # DynamoDB tables
 resources:
   Resources:
-    # Training Plans Table
-    TrainingPlansTable:
+    # Coaches Table
+    CoachesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${self:provider.stage}-training-plans
+        TableName: ${self:service}-${self:provider.stage}-coaches
         AttributeDefinitions:
-          - AttributeName: version
+          - AttributeName: coachId
             AttributeType: S
         KeySchema:
-          - AttributeName: version
+          - AttributeName: coachId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        
-    # User Profiles Table
-    UserProfilesTable:
+
+    # Trainers Table
+    TrainersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${self:provider.stage}-user-profiles
+        TableName: ${self:service}-${self:provider.stage}-trainers
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: trainerId
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: trainerId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        
-    # Exercise Data Table
-    ExerciseDataTable:
+
+    # Exercises Table
+    ExercisesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${self:provider.stage}-exercise-data
+        TableName: ${self:service}-${self:provider.stage}-exercises
         AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-          - AttributeName: timestamp
+          - AttributeName: exerciseId
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: exerciseId
             KeyType: HASH
-          - AttributeName: timestamp
-            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+
+    # Training Plans Table (new structure)
+    PlansTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-plans
+        AttributeDefinitions:
+          - AttributeName: planId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: planId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    # Plan Assignments Table
+    PlanAssignmentsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-plan-assignments
+        AttributeDefinitions:
+          - AttributeName: assignmentId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: assignmentId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    # Progress Table
+    ProgressTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-progress
+        AttributeDefinitions:
+          - AttributeName: progressId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: progressId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
 
 # Custom domain (optional)
 # custom:
