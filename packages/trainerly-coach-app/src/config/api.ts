@@ -21,8 +21,8 @@ const getEnvironment = (): 'dev' | 'prod' => {
 // API Configuration for each environment
 const API_CONFIGS: Record<'dev' | 'prod', ApiConfig> = {
   dev: {
-    // Use local development server
-    baseUrl: 'http://localhost:3000/dev',
+    // Use AWS dev server for real database updates
+    baseUrl: 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev',
     stage: 'dev'
   },
   prod: {
