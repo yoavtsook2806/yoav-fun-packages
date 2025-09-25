@@ -269,7 +269,8 @@ export const identifyTrainer = async (
     }
 
     const response: TrainerIdentifyResponse = {
-      trainerId: trainer.trainerId
+      trainerId: trainer.trainerId,
+      coachId: trainer.coachId
     };
 
     return {

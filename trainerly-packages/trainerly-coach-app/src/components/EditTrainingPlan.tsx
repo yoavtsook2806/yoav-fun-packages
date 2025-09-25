@@ -172,9 +172,6 @@ const EditTrainingPlan: React.FC<EditTrainingPlanProps> = ({
               <div className="trainings-section">
                 <div className="section-header">
                   <h3>אימונים בתוכנית ({formData.trainings.length})</h3>
-                  <button onClick={addTraining} className="add-training-btn">
-                    ➕ הוסף אימון
-                  </button>
                 </div>
 
                 <div className="trainings-list">

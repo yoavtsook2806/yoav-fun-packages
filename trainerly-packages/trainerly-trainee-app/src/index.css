@@ -1,3 +1,68 @@
+/* Logo Styles */
+.logo-section {
+  padding: 2rem 0 1rem 0;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.trainerly-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.trainerly-logo:hover {
+  transform: scale(1.05);
+}
+
+.app-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #FF8C00, #FFD700, #00D4AA, #84D8FF, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  text-align: center;
+}
+
+.app-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary, #cbd5e1);
+  margin: 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .trainerly-logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .app-title {
+    font-size: 1.75rem;
+  }
+  
+  .app-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .logo-section {
+    padding: 1rem 0 0.5rem 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
 :root {
   /* Modern Design System */
   --primary: #6366f1;

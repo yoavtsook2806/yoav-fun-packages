@@ -146,6 +146,19 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
         <main className="dashboard-main">
           {activeSection === 'dashboard' && (
             <>
+              {/* Trainerly Logo */}
+              <section className="logo-section">
+                <div className="logo-container">
+                  <img 
+                    src="/trainerly-logo.svg" 
+                    alt="Trainerly" 
+                    className="trainerly-logo"
+                  />
+                  <h1 className="app-title">Trainerly Coach</h1>
+                  <p className="app-subtitle">פלטפורמת ניהול אימונים מתקדמת</p>
+                </div>
+              </section>
+              
               {/* Simple Management Buttons */}
               <section className="simple-management-section">
                 <div className="simple-management-grid">

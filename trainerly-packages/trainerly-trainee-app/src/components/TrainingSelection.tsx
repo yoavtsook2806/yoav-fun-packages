@@ -173,6 +173,19 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
 
   return (
     <div className="training-selection">
+      {/* Trainerly Logo */}
+      <div className="logo-section">
+        <div className="logo-container">
+          <img 
+            src="/trainerly-logo.svg" 
+            alt="Trainerly" 
+            className="trainerly-logo"
+          />
+          <h1 className="app-title">Trainerly</h1>
+          <p className="app-subtitle">אפליקציית המתאמנים</p>
+        </div>
+      </div>
+      
       <h1>{getWelcomeTitle()}</h1>
       
       <div className="training-buttons">

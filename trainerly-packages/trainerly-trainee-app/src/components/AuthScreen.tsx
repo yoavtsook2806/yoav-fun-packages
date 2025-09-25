@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './AuthScreen.css';
 
 interface AuthScreenProps {
-  onAuthenticated: (traineeId: string, trainerName: string) => void;
+  onAuthenticated: (traineeId: string, trainerName: string, coachId?: string) => void;
 }
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
@@ -43,7 +43,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       }
 
       const trainerData = await identifyResponse.json();
-      onAuthenticated(trainerData.trainerId, `${firstName} ${lastName}`);
+      onAuthenticated(trainerData.trainerId, `${firstName} ${lastName}`, trainerData.coachId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'שגיאה לא צפויה');
     } finally {

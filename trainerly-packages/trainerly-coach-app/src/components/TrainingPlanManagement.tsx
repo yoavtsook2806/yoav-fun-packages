@@ -301,9 +301,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               <div className="trainings-section">
                 <div className="section-header">
                   <h3>אימונים בתוכנית</h3>
-                  <button type="button" onClick={addTraining} className="add-training-button">
-                    ➕ הוסף אימון
-                  </button>
                 </div>
 
                 <div className="trainings-list">

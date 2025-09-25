@@ -103,15 +103,18 @@ interface ExerciseSessionData {
   restTime?: number;
 }
 
-export const fetchTraineeData = async (traineeId: string): Promise<TraineeData | null> => {
+export const fetchTraineeData = async (traineeId: string, coachId?: string): Promise<TraineeData | null> => {
   try {
-    console.log(`🔄 Fetching trainee data for ID: ${traineeId}`);
+    console.log(`🔄 Fetching trainee data for ID: ${traineeId}, Coach ID: ${coachId}`);
     
-    // Check cache first
+    // Check cache first (but let's skip cache for debugging)
     const cacheKey = `trainerly_trainee_data_${traineeId}`;
     const cachedDataString = localStorage.getItem(cacheKey);
     
-    if (cachedDataString) {
+    // DEBUGGING: Skip cache to always fetch fresh data
+    console.log('🔧 DEBUG MODE: Skipping cache to fetch fresh data');
+    
+    if (false && cachedDataString) { // Disabled for debugging
       try {
         const cachedData: CachedTraineeData = JSON.parse(cachedDataString);
         const now = Date.now();
@@ -140,12 +143,21 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
       currentPlan: null
     };
     
-    // Try to find the trainee by checking the known coach
-    // In a real system, we'd have a better way to get this, but for now we'll use the coach we know
-    const knownCoachId = '84b48a6d-65d0-4b71-bf69-16305af96815'; // The coach ID from our test data
+    // Use the provided coach ID or fall back to searching (for backward compatibility)
+    let actualCoachId = coachId;
+    
+    if (!actualCoachId) {
+      console.warn('⚠️ No coach ID provided, this may cause issues fetching training plans');
+      // Fallback: try to find trainee across coaches (less efficient but works)
+      const fallbackCoachId = '84b48a6d-65d0-4b71-bf69-16305af96815'; // Temporary fallback
+      actualCoachId = fallbackCoachId;
+      console.log('🔄 Using fallback coach ID:', actualCoachId);
+    } else {
+      console.log('✅ Using provided coach ID:', actualCoachId);
+    }
     
     try {
-      const trainersResponse = await fetch(`${API_BASE_URL}/coaches/${knownCoachId}/trainers`, {
+      const trainersResponse = await fetch(`${API_BASE_URL}/coaches/${actualCoachId}/trainers`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,9 +166,11 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
 
       if (trainersResponse.ok) {
         const trainersData = await trainersResponse.json();
+        console.log('📋 All trainers data:', trainersData);
         const foundTrainer = trainersData.items?.find((trainer: any) => trainer.trainerId === traineeId);
         
         if (foundTrainer) {
+          console.log('✅ Found trainer:', foundTrainer);
           traineeData = {
             trainerId: foundTrainer.trainerId,
             firstName: foundTrainer.firstName,
@@ -165,7 +179,14 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
             currentPlan: null
           };
           console.log('📋 Found trainee with plans:', foundTrainer.plans);
+        } else {
+          console.error('❌ Trainer not found in response. Looking for ID:', traineeId);
+          console.error('Available trainers:', trainersData.items?.map((t: any) => ({ id: t.trainerId, name: `${t.firstName} ${t.lastName}` })));
         }
+      } else {
+        console.error('❌ Failed to fetch trainers:', trainersResponse.status, trainersResponse.statusText);
+        const errorText = await trainersResponse.text().catch(() => 'No error details');
+        console.error('Error details:', errorText);
       }
     } catch (error) {
       console.error('Error fetching trainer data:', error);
@@ -173,13 +194,15 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
     
     // If trainee has plans, fetch all plan details
     if (traineeData.plans && traineeData.plans.length > 0) {
-      const coachId = knownCoachId; // We know the coach ID
+      console.log('📋 Trainee has plans:', traineeData.plans);
+      const coachIdForPlans = actualCoachId; // Use the actual coach ID
       const allPlans = [];
       
       // Fetch all plans
       for (const planId of traineeData.plans) {
+        console.log(`🔄 Fetching plan: ${planId} from coach: ${coachIdForPlans}`);
         try {
-          const planResponse = await fetch(`${API_BASE_URL}/coaches/${coachId}/training-plans/${planId}`, {
+          const planResponse = await fetch(`${API_BASE_URL}/coaches/${coachIdForPlans}/training-plans/${planId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -198,7 +221,9 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
             allPlans.push(plan);
             console.log('✅ Fetched plan:', convertedPlan.name);
           } else {
-            console.warn(`Failed to fetch training plan ${planId}`);
+            console.warn(`Failed to fetch training plan ${planId}:`, planResponse.status, planResponse.statusText);
+            const errorText = await planResponse.text().catch(() => 'No error details');
+            console.warn('Error details:', errorText);
           }
         } catch (planError) {
           console.error(`Error fetching training plan ${planId}:`, planError);
@@ -211,7 +236,11 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
       if (allPlans.length > 0) {
         traineeData.currentPlan = allPlans[allPlans.length - 1];
         console.log('✅ Set current plan:', traineeData.currentPlan.name);
+      } else {
+        console.warn('⚠️ No plans could be fetched, but trainee has plan IDs:', traineeData.plans);
       }
+    } else {
+      console.log('ℹ️ Trainee has no plans assigned');
     }
     
     // Cache the fresh data
@@ -221,7 +250,7 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
     };
     
     localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-    console.log('💾 Cached fresh trainee data');
+    console.log('💾 Cached fresh trainee data:', traineeData);
     
     return traineeData;
     

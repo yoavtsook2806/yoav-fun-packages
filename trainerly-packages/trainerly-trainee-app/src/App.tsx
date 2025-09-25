@@ -81,14 +81,15 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [traineeId, setTraineeId] = useState<string | null>(null);
   const [trainerName, setTrainerName] = useState<string | null>(null);
+  const [coachId, setCoachId] = useState<string | null>(null);
 
   // Load trainee data from server
-  const loadTraineeData = async (traineeId: string) => {
+  const loadTraineeData = async (traineeId: string, coachId?: string) => {
     console.log('🔄 Loading trainee data...');
     setIsLoadingPlan(true);
     
     try {
-      const traineeData = await fetchTraineeData(traineeId);
+      const traineeData = await fetchTraineeData(traineeId, coachId);
       
       if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
         setAllTrainingPlans(traineeData.allPlans);
@@ -114,8 +115,10 @@ function App() {
     setIsAuthenticated(false);
     setTraineeId(null);
     setTrainerName(null);
+    setCoachId(null);
     localStorage.removeItem('trainerly_trainee_id');
     localStorage.removeItem('trainerly_trainer_name');
+    localStorage.removeItem('trainerly_coach_id');
     localStorage.removeItem('trainerly_auth_timestamp');
     
     // Clear trainee data cache
@@ -145,14 +148,16 @@ function App() {
     // Check for existing authentication
     const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
     const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
+    const storedCoachId = localStorage.getItem('trainerly_coach_id');
     
     if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
       setTraineeId(storedTraineeId);
       setTrainerName(storedTrainerName);
+      setCoachId(storedCoachId);
       setIsAuthenticated(true);
       
       // Load trainee data
-      loadTraineeData(storedTraineeId);
+      loadTraineeData(storedTraineeId, storedCoachId);
     } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
       // Authentication expired, clear stored data
       console.log('Authentication expired, requiring re-login');
@@ -161,20 +166,24 @@ function App() {
   }, []);
 
   // Handle authentication
-  const handleAuthenticated = (newTraineeId: string, newTrainerName: string) => {
+  const handleAuthenticated = (newTraineeId: string, newTrainerName: string, newCoachId?: string) => {
     setTraineeId(newTraineeId);
     setTrainerName(newTrainerName);
+    setCoachId(newCoachId || null);
     setIsAuthenticated(true);
     
     // Store in localStorage for persistence with timestamp
     localStorage.setItem('trainerly_trainee_id', newTraineeId);
     localStorage.setItem('trainerly_trainer_name', newTrainerName);
+    if (newCoachId) {
+      localStorage.setItem('trainerly_coach_id', newCoachId);
+    }
     localStorage.setItem('trainerly_auth_timestamp', Date.now().toString());
     
-    console.log(`✅ Authentication successful for ${newTrainerName} (ID: ${newTraineeId})`);
+    console.log(`✅ Authentication successful for ${newTrainerName} (ID: ${newTraineeId}, Coach: ${newCoachId})`);
     
     // Load trainee data
-    loadTraineeData(newTraineeId);
+    loadTraineeData(newTraineeId, newCoachId);
   };
 
   // Handle plan change from settings

@@ -247,6 +247,7 @@ export interface TrainerIdentifyRequest {
 
 export interface TrainerIdentifyResponse {
   trainerId: string;
+  coachId: string;
 }
 
 export interface TrainerListResponse {
