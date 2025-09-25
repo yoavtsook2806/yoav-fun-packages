@@ -207,6 +207,7 @@ export interface CoachGetResponse {
   nickname: string;
   phone?: string;
   age?: number;
+  isAdmin?: boolean;
 }
 
 export interface CoachUpdateRequest {

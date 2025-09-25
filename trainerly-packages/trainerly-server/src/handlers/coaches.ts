@@ -376,7 +376,8 @@ export const getCoach = async (
       valid: coach.valid,
       nickname: coach.nickname,
       phone: coach.phone,
-      age: coach.age
+      age: coach.age,
+      isAdmin: coach.isAdmin || false
     };
 
     return {
