@@ -35,7 +35,9 @@ jobs:
       run: yarn install --immutable
       
     - name: Build all packages
-      run: yarn build
+      run: |
+        yarn workspace matan-training build
+        yarn workspace trainerly-trainer-app build
       
     - name: Create deployment structure
       run: |
@@ -122,7 +124,15 @@ jobs:
                             Progressive Web App for workout tracking with Hebrew UI. 
                             Features dark mode, custom rest times, and responsive design.
                         </div>
-                        <a href="./matan-trainings/" class="package-link">Open Training App</a>
+                        <a href="./matan-training/" class="package-link">Open Training App</a>
+                    </div>
+                    <div class="package-card">
+                        <div class="package-title">Trainerly - Professional Training Platform</div>
+                        <div class="package-description">
+                            Advanced training platform with server integration and coach management.
+                            Full-featured training app with real-time data sync.
+                        </div>
+                        <a href="./trainerly-trainer-app/" class="package-link">Open Trainerly App</a>
                     </div>
                 </div>
                 
@@ -135,15 +145,15 @@ jobs:
         
     - name: Copy package builds to dist
       run: |
-        # Copy matan-trainings build
-        if [ -d "packages/matan-trainings/dist" ]; then
-          cp -r packages/matan-trainings/dist dist/matan-trainings
+        # Copy matan-training build (original app)
+        if [ -d "packages/matan-training/dist" ]; then
+          cp -r packages/matan-training/dist dist/matan-training
         fi
         
-        # Add more packages here as they are created
-        # if [ -d "packages/another-package/dist" ]; then
-        #   cp -r packages/another-package/dist dist/another-package
-        # fi
+        # Copy trainerly-trainer-app build (new professional app)
+        if [ -d "packages/trainerly-trainer-app/dist" ]; then
+          cp -r packages/trainerly-trainer-app/dist dist/trainerly-trainer-app
+        fi
       
     - name: Setup Pages
       uses: actions/configure-pages@v4

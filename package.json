@@ -7,12 +7,16 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspace matan-trainings dev",
-    "dev:server": "yarn workspace matan-trainings-server dev",
-    "build": "yarn workspace matan-trainings build",
-    "build:server": "yarn workspace matan-trainings-server build",
-    "preview": "yarn workspace matan-trainings preview",
-    "deploy:server": "yarn workspace matan-trainings-server deploy",
+    "dev": "yarn workspace matan-training dev",
+    "dev:server": "yarn workspace trainerly-server dev",
+    "dev:trainerly": "yarn workspace trainerly-trainer-app dev",
+    "dev:coach": "yarn workspace trainerly-coach-app dev",
+    "build": "yarn workspace matan-training build",
+    "build:server": "yarn workspace trainerly-server build",
+    "build:trainerly": "yarn workspace trainerly-trainer-app build",
+    "build:coach": "yarn workspace trainerly-coach-app build",
+    "preview": "yarn workspace matan-training preview",
+    "deploy:server": "yarn workspace trainerly-server deploy",
     "type-check": "yarn workspaces foreach run type-check"
   },
   "devDependencies": {
