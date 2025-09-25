@@ -35,11 +35,14 @@ This is a monorepo containing multiple fun web applications and packages.
 - Start trainerly-server: `yarn workspace trainerly-server dev`
 - Install root dependencies: `yarn install`
 
-## Git Workflow
+## CRITICAL USER-ONLY OPERATIONS
 - **NEVER use `git push`** - only commit changes with `git commit`
+- **NEVER clear/delete the database** - only the user can remove database data
 - The user will handle all pushing to remote repositories
+- The user will handle all database clearing/deletion operations
 - Always use `git add` and `git commit` for saving changes
 - Never run `git push` under any circumstances
+- Never run database clear commands like `/admin/clear-database` or similar deletion operations
 
 ## Server Deployment
 - **ALWAYS deploy server changes** after modifying trainerly-server code
