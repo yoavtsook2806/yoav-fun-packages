@@ -40,7 +40,20 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
 
   useEffect(() => {
     loadData();
-  }, []);
+    
+    // Listen for cache updates
+    const handleCacheUpdate = (event: any) => {
+      if (event.detail.key === 'training_plans' && event.detail.coachId === coachId) {
+        loadData();
+      }
+    };
+    
+    window.addEventListener('cacheUpdated', handleCacheUpdate);
+    
+    return () => {
+      window.removeEventListener('cacheUpdated', handleCacheUpdate);
+    };
+  }, [coachId]);
 
   const loadData = async () => {
     try {
@@ -101,15 +114,27 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   const handleDeletePlan = async (plan: TrainingPlanSummary) => {
     if (confirm(`האם אתה בטוח שברצונך למחוק את תוכנית "${plan.name}"?`)) {
       try {
-        setLoading(true);
+        // Add deleting class for animation
+        const planElement = document.querySelector(`[data-plan-id="${plan.planId}"]`);
+        if (planElement) {
+          planElement.classList.add('deleting');
+        }
+        
+        // Wait for animation to start
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         await cachedApiService.deleteTrainingPlan(coachId, plan.planId, token);
         showSuccess(`תוכנית "${plan.name}" נמחקה בהצלחה`);
         // Plans will be updated automatically via cache event
       } catch (err) {
+        // Remove deleting class if error occurred
+        const planElement = document.querySelector(`[data-plan-id="${plan.planId}"]`);
+        if (planElement) {
+          planElement.classList.remove('deleting');
+        }
+        
         const errorMsg = err instanceof Error ? err.message : 'שגיאה במחיקת תוכנית האימון';
         showError(errorMsg);
-      } finally {
-        setLoading(false);
       }
     }
   };
@@ -497,7 +522,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           </div>
         ) : (
           plans.filter(plan => !plan.customTrainee).map((plan) => (
-            <div key={plan.planId} className="plan-card clickable" onClick={() => handleEditPlan(plan)}>
+            <div key={plan.planId} data-plan-id={plan.planId} className="plan-card clickable" onClick={() => handleEditPlan(plan)}>
               <div className="plan-header">
                 <h3 className="plan-name">{plan.name}</h3>
                 <div className="plan-actions">

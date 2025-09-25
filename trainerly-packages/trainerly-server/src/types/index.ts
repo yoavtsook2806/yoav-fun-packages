@@ -298,6 +298,9 @@ export interface PlanListResponse {
     name: string;
     description?: string;
     trainingsCount: number;
+    isAdminPlan?: boolean;
+    originalPlanId?: string;
+    customTrainee?: string;
     createdAt: string;
   }>;
 }

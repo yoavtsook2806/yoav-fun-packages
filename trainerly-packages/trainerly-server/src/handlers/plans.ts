@@ -123,6 +123,9 @@ export const listPlans = async (
         name: plan.name,
         description: plan.description,
         trainingsCount: plan.trainings?.length || 0,
+        isAdminPlan: plan.isAdminPlan,
+        originalPlanId: plan.originalPlanId,
+        customTrainee: plan.customTrainee,
         createdAt: plan.createdAt
       }))
     };
@@ -169,7 +172,7 @@ export const assignPlan = async (
     // Security check: Verify that both the trainer and plan belong to the requesting coach
     const [trainer, plan] = await Promise.all([
       db.getTrainer(trainerId),
-      db.getPlan(planId)
+      db.getTrainingPlan(planId)
     ]);
 
     if (!trainer) {
