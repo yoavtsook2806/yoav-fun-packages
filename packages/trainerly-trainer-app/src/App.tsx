@@ -6,7 +6,6 @@ import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
-import { getAppConfig } from './utils/urlParams';
 import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData, getCurrentVersionForFetch } from './services/serverService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
@@ -33,11 +32,8 @@ function App() {
   // Current training plan (session-only, not saved to localStorage)
   const [currentTrainingPlan, setCurrentTrainingPlan] = useState(latestPlan);
   
-  // App configuration - always true for both settings in Trainerly app
-  const appConfig = getAppConfig();
-  
   // Log config for debugging
-  console.log('App config:', appConfig);
+  console.log('App config: useServerData=true, showCoachApp=true (hardcoded for Trainerly)');
   
   
   const [trainingState, setTrainingState] = useState<TrainingState>({

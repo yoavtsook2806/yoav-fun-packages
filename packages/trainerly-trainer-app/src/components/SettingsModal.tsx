@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getAvailableVersions } from '../data/trainingPlans';
 import { getVolume, saveVolume, internalToDisplayVolume, displayToInternalVolume, testSound } from '../utils/soundUtils';
 import { APP_VERSION } from '../constants';
-import { getAppConfig } from '../utils/urlParams';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -19,7 +18,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const availableVersions = getAvailableVersions();
   const [volume, setVolume] = useState(0);
-  const appConfig = getAppConfig();
+  // Trainerly always shows coach app (hardcoded)
 
   useEffect(() => {
     // Load current volume setting
@@ -113,8 +112,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* Coach App Access - only show if enabled */}
-          {appConfig.showCoachApp && (
+          {/* Coach App Access - always shown in Trainerly */}
+          {(
             <div className="settings-section">
               <div className="settings-item">
                 <button 

@@ -1,5 +1,4 @@
 import { TrainingPlan, getLatestTrainingPlan, getLatestTrainingUpdates, getAllTrainingPlans } from '../data/trainingPlans';
-import { getAppConfig } from '../utils/urlParams';
 import { 
   LAST_FETCH_DATE_KEY, 
   SERVER_TRAINING_PLAN_KEY, 
@@ -103,7 +102,7 @@ const markTrainingsFetched = (): void => {
  * This function gets trainings newer than the current version
  */
 export const fetchNewTrainings = async (currentVersion?: string): Promise<ServerResponse<TrainingPlan[]>> => {
-  const config = getAppConfig();
+  // Trainerly always uses server data (hardcoded)
   
   console.log(`🔄 fetchNewTrainings called with currentVersion: ${currentVersion || 'undefined'}`);
   
@@ -127,7 +126,7 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
   }
   
   try {
-    if (config.useServerData) {
+    if (true) { // Always use server data in Trainerly
       // TODO: Call real server endpoint
       // const response = await fetch('/api/trainings/latest');
       // const data = await response.json();
@@ -169,7 +168,12 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
     } else {
       // Use local data
       console.log(`🔄 Fetching new trainings from local data...currentVersion: ${currentVersion}`);
-      const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : getAllTrainingPlans();
+      let newerTrainings: TrainingPlan[];
+      if (currentVersion && (currentVersion as string).length > 0) {
+        newerTrainings = getLatestTrainingUpdates(currentVersion as string);
+      } else {
+        newerTrainings = getAllTrainingPlans();
+      }
       markTrainingsFetched();
       
       // Save the latest training plan to local storage
@@ -220,10 +224,10 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
  * Called every time an exercise is completed/edited
  */
 export const updateUserData = async (exerciseData: ExerciseCompletionData): Promise<ServerResponse> => {
-  const config = getAppConfig();
+  // Trainerly always uses server data (hardcoded)
   
   try {
-    if (config.useServerData) {
+    if (true) { // Always use server data in Trainerly
       // TODO: Call real server endpoint
       // const response = await fetch('/api/user/exercise-data', {
       //   method: 'POST',
