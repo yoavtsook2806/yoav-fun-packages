@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
+import CustomTraineePlanManager from './CustomTraineePlanManager';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -18,6 +19,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const [showProgressModal, setShowProgressModal] = useState(false);
   const [selectedTrainee, setSelectedTrainee] = useState<Trainee | null>(null);
   const [traineeProgress, setTraineeProgress] = useState<any[]>([]);
+  const [showCustomPlanManager, setShowCustomPlanManager] = useState(false);
+  const [customPlanTrainee, setCustomPlanTrainee] = useState<Trainee | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -115,6 +118,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     } finally {
       setLoading(false);
     }
+  };
+
+  const openCustomPlanManager = (trainee: Trainee) => {
+    setCustomPlanTrainee(trainee);
+    setShowCustomPlanManager(true);
+  };
+
+  const closeCustomPlanManager = () => {
+    setShowCustomPlanManager(false);
+    setCustomPlanTrainee(null);
   };
 
   const getPlanName = (planId: string) => {
@@ -309,6 +322,13 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                 </div>
                 <div className="trainee-actions">
                   <button 
+                    onClick={() => openCustomPlanManager(trainee)} 
+                    className="custom-plan-button"
+                    title="תוכניות מותאמות"
+                  >
+                    👤
+                  </button>
+                  <button 
                     onClick={() => viewProgress(trainee)} 
                     className="progress-button"
                     title="צפה בהתקדמות"
@@ -377,6 +397,17 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
           ))
         )}
       </div>
+
+      {/* Custom Trainee Plan Manager Modal */}
+      {customPlanTrainee && (
+        <CustomTraineePlanManager
+          coachId={coachId}
+          token={token}
+          trainee={customPlanTrainee}
+          isOpen={showCustomPlanManager}
+          onClose={closeCustomPlanManager}
+        />
+      )}
     </div>
   );
 };
