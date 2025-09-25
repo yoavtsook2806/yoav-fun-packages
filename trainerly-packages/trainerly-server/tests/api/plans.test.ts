@@ -70,8 +70,11 @@ describe('Training Plans API', () => {
     };
 
     it('should create training plan successfully', async () => {
-      mockDynamoPut.mockImplementation((params: any, callback: any) => {
-        callback(null, {});
+      mockDynamoPut.mockImplementation((params: any, callback?: any) => {
+        if (callback) {
+          callback(null, {});
+        }
+        return Promise.resolve({});
       });
 
       const event: Partial<APIGatewayProxyEvent> = {
@@ -292,8 +295,9 @@ describe('Training Plans API', () => {
 
       const event: Partial<APIGatewayProxyEvent> = {
         httpMethod: 'POST',
-        path: '/trainers/trainer-id/plans/plan-id/assign',
+        path: '/coaches/coach-id/trainers/trainer-id/plans/plan-id/assign',
         pathParameters: { 
+          coachId: 'coach-id',
           trainerId: 'trainer-id',
           planId: 'plan-id'
         }
@@ -340,7 +344,7 @@ describe('Training Plans API', () => {
       expect(result.statusCode).toBe(400);
       const body = JSON.parse(result.body);
       expect(body.error).toBe('VALIDATION_ERROR');
-      expect(body.message).toBe('Trainer ID and Plan ID are required');
+      expect(body.message).toBe('Coach ID, Trainer ID and Plan ID are required');
     });
   });
 

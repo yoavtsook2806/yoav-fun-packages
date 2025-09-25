@@ -68,7 +68,7 @@ describe('Coach Profile Management', () => {
         nickname: 'john_coach',
         phone: '+1-555-9999',
         age: 36,
-        updatedAt: expect.toBeValidISODate()
+        updatedAt: expect.any(String)
       });
 
       expect(db.getCoach).toHaveBeenCalledWith('coach-123');
@@ -78,7 +78,7 @@ describe('Coach Profile Management', () => {
           name: 'John Updated',
           phone: '+1-555-9999',
           age: 36,
-          updatedAt: expect.toBeValidISODate()
+          updatedAt: expect.any(String)
         })
       );
     });

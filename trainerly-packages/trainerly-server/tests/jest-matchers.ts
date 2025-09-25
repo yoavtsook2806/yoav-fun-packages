@@ -4,6 +4,11 @@ declare global {
       toBeValidUUID(): R;
       toBeValidISODate(): R;
     }
+    
+    interface Expect {
+      toBeValidUUID(): any;
+      toBeValidISODate(): any;
+    }
   }
 }
 

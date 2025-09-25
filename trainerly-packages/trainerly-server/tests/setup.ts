@@ -1,5 +1,14 @@
 import AWS from 'aws-sdk-mock';
 import './jest-matchers';
+import { mockDatabase } from './__mocks__/database';
+
+// Global test data store for isolation
+export const testDataStore = new Map<string, any>();
+
+// Mock the database service
+jest.mock('../src/services/database', () => ({
+  db: mockDatabase
+}));
 
 // Mock AWS services for testing
 beforeAll(() => {
@@ -9,6 +18,12 @@ beforeAll(() => {
   process.env.JWT_SECRET = 'test-secret-key';
   process.env.IS_LOCAL = 'true';
   process.env.DYNAMODB_ENDPOINT = 'http://localhost:8000';
+});
+
+// Clear test data between each test for isolation
+beforeEach(() => {
+  testDataStore.clear();
+  mockDatabase.clear();
 });
 
 afterAll(() => {
