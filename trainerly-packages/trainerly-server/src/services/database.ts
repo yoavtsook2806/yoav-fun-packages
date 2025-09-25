@@ -763,6 +763,119 @@ export class DatabaseService {
     }
   }
 
+  // Comprehensive Trainee Data Methods - New table for all local storage data
+  // Rule: All data in local storage must also be saved to server
+
+  async syncTraineeData(traineeId: string, data: {
+    exerciseDefaults?: Record<string, any>;
+    trainingProgress?: Record<string, any>;
+    exerciseHistory?: Record<string, any[]>;
+    firstTimeExperienceCompleted?: boolean;
+    customExerciseData?: Record<string, any>;
+  }): Promise<boolean> {
+    try {
+      // Get trainer to find coachId
+      const trainer = await this.getTrainer(traineeId);
+      if (!trainer) {
+        console.error('Trainer not found:', traineeId);
+        return false;
+      }
+
+      // Get existing trainee data or create new
+      let existingData = await this.getTraineeData(traineeId);
+      if (!existingData) {
+        existingData = {
+          traineeId,
+          coachId: trainer.coachId,
+          exerciseDefaults: {},
+          trainingProgress: {},
+          exerciseHistory: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+      }
+
+      // Merge with new data
+      const updatedData = {
+        ...existingData,
+        exerciseDefaults: data.exerciseDefaults || existingData.exerciseDefaults || {},
+        trainingProgress: data.trainingProgress || existingData.trainingProgress || {},
+        exerciseHistory: data.exerciseHistory || existingData.exerciseHistory || {},
+        firstTimeExperienceCompleted: data.firstTimeExperienceCompleted !== undefined 
+          ? data.firstTimeExperienceCompleted 
+          : existingData.firstTimeExperienceCompleted,
+        customExerciseData: data.customExerciseData || existingData.customExerciseData || {},
+        updatedAt: new Date().toISOString()
+      };
+
+        const command = new PutCommand({
+          TableName: this.getTableName('trainee_data'),
+          Item: updatedData
+        });
+
+      await this.client.send(command);
+      console.log('✅ Synced trainee data to server for:', traineeId);
+      return true;
+    } catch (error) {
+      console.error('Error syncing trainee data:', error);
+      return false;
+    }
+  }
+
+  async getTraineeData(traineeId: string): Promise<any | null> {
+    try {
+      const command = new GetCommand({
+        TableName: this.getTableName('trainee_data'),
+        Key: {
+          traineeId
+        }
+      });
+
+      const result = await this.client.send(command);
+      
+      if (result.Item) {
+        const data = result.Item;
+        console.log('📥 Retrieved trainee data from server for:', traineeId);
+        return data;
+      }
+
+      console.log('ℹ️ No trainee data found on server for:', traineeId);
+      return null;
+    } catch (error) {
+      console.error('Error getting trainee data:', error);
+      return null;
+    }
+  }
+
+  async getTraineeDataForResponse(traineeId: string): Promise<{
+    exerciseDefaults: Record<string, any>;
+    trainingProgress: Record<string, any>;
+    exerciseHistory: Record<string, any[]>;
+    firstTimeExperienceCompleted?: boolean;
+    customExerciseData?: Record<string, any>;
+  }> {
+    try {
+      const data = await this.getTraineeData(traineeId);
+      
+      return {
+        exerciseDefaults: data?.exerciseDefaults || {},
+        trainingProgress: data?.trainingProgress || {},
+        exerciseHistory: data?.exerciseHistory || {},
+        firstTimeExperienceCompleted: data?.firstTimeExperienceCompleted || false,
+        customExerciseData: data?.customExerciseData || {}
+      };
+    } catch (error) {
+      console.error('Error getting trainee data for response:', error);
+      return {
+        exerciseDefaults: {},
+        trainingProgress: {},
+        exerciseHistory: {},
+        firstTimeExperienceCompleted: false,
+        customExerciseData: {}
+      };
+    }
+  }
+
 }
 
 export const db = new DatabaseService();

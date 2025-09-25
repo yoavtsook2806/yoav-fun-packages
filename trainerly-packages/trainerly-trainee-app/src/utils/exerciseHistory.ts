@@ -353,14 +353,34 @@ export const clearCustomExerciseData = (): void => {
 };
 
 export const isFirstTimeExperience = (_trainingType: string, exercises: string[]): boolean => {
+  // First check if user has ever completed first-time setup
+  const firstTimeCompleted = localStorage.getItem('trainerly_first_time_completed');
+  if (firstTimeCompleted === 'true') {
+    console.log('✅ First-time experience already completed');
+    return false;
+  }
+
+  // Check if user has any exercise history (means they've used the app before)
+  const history = getExerciseHistory();
+  if (Object.keys(history).length > 0) {
+    console.log('✅ User has exercise history, not first time');
+    // Mark as completed if they have history but flag wasn't set
+    localStorage.setItem('trainerly_first_time_completed', 'true');
+    return false;
+  }
+
+  // Check if user has any exercise defaults set
   for (const exerciseName of exercises) {
     const defaultWeight = getDefaultWeight(exerciseName);
     const defaultRestTime = getDefaultRestTime(exerciseName);
     const defaultRepeats = getDefaultRepeats(exerciseName);
 
     if (defaultWeight !== undefined || defaultRestTime !== undefined || defaultRepeats !== undefined) {
+      console.log('✅ User has exercise defaults, not first time');
       return false;
     }
   }
+  
+  console.log('🆕 This is a first-time experience');
   return true;
 };

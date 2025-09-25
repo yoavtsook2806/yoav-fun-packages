@@ -6,7 +6,7 @@ import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import AuthScreen from './components/AuthScreen';
-import { fetchTraineeData, clearTraineeCache, syncExerciseSession, loadExerciseHistoryFromServer } from './services/traineeService';
+import { fetchTraineeData, clearTraineeCache, syncExerciseSession, loadAllTraineeDataFromServer, syncAllTraineeDataToServer } from './services/traineeService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
   getLastUsedWeight,
@@ -94,7 +94,18 @@ function App() {
     setIsLoadingPlan(true);
     
     try {
-      // Load training plans
+      // FIRST: Load ALL trainee data from server and populate local storage
+      // Rule: All data in local storage must be synced with server
+      // This MUST happen BEFORE any first-time experience checks
+      console.log('🔄 Loading all trainee data from server...');
+      const dataLoaded = await loadAllTraineeDataFromServer(traineeId);
+      if (dataLoaded) {
+        console.log('✅ All trainee data loaded from server');
+      } else {
+        console.log('⚠️ Failed to load trainee data from server');
+      }
+
+      // THEN: Load training plans
       const traineeData = await fetchTraineeData(traineeId, coachId);
       
       if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
@@ -106,15 +117,6 @@ function App() {
         console.log('⚠️ No training plans assigned to trainee');
         setAllTrainingPlans([]);
         setCurrentTrainingPlan(createEmptyTrainingPlan());
-      }
-
-      // Load exercise history from server and populate local storage
-      console.log('🔄 Loading exercise history from server...');
-      const historyLoaded = await loadExerciseHistoryFromServer(traineeId);
-      if (historyLoaded) {
-        console.log('✅ Exercise history loaded from server');
-      } else {
-        console.log('⚠️ Failed to load exercise history from server');
       }
       
     } catch (error) {
@@ -310,11 +312,23 @@ function App() {
     setFirstTimeTrainingType(null);
   };
 
-  const handleFirstTimeSetupComplete = (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
+  const handleFirstTimeSetupComplete = async (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
     // Save all exercise defaults
     Object.entries(exerciseDefaults).forEach(([exerciseName, defaults]) => {
       saveExerciseDefaults(exerciseName, defaults.weight, defaults.timeToRest, defaults.repeats);
     });
+
+    // Mark first-time experience as completed
+    localStorage.setItem('trainerly_first_time_completed', 'true');
+    console.log('✅ First-time experience marked as completed');
+
+    // Sync all data to server if authenticated
+    if (traineeId) {
+      const syncSuccess = await syncAllTraineeDataToServer(traineeId);
+      if (syncSuccess) {
+        console.log('✅ First-time setup data synced to server');
+      }
+    }
 
     // Close first-time setup
     setShowFirstTimeSetup(false);
@@ -381,12 +395,22 @@ function App() {
                 restTime: historyEntry.restTime
               };
               
-              const syncSuccess = await syncExerciseSession(traineeId, exerciseSessionData);
-              if (syncSuccess) {
-                console.log('✅ Exercise synced to server:', exerciseName);
+              const sessionSyncSuccess = await syncExerciseSession(traineeId, exerciseSessionData);
+              if (sessionSyncSuccess) {
+                console.log('✅ Exercise session synced to server:', exerciseName);
               } else {
-                console.log('⚠️ Exercise saved locally but server sync failed:', exerciseName);
+                console.log('⚠️ Exercise session saved locally but server sync failed:', exerciseName);
               }
+
+              // 2. Sync ALL local storage data to server (comprehensive backup)
+              // Rule: All data in local storage must also be saved to server
+              const allDataSyncSuccess = await syncAllTraineeDataToServer(traineeId);
+              if (allDataSyncSuccess) {
+                console.log('✅ All trainee data synced to server');
+              } else {
+                console.log('⚠️ Failed to sync all trainee data to server');
+              }
+              
             } catch (error) {
               console.error('❌ Server sync error:', error);
             }
