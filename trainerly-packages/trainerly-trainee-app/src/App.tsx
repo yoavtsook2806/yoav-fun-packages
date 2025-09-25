@@ -344,7 +344,7 @@ function App() {
           saveExerciseEntry(exerciseName, historyEntry);
           
           // Sync to server if authenticated
-          if (authenticatedTraineeId) {
+          if (traineeId) {
             try {
               const exerciseSessionData = {
                 exerciseName,
@@ -356,7 +356,7 @@ function App() {
                 restTime: historyEntry.restTime
               };
               
-              const syncSuccess = await syncExerciseSession(authenticatedTraineeId, exerciseSessionData);
+              const syncSuccess = await syncExerciseSession(traineeId, exerciseSessionData);
               if (syncSuccess) {
                 console.log('✅ Exercise synced to server:', exerciseName);
               } else {
