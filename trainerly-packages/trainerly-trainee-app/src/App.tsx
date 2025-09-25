@@ -76,6 +76,10 @@ function App() {
   // Debug settings state changes
   useEffect(() => {
     console.log('🔧 Settings modal state changed:', showSettings);
+    if (showSettings) {
+      console.log('🔧 Settings modal OPENED - Stack trace:');
+      console.trace();
+    }
   }, [showSettings]);
 
   // First-time setup state
@@ -161,6 +165,7 @@ function App() {
 
   // Clean up duplicate history entries on app initialization and check authentication
   useEffect(() => {
+    console.log('🔄 App initialization - checking authentication...');
     removeDuplicateHistoryEntries();
     
     // Check for existing authentication
@@ -168,7 +173,10 @@ function App() {
     const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
     const storedCoachId = localStorage.getItem('trainerly_coach_id');
     
+    console.log('🔍 Stored auth data:', { storedTraineeId, storedTrainerName, storedCoachId });
+    
     if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
+      console.log('✅ Valid authentication found, logging in...');
       setTraineeId(storedTraineeId);
       setTrainerName(storedTrainerName);
       setCoachId(storedCoachId);
@@ -180,11 +188,14 @@ function App() {
       // Authentication expired, clear stored data
       console.log('Authentication expired, requiring re-login');
       handleLogout();
+    } else {
+      console.log('❌ No valid authentication found');
     }
   }, []);
 
   // Handle authentication
   const handleAuthenticated = (newTraineeId: string, newTrainerName: string, newCoachId?: string) => {
+    console.log('🔐 handleAuthenticated called:', { newTraineeId, newTrainerName, newCoachId });
     setTraineeId(newTraineeId);
     setTrainerName(newTrainerName);
     setCoachId(newCoachId || null);
@@ -486,6 +497,7 @@ function App() {
 
   // Show auth screen if not authenticated
   if (!isAuthenticated) {
+    console.log('🔒 Rendering AuthScreen - not authenticated');
     return <AuthScreen onAuthenticated={handleAuthenticated} />;
   }
 
@@ -507,7 +519,10 @@ function App() {
         {/* Settings button - top right corner */}
         <button
           className="settings-btn"
-          onClick={() => setShowSettings(true)}
+          onClick={() => {
+            console.log('⚙️ Settings button clicked (training selection screen)');
+            setShowSettings(true);
+          }}
           title="הגדרות"
         >
           ⚙️
