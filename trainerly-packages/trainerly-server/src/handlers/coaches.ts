@@ -29,9 +29,9 @@ const headers = {
 function normalizeNickname(nickname: string): string {
   return nickname
     .trim()
-    .toLowerCase()
     .replace(/\s+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
+    // Allow Hebrew letters (א-ת), English letters (a-z, A-Z), numbers (0-9), and underscores
+    .replace(/[^\u0590-\u05FFa-zA-Z0-9_]/g, '')
     .replace(/_+/g, '_')
     .replace(/^_+|_+$/g, '');
 }
@@ -64,7 +64,7 @@ export const checkNickname = async (
     const canonical = normalizeNickname(nickname);
     console.log('🔧 Canonical nickname:', canonical);
     
-    const valid = canonical.length > 0 && /^[a-z0-9_]+$/.test(canonical);
+    const valid = canonical.length > 0 && /^[\u0590-\u05FFa-zA-Z0-9_]+$/.test(canonical);
     console.log('✅ Nickname valid:', valid);
     
     let available = true;
