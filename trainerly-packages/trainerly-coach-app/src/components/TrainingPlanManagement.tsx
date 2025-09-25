@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/apiService';
+import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/cachedApiService';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -38,13 +38,19 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
 
   const loadData = async () => {
     try {
-      setLoading(true);
-      const [planList, exerciseList] = await Promise.all([
-        apiService.getTrainingPlans(coachId, token),
-        apiService.getExercises(coachId, token)
+      const [planResult, exerciseResult] = await Promise.all([
+        cachedApiService.getTrainingPlans(coachId, token),
+        cachedApiService.getExercises(coachId, token)
       ]);
-      setPlans(planList);
-      setExercises(exerciseList);
+      
+      setPlans(planResult.data);
+      setExercises(exerciseResult.data);
+      
+      // Only show loading if both data sources didn't come from cache
+      if (!planResult.fromCache || !exerciseResult.fromCache) {
+        setLoading(true);
+      }
+      
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -57,7 +63,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     e.preventDefault();
     try {
       setLoading(true);
-      await apiService.createTrainingPlan(coachId, token, formData);
+      await cachedApiService.createTrainingPlan(coachId, token, formData);
       await loadData();
       resetPlanForm();
       setError(null);

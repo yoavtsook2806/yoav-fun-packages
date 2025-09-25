@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, Coach } from '../services/apiService';
+import { cachedApiService, Coach } from '../services/cachedApiService';
 import './ProfileModal.css';
 
 interface ProfileModalProps {
@@ -58,7 +58,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
       console.log('Updating coach profile:', updateData);
       
-      const updatedCoach = await apiService.updateCoach(coach.coachId, token, updateData);
+      const updatedCoach = await cachedApiService.updateCoach(coach.coachId, token, updateData);
       
       setSuccess(true);
       onUpdate(updatedCoach);

@@ -4,7 +4,7 @@ import SettingsModal from './SettingsModal';
 import ExerciseManagement from './ExerciseManagement';
 import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
-import { apiService, Coach } from '../services/apiService';
+import { cachedApiService, Coach } from '../services/cachedApiService';
 import './CoachDashboard.css';
 
 interface CoachDashboardProps {
@@ -27,15 +27,36 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
 
   useEffect(() => {
     loadCoachProfile();
+
+    // Listen for cache updates
+    const handleCacheUpdate = (event: CustomEvent) => {
+      const { cacheKey, coachId: updatedCoachId, data } = event.detail;
+      if (updatedCoachId === coachId && cacheKey === 'profile') {
+        console.log('🔄 Coach profile updated from background sync');
+        setCoach(data);
+      }
+    };
+
+    window.addEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    };
   }, [coachId]);
 
   const loadCoachProfile = async () => {
     try {
-      setLoading(true);
       console.log('Loading coach profile for:', coachId);
       
-      const coachData = await apiService.getCoach(coachId, token);
-      setCoach(coachData);
+      const result = await cachedApiService.getCoach(coachId, token);
+      setCoach(result.data);
+      
+      // Only show loading if data came from cache
+      if (!result.fromCache) {
+        setLoading(true);
+      }
+      
+      setError(null);
     } catch (err: any) {
       console.error('Failed to load coach profile:', err);
       setError(err.message || 'Failed to load coach profile');

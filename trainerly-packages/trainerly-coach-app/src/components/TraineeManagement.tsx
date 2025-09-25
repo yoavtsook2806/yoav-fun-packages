@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, Trainee, TrainingPlanSummary } from '../services/apiService';
+import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -32,13 +32,19 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
 
   const loadData = async () => {
     try {
-      setLoading(true);
-      const [traineeList, planList] = await Promise.all([
-        apiService.getTrainees(coachId, token),
-        apiService.getTrainingPlans(coachId, token)
+      const [traineeResult, planResult] = await Promise.all([
+        cachedApiService.getTrainees(coachId, token),
+        cachedApiService.getTrainingPlans(coachId, token)
       ]);
-      setTrainees(traineeList);
-      setPlans(planList);
+      
+      setTrainees(traineeResult.data);
+      setPlans(planResult.data);
+      
+      // Only show loading if both data sources didn't come from cache
+      if (!traineeResult.fromCache || !planResult.fromCache) {
+        setLoading(true);
+      }
+      
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -51,11 +57,11 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     e.preventDefault();
     try {
       setLoading(true);
-      const newTrainee = await apiService.createTrainee(coachId, token, formData);
+      const newTrainee = await cachedApiService.createTrainee(coachId, token, formData);
       
       // If a plan was assigned, assign it
       if (formData.assignedPlanId) {
-        await apiService.assignPlanToTrainee(coachId, newTrainee.trainerId, formData.assignedPlanId, token);
+        await cachedApiService.assignPlanToTrainee(coachId, newTrainee.trainerId, formData.assignedPlanId, token);
       }
       
       await loadData();
@@ -81,7 +87,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const assignPlan = async (trainee: Trainee, planId: string) => {
     try {
       setLoading(true);
-      await apiService.assignPlanToTrainee(coachId, trainee.trainerId, planId, token);
+      await cachedApiService.assignPlanToTrainee(coachId, trainee.trainerId, planId, token);
       await loadData();
       setError(null);
     } catch (err) {
@@ -94,7 +100,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const viewProgress = async (trainee: Trainee) => {
     try {
       setLoading(true);
-      const progress = await apiService.getTraineeProgress(coachId, trainee.trainerId, token);
+      const progressResult = await cachedApiService.getTraineeProgress(coachId, trainee.trainerId, token);
+      const progress = progressResult.data;
       setTraineeProgress(progress);
       setSelectedTrainee(trainee);
       setShowProgressModal(true);

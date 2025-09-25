@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, Exercise } from '../services/apiService';
+import { cachedApiService, Exercise } from '../services/cachedApiService';
 import './ExerciseManagement.css';
 
 interface ExerciseManagementProps {
@@ -25,13 +25,33 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
 
   useEffect(() => {
     loadExercises();
-  }, []);
+
+    // Listen for cache updates
+    const handleCacheUpdate = (event: CustomEvent) => {
+      const { cacheKey, coachId: updatedCoachId, data } = event.detail;
+      if (updatedCoachId === coachId && cacheKey === 'exercises') {
+        console.log('🔄 Exercises updated from background sync');
+        setExercises(data);
+      }
+    };
+
+    window.addEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    };
+  }, [coachId]);
 
   const loadExercises = async () => {
     try {
-      setLoading(true);
-      const exerciseList = await apiService.getExercises(coachId, token);
-      setExercises(exerciseList);
+      const result = await cachedApiService.getExercises(coachId, token);
+      setExercises(result.data);
+      
+      // Only show loading if data didn't come from cache
+      if (!result.fromCache) {
+        setLoading(true);
+      }
+      
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load exercises');
@@ -50,7 +70,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
         console.log('Update exercise functionality would go here');
       } else {
         // Create new exercise
-        await apiService.createExercise(coachId, token, formData);
+        await cachedApiService.createExercise(coachId, token, formData);
       }
       
       await loadExercises();
