@@ -245,6 +245,69 @@ functions:
           method: delete
           cors: true
 
+  # Admin exercise bank
+  getAdminExercises:
+    handler: src/handlers/admin.getAdminExercises
+    events:
+      - http:
+          path: /admin/exercises
+          method: get
+          cors: true
+
+  # Admin training plan bank
+  getAdminTrainingPlans:
+    handler: src/handlers/admin.getAdminTrainingPlans
+    events:
+      - http:
+          path: /admin/training-plans
+          method: get
+          cors: true
+
+  # Copy admin exercise to coach
+  copyAdminExercise:
+    handler: src/handlers/coaches.copyAdminExercise
+    events:
+      - http:
+          path: /coaches/{coachId}/exercises/copy-admin/{adminExerciseId}
+          method: post
+          cors: true
+
+  # Copy admin training plan to coach
+  copyAdminTrainingPlan:
+    handler: src/handlers/coaches.copyAdminTrainingPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/training-plans/copy-admin/{adminPlanId}
+          method: post
+          cors: true
+
+  # Create custom training plan for trainee
+  createCustomTrainingPlan:
+    handler: src/handlers/trainers.createCustomTrainingPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers/{traineeId}/custom-plan
+          method: post
+          cors: true
+
+  # Get custom training plans for trainee
+  getTraineeCustomPlans:
+    handler: src/handlers/trainers.getTraineeCustomPlans
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers/{traineeId}/custom-plans
+          method: get
+          cors: true
+
+  # Make custom plan generic
+  makeCustomPlanGeneric:
+    handler: src/handlers/plans.makeCustomPlanGeneric
+    events:
+      - http:
+          path: /coaches/{coachId}/training-plans/{planId}/make-generic
+          method: put
+          cors: true
+
 # DynamoDB tables
 resources:
   Resources:

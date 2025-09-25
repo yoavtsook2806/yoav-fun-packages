@@ -516,3 +516,153 @@ export const updateCoach = async (
     };
   }
 };
+
+/**
+ * Copy an admin exercise to coach's personal library
+ */
+export const copyAdminExercise = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const adminExerciseId = event.pathParameters?.adminExerciseId;
+
+    if (!coachId || !adminExerciseId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and admin exercise ID are required'
+        })
+      };
+    }
+
+    // Get the admin exercise
+    const adminExercise = await db.getExercise(adminExerciseId);
+    if (!adminExercise || !adminExercise.isAdminExercise) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Admin exercise not found'
+        })
+      };
+    }
+
+    // Create a copy for the coach
+    const copiedExercise = {
+      ...adminExercise,
+      exerciseId: randomUUID(),
+      coachId,
+      originalExerciseId: adminExerciseId,
+      isAdminExercise: false,
+      createdAt: new Date().toISOString()
+    };
+
+    const success = await db.saveExercise(copiedExercise);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to copy admin exercise'
+        })
+      };
+    }
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(copiedExercise)
+    };
+  } catch (error) {
+    console.error('Error copying admin exercise:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Copy an admin training plan to coach's personal library
+ */
+export const copyAdminTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const adminPlanId = event.pathParameters?.adminPlanId;
+
+    if (!coachId || !adminPlanId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and admin plan ID are required'
+        })
+      };
+    }
+
+    // Get the admin training plan
+    const adminPlan = await db.getTrainingPlan(adminPlanId);
+    if (!adminPlan || !adminPlan.isAdminPlan) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Admin training plan not found'
+        })
+      };
+    }
+
+    // Create a copy for the coach
+    const copiedPlan = {
+      ...adminPlan,
+      planId: randomUUID(),
+      coachId,
+      originalPlanId: adminPlanId,
+      isAdminPlan: false,
+      customTrainee: undefined, // Make it generic for the coach
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const success = await db.saveTrainingPlan(copiedPlan);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to copy admin training plan'
+        })
+      };
+    }
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(copiedPlan)
+    };
+  } catch (error) {
+    console.error('Error copying admin training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};

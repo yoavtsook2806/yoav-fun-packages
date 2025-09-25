@@ -297,3 +297,86 @@ export const getTrainerPlans = async (
     };
   }
 };
+
+/**
+ * Make a custom training plan generic (remove trainee specificity)
+ */
+export const makeCustomPlanGeneric = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const planId = event.pathParameters?.planId;
+
+    if (!coachId || !planId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and plan ID are required'
+        })
+      };
+    }
+
+    // Get the training plan
+    const plan = await db.getTrainingPlan(planId);
+    if (!plan || plan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Training plan not found or not owned by coach'
+        })
+      };
+    }
+
+    if (!plan.customTrainee) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Plan is already generic'
+        })
+      };
+    }
+
+    // Make the plan generic by removing customTrainee and updating the name
+    const updatedPlan = {
+      ...plan,
+      customTrainee: undefined,
+      name: plan.name.replace(/ - .+$/, ''), // Remove trainee name from plan name
+      updatedAt: new Date().toISOString()
+    };
+
+    const success = await db.updateTrainingPlan(updatedPlan);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to make plan generic'
+        })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(updatedPlan)
+    };
+  } catch (error) {
+    console.error('Error making custom plan generic:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};

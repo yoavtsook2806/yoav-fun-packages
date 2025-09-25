@@ -305,3 +305,174 @@ export const identifyTrainer = async (
     };
   }
 };
+
+/**
+ * Create a custom training plan for a specific trainee
+ */
+export const createCustomTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const traineeId = event.pathParameters?.traineeId;
+
+    if (!coachId || !traineeId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and trainee ID are required'
+        })
+      };
+    }
+
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Request body is required'
+        })
+      };
+    }
+
+    const { basePlanId, traineeName } = JSON.parse(event.body);
+
+    if (!basePlanId || !traineeName) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Base plan ID and trainee name are required'
+        })
+      };
+    }
+
+    // Get the base training plan
+    const basePlan = await db.getTrainingPlan(basePlanId);
+    if (!basePlan || basePlan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Base training plan not found or not owned by coach'
+        })
+      };
+    }
+
+    // Create a custom plan for the trainee
+    const customPlan = {
+      ...basePlan,
+      planId: randomUUID(),
+      name: `${basePlan.name} - ${traineeName}`,
+      customTrainee: traineeName,
+      originalPlanId: basePlanId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const success = await db.saveTrainingPlan(customPlan);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to create custom training plan'
+        })
+      };
+    }
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(customPlan)
+    };
+  } catch (error) {
+    console.error('Error creating custom training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Get custom training plans for a specific trainee
+ */
+export const getTraineeCustomPlans = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const traineeId = event.pathParameters?.traineeId;
+
+    if (!coachId || !traineeId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and trainee ID are required'
+        })
+      };
+    }
+
+    // Get trainee to get their name
+    const trainee = await db.getTrainer(traineeId);
+    if (!trainee || trainee.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Trainee not found'
+        })
+      };
+    }
+
+    const traineeName = `${trainee.firstName} ${trainee.lastName}`;
+    
+    // Get custom plans for this trainee
+    const customPlans = await db.getCustomTrainingPlansForTrainee(coachId, traineeName);
+
+    // Convert to summary format
+    const planSummaries = customPlans.map(plan => ({
+      planId: plan.planId,
+      name: plan.name,
+      description: plan.description,
+      trainingsCount: plan.trainings?.length || 0,
+      isAdminPlan: plan.isAdminPlan,
+      originalPlanId: plan.originalPlanId,
+      customTrainee: plan.customTrainee,
+      createdAt: plan.createdAt
+    }));
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        items: planSummaries,
+        count: planSummaries.length
+      })
+    };
+  } catch (error) {
+    console.error('Error getting trainee custom plans:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};

@@ -617,6 +617,132 @@ export class DatabaseService {
     }
   }
 
+  // Admin functionality
+  async getAdminExercises(): Promise<any[]> {
+    try {
+      const command = new ScanCommand({
+        TableName: this.getTableName('exercises'),
+        FilterExpression: 'isAdminExercise = :isAdmin',
+        ExpressionAttributeValues: { ':isAdmin': true }
+      });
+      
+      const result = await this.client.send(command);
+      return result.Items || [];
+    } catch (error) {
+      console.error('❌ Error getting admin exercises:', error);
+      return [];
+    }
+  }
+
+  async getAdminTrainingPlans(): Promise<any[]> {
+    try {
+      const command = new ScanCommand({
+        TableName: this.getTableName('plans'),
+        FilterExpression: 'isAdminPlan = :isAdmin',
+        ExpressionAttributeValues: { ':isAdmin': true }
+      });
+      
+      const result = await this.client.send(command);
+      
+      // Convert to summary format
+      const plans = result.Items || [];
+      return plans.map(plan => ({
+        planId: plan.planId,
+        name: plan.name,
+        description: plan.description,
+        trainingsCount: plan.trainings?.length || 0,
+        isAdminPlan: plan.isAdminPlan,
+        originalPlanId: plan.originalPlanId,
+        customTrainee: plan.customTrainee,
+        createdAt: plan.createdAt
+      }));
+    } catch (error) {
+      console.error('❌ Error getting admin training plans:', error);
+      return [];
+    }
+  }
+
+  async getExercise(exerciseId: string): Promise<any | null> {
+    try {
+      const command = new GetCommand({
+        TableName: this.getTableName('exercises'),
+        Key: { exerciseId }
+      });
+      
+      const result = await this.client.send(command);
+      return result.Item || null;
+    } catch (error) {
+      console.error('❌ Error getting exercise:', error);
+      return null;
+    }
+  }
+
+  async getTrainingPlan(planId: string): Promise<any | null> {
+    try {
+      const command = new GetCommand({
+        TableName: this.getTableName('plans'),
+        Key: { planId }
+      });
+      
+      const result = await this.client.send(command);
+      return result.Item || null;
+    } catch (error) {
+      console.error('❌ Error getting training plan:', error);
+      return null;
+    }
+  }
+
+  async saveTrainingPlan(plan: any): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: this.getTableName('plans'),
+        Item: plan
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Training plan ${plan.planId} saved successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error saving training plan:', error);
+      return false;
+    }
+  }
+
+  async updateTrainingPlan(plan: any): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: this.getTableName('plans'),
+        Item: plan
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Training plan ${plan.planId} updated successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error updating training plan:', error);
+      return false;
+    }
+  }
+
+  async getCustomTrainingPlansForTrainee(coachId: string, traineeName: string): Promise<any[]> {
+    try {
+      const command = new ScanCommand({
+        TableName: this.getTableName('plans'),
+        FilterExpression: 'coachId = :coachId AND customTrainee = :traineeName',
+        ExpressionAttributeValues: { 
+          ':coachId': coachId,
+          ':traineeName': traineeName
+        }
+      });
+      
+      const result = await this.client.send(command);
+      return result.Items || [];
+    } catch (error) {
+      console.error('❌ Error getting custom training plans for trainee:', error);
+      return [];
+    }
+  }
+
   // Health check
   async healthCheck(): Promise<boolean> {
     try {

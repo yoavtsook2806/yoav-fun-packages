@@ -41,6 +41,15 @@ This is a monorepo containing multiple fun web applications and packages.
 - Always use `git add` and `git commit` for saving changes
 - Never run `git push` under any circumstances
 
+## Server Deployment
+- **ALWAYS deploy server changes** after modifying trainerly-server code
+- After any changes to `/trainerly-packages/trainerly-server/src/` files, run:
+  ```bash
+  cd /Users/yoavt/publicDev/yoav-fun-packages && yarn workspace trainerly-server deploy:dev
+  ```
+- Deploy immediately after committing server-side changes
+- Server endpoints must be deployed before client can use them
+
 ## Code Style
 - Use TypeScript for all new code
 - Follow React best practices
