@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Trainee } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
+import EditTrainingPlan from './EditTrainingPlan';
 import './CustomTraineePlanManager.css';
 
 interface CustomTraineePlanManagerProps {
@@ -24,6 +25,7 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [creating, setCreating] = useState<string | null>(null); // planId being used to create custom plan
   const [makingGeneric, setMakingGeneric] = useState<string | null>(null); // planId being made generic
+  const [editingPlan, setEditingPlan] = useState<TrainingPlanSummary | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -143,6 +145,13 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
                         
                         <div className="plan-actions">
                           <button
+                            onClick={() => setEditingPlan(plan)}
+                            className="edit-custom-plan-btn"
+                            title="ערוך תוכנית"
+                          >
+                            ✏️ ערוך
+                          </button>
+                          <button
                             onClick={() => handleMakeGeneric(plan)}
                             disabled={makingGeneric === plan.planId}
                             className="make-generic-btn"
@@ -224,6 +233,22 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
           )}
         </div>
       </div>
+
+      {/* Edit Training Plan Modal */}
+      {editingPlan && (
+        <EditTrainingPlan
+          coachId={coachId}
+          token={token}
+          plan={editingPlan}
+          isOpen={!!editingPlan}
+          onClose={() => setEditingPlan(null)}
+          onPlanUpdated={(updatedPlan) => {
+            // Refresh data after update
+            loadData();
+            setEditingPlan(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -308,6 +308,30 @@ functions:
           method: put
           cors: true
 
+  getTrainingPlan:
+    handler: src/handlers/plans.getTrainingPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/training-plans/{planId}
+          method: get
+          cors: true
+
+  updateTrainingPlan:
+    handler: src/handlers/plans.updateTrainingPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/training-plans/{planId}
+          method: put
+          cors: true
+
+  deleteTrainingPlan:
+    handler: src/handlers/plans.deleteTrainingPlan
+    events:
+      - http:
+          path: /coaches/{coachId}/training-plans/{planId}
+          method: delete
+          cors: true
+
 # DynamoDB tables
 resources:
   Resources:

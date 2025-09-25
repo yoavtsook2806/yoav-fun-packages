@@ -399,12 +399,8 @@
 .plan-actions {
   display: flex;
   gap: 8px;
-  opacity: 0;
+  opacity: 1; /* Always visible now */
   transition: opacity 0.2s ease;
-}
-
-.plan-card:hover .plan-actions {
-  opacity: 1;
 }
 
 .edit-plan-btn,

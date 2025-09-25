@@ -352,6 +352,47 @@ class ApiService {
     const data = await response.json();
     return data.items || [];
   }
+
+  // Delete training plan
+  async deleteTrainingPlan(coachId: string, planId: string, token: string): Promise<void> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/${planId}`, {
+      method: 'DELETE',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete training plan: ${response.statusText}`);
+    }
+  }
+
+  // Get single training plan with full details
+  async getTrainingPlan(coachId: string, planId: string, token: string): Promise<TrainingPlan> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/${planId}`, {
+      method: 'GET',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch training plan: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Update training plan
+  async updateTrainingPlan(coachId: string, planId: string, token: string, planData: Partial<TrainingPlan>): Promise<TrainingPlan> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/${planId}`, {
+      method: 'PUT',
+      headers: this.getAuthHeaders(token),
+      body: JSON.stringify(planData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update training plan: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
 }
 
 export const apiService = new ApiService();

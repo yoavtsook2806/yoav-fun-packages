@@ -380,3 +380,204 @@ export const makeCustomPlanGeneric = async (
     };
   }
 };
+
+/**
+ * Get single training plan by ID
+ */
+export const getTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const planId = event.pathParameters?.planId;
+
+    if (!coachId || !planId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and plan ID are required'
+        })
+      };
+    }
+
+    const plan = await db.getTrainingPlan(planId);
+    if (!plan || plan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Training plan not found'
+        })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(plan)
+    };
+  } catch (error) {
+    console.error('Error getting training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Update training plan
+ */
+export const updateTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const planId = event.pathParameters?.planId;
+
+    if (!coachId || !planId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and plan ID are required'
+        })
+      };
+    }
+
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Request body is required'
+        })
+      };
+    }
+
+    const updateData = JSON.parse(event.body);
+
+    // Get existing plan
+    const existingPlan = await db.getTrainingPlan(planId);
+    if (!existingPlan || existingPlan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Training plan not found'
+        })
+      };
+    }
+
+    // Update plan
+    const updatedPlan = {
+      ...existingPlan,
+      ...updateData,
+      planId, // Ensure ID doesn't change
+      coachId, // Ensure coach doesn't change
+      updatedAt: new Date().toISOString()
+    };
+
+    const success = await db.updateTrainingPlan(updatedPlan);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to update training plan'
+        })
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(updatedPlan)
+    };
+  } catch (error) {
+    console.error('Error updating training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Delete training plan
+ */
+export const deleteTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const planId = event.pathParameters?.planId;
+
+    if (!coachId || !planId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and plan ID are required'
+        })
+      };
+    }
+
+    // Check if plan exists and belongs to coach
+    const existingPlan = await db.getTrainingPlan(planId);
+    if (!existingPlan || existingPlan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Training plan not found'
+        })
+      };
+    }
+
+    const success = await db.deleteTrainingPlan(planId);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to delete training plan'
+        })
+      };
+    }
+
+    return {
+      statusCode: 204,
+      headers,
+      body: ''
+    };
+  } catch (error) {
+    console.error('Error deleting training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};

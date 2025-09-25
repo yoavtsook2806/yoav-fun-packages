@@ -715,6 +715,24 @@ export class DatabaseService {
     }
   }
 
+  async deleteTrainingPlan(planId: string): Promise<boolean> {
+    try {
+      const command = new DeleteCommand({
+        TableName: this.getTableName('plans'),
+        Key: {
+          planId: planId
+        }
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Training plan ${planId} deleted successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error deleting training plan:', error);
+      return false;
+    }
+  }
+
   async getCustomTrainingPlansForTrainee(coachId: string, traineeName: string): Promise<any[]> {
     try {
       const command = new ScanCommand({

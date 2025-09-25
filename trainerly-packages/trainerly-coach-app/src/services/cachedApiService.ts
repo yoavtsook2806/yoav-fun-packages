@@ -316,6 +316,49 @@ class CachedApiService {
       options
     );
   }
+
+  async deleteTrainingPlan(coachId: string, planId: string, token: string): Promise<void> {
+    await apiService.deleteTrainingPlan(coachId, planId, token);
+    
+    // Remove from training plans cache
+    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
+    const updatedPlans = cachedPlans.filter(plan => plan.planId !== planId);
+    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
+    
+    // Emit cache update event
+    window.dispatchEvent(new CustomEvent('cacheUpdated', { 
+      detail: { key: CACHE_KEYS.TRAINING_PLANS, coachId } 
+    }));
+  }
+
+  async getTrainingPlan(coachId: string, planId: string, token: string): Promise<TrainingPlan> {
+    return await apiService.getTrainingPlan(coachId, planId, token);
+  }
+
+  async updateTrainingPlan(coachId: string, planId: string, token: string, planData: Partial<TrainingPlan>): Promise<TrainingPlan> {
+    const updatedPlan = await apiService.updateTrainingPlan(coachId, planId, token, planData);
+    
+    // Update the training plans cache
+    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
+    const updatedPlans = cachedPlans.map(plan => 
+      plan.planId === planId 
+        ? { 
+            ...plan, 
+            name: updatedPlan.name, 
+            description: updatedPlan.description,
+            trainingsCount: updatedPlan.trainings?.length || 0
+          } 
+        : plan
+    );
+    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
+    
+    // Emit cache update event
+    window.dispatchEvent(new CustomEvent('cacheUpdated', { 
+      detail: { key: CACHE_KEYS.TRAINING_PLANS, coachId } 
+    }));
+    
+    return updatedPlan;
+  }
 }
 
 export const cachedApiService = new CachedApiService();

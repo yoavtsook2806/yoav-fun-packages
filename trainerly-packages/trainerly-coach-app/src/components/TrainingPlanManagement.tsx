@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import AdminTrainingPlanBank from './AdminTrainingPlanBank';
+import EditTrainingPlan from './EditTrainingPlan';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -18,6 +19,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAdminPlanBank, setShowAdminPlanBank] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<TrainingPlanSummary | null>(null);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -93,14 +95,22 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   };
 
   const handleEditPlan = (plan: TrainingPlanSummary) => {
-    // For now, just show a message - full edit functionality would require more complex state management
-    showSuccess(`עריכת תוכנית "${plan.name}" תתווסף בקרוב`);
+    setEditingPlan(plan);
   };
 
-  const handleDeletePlan = (plan: TrainingPlanSummary) => {
+  const handleDeletePlan = async (plan: TrainingPlanSummary) => {
     if (confirm(`האם אתה בטוח שברצונך למחוק את תוכנית "${plan.name}"?`)) {
-      // Delete functionality would be implemented here
-      showSuccess(`תוכנית "${plan.name}" נמחקה בהצלחה`);
+      try {
+        setLoading(true);
+        await cachedApiService.deleteTrainingPlan(coachId, plan.planId, token);
+        showSuccess(`תוכנית "${plan.name}" נמחקה בהצלחה`);
+        // Plans will be updated automatically via cache event
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'שגיאה במחיקת תוכנית האימון';
+        showError(errorMsg);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -486,7 +496,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             </button>
           </div>
         ) : (
-          plans.map((plan) => (
+          plans.filter(plan => !plan.customTrainee).map((plan) => (
             <div key={plan.planId} className="plan-card clickable" onClick={() => handleEditPlan(plan)}>
               <div className="plan-header">
                 <h3 className="plan-name">{plan.name}</h3>
@@ -548,6 +558,21 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           loadData();
         }}
       />
+
+      {/* Edit Training Plan Modal */}
+      {editingPlan && (
+        <EditTrainingPlan
+          coachId={coachId}
+          token={token}
+          plan={editingPlan}
+          isOpen={!!editingPlan}
+          onClose={() => setEditingPlan(null)}
+          onPlanUpdated={(updatedPlan) => {
+            // Plans will be updated automatically via cache event
+            setEditingPlan(null);
+          }}
+        />
+      )}
     </div>
   );
 };
