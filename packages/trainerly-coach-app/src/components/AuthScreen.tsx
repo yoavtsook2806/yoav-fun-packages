@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getApiBaseUrl } from '../config/api';
+import './AuthScreen.css';
 
 interface Coach {
   coachId: string;
@@ -183,119 +184,214 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
 
   return (
     <div className="auth-screen">
+      <div className="auth-background">
+        <div className="auth-gradient"></div>
+        <div className="auth-pattern"></div>
+      </div>
+      
       <div className="auth-container">
-        <h1>🏋️ מערכת ניהול אימונים למאמנים</h1>
-        
-        <div className="auth-tabs">
-          <button 
-            className={isLogin ? 'active' : ''} 
-            onClick={() => setIsLogin(true)}
-          >
-            התחברות
-          </button>
-          <button 
-            className={!isLogin ? 'active' : ''} 
-            onClick={() => setIsLogin(false)}
-          >
-            הרשמה
-          </button>
-        </div>
-
-        {isLogin ? (
-          <form onSubmit={handleLogin} className="auth-form">
-            <h2>התחברות</h2>
-            
-            <div className="form-group">
-              <label>אימייל:</label>
-              <input
-                type="email"
-                value={loginData.email}
-                onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-                required
-              />
+        <div className="auth-card">
+          <div className="auth-header">
+            <div className="auth-logo">
+              <div className="logo-icon">💪</div>
+              <h1>Trainerly</h1>
+              <p className="auth-subtitle">מערכת ניהול אימונים מקצועית</p>
             </div>
-            
-            <div className="form-group">
-              <label>סיסמה:</label>
-              <input
-                type="password"
-                value={loginData.password}
-                onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                required
-              />
-            </div>
-            
-            {error && <div className="error">{error}</div>}
-            
-            <button type="submit" disabled={loading}>
-              {loading ? 'מתחבר...' : 'התחבר'}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleRegister} className="auth-form">
-            <h2>הרשמה</h2>
-            
-            <div className="form-group">
-              <label>שם מלא:</label>
-              <input
-                type="text"
-                value={registerData.name}
-                onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>אימייל:</label>
-              <input
-                type="email"
-                value={registerData.email}
-                onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>כינוי (לזיהוי מתאמנים):</label>
-              <input
-                type="text"
-                value={registerData.nickname}
-                onChange={(e) => {
-                  setRegisterData({...registerData, nickname: e.target.value});
-                  // Check nickname availability with debouncing
-                  setTimeout(() => checkNickname(e.target.value), 500);
-                }}
-                required
-              />
-              {nicknameStatus.checking && <div className="nickname-status">בודק...</div>}
-              {nicknameStatus.message && (
-                <div className={`nickname-status ${nicknameStatus.available ? 'available' : 'unavailable'}`}>
-                  {nicknameStatus.message}
-                </div>
-              )}
-            </div>
-            
-            <div className="form-group">
-              <label>סיסמה:</label>
-              <input
-                type="password"
-                value={registerData.password}
-                onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
-                required
-                minLength={8}
-              />
-            </div>
-            
-            {error && <div className="error">{error}</div>}
-            
+          </div>
+          
+          <div className="auth-tabs">
             <button 
-              type="submit" 
-              disabled={loading || !nicknameStatus.available}
+              className={`tab-button ${isLogin ? 'active' : ''}`} 
+              onClick={() => setIsLogin(true)}
             >
-              {loading ? 'נרשם...' : 'הירשם'}
+              <span className="tab-icon">🔑</span>
+              התחברות
             </button>
-          </form>
-        )}
+            <button 
+              className={`tab-button ${!isLogin ? 'active' : ''}`} 
+              onClick={() => setIsLogin(false)}
+            >
+              <span className="tab-icon">✨</span>
+              הרשמה
+            </button>
+          </div>
+
+          {isLogin ? (
+            <form onSubmit={handleLogin} className="auth-form">
+              <div className="form-section">
+                <h2 className="form-title">
+                  <span className="form-icon">👋</span>
+                  ברוכים השבים!
+                </h2>
+                <p className="form-description">התחברו לחשבון המאמן שלכם</p>
+                
+                <div className="input-group">
+                  <div className="input-icon">📧</div>
+                  <input
+                    type="email"
+                    placeholder="כתובת אימייל"
+                    value={loginData.email}
+                    onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                    required
+                    className="modern-input"
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <div className="input-icon">🔒</div>
+                  <input
+                    type="password"
+                    placeholder="סיסמה"
+                    value={loginData.password}
+                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                    required
+                    className="modern-input"
+                  />
+                </div>
+                
+                {error && (
+                  <div className="error-message">
+                    <span className="error-icon">⚠️</span>
+                    {error}
+                  </div>
+                )}
+                
+                <button type="submit" disabled={loading} className="primary-button">
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner"></span>
+                      מתחבר...
+                    </>
+                  ) : (
+                    <>
+                      <span className="button-icon">🚀</span>
+                      התחבר
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleRegister} className="auth-form">
+              <div className="form-section">
+                <h2 className="form-title">
+                  <span className="form-icon">🌟</span>
+                  הצטרפו אלינו!
+                </h2>
+                <p className="form-description">צרו חשבון מאמן חדש והתחילו לנהל את המתאמנים שלכם</p>
+                
+                <div className="input-group">
+                  <div className="input-icon">👤</div>
+                  <input
+                    type="text"
+                    placeholder="שם מלא"
+                    value={registerData.name}
+                    onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
+                    required
+                    className="modern-input"
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <div className="input-icon">📧</div>
+                  <input
+                    type="email"
+                    placeholder="כתובת אימייל"
+                    value={registerData.email}
+                    onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
+                    required
+                    className="modern-input"
+                  />
+                </div>
+                
+                <div className="input-group">
+                  <div className="input-icon">🏷️</div>
+                  <input
+                    type="text"
+                    placeholder="כינוי (לזיהוי מתאמנים)"
+                    value={registerData.nickname}
+                    onChange={(e) => {
+                      setRegisterData({...registerData, nickname: e.target.value});
+                      // Check nickname availability with debouncing
+                      setTimeout(() => checkNickname(e.target.value), 500);
+                    }}
+                    required
+                    className="modern-input"
+                  />
+                  {nicknameStatus.checking && (
+                    <div className="nickname-status checking">
+                      <span className="loading-spinner small"></span>
+                      בודק זמינות...
+                    </div>
+                  )}
+                  {nicknameStatus.message && (
+                    <div className={`nickname-status ${nicknameStatus.available ? 'available' : 'unavailable'}`}>
+                      <span className="status-icon">
+                        {nicknameStatus.available ? '✅' : '❌'}
+                      </span>
+                      {nicknameStatus.message}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="input-group">
+                  <div className="input-icon">🔒</div>
+                  <input
+                    type="password"
+                    placeholder="סיסמה (לפחות 8 תווים)"
+                    value={registerData.password}
+                    onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
+                    required
+                    minLength={8}
+                    className="modern-input"
+                  />
+                </div>
+                
+                {error && (
+                  <div className="error-message">
+                    <span className="error-icon">⚠️</span>
+                    {error}
+                  </div>
+                )}
+                
+                <button 
+                  type="submit" 
+                  disabled={loading || !nicknameStatus.available}
+                  className="primary-button"
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading-spinner"></span>
+                      נרשם...
+                    </>
+                  ) : (
+                    <>
+                      <span className="button-icon">🎯</span>
+                      הירשם
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+          
+          <div className="auth-footer">
+            <div className="feature-highlights">
+              <div className="feature">
+                <span className="feature-icon">📊</span>
+                <span>ניהול מתאמנים</span>
+              </div>
+              <div className="feature">
+                <span className="feature-icon">💪</span>
+                <span>תוכניות אימון</span>
+              </div>
+              <div className="feature">
+                <span className="feature-icon">📈</span>
+                <span>מעקב התקדמות</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -12898,9 +12898,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"trainerly-trainer-app@workspace:packages/trainerly-trainer-app":
+"trainerly-trainee-app@workspace:packages/trainerly-trainee-app":
   version: 0.0.0-use.local
-  resolution: "trainerly-trainer-app@workspace:packages/trainerly-trainer-app"
+  resolution: "trainerly-trainee-app@workspace:packages/trainerly-trainee-app"
   dependencies:
     "@types/react": "npm:^18.2.43"
     "@types/react-dom": "npm:^18.2.17"

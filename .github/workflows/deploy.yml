@@ -37,7 +37,7 @@ jobs:
     - name: Build all packages
       run: |
         yarn workspace matan-training build
-        yarn workspace trainerly-trainer-app build
+        yarn workspace trainerly-trainee-app build
       
     - name: Create deployment structure
       run: |
@@ -132,7 +132,7 @@ jobs:
                             Advanced training platform with server integration and coach management.
                             Full-featured training app with real-time data sync.
                         </div>
-                        <a href="./trainerly-trainer-app/" class="package-link">Open Trainerly App</a>
+                        <a href="./trainerly-trainee-app/" class="package-link">Open Trainerly App</a>
                     </div>
                 </div>
                 
@@ -150,9 +150,9 @@ jobs:
           cp -r packages/matan-training/dist dist/matan-training
         fi
         
-        # Copy trainerly-trainer-app build (new professional app)
-        if [ -d "packages/trainerly-trainer-app/dist" ]; then
-          cp -r packages/trainerly-trainer-app/dist dist/trainerly-trainer-app
+        # Copy trainerly-trainee-app build (new professional app)
+        if [ -d "packages/trainerly-trainee-app/dist" ]; then
+          cp -r packages/trainerly-trainee-app/dist dist/trainerly-trainee-app
         fi
       
     - name: Setup Pages

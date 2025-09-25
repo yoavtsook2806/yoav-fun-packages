@@ -9,11 +9,11 @@
   "scripts": {
     "dev": "yarn workspace matan-training dev",
     "dev:server": "yarn workspace trainerly-server dev",
-    "dev:trainerly": "yarn workspace trainerly-trainer-app dev",
+    "dev:trainerly": "yarn workspace trainerly-trainee-app dev",
     "dev:coach": "yarn workspace trainerly-coach-app dev",
     "build": "yarn workspace matan-training build",
     "build:server": "yarn workspace trainerly-server build",
-    "build:trainerly": "yarn workspace trainerly-trainer-app build",
+    "build:trainerly": "yarn workspace trainerly-trainee-app build",
     "build:coach": "yarn workspace trainerly-coach-app build",
     "preview": "yarn workspace matan-training preview",
     "deploy:server": "yarn workspace trainerly-server deploy",

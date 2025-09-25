@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ProfileModal.css';
 
 interface Coach {
   coachId: string;
@@ -96,242 +97,126 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        padding: '30px',
-        borderRadius: '12px',
-        width: '90%',
-        maxWidth: '500px',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '25px' 
-        }}>
-          <h2 style={{ margin: 0, color: '#333' }}>Edit Profile</h2>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '24px',
-              cursor: 'pointer',
-              color: '#666',
-              padding: '5px'
-            }}
-          >
-            ×
+    <div className="profile-modal-overlay" dir="rtl">
+      <div className="profile-modal">
+        <div className="modal-header">
+          <h2 className="modal-title">
+            <span className="modal-icon">⚙️</span>
+            עריכת פרופיל
+          </h2>
+          <button onClick={onClose} className="close-button">
+            <span className="close-icon">✕</span>
           </button>
         </div>
 
         {success && (
-          <div style={{
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            padding: '12px',
-            borderRadius: '6px',
-            marginBottom: '20px',
-            border: '1px solid #c3e6cb'
-          }}>
-            Profile updated successfully!
+          <div className="success-message">
+            <span className="success-icon">✅</span>
+            הפרופיל עודכן בהצלחה!
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: '500',
-              color: '#333'
-            }}>
-              Name *
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #e1e5e9',
-                borderRadius: '6px',
-                fontSize: '16px',
-                boxSizing: 'border-box'
-              }}
-            />
+        <form onSubmit={handleSubmit} className="profile-form">
+          <div className="form-group">
+            <div className="input-group">
+              <div className="input-icon">👤</div>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="שם מלא *"
+                className="modal-input"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: '500',
-              color: '#333'
-            }}>
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="e.g., +972-50-123-4567"
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #e1e5e9',
-                borderRadius: '6px',
-                fontSize: '16px',
-                boxSizing: 'border-box'
-              }}
-            />
+          <div className="form-group">
+            <div className="input-group">
+              <div className="input-icon">📱</div>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="מספר טלפון (לדוגמה: 050-123-4567)"
+                className="modal-input"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: '500',
-              color: '#333'
-            }}>
-              Age
-            </label>
-            <input
-              type="number"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              min="18"
-              max="120"
-              placeholder="e.g., 35"
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #e1e5e9',
-                borderRadius: '6px',
-                fontSize: '16px',
-                boxSizing: 'border-box'
-              }}
-            />
+          <div className="form-group">
+            <div className="input-group">
+              <div className="input-icon">🎂</div>
+              <input
+                type="number"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                min="18"
+                max="120"
+                placeholder="גיל (לדוגמה: 35)"
+                className="modal-input"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: '500',
-              color: '#666'
-            }}>
-              Email (read-only)
-            </label>
-            <input
-              type="email"
-              value={coach.email}
-              disabled
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #e1e5e9',
-                borderRadius: '6px',
-                fontSize: '16px',
-                backgroundColor: '#f8f9fa',
-                color: '#666',
-                boxSizing: 'border-box'
-              }}
-            />
+          <div className="form-group">
+            <div className="readonly-field">
+              <div className="field-icon">📧</div>
+              <div className="field-content">
+                <div className="field-label">אימייל (לקריאה בלבד)</div>
+                <div className="field-value">{coach.email}</div>
+              </div>
+            </div>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px', 
-              fontWeight: '500',
-              color: '#666'
-            }}>
-              Nickname (read-only)
-            </label>
-            <input
-              type="text"
-              value={coach.nickname}
-              disabled
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #e1e5e9',
-                borderRadius: '6px',
-                fontSize: '16px',
-                backgroundColor: '#f8f9fa',
-                color: '#666',
-                boxSizing: 'border-box'
-              }}
-            />
+          <div className="form-group">
+            <div className="readonly-field">
+              <div className="field-icon">🏷️</div>
+              <div className="field-content">
+                <div className="field-label">כינוי (לקריאה בלבד)</div>
+                <div className="field-value">@{coach.nickname}</div>
+              </div>
+            </div>
           </div>
 
           {error && (
-            <div style={{
-              backgroundColor: '#f8d7da',
-              color: '#721c24',
-              padding: '12px',
-              borderRadius: '6px',
-              marginBottom: '20px',
-              border: '1px solid #f5c6cb'
-            }}>
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
               {error}
             </div>
           )}
 
-          <div style={{ 
-            display: 'flex', 
-            gap: '10px', 
-            justifyContent: 'flex-end' 
-          }}>
+          <div className="modal-actions">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              style={{
-                padding: '12px 24px',
-                border: '2px solid #6c757d',
-                borderRadius: '6px',
-                backgroundColor: 'white',
-                color: '#6c757d',
-                cursor: 'pointer',
-                fontSize: '16px',
-                fontWeight: '500'
-              }}
+              className="modal-button secondary"
             >
-              Cancel
+              <span className="button-icon">❌</span>
+              ביטול
             </button>
             <button
               type="submit"
               disabled={loading || success}
-              style={{
-                padding: '12px 24px',
-                border: 'none',
-                borderRadius: '6px',
-                backgroundColor: success ? '#28a745' : '#007bff',
-                color: 'white',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontSize: '16px',
-                fontWeight: '500',
-                opacity: loading ? 0.7 : 1
-              }}
+              className={`modal-button primary ${success ? 'success' : ''}`}
             >
-              {loading ? 'Updating...' : success ? '✓ Updated' : 'Update Profile'}
+              {loading ? (
+                <>
+                  <span className="loading-spinner small"></span>
+                  מעדכן...
+                </>
+              ) : success ? (
+                <>
+                  <span className="button-icon">✅</span>
+                  עודכן!
+                </>
+              ) : (
+                <>
+                  <span className="button-icon">💾</span>
+                  עדכן פרופיל
+                </>
+              )}
             </button>
           </div>
         </form>

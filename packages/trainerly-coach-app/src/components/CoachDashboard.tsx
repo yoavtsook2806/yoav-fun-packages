@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProfileModal from './ProfileModal';
+import './CoachDashboard.css';
 
 interface Coach {
   coachId: string;
@@ -67,292 +68,227 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px',
-        color: '#666'
-      }}>
-        Loading coach dashboard...
+      <div className="dashboard-loading">
+        <div className="loading-container">
+          <div className="loading-spinner-large"></div>
+          <div className="loading-text">טוען פרופיל מאמן...</div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        gap: '20px'
-      }}>
-        <div style={{ color: '#dc3545', fontSize: '18px' }}>
-          Error: {error}
+      <div className="dashboard-error">
+        <div className="error-container">
+          <div className="error-icon">⚠️</div>
+          <div className="error-text">שגיאה: {error}</div>
+          <button onClick={loadCoachProfile} className="retry-button">
+            <span className="button-icon">🔄</span>
+            נסה שוב
+          </button>
         </div>
-        <button
-          onClick={loadCoachProfile}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Retry
-        </button>
       </div>
     );
   }
 
   if (!coach) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px',
-        color: '#dc3545'
-      }}>
-        Coach profile not found
+      <div className="dashboard-error">
+        <div className="error-container">
+          <div className="error-icon">❌</div>
+          <div className="error-text">פרופיל מאמן לא נמצא</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f8f9fa',
-      padding: '20px'
-    }}>
+    <div className="coach-dashboard" dir="rtl">
+      <div className="dashboard-background">
+        <div className="dashboard-gradient"></div>
+      </div>
+      
       {/* Header */}
-      <div style={{
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '12px',
-        marginBottom: '30px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <div>
-          <h1 style={{ margin: '0 0 5px 0', color: '#333' }}>
-            Welcome, {coach.name}!
-          </h1>
-          <p style={{ margin: 0, color: '#666', fontSize: '16px' }}>
-            Coach Dashboard • @{coach.nickname}
-          </p>
-        </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            onClick={() => setIsProfileModalOpen(true)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500'
-            }}
-          >
-            Edit Profile
-          </button>
-          <button
-            onClick={onLogout}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500'
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-
-      {/* Profile Summary */}
-      <div style={{
-        backgroundColor: 'white',
-        padding: '25px',
-        borderRadius: '12px',
-        marginBottom: '30px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
-      }}>
-        <h2 style={{ margin: '0 0 20px 0', color: '#333' }}>
-          Your Profile
-        </h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '20px'
-        }}>
-          <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              color: '#666', 
-              marginBottom: '5px',
-              fontWeight: '500'
-            }}>
-              Email
-            </label>
-            <div style={{ fontSize: '16px', color: '#333' }}>
-              {coach.email}
+      <header className="dashboard-header">
+        <div className="header-content">
+          <div className="header-info">
+            <div className="welcome-section">
+              <h1 className="welcome-title">
+                <span className="welcome-icon">👋</span>
+                שלום, {coach.name}!
+              </h1>
+              <p className="welcome-subtitle">
+                <span className="dashboard-icon">📊</span>
+                דשבורד מאמן • @{coach.nickname}
+              </p>
+            </div>
+            <div className="coach-status">
+              <div className="status-badge active">
+                <span className="status-dot"></span>
+                פעיל
+              </div>
             </div>
           </div>
-          <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              color: '#666', 
-              marginBottom: '5px',
-              fontWeight: '500'
-            }}>
-              Phone
-            </label>
-            <div style={{ fontSize: '16px', color: '#333' }}>
-              {coach.phone || 'Not provided'}
-            </div>
-          </div>
-          <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              color: '#666', 
-              marginBottom: '5px',
-              fontWeight: '500'
-            }}>
-              Age
-            </label>
-            <div style={{ fontSize: '16px', color: '#333' }}>
-              {coach.age || 'Not provided'}
-            </div>
-          </div>
-          <div>
-            <label style={{ 
-              display: 'block', 
-              fontSize: '14px', 
-              color: '#666', 
-              marginBottom: '5px',
-              fontWeight: '500'
-            }}>
-              Member Since
-            </label>
-            <div style={{ fontSize: '16px', color: '#333' }}>
-              {new Date(coach.createdAt).toLocaleDateString()}
-            </div>
+          <div className="header-actions">
+            <button
+              onClick={() => setIsProfileModalOpen(true)}
+              className="action-button secondary"
+            >
+              <span className="button-icon">⚙️</span>
+              עריכת פרופיל
+            </button>
+            <button
+              onClick={onLogout}
+              className="action-button danger"
+            >
+              <span className="button-icon">🚪</span>
+              יציאה
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Management Sections - Coming Soon */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '20px'
-      }}>
-        <div style={{
-          backgroundColor: 'white',
-          padding: '25px',
-          borderRadius: '12px',
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>
-            Manage Trainers
-          </h3>
-          <p style={{ color: '#666', marginBottom: '20px' }}>
-            Add and manage your trainers
-          </p>
-          <button
-            disabled
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#e9ecef',
-              color: '#6c757d',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'not-allowed',
-              fontSize: '14px'
-            }}
-          >
-            Coming Soon
-          </button>
-        </div>
+      {/* Main Content */}
+      <main className="dashboard-main">
+        {/* Quick Stats */}
+        <section className="stats-section">
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-icon">👥</div>
+              <div className="stat-content">
+                <div className="stat-number">0</div>
+                <div className="stat-label">מתאמנים</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">💪</div>
+              <div className="stat-content">
+                <div className="stat-number">0</div>
+                <div className="stat-label">תוכניות אימון</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">📊</div>
+              <div className="stat-content">
+                <div className="stat-number">0</div>
+                <div className="stat-label">אימונים השבוע</div>
+              </div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">🏆</div>
+              <div className="stat-content">
+                <div className="stat-number">0</div>
+                <div className="stat-label">יעדים הושגו</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <div style={{
-          backgroundColor: 'white',
-          padding: '25px',
-          borderRadius: '12px',
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>
-            Manage Exercises
-          </h3>
-          <p style={{ color: '#666', marginBottom: '20px' }}>
-            Create and edit exercise library
-          </p>
-          <button
-            disabled
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#e9ecef',
-              color: '#6c757d',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'not-allowed',
-              fontSize: '14px'
-            }}
-          >
-            Coming Soon
-          </button>
-        </div>
+        {/* Profile Summary */}
+        <section className="profile-section">
+          <div className="section-card">
+            <div className="section-header">
+              <h2 className="section-title">
+                <span className="section-icon">👤</span>
+                הפרופיל שלך
+              </h2>
+            </div>
+            <div className="profile-grid">
+              <div className="profile-field">
+                <div className="field-icon">📧</div>
+                <div className="field-content">
+                  <div className="field-label">אימייל</div>
+                  <div className="field-value">{coach.email}</div>
+                </div>
+              </div>
+              <div className="profile-field">
+                <div className="field-icon">📱</div>
+                <div className="field-content">
+                  <div className="field-label">טלפון</div>
+                  <div className="field-value">{coach.phone || 'לא צוין'}</div>
+                </div>
+              </div>
+              <div className="profile-field">
+                <div className="field-icon">🎂</div>
+                <div className="field-content">
+                  <div className="field-label">גיל</div>
+                  <div className="field-value">{coach.age || 'לא צוין'}</div>
+                </div>
+              </div>
+              <div className="profile-field">
+                <div className="field-icon">📅</div>
+                <div className="field-content">
+                  <div className="field-label">חבר מאז</div>
+                  <div className="field-value">{new Date(coach.createdAt).toLocaleDateString('he-IL')}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <div style={{
-          backgroundColor: 'white',
-          padding: '25px',
-          borderRadius: '12px',
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>
-            Training Plans
-          </h3>
-          <p style={{ color: '#666', marginBottom: '20px' }}>
-            Create and assign training plans
-          </p>
-          <button
-            disabled
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#e9ecef',
-              color: '#6c757d',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'not-allowed',
-              fontSize: '14px'
-            }}
-          >
-            Coming Soon
-          </button>
-        </div>
-      </div>
+        {/* Management Sections */}
+        <section className="management-section">
+          <div className="section-header">
+            <h2 className="section-title">
+              <span className="section-icon">⚡</span>
+              ניהול מהיר
+            </h2>
+          </div>
+          <div className="management-grid">
+            <div className="management-card coming-soon">
+              <div className="card-icon">👥</div>
+              <div className="card-content">
+                <h3 className="card-title">ניהול מתאמנים</h3>
+                <p className="card-description">הוספה וניהול של המתאמנים שלך</p>
+                <div className="card-features">
+                  <div className="feature-item">✨ יצירת פרופילים</div>
+                  <div className="feature-item">📊 מעקב התקדמות</div>
+                  <div className="feature-item">📱 התראות</div>
+                </div>
+                <button className="card-button disabled">
+                  <span className="button-icon">🚀</span>
+                  בקרוב
+                </button>
+              </div>
+            </div>
+
+            <div className="management-card coming-soon">
+              <div className="card-icon">💪</div>
+              <div className="card-content">
+                <h3 className="card-title">ספריית תרגילים</h3>
+                <p className="card-description">יצירה ועריכה של בסיס נתוני תרגילים</p>
+                <div className="card-features">
+                  <div className="feature-item">🎯 תרגילים מותאמים</div>
+                  <div className="feature-item">📹 סרטוני הדרכה</div>
+                  <div className="feature-item">⚙️ הגדרות קושי</div>
+                </div>
+                <button className="card-button disabled">
+                  <span className="button-icon">🚀</span>
+                  בקרוב
+                </button>
+              </div>
+            </div>
+
+            <div className="management-card coming-soon">
+              <div className="card-icon">📋</div>
+              <div className="card-content">
+                <h3 className="card-title">תוכניות אימון</h3>
+                <p className="card-description">יצירה והקצאה של תוכניות אימון מותאמות</p>
+                <div className="card-features">
+                  <div className="feature-item">📝 תוכניות מותאמות</div>
+                  <div className="feature-item">📈 מעקב ביצועים</div>
+                  <div className="feature-item">🔄 עדכונים אוטומטיים</div>
+                </div>
+                <button className="card-button disabled">
+                  <span className="button-icon">🚀</span>
+                  בקרוב
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* Profile Modal */}
       <ProfileModal
