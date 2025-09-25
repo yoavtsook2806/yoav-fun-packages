@@ -221,7 +221,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           </div>
 
           {isLogin ? (
-            <form onSubmit={handleLogin} className="auth-form">
+              <form onSubmit={handleLogin} className="auth-form" autoComplete="off" spellCheck="false">
               <div className="form-section">
                 <h2 className="form-title">
                   <span className="form-icon">👋</span>
@@ -231,14 +231,19 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                 
                 <div className="input-group">
                   <div className="input-icon">📧</div>
-                  <input
-                    type="email"
-                    placeholder="כתובת אימייל"
-                    value={loginData.email}
-                    onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-                    required
-                    className="modern-input"
-                  />
+                    <input
+                      type="email"
+                      placeholder="כתובת אימייל"
+                      value={loginData.email}
+                      onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                      required
+                      className="modern-input"
+                      autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
+                      spellCheck="false"
+                      data-form-type="other"
+                    />
                 </div>
                 
                 <div className="input-group">
@@ -250,6 +255,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                     onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                     required
                     className="modern-input password-input"
+                    autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
                   />
                   <button
                     type="button"
@@ -284,7 +292,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
               </div>
             </form>
           ) : (
-            <form onSubmit={handleRegister} className="auth-form">
+              <form onSubmit={handleRegister} className="auth-form" autoComplete="off" spellCheck="false">
               <div className="form-section">
                 <h2 className="form-title">
                   <span className="form-icon">🌟</span>
@@ -294,14 +302,19 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                 
                 <div className="input-group">
                   <div className="input-icon">👤</div>
-                  <input
-                    type="text"
-                    placeholder="שם מלא"
-                    value={registerData.name}
-                    onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
-                    required
-                    className="modern-input"
-                  />
+                    <input
+                      type="text"
+                      placeholder="שם מלא"
+                      value={registerData.name}
+                      onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
+                      required
+                      className="modern-input"
+                      autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
+                      spellCheck="false"
+                      data-form-type="other"
+                    />
                 </div>
                 
                 <div className="input-group">
@@ -313,6 +326,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                     onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
                     required
                     className="modern-input"
+                    autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
                   />
                 </div>
                 
@@ -329,6 +345,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                     }}
                     required
                     className="modern-input"
+                    autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
                   />
                   {nicknameStatus.checking && (
                     <div className="nickname-status checking">
@@ -356,6 +375,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                     required
                     minLength={8}
                     className="modern-input password-input"
+                    autoComplete="off"
+                    spellCheck="false"
+                    data-form-type="other"
                   />
                   <button
                     type="button"
