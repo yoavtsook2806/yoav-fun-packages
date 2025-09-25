@@ -9,6 +9,7 @@ export interface Coach {
   valid: boolean;
   phone?: string;
   age?: number;
+  isAdmin?: boolean; // True if coach is admin, false by default
   createdAt: string;
   updatedAt: string;
 }
@@ -20,6 +21,7 @@ export interface Trainer {
   lastName: string;
   email?: string;
   trainerCode?: string; // auto-generated for easy identification
+  plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;
 }
 
@@ -31,7 +33,8 @@ export interface Exercise {
   link?: string; // video URL
   note?: string; // exercise instructions/notes
   short: string; // short description, e.g., "פרפר"
-  muscleGroup?: 'legs' | 'back' | 'chest' | 'shoulders' | 'arms' | 'core' | 'full_body' | 'other';
+  isAdminExercise?: boolean; // True if created by admin, available to all coaches
+  originalExerciseId?: string; // Reference to original admin exercise if this is a copy
   createdAt: string;
 }
 
@@ -262,7 +265,6 @@ export interface ExerciseCreateRequest {
   link?: string; // video URL
   note?: string; // exercise instructions
   short: string; // short description, e.g., "פרפר"
-  muscleGroup?: string;
 }
 
 export interface ExerciseCreateResponse {
@@ -276,7 +278,8 @@ export interface ExerciseListResponse {
     link?: string;
     note?: string;
     short: string;
-    muscleGroup?: string;
+    isAdminExercise?: boolean;
+    originalExerciseId?: string;
     createdAt: string;
   }>;
 }

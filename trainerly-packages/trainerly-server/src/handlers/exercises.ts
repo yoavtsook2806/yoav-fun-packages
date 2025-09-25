@@ -44,7 +44,7 @@ export const createExercise = async (
     }
 
     const requestData: ExerciseCreateRequest = JSON.parse(event.body);
-    const { name, link, note, short, muscleGroup } = requestData;
+    const { name, link, note, short } = requestData;
 
     if (!name || !short) {
       return {
@@ -83,7 +83,6 @@ export const createExercise = async (
       link,
       note,
       short,
-      muscleGroup: muscleGroup as any, // Type assertion to handle string vs enum
       createdAt: new Date().toISOString()
     };
 
