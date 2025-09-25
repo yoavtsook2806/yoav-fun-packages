@@ -70,6 +70,12 @@ function App() {
   // Track if this is a fresh completion (to show congratulation only once)
   const [showCongratulation, setShowCongratulation] = useState(false);
   
+  // Authentication state - declare early to avoid hoisting issues
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [traineeId, setTraineeId] = useState<string | null>(null);
+  const [trainerName, setTrainerName] = useState<string | null>(null);
+  const [coachId, setCoachId] = useState<string | null>(null);
+  
   // Settings modal state - explicitly initialize to false to prevent hot reload issues
   const [showSettings, setShowSettings] = useState(() => {
     console.log('🔧 Initializing settings modal state to false');
@@ -96,12 +102,6 @@ function App() {
   // First-time setup state
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
-
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [traineeId, setTraineeId] = useState<string | null>(null);
-  const [trainerName, setTrainerName] = useState<string | null>(null);
-  const [coachId, setCoachId] = useState<string | null>(null);
 
   // Load trainee data from server
   const loadTraineeData = async (traineeId: string, coachId?: string) => {
