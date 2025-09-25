@@ -25,7 +25,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<'dashboard' | 'exercises' | 'plans' | 'trainees' | 'profile'>('dashboard');
+  const [activeSection, setActiveSection] = useState<'dashboard' | 'exercises' | 'plans' | 'trainees'>('dashboard');
 
   useEffect(() => {
     loadCoachProfile();
@@ -186,13 +186,6 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
                     <div className="simple-button-text">ניהול מתאמנים</div>
                   </button>
                   
-                  <button 
-                    className="simple-manage-button"
-                    onClick={() => setActiveSection('profile')}
-                  >
-                    <div className="simple-button-icon">📊</div>
-                    <div className="simple-button-text">דוחות וסטטיסטיקות</div>
-                  </button>
                 </div>
               </section>
             </>

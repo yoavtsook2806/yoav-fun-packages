@@ -72,6 +72,11 @@ function App() {
   
   // Settings modal state
   const [showSettings, setShowSettings] = useState(false);
+  
+  // Debug settings state changes
+  useEffect(() => {
+    console.log('🔧 Settings modal state changed:', showSettings);
+  }, [showSettings]);
 
   // First-time setup state
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
@@ -506,12 +511,16 @@ function App() {
   }
 
   if (!trainingState.selectedTraining) {
+    console.log('🏠 Rendering home screen - showSettings:', showSettings);
     return (
       <div className="app">
         {/* Settings button - top right corner */}
         <button
           className="settings-btn"
-          onClick={() => setShowSettings(true)}
+          onClick={() => {
+            console.log('⚙️ Settings button clicked');
+            setShowSettings(true);
+          }}
           title="הגדרות"
         >
           ⚙️
@@ -526,7 +535,10 @@ function App() {
         {/* Settings Modal */}
         {showSettings && (
           <SettingsModal
-            onClose={() => setShowSettings(false)}
+            onClose={() => {
+              console.log('❌ Settings modal closed');
+              setShowSettings(false);
+            }}
             onLogout={handleLogout}
             availablePlans={allTrainingPlans.map(plan => ({
               planId: plan.planId,

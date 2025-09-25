@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import CustomTraineePlanManager from './CustomTraineePlanManager';
+import TraineeTrainingHistory from './TraineeTrainingHistory';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -21,6 +22,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const [traineeProgress, setTraineeProgress] = useState<any[]>([]);
   const [showCustomPlanManager, setShowCustomPlanManager] = useState(false);
   const [customPlanTrainee, setCustomPlanTrainee] = useState<Trainee | null>(null);
+  const [showTrainingHistory, setShowTrainingHistory] = useState(false);
+  const [historyTrainee, setHistoryTrainee] = useState<Trainee | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -152,6 +155,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const closeCustomPlanManager = () => {
     setShowCustomPlanManager(false);
     setCustomPlanTrainee(null);
+  };
+
+  const openTrainingHistory = (trainee: Trainee) => {
+    setHistoryTrainee(trainee);
+    setShowTrainingHistory(true);
+  };
+
+  const closeTrainingHistory = () => {
+    setShowTrainingHistory(false);
+    setHistoryTrainee(null);
   };
 
   const getPlanName = (planId: string) => {
@@ -389,9 +402,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                     👤
                   </button>
                   <button 
+                    onClick={() => openTrainingHistory(trainee)} 
+                    className="history-button"
+                    title="היסטוריית אימונים מלאה"
+                  >
+                    📋
+                  </button>
+                  <button 
                     onClick={() => viewProgress(trainee)} 
                     className="progress-button"
-                    title="צפה בהתקדמות"
+                    title="סקירת התקדמות מהירה"
                   >
                     📊
                   </button>
@@ -474,6 +494,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
           trainee={customPlanTrainee}
           isOpen={showCustomPlanManager}
           onClose={closeCustomPlanManager}
+        />
+      )}
+
+      {/* Training History View */}
+      {showTrainingHistory && historyTrainee && (
+        <TraineeTrainingHistory
+          trainee={historyTrainee}
+          coachId={coachId}
+          token={token}
+          onBack={closeTrainingHistory}
         />
       )}
     </div>

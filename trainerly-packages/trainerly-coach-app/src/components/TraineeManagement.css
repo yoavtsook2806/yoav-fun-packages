@@ -116,9 +116,30 @@
   box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 }
 
+.history-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
 .custom-plan-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.history-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
 }
 
 .progress-button:hover {
