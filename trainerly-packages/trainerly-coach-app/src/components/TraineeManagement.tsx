@@ -154,7 +154,24 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('he-IL');
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        // If date is invalid, try to extract a valid part or return fallback
+        console.warn('Invalid date string:', dateString);
+        return 'תאריך לא תקין';
+      }
+      return date.toLocaleDateString('he-IL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'תאריך לא תקין';
+    }
   };
 
 
