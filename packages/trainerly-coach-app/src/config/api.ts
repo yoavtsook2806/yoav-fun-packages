@@ -7,9 +7,9 @@ export interface ApiConfig {
 
 // Environment detection
 const getEnvironment = (): 'dev' | 'prod' => {
-  // Check URL patterns or environment variables for deployed environments
-  if (window.location.hostname.includes('dev') || 
-      window.location.pathname.includes('dev') ||
+  // Check if running locally
+  if (window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' ||
       process.env.NODE_ENV === 'development') {
     return 'dev';
   }
@@ -18,10 +18,11 @@ const getEnvironment = (): 'dev' | 'prod' => {
   return 'prod';
 };
 
-// API Configuration for each environment (always AWS)
+// API Configuration for each environment
 const API_CONFIGS: Record<'dev' | 'prod', ApiConfig> = {
   dev: {
-    baseUrl: 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev',
+    // Use local development server
+    baseUrl: 'http://localhost:3000/dev',
     stage: 'dev'
   },
   prod: {
