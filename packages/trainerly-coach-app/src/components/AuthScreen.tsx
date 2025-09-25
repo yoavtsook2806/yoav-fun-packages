@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiBaseUrl } from '../config/api';
 
 interface Coach {
   coachId: string;
@@ -15,7 +16,7 @@ interface AuthScreenProps {
   onLogin: (coach: Coach, token: string) => void;
 }
 
-const API_BASE = 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
+const API_BASE = getApiBaseUrl();
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
