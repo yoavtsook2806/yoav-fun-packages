@@ -146,7 +146,7 @@ functions:
     handler: src/handlers/trainers.getTrainer
     events:
       - http:
-          path: /trainers/{trainerId}
+          path: /coaches/{coachId}/trainers/{trainerId}
           method: get
           cors: true
 
@@ -196,7 +196,7 @@ functions:
     handler: src/handlers/plans.assignPlan
     events:
       - http:
-          path: /trainers/{trainerId}/plans/{planId}/assign
+          path: /coaches/{coachId}/trainers/{trainerId}/plans/{planId}/assign
           method: post
           cors: true
 

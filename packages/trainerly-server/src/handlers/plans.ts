@@ -149,21 +149,72 @@ export const assignPlan = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
+    const coachId = event.pathParameters?.coachId;
     const trainerId = event.pathParameters?.trainerId;
     const planId = event.pathParameters?.planId;
     
-    if (!trainerId || !planId) {
+    if (!coachId || !trainerId || !planId) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Trainer ID and Plan ID are required'
+          message: 'Coach ID, Trainer ID and Plan ID are required'
         })
       };
     }
 
-    // TODO: Verify JWT token and check if coach has permission to assign this plan
+    // TODO: Verify JWT token and check if coach exists and is valid
+
+    // Security check: Verify that both the trainer and plan belong to the requesting coach
+    const [trainer, plan] = await Promise.all([
+      db.getTrainer(trainerId),
+      db.getPlan(planId)
+    ]);
+
+    if (!trainer) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Trainer not found'
+        })
+      };
+    }
+
+    if (!plan) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Plan not found'
+        })
+      };
+    }
+
+    if (trainer.coachId !== coachId) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'FORBIDDEN',
+          message: 'Access denied: Trainer does not belong to this coach'
+        })
+      };
+    }
+
+    if (plan.coachId !== coachId) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'FORBIDDEN',
+          message: 'Access denied: Plan does not belong to this coach'
+        })
+      };
+    }
 
     const assignment: PlanAssignment = {
       assignmentId: uuidv4(),

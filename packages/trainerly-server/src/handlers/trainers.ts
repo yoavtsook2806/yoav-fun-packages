@@ -162,18 +162,21 @@ export const getTrainer = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
+    const coachId = event.pathParameters?.coachId;
     const trainerId = event.pathParameters?.trainerId;
     
-    if (!trainerId) {
+    if (!coachId || !trainerId) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Trainer ID is required'
+          message: 'Coach ID and Trainer ID are required'
         })
       };
     }
+
+    // TODO: Verify JWT token and check if coach exists and is valid
 
     const trainer = await db.getTrainer(trainerId);
     if (!trainer) {
@@ -183,6 +186,18 @@ export const getTrainer = async (
         body: JSON.stringify({
           error: 'NOT_FOUND',
           message: 'Trainer not found'
+        })
+      };
+    }
+
+    // Security check: Verify that this trainer belongs to the requesting coach
+    if (trainer.coachId !== coachId) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'FORBIDDEN',
+          message: 'Access denied: Trainer does not belong to this coach'
         })
       };
     }

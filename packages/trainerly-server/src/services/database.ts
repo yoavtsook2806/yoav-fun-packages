@@ -483,6 +483,21 @@ export class DatabaseService {
     }
   }
 
+  async getPlan(planId: string): Promise<any | null> {
+    try {
+      const command = new GetCommand({
+        TableName: this.getTableName('plans'),
+        Key: { planId }
+      });
+      
+      const result = await this.client.send(command);
+      return result.Item || null;
+    } catch (error) {
+      console.error('❌ Error getting plan:', error);
+      return null;
+    }
+  }
+
   async getPlansByCoach(coachId: string): Promise<any[]> {
     try {
       const command = new ScanCommand({

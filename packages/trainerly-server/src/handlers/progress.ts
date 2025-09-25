@@ -163,15 +163,7 @@ export const getCoachViewProgress = async (
       };
     }
 
-    // TODO: Verify that this trainer belongs to this coach
-
-    const queryParams = event.queryStringParameters || {};
-    const filters = {
-      from: queryParams.from,
-      to: queryParams.to
-    };
-
-    const progressEntries = await db.getProgressByTrainer(trainerId, filters);
+    // Verify that this trainer belongs to this coach
     const trainer = await db.getTrainer(trainerId);
 
     if (!trainer) {
@@ -184,6 +176,26 @@ export const getCoachViewProgress = async (
         })
       };
     }
+
+    // Security check: Verify that this trainer belongs to the requesting coach
+    if (trainer.coachId !== coachId) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'FORBIDDEN',
+          message: 'Access denied: Trainer does not belong to this coach'
+        })
+      };
+    }
+
+    const queryParams = event.queryStringParameters || {};
+    const filters = {
+      from: queryParams.from,
+      to: queryParams.to
+    };
+
+    const progressEntries = await db.getProgressByTrainer(trainerId, filters);
 
     const response = {
       trainer: {
