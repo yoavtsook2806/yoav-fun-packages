@@ -558,13 +558,11 @@ button:disabled {
 }
 
 .training-button.recommended {
-  border-color: #ff9800;
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 152, 0, 0.3);
+  /* No special border - only label indicates status */
 }
 
 .training-button.current {
-  border-color: #4caf50;
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(76, 175, 80, 0.3);
+  /* No special border - only label indicates status */
 }
 
 .training-button-content {
@@ -1694,6 +1692,72 @@ button:disabled {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Training Plans in Settings */
+.settings-section h3 {
+  color: var(--text-primary);
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.plans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plan-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.plan-option:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+}
+
+.plan-option.current {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.plan-name {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.current-badge {
+  background: var(--primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.plan-action {
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .app-version {

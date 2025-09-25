@@ -5,11 +5,19 @@ import { APP_VERSION } from '../constants';
 interface SettingsModalProps {
   onClose: () => void;
   onLogout: () => void;
+  availablePlans: Array<{
+    planId: string;
+    name: string;
+    isCurrent: boolean;
+  }>;
+  onPlanChange: (planId: string) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
-  onLogout
+  onLogout,
+  availablePlans,
+  onPlanChange
 }) => {
   const [volume, setVolume] = useState(0);
   // Trainerly always shows coach app (hardcoded)
@@ -42,6 +50,30 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
         
         <div className="modal-body">
+          {/* Training Plans */}
+          {availablePlans.length > 1 && (
+            <div className="settings-section">
+              <h3>תוכניות אימונים</h3>
+              <div className="plans-list">
+                {availablePlans.map((plan) => (
+                  <div
+                    key={plan.planId}
+                    className={`plan-option ${plan.isCurrent ? 'current' : ''}`}
+                    onClick={() => onPlanChange(plan.planId)}
+                  >
+                    <div className="plan-info">
+                      <span className="plan-name">{plan.name}</span>
+                      {plan.isCurrent && <span className="current-badge">נוכחית</span>}
+                    </div>
+                    <div className="plan-action">
+                      {plan.isCurrent ? '✓' : '→'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Sound Settings */}
           <div className="settings-section">
             <div className="settings-item">

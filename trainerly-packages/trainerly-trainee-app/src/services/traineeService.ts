@@ -12,6 +12,12 @@ interface TraineeData {
     version: string; // We'll use planId as version for compatibility
     trainings: Trainings;
   };
+  allPlans?: Array<{
+    planId: string;
+    name: string;
+    version: string;
+    trainings: Trainings;
+  }>;
 }
 
 // Server types (simplified)
@@ -151,35 +157,46 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
       console.error('Error fetching trainer data:', error);
     }
     
-    // If trainee has plans, fetch the current plan details
+    // If trainee has plans, fetch all plan details
     if (traineeData.plans && traineeData.plans.length > 0) {
-      // Get the latest plan (last in array)
-      const currentPlanId = traineeData.plans[traineeData.plans.length - 1];
       const coachId = knownCoachId; // We know the coach ID
+      const allPlans = [];
       
-      try {
-        const planResponse = await fetch(`${API_BASE_URL}/coaches/${coachId}/training-plans/${currentPlanId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        
-        if (planResponse.ok) {
-          const serverPlanData = await planResponse.json();
-          const convertedPlan = convertServerPlanToTraineeFormat(serverPlanData);
-          traineeData.currentPlan = {
-            planId: serverPlanData.planId,
-            name: convertedPlan.name,
-            version: convertedPlan.version,
-            trainings: convertedPlan.trainings
-          };
-          console.log('✅ Fetched and converted training plan:', convertedPlan.name);
-        } else {
-          console.warn('Failed to fetch current training plan details');
+      // Fetch all plans
+      for (const planId of traineeData.plans) {
+        try {
+          const planResponse = await fetch(`${API_BASE_URL}/coaches/${coachId}/training-plans/${planId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (planResponse.ok) {
+            const serverPlanData = await planResponse.json();
+            const convertedPlan = convertServerPlanToTraineeFormat(serverPlanData);
+            const plan = {
+              planId: serverPlanData.planId,
+              name: convertedPlan.name,
+              version: convertedPlan.version,
+              trainings: convertedPlan.trainings
+            };
+            allPlans.push(plan);
+            console.log('✅ Fetched plan:', convertedPlan.name);
+          } else {
+            console.warn(`Failed to fetch training plan ${planId}`);
+          }
+        } catch (planError) {
+          console.error(`Error fetching training plan ${planId}:`, planError);
         }
-      } catch (planError) {
-        console.error('Error fetching training plan details:', planError);
+      }
+      
+      traineeData.allPlans = allPlans;
+      
+      // Set current plan as the last one (most recent)
+      if (allPlans.length > 0) {
+        traineeData.currentPlan = allPlans[allPlans.length - 1];
+        console.log('✅ Set current plan:', traineeData.currentPlan.name);
       }
     }
     

@@ -128,7 +128,8 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   };
 
   const currentTraining = getCurrentTraining();
-  const nextRecommended = currentTraining ? null : getNextRecommendedTraining();
+  // Always show the next recommended training - current only shows if it's incomplete
+  const nextRecommended = getNextRecommendedTraining();
 
   const handleStartTraining = () => {
     if (selectedTraining) {
@@ -164,8 +165,11 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
                 <span className="training-name">אימון {training}</span>
                 <div className="training-indicators">
                   <span className="completion-count">{completionCount}×</span>
-                  {isCurrent && <span className="current-indicator">נוכחי</span>}
-                  {isRecommended && !isCurrent && <span className="next-indicator">הבא</span>}
+                  {isCurrent ? (
+                    <span className="current-indicator">נוכחי</span>
+                  ) : isRecommended ? (
+                    <span className="next-indicator">הבא</span>
+                  ) : null}
                 </div>
               </div>
             </button>

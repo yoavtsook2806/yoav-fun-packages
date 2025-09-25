@@ -49,6 +49,12 @@ const createEmptyTrainingPlan = () => ({
 function App() {
   // Current training plan (loaded from server)
   const [currentTrainingPlan, setCurrentTrainingPlan] = useState(createEmptyTrainingPlan());
+  const [allTrainingPlans, setAllTrainingPlans] = useState<Array<{
+    planId: string;
+    name: string;
+    version: string;
+    trainings: any;
+  }>>([]);
   const [isLoadingPlan, setIsLoadingPlan] = useState(false);
   
   const [trainingState, setTrainingState] = useState<TrainingState>({
@@ -84,11 +90,14 @@ function App() {
     try {
       const traineeData = await fetchTraineeData(traineeId);
       
-      if (traineeData?.currentPlan) {
-        setCurrentTrainingPlan(traineeData.currentPlan);
-        console.log('✅ Loaded training plan:', traineeData.currentPlan.name);
+      if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
+        setAllTrainingPlans(traineeData.allPlans);
+        setCurrentTrainingPlan(traineeData.currentPlan || traineeData.allPlans[0]);
+        console.log('✅ Loaded training plans:', traineeData.allPlans.map(p => p.name));
+        console.log('✅ Current plan:', traineeData.currentPlan?.name);
       } else {
-        console.log('⚠️ No training plan assigned to trainee');
+        console.log('⚠️ No training plans assigned to trainee');
+        setAllTrainingPlans([]);
         setCurrentTrainingPlan(createEmptyTrainingPlan());
       }
     } catch (error) {
@@ -166,6 +175,27 @@ function App() {
     
     // Load trainee data
     loadTraineeData(newTraineeId);
+  };
+
+  // Handle plan change from settings
+  const handlePlanChange = (planId: string) => {
+    const selectedPlan = allTrainingPlans.find(plan => plan.planId === planId);
+    if (selectedPlan) {
+      setCurrentTrainingPlan(selectedPlan);
+      console.log('✅ Switched to plan:', selectedPlan.name);
+      
+      // Reset training state when changing plans
+      setTrainingState({
+        selectedTraining: null,
+        restTime: 60,
+        currentExerciseIndex: 0,
+        exercises: [],
+        exerciseStates: {},
+        isTrainingComplete: false,
+        trainingPlanVersion: selectedPlan.version,
+      });
+      setShowCongratulation(false);
+    }
   };
 
 
@@ -417,6 +447,12 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onLogout={handleLogout}
+            availablePlans={allTrainingPlans.map(plan => ({
+              planId: plan.planId,
+              name: plan.name,
+              isCurrent: plan.planId === currentTrainingPlan.planId
+            }))}
+            onPlanChange={handlePlanChange}
           />
         )}
       </div>
@@ -460,6 +496,12 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onLogout={handleLogout}
+            availablePlans={allTrainingPlans.map(plan => ({
+              planId: plan.planId,
+              name: plan.name,
+              isCurrent: plan.planId === currentTrainingPlan.planId
+            }))}
+            onPlanChange={handlePlanChange}
           />
         )}
       </div>
