@@ -27,7 +27,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     firstName: '',
     lastName: '',
     email: '',
-    assignedPlanId: ''
+    initialPlanId: '' // Plan to assign after creating trainee
   });
 
   useEffect(() => {
@@ -64,8 +64,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       const newTrainee = await cachedApiService.createTrainee(coachId, token, formData);
       
       // If a plan was assigned, assign it
-      if (formData.assignedPlanId) {
-        await cachedApiService.assignPlanToTrainee(coachId, newTrainee.trainerId, formData.assignedPlanId, token);
+      if (formData.initialPlanId) {
+        await cachedApiService.assignPlanToTrainee(coachId, newTrainee.trainerId, formData.initialPlanId, token);
       }
       
       await loadData();
@@ -86,19 +86,35 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       firstName: '',
       lastName: '',
       email: '',
-      assignedPlanId: ''
+      initialPlanId: ''
     });
     setShowAddForm(false);
   };
 
   const assignPlan = async (trainee: Trainee, planId: string) => {
     try {
+      console.log('🎯 CLIENT - Starting plan assignment:', {
+        traineeId: trainee.trainerId,
+        traineeName: `${trainee.firstName} ${trainee.lastName}`,
+        planId,
+        planName: getPlanName(planId),
+        currentPlans: trainee.plans
+      });
+      
       setLoading(true);
       await cachedApiService.assignPlanToTrainee(coachId, trainee.trainerId, planId, token);
+      
+      console.log('✅ CLIENT - Plan assigned, refreshing data...');
       await loadData();
+      
+      console.log('🎉 CLIENT - Data refreshed successfully');
       setError(null);
+      showSuccess(`תוכנית "${getPlanName(planId)}" הוקצתה בהצלחה ל${trainee.firstName} ${trainee.lastName}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to assign plan');
+      const errorMsg = err instanceof Error ? err.message : 'Failed to assign plan';
+      console.error('❌ CLIENT - Plan assignment failed:', err);
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -354,12 +370,20 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
               <div className="plan-assignment">
                 <div className="current-plan">
                   <strong>תוכנית נוכחית:</strong>
-                  {trainee.assignedPlanId ? (
-                    <span className="assigned-plan">{getPlanName(trainee.assignedPlanId)}</span>
+                  {trainee.plans && trainee.plans.length > 0 ? (
+                    <span className="assigned-plan">{getPlanName(trainee.plans[trainee.plans.length - 1])}</span>
                   ) : (
                     <span className="no-plan">לא הוקצתה תוכנית</span>
                   )}
                 </div>
+                
+                {trainee.plans && trainee.plans.length > 1 && (
+                  <div className="plan-history">
+                    <small style={{ color: '#64748b' }}>
+                      תוכניות קודמות: {trainee.plans.slice(0, -1).map(planId => getPlanName(planId)).join(', ')}
+                    </small>
+                  </div>
+                )}
                 
                 <div className="plan-actions">
                   <select
@@ -374,7 +398,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                   >
                     <option value="">הקצה תוכנית...</option>
                     {plans
-                      .filter(plan => plan.planId !== trainee.assignedPlanId)
+                      .filter(plan => !trainee.plans || !trainee.plans.includes(plan.planId))
                       .map((plan) => (
                         <option key={plan.planId} value={plan.planId}>
                           {plan.name}

@@ -74,7 +74,7 @@ export interface Trainee {
   lastName: string;
   email?: string;
   trainerCode?: string; // auto-generated for easy identification
-  assignedPlanId?: string;
+  plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;
 }
 

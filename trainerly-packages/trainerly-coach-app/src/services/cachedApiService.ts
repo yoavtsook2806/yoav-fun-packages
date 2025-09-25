@@ -184,10 +184,16 @@ class CachedApiService {
   }
 
   async assignPlanToTrainee(coachId: string, traineeId: string, planId: string, token: string): Promise<void> {
+    console.log('🔄 CACHED API - Assigning plan via API service:', { coachId, traineeId, planId });
+    
     await apiService.assignPlanToTrainee(coachId, traineeId, planId, token);
+    
+    console.log('✅ CACHED API - Plan assigned successfully, invalidating trainees cache');
     
     // Invalidate trainees cache to force refresh (since assignments changed)
     cacheService.remove(coachId, CACHE_KEYS.TRAINEES);
+    
+    console.log('🗑️ CACHED API - Trainees cache invalidated');
   }
 
   // Trainee Progress

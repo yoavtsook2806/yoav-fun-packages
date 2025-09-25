@@ -154,7 +154,10 @@ export const assignPlan = async (
     const trainerId = event.pathParameters?.trainerId;
     const planId = event.pathParameters?.planId;
     
+    console.log('🎯 ASSIGN PLAN - Received request:', { coachId, trainerId, planId });
+    
     if (!coachId || !trainerId || !planId) {
+      console.log('❌ ASSIGN PLAN - Missing parameters');
       return {
         statusCode: 400,
         headers,
@@ -165,15 +168,21 @@ export const assignPlan = async (
       };
     }
 
-    // TODO: Verify JWT token and check if coach exists and is valid
-
+    console.log('🔍 ASSIGN PLAN - Fetching trainer and plan...');
+    
     // Security check: Verify that both the trainer and plan belong to the requesting coach
     const [trainer, plan] = await Promise.all([
       db.getTrainer(trainerId),
       db.getTrainingPlan(planId)
     ]);
 
+    console.log('📊 ASSIGN PLAN - Fetched data:', {
+      trainer: trainer ? { trainerId: trainer.trainerId, coachId: trainer.coachId, currentPlans: trainer.plans } : null,
+      plan: plan ? { planId: plan.planId, coachId: plan.coachId, name: plan.name } : null
+    });
+
     if (!trainer) {
+      console.log('❌ ASSIGN PLAN - Trainer not found');
       return {
         statusCode: 404,
         headers,
@@ -185,6 +194,7 @@ export const assignPlan = async (
     }
 
     if (!plan) {
+      console.log('❌ ASSIGN PLAN - Plan not found');
       return {
         statusCode: 404,
         headers,
@@ -196,6 +206,7 @@ export const assignPlan = async (
     }
 
     if (trainer.coachId !== coachId) {
+      console.log('❌ ASSIGN PLAN - Trainer does not belong to coach');
       return {
         statusCode: 403,
         headers,
@@ -207,6 +218,7 @@ export const assignPlan = async (
     }
 
     if (plan.coachId !== coachId) {
+      console.log('❌ ASSIGN PLAN - Plan does not belong to coach');
       return {
         statusCode: 403,
         headers,
@@ -218,20 +230,31 @@ export const assignPlan = async (
     }
 
     // Add planId to trainer's plans array (last one is current)
-    const updatedPlans = trainer.plans ? [...trainer.plans, planId] : [planId];
+    const currentPlans = trainer.plans || [];
+    const updatedPlans = [...currentPlans, planId];
     const updatedTrainer = {
       ...trainer,
       plans: updatedPlans
     };
 
-    await db.saveTrainer(updatedTrainer);
+    console.log('💾 ASSIGN PLAN - Updating trainer:', {
+      trainerId: trainer.trainerId,
+      oldPlans: currentPlans,
+      newPlans: updatedPlans
+    });
+
+    const saveResult = await db.saveTrainer(updatedTrainer);
+    console.log('✅ ASSIGN PLAN - Save result:', saveResult);
 
     const response = {
       trainerId,
       planId,
       assignedAt: new Date().toISOString(),
-      currentPlan: planId
+      currentPlan: planId,
+      allPlans: updatedPlans
     };
+
+    console.log('🎉 ASSIGN PLAN - Success response:', response);
 
     return {
       statusCode: 200,
@@ -239,7 +262,7 @@ export const assignPlan = async (
       body: JSON.stringify(response)
     };
   } catch (error) {
-    console.error('Error assigning plan:', error);
+    console.error('❌ ASSIGN PLAN - Error:', error);
     return {
       statusCode: 500,
       headers,
