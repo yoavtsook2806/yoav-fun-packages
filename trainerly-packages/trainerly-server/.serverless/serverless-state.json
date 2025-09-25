@@ -8,10 +8,10 @@
       "name": "aws",
       "runtime": "nodejs18.x",
       "region": "eu-central-1",
-      "stage": "prod",
+      "stage": "dev",
       "environment": {
-        "STAGE": "prod",
-        "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+        "STAGE": "dev",
+        "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
         "DYNAMODB_ENDPOINT": "",
         "IS_LOCAL": "false"
       },
@@ -28,7 +28,7 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem"
               ],
-              "Resource": "arn:aws:dynamodb:eu-central-1:*:table/matan-trainings-server-prod-*"
+              "Resource": "arn:aws:dynamodb:eu-central-1:*:table/matan-trainings-server-dev-*"
             }
           ]
         }
@@ -110,181 +110,181 @@
           "HealthLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-health"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-health"
             }
           },
           "CheckNicknameLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-checkNickname"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-checkNickname"
             }
           },
           "CreateCoachLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createCoach"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createCoach"
             }
           },
           "LoginCoachLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-loginCoach"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-loginCoach"
             }
           },
           "GetCoachLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getCoach"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getCoach"
             }
           },
           "UpdateCoachLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-updateCoach"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-updateCoach"
             }
           },
           "CreateTrainerLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createTrainer"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createTrainer"
             }
           },
           "ListTrainersLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-listTrainers"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listTrainers"
             }
           },
           "GetTrainerLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTrainer"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainer"
             }
           },
           "IdentifyTrainerLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-identifyTrainer"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-identifyTrainer"
             }
           },
           "CreateExerciseLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createExercise"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createExercise"
             }
           },
           "ListExercisesLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-listExercises"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listExercises"
             }
           },
           "CreatePlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createPlan"
             }
           },
           "ListPlansLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-listPlans"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-listPlans"
             }
           },
           "AssignPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-assignPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-assignPlan"
             }
           },
           "GetTrainerPlansLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTrainerPlans"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainerPlans"
             }
           },
           "CreateProgressLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createProgress"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createProgress"
             }
           },
           "GetTrainerProgressLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTrainerProgress"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainerProgress"
             }
           },
           "GetCoachViewProgressLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getCoachViewProgress"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getCoachViewProgress"
             }
           },
           "ClearDatabaseLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-clearDatabase"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-clearDatabase"
             }
           },
           "GetAdminExercisesLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getAdminExercises"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getAdminExercises"
             }
           },
           "GetAdminTrainingPlansLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getAdminTrainingPlans"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getAdminTrainingPlans"
             }
           },
           "CopyAdminExerciseLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-copyAdminExercise"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-copyAdminExercise"
             }
           },
           "CopyAdminTrainingPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-copyAdminTrainingPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-copyAdminTrainingPlan"
             }
           },
           "CreateCustomTrainingPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-createCustomTrainingPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-createCustomTrainingPlan"
             }
           },
           "GetTraineeCustomPlansLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTraineeCustomPlans"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTraineeCustomPlans"
             }
           },
           "MakeCustomPlanGenericLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-makeCustomPlanGeneric"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-makeCustomPlanGeneric"
             }
           },
           "GetTrainingPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-getTrainingPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-getTrainingPlan"
             }
           },
           "UpdateTrainingPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-updateTrainingPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-updateTrainingPlan"
             }
           },
           "DeleteTrainingPlanLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/matan-trainings-server-prod-deleteTrainingPlan"
+              "LogGroupName": "/aws/lambda/matan-trainings-server-dev-deleteTrainingPlan"
             }
           },
           "IamRoleLambdaExecution": {
@@ -313,7 +313,7 @@
                       "-",
                       [
                         "matan-trainings-server",
-                        "prod",
+                        "dev",
                         "lambda"
                       ]
                     ]
@@ -330,7 +330,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-prod*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-dev*:*"
                           }
                         ]
                       },
@@ -341,7 +341,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-prod*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matan-trainings-server-dev*:*:*"
                           }
                         ]
                       },
@@ -358,7 +358,7 @@
                   "-",
                   [
                     "matan-trainings-server",
-                    "prod",
+                    "dev",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -375,17 +375,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/health.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/health.zip"
               },
               "Handler": "src/handlers/health.handler",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-health",
+              "FunctionName": "matan-trainings-server-dev-health",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -408,17 +408,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/checkNickname.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/checkNickname.zip"
               },
               "Handler": "src/handlers/coaches.checkNickname",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-checkNickname",
+              "FunctionName": "matan-trainings-server-dev-checkNickname",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -441,17 +441,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createCoach.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createCoach.zip"
               },
               "Handler": "src/handlers/coaches.createCoach",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createCoach",
+              "FunctionName": "matan-trainings-server-dev-createCoach",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -474,17 +474,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/loginCoach.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/loginCoach.zip"
               },
               "Handler": "src/handlers/coaches.loginCoach",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-loginCoach",
+              "FunctionName": "matan-trainings-server-dev-loginCoach",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -507,17 +507,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getCoach.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getCoach.zip"
               },
               "Handler": "src/handlers/coaches.getCoach",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getCoach",
+              "FunctionName": "matan-trainings-server-dev-getCoach",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -540,17 +540,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/updateCoach.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/updateCoach.zip"
               },
               "Handler": "src/handlers/coaches.updateCoach",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-updateCoach",
+              "FunctionName": "matan-trainings-server-dev-updateCoach",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -573,17 +573,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createTrainer.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createTrainer.zip"
               },
               "Handler": "src/handlers/trainers.createTrainer",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createTrainer",
+              "FunctionName": "matan-trainings-server-dev-createTrainer",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -606,17 +606,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/listTrainers.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/listTrainers.zip"
               },
               "Handler": "src/handlers/trainers.listTrainers",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-listTrainers",
+              "FunctionName": "matan-trainings-server-dev-listTrainers",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -639,17 +639,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getTrainer.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getTrainer.zip"
               },
               "Handler": "src/handlers/trainers.getTrainer",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getTrainer",
+              "FunctionName": "matan-trainings-server-dev-getTrainer",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -672,17 +672,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/identifyTrainer.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/identifyTrainer.zip"
               },
               "Handler": "src/handlers/trainers.identifyTrainer",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-identifyTrainer",
+              "FunctionName": "matan-trainings-server-dev-identifyTrainer",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -705,17 +705,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createExercise.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createExercise.zip"
               },
               "Handler": "src/handlers/exercises.createExercise",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createExercise",
+              "FunctionName": "matan-trainings-server-dev-createExercise",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -738,17 +738,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/listExercises.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/listExercises.zip"
               },
               "Handler": "src/handlers/exercises.listExercises",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-listExercises",
+              "FunctionName": "matan-trainings-server-dev-listExercises",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -771,17 +771,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createPlan.zip"
               },
               "Handler": "src/handlers/plans.createPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createPlan",
+              "FunctionName": "matan-trainings-server-dev-createPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -804,17 +804,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/listPlans.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/listPlans.zip"
               },
               "Handler": "src/handlers/plans.listPlans",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-listPlans",
+              "FunctionName": "matan-trainings-server-dev-listPlans",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -837,17 +837,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/assignPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/assignPlan.zip"
               },
               "Handler": "src/handlers/plans.assignPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-assignPlan",
+              "FunctionName": "matan-trainings-server-dev-assignPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -870,17 +870,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getTrainerPlans.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getTrainerPlans.zip"
               },
               "Handler": "src/handlers/plans.getTrainerPlans",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getTrainerPlans",
+              "FunctionName": "matan-trainings-server-dev-getTrainerPlans",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -903,17 +903,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createProgress.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createProgress.zip"
               },
               "Handler": "src/handlers/progress.createProgress",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createProgress",
+              "FunctionName": "matan-trainings-server-dev-createProgress",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -936,17 +936,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getTrainerProgress.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getTrainerProgress.zip"
               },
               "Handler": "src/handlers/progress.getTrainerProgress",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getTrainerProgress",
+              "FunctionName": "matan-trainings-server-dev-getTrainerProgress",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -969,17 +969,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getCoachViewProgress.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getCoachViewProgress.zip"
               },
               "Handler": "src/handlers/progress.getCoachViewProgress",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getCoachViewProgress",
+              "FunctionName": "matan-trainings-server-dev-getCoachViewProgress",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1002,17 +1002,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/clearDatabase.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/clearDatabase.zip"
               },
               "Handler": "src/handlers/admin.clearDatabase",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-clearDatabase",
+              "FunctionName": "matan-trainings-server-dev-clearDatabase",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1035,17 +1035,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getAdminExercises.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getAdminExercises.zip"
               },
               "Handler": "src/handlers/admin.getAdminExercises",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getAdminExercises",
+              "FunctionName": "matan-trainings-server-dev-getAdminExercises",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1068,17 +1068,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getAdminTrainingPlans.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getAdminTrainingPlans.zip"
               },
               "Handler": "src/handlers/admin.getAdminTrainingPlans",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getAdminTrainingPlans",
+              "FunctionName": "matan-trainings-server-dev-getAdminTrainingPlans",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1101,17 +1101,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/copyAdminExercise.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/copyAdminExercise.zip"
               },
               "Handler": "src/handlers/coaches.copyAdminExercise",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-copyAdminExercise",
+              "FunctionName": "matan-trainings-server-dev-copyAdminExercise",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1134,17 +1134,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/copyAdminTrainingPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/copyAdminTrainingPlan.zip"
               },
               "Handler": "src/handlers/coaches.copyAdminTrainingPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-copyAdminTrainingPlan",
+              "FunctionName": "matan-trainings-server-dev-copyAdminTrainingPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1167,17 +1167,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/createCustomTrainingPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/createCustomTrainingPlan.zip"
               },
               "Handler": "src/handlers/trainers.createCustomTrainingPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-createCustomTrainingPlan",
+              "FunctionName": "matan-trainings-server-dev-createCustomTrainingPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1200,17 +1200,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getTraineeCustomPlans.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getTraineeCustomPlans.zip"
               },
               "Handler": "src/handlers/trainers.getTraineeCustomPlans",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getTraineeCustomPlans",
+              "FunctionName": "matan-trainings-server-dev-getTraineeCustomPlans",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1233,17 +1233,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/makeCustomPlanGeneric.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/makeCustomPlanGeneric.zip"
               },
               "Handler": "src/handlers/plans.makeCustomPlanGeneric",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-makeCustomPlanGeneric",
+              "FunctionName": "matan-trainings-server-dev-makeCustomPlanGeneric",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1266,17 +1266,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/getTrainingPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/getTrainingPlan.zip"
               },
               "Handler": "src/handlers/plans.getTrainingPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-getTrainingPlan",
+              "FunctionName": "matan-trainings-server-dev-getTrainingPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1299,17 +1299,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/updateTrainingPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/updateTrainingPlan.zip"
               },
               "Handler": "src/handlers/plans.updateTrainingPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-updateTrainingPlan",
+              "FunctionName": "matan-trainings-server-dev-updateTrainingPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1332,17 +1332,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z/deleteTrainingPlan.zip"
+                "S3Key": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z/deleteTrainingPlan.zip"
               },
               "Handler": "src/handlers/plans.deleteTrainingPlan",
               "Runtime": "nodejs18.x",
-              "FunctionName": "matan-trainings-server-prod-deleteTrainingPlan",
+              "FunctionName": "matan-trainings-server-dev-deleteTrainingPlan",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "STAGE": "prod",
-                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-prod",
+                  "STAGE": "dev",
+                  "DYNAMODB_TABLE_PREFIX": "matan-trainings-server-dev",
                   "DYNAMODB_ENDPOINT": "",
                   "IS_LOCAL": "false"
                 }
@@ -1358,310 +1358,310 @@
               "DeleteTrainingPlanLogGroup"
             ]
           },
-          "CreateCoachLambdaVersionCQS2ZdrDYfhQcyhCC3k7GA6MzOJE7o4RH0BVWKD9qZ0": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "CreateCoachLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "HealthLambdaVersionXRvJEKaeTYc9tLLHV3BwBzhyceDjU9qacRrWjRYVmQ": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "HealthLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "LoginCoachLambdaVersionEGT8FeTb4zP5vu57OsjyzThkZvHkinyz2wT1VD1I": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "LoginCoachLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "GetCoachLambdaVersionFt3m8zEr3nGt4VfRdkNsX18t0jwowdNJyBDklCrZIs": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "GetCoachLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "CheckNicknameLambdaVersionC43gcRVnfOxEpYAqNUry4pPiR3elJZKZgOPlZ6yNg": {
+          "CheckNicknameLambdaVersion9EQxv5veapR2c8UyuZT9WYYlCYlB8imgoCU8jSEfeqI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CheckNicknameLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "UpdateCoachLambdaVersionUNZvSmR4ffe5gYGnDPy4qeALimGs24fhazoEOYUmU": {
+          "HealthLambdaVersionzvNMCym4LOUe9cqd7vu0NlZFWaea5H6koTimhgeAX4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "HealthLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "LoginCoachLambdaVersionkMVGPpCqSBtSToU9FP9jitIgB2Lkuj5p7VQtpeRFQ": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "LoginCoachLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "GetCoachLambdaVersionaARK7vkzR0enicuaFmlhvYYGNIqM4ACUeYT9Sbvtc": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetCoachLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "UpdateCoachLambdaVersionvBTRs2f3ojUzsYfm4bNFKjzVoGfefMd8h66b8ZO1DU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateCoachLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "CreateTrainerLambdaVersionFLQZWZJBNMH6waMYyKbzsvP3jRFGZxHWHy6EpcZh0k": {
+          "CreateTrainerLambdaVersionEs061gajmR7SiuB9YydK3tCpxOprL0InwghmAZblMLQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateTrainerLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "ListTrainersLambdaVersionzBUoxy679zzZEjnUWxrdMIOvvJpM8KXmJ4Bau3Oy1w8": {
+          "CreateCoachLambdaVersionUjOusYPOPlRhjDiSHkjKz6CjpHVZXOzXM1KGfAG2g": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateCoachLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "ListTrainersLambdaVersionqeWOnqQHrOUabqxSoPGCU573RpItqXYTgA4Hig3as": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ListTrainersLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "GetTrainerLambdaVersionX4V1P6l32YetFu49sRKtd6vEk7RqUrByHJJ1Bh0rJ0": {
+          "GetTrainerLambdaVersioniX109Ews7ry6h3t3KIqrXNhwIHMADns4rbd9BxMw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetTrainerLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "IdentifyTrainerLambdaVersion9CvnJMWeTZswsTLdlcfsSvFnd8GJC7WDLpEfsQ1Tc": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "IdentifyTrainerLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "CreateExerciseLambdaVersion1GNMvk98tmKpa2WVUKFMsutwDHixGva5BpiPlPtluS8": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "CreateExerciseLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "CreatePlanLambdaVersion4JcySuMLoiwuFXYmE1HdwXwYqK78ayet25tb2wnvn4Y": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "CreatePlanLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "AssignPlanLambdaVersionQkDBx00TNijDpzbHknm1F5xZjxdZJmRebrCvs0": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "AssignPlanLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "ListExercisesLambdaVersiontOCwE7oTgNPF8BSNytXnZmDBcQDsYTHplYsXblP0s": {
+          "ListExercisesLambdaVersionmc9BGn7kc2YBfjZsh07IdFgioy2OKg5vnPUMsJuXx0U": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ListExercisesLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "ListPlansLambdaVersionhthLLfqkFoWMKwPkMO5twweHhgfH5MRsSTWziNlr0": {
+          "CreateExerciseLambdaVersionq2UZZ3KQ2xfaj60KlKRLQLzjde7HuGSxFfRtPLDbQyM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "ListPlansLambdaFunction"
+                "Ref": "CreateExerciseLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "GetTrainerPlansLambdaVersion0GHrP8rKx1jbXLdvoyW88Zqj068YfQj0QpH8KntoQ": {
+          "IdentifyTrainerLambdaVersionw8M2AsCebdKRrFVjx1OyD4fcgSyPn2hsW5PX7rbBnQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "GetTrainerPlansLambdaFunction"
+                "Ref": "IdentifyTrainerLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "CreateProgressLambdaVersionYUtg2G5a85LcRg0sorGOZrcaHlx6fJItOBnnlQw5jQ": {
+          "CreatePlanLambdaVersionQ9HYsq1KzpLcjaM8UEjGzuUsul9Jzxu2LRsawcEDU": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreatePlanLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "CreateProgressLambdaVersion08t2bAYz4yTuB63bTC8yDJslbGhfl8Aa2EaDtnyIBg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateProgressLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "GetTrainerProgressLambdaVersionMebEYzUjt69jDxQrkfRHtyFcUO3z9h6MOrZxaaTFU": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "GetTrainerProgressLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "GetCoachViewProgressLambdaVersionkaVrXIE1pp7OJVDXfATC2ViXRagxxZVFLYvqL23sA": {
+          "GetCoachViewProgressLambdaVersiong2pB3xcl88qL9lACZFbvlkWoEoRphlVDGt0jEGnDEQU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetCoachViewProgressLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "ClearDatabaseLambdaVersionL3q98lFUIu7hV1tJ9As0TtoWU9mSOiWNPE1A2294": {
+          "ListPlansLambdaVersionfQu6Yk0wp5GA5TjHDqIxpLfprvGoDMUZS6Tsw5Weg": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ListPlansLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "AssignPlanLambdaVersionX93Qj9hsO44yx4GQe4ejSsnsNugknkdT43kNGnQ6dzI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "AssignPlanLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "ClearDatabaseLambdaVersiont2ANHIaJgsuD6jnqtyD0qOWpATuGNCAzcFRGLLv4A": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ClearDatabaseLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "GetAdminExercisesLambdaVersionRArgjcEcaGDxbSdMnpktpgYkPYApbvZbRl3CMFIVj0": {
+          "GetTrainerProgressLambdaVersionKQx6vaaoEZkUfItp64OtXykx1SiLKzZwn51YyTNwg": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetTrainerProgressLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "GetAdminExercisesLambdaVersionSt7kbnmKvrYrkVpPQAWorApH3OJUBWCI28wtbcjImk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAdminExercisesLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "GetAdminTrainingPlansLambdaVersion4OXBqO4niSeJXyNqK075kqGqqCnaIScXbXdzQsUKvI": {
+          "GetTrainerPlansLambdaVersionoZSgN3WeYidmgWOf73yZ4Wo1mIINY1Z8yfZroo8co": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetTrainerPlansLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "GetAdminTrainingPlansLambdaVersiontoY8Yqg3j3pHk8x1xim8CTi31jc6Bx8hqkm1rlhx8c": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAdminTrainingPlansLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "CopyAdminTrainingPlanLambdaVersioncgFNVSVJWIo038SfmWXtivb9LQSkCMxNuARFI8z14": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "CopyAdminTrainingPlanLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "GetTraineeCustomPlansLambdaVersione2ZAJufoG0Wg9zIqcGRQU8V8gLspNB2tzH7p2oe8": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "GetTraineeCustomPlansLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "CopyAdminExerciseLambdaVersionMmQyaXBkNuwgFfStdycNspl7SM7RGiEEX5J1TStgc": {
+          "CopyAdminExerciseLambdaVersionJPYF4JZUrw0wn6UyYfg7iFTLs6JBy6HePmMolTqZaE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CopyAdminExerciseLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "CreateCustomTrainingPlanLambdaVersionOeP1EYCBkHCDq0mlHWAaDpE2wZB0jjbUxPyWhzcrw": {
+          "GetTraineeCustomPlansLambdaVersionrEJmXyjRPo6Q1htZEXdFlNpbwi4rXhH0ARNxsZfykws": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetTraineeCustomPlansLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "CreateCustomTrainingPlanLambdaVersionaac6ziV7VXdlWjwyoaxcytCoqpcUWcg60c3GMIhjI4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateCustomTrainingPlanLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "MakeCustomPlanGenericLambdaVersionYf7X41iWrNvC85JyScUvHhWhzlORvi77ByFl8jsMw": {
+          "CopyAdminTrainingPlanLambdaVersionGZ017KZZAer4j9Ds6VSyq1e8cXlQwgK7ojDe82Tt4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CopyAdminTrainingPlanLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "MakeCustomPlanGenericLambdaVersion0QW4NZR7TqQkOkfd1LS6IJtvPyUtRrv0wCXggGOF3M": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MakeCustomPlanGenericLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
-          "DeleteTrainingPlanLambdaVersionhs9Pae3AdY5K2JkmqM7SPw5D63D4uskSyLD49xXoPOc": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "DeleteTrainingPlanLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "UpdateTrainingPlanLambdaVersionnx4ck9e6iWOtkA0lVdZ9Jf1pkqjyCa405DnMMHZTBE": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "UpdateTrainingPlanLambdaFunction"
-              },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
-            }
-          },
-          "GetTrainingPlanLambdaVersion0ggOjW90nPPlnV8s33UtJfbPT4l1cTlIH6aJy5tgs": {
+          "GetTrainingPlanLambdaVersion0oiu1QF3KZxqklfd1XN0Vfgw5gDAy8epIy0cTkj10": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetTrainingPlanLambdaFunction"
               },
-              "CodeSha256": "xn19DvrTkgX9P5rmSGlzhOIbBbX3DUOxOWPrEFftHf0="
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "DeleteTrainingPlanLambdaVersiondLveo6eSkm2lPA7YoJvFyfCnUaTE6ZqWRpPryYnJA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeleteTrainingPlanLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
+            }
+          },
+          "UpdateTrainingPlanLambdaVersionT6lbtzXm5i5l1gy2dkvq9pTVPZQznksZ5yvgxNZIHA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateTrainingPlanLambdaFunction"
+              },
+              "CodeSha256": "tvrWIdhU24R4I4KceWr1bSTjDrwXhK/vws4Vmf7in+c="
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "prod-matan-trainings-server",
+              "Name": "dev-matan-trainings-server",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -4523,13 +4523,13 @@
               "DeleteTrainingPlanLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1758817393178": {
+          "ApiGatewayDeployment1758817546742": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               },
-              "StageName": "prod"
+              "StageName": "dev"
             },
             "DependsOn": [
               "ApiGatewayMethodHealthOptions",
@@ -5700,7 +5700,7 @@
           "CoachesTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-coaches",
+              "TableName": "matan-trainings-server-dev-coaches",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "coachId",
@@ -5719,7 +5719,7 @@
           "TrainersTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-trainers",
+              "TableName": "matan-trainings-server-dev-trainers",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "trainerId",
@@ -5738,7 +5738,7 @@
           "ExercisesTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-exercises",
+              "TableName": "matan-trainings-server-dev-exercises",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "exerciseId",
@@ -5757,7 +5757,7 @@
           "PlansTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-plans",
+              "TableName": "matan-trainings-server-dev-plans",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "planId",
@@ -5776,7 +5776,7 @@
           "PlanAssignmentsTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-plan-assignments",
+              "TableName": "matan-trainings-server-dev-plan-assignments",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "assignmentId",
@@ -5795,7 +5795,7 @@
           "ProgressTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
-              "TableName": "matan-trainings-server-prod-progress",
+              "TableName": "matan-trainings-server-dev-progress",
               "AttributeDefinitions": [
                 {
                   "AttributeName": "progressId",
@@ -5818,277 +5818,277 @@
               "Ref": "ServerlessDeploymentBucket"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ServerlessDeploymentBucketName"
-            }
-          },
-          "CreateCoachLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "CreateCoachLambdaVersionCQS2ZdrDYfhQcyhCC3k7GA6MzOJE7o4RH0BVWKD9qZ0"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreateCoachLambdaFunctionQualifiedArn"
-            }
-          },
-          "HealthLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "HealthLambdaVersionXRvJEKaeTYc9tLLHV3BwBzhyceDjU9qacRrWjRYVmQ"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-HealthLambdaFunctionQualifiedArn"
-            }
-          },
-          "LoginCoachLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "LoginCoachLambdaVersionEGT8FeTb4zP5vu57OsjyzThkZvHkinyz2wT1VD1I"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-LoginCoachLambdaFunctionQualifiedArn"
-            }
-          },
-          "GetCoachLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "GetCoachLambdaVersionFt3m8zEr3nGt4VfRdkNsX18t0jwowdNJyBDklCrZIs"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetCoachLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-ServerlessDeploymentBucketName"
             }
           },
           "CheckNicknameLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CheckNicknameLambdaVersionC43gcRVnfOxEpYAqNUry4pPiR3elJZKZgOPlZ6yNg"
+              "Ref": "CheckNicknameLambdaVersion9EQxv5veapR2c8UyuZT9WYYlCYlB8imgoCU8jSEfeqI"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-CheckNicknameLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CheckNicknameLambdaFunctionQualifiedArn"
+            }
+          },
+          "HealthLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "HealthLambdaVersionzvNMCym4LOUe9cqd7vu0NlZFWaea5H6koTimhgeAX4"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-HealthLambdaFunctionQualifiedArn"
+            }
+          },
+          "LoginCoachLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "LoginCoachLambdaVersionkMVGPpCqSBtSToU9FP9jitIgB2Lkuj5p7VQtpeRFQ"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-LoginCoachLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetCoachLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetCoachLambdaVersionaARK7vkzR0enicuaFmlhvYYGNIqM4ACUeYT9Sbvtc"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-GetCoachLambdaFunctionQualifiedArn"
             }
           },
           "UpdateCoachLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateCoachLambdaVersionUNZvSmR4ffe5gYGnDPy4qeALimGs24fhazoEOYUmU"
+              "Ref": "UpdateCoachLambdaVersionvBTRs2f3ojUzsYfm4bNFKjzVoGfefMd8h66b8ZO1DU"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-UpdateCoachLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-UpdateCoachLambdaFunctionQualifiedArn"
             }
           },
           "CreateTrainerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateTrainerLambdaVersionFLQZWZJBNMH6waMYyKbzsvP3jRFGZxHWHy6EpcZh0k"
+              "Ref": "CreateTrainerLambdaVersionEs061gajmR7SiuB9YydK3tCpxOprL0InwghmAZblMLQ"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreateTrainerLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CreateTrainerLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreateCoachLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateCoachLambdaVersionUjOusYPOPlRhjDiSHkjKz6CjpHVZXOzXM1KGfAG2g"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-CreateCoachLambdaFunctionQualifiedArn"
             }
           },
           "ListTrainersLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ListTrainersLambdaVersionzBUoxy679zzZEjnUWxrdMIOvvJpM8KXmJ4Bau3Oy1w8"
+              "Ref": "ListTrainersLambdaVersionqeWOnqQHrOUabqxSoPGCU573RpItqXYTgA4Hig3as"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ListTrainersLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-ListTrainersLambdaFunctionQualifiedArn"
             }
           },
           "GetTrainerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetTrainerLambdaVersionX4V1P6l32YetFu49sRKtd6vEk7RqUrByHJJ1Bh0rJ0"
+              "Ref": "GetTrainerLambdaVersioniX109Ews7ry6h3t3KIqrXNhwIHMADns4rbd9BxMw"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetTrainerLambdaFunctionQualifiedArn"
-            }
-          },
-          "IdentifyTrainerLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "IdentifyTrainerLambdaVersion9CvnJMWeTZswsTLdlcfsSvFnd8GJC7WDLpEfsQ1Tc"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-IdentifyTrainerLambdaFunctionQualifiedArn"
-            }
-          },
-          "CreateExerciseLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "CreateExerciseLambdaVersion1GNMvk98tmKpa2WVUKFMsutwDHixGva5BpiPlPtluS8"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreateExerciseLambdaFunctionQualifiedArn"
-            }
-          },
-          "CreatePlanLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "CreatePlanLambdaVersion4JcySuMLoiwuFXYmE1HdwXwYqK78ayet25tb2wnvn4Y"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreatePlanLambdaFunctionQualifiedArn"
-            }
-          },
-          "AssignPlanLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "AssignPlanLambdaVersionQkDBx00TNijDpzbHknm1F5xZjxdZJmRebrCvs0"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-AssignPlanLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-GetTrainerLambdaFunctionQualifiedArn"
             }
           },
           "ListExercisesLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ListExercisesLambdaVersiontOCwE7oTgNPF8BSNytXnZmDBcQDsYTHplYsXblP0s"
+              "Ref": "ListExercisesLambdaVersionmc9BGn7kc2YBfjZsh07IdFgioy2OKg5vnPUMsJuXx0U"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ListExercisesLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-ListExercisesLambdaFunctionQualifiedArn"
             }
           },
-          "ListPlansLambdaFunctionQualifiedArn": {
+          "CreateExerciseLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ListPlansLambdaVersionhthLLfqkFoWMKwPkMO5twweHhgfH5MRsSTWziNlr0"
+              "Ref": "CreateExerciseLambdaVersionq2UZZ3KQ2xfaj60KlKRLQLzjde7HuGSxFfRtPLDbQyM"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ListPlansLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CreateExerciseLambdaFunctionQualifiedArn"
             }
           },
-          "GetTrainerPlansLambdaFunctionQualifiedArn": {
+          "IdentifyTrainerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetTrainerPlansLambdaVersion0GHrP8rKx1jbXLdvoyW88Zqj068YfQj0QpH8KntoQ"
+              "Ref": "IdentifyTrainerLambdaVersionw8M2AsCebdKRrFVjx1OyD4fcgSyPn2hsW5PX7rbBnQ"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetTrainerPlansLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-IdentifyTrainerLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreatePlanLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreatePlanLambdaVersionQ9HYsq1KzpLcjaM8UEjGzuUsul9Jzxu2LRsawcEDU"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-CreatePlanLambdaFunctionQualifiedArn"
             }
           },
           "CreateProgressLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateProgressLambdaVersionYUtg2G5a85LcRg0sorGOZrcaHlx6fJItOBnnlQw5jQ"
+              "Ref": "CreateProgressLambdaVersion08t2bAYz4yTuB63bTC8yDJslbGhfl8Aa2EaDtnyIBg"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreateProgressLambdaFunctionQualifiedArn"
-            }
-          },
-          "GetTrainerProgressLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "GetTrainerProgressLambdaVersionMebEYzUjt69jDxQrkfRHtyFcUO3z9h6MOrZxaaTFU"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetTrainerProgressLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CreateProgressLambdaFunctionQualifiedArn"
             }
           },
           "GetCoachViewProgressLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetCoachViewProgressLambdaVersionkaVrXIE1pp7OJVDXfATC2ViXRagxxZVFLYvqL23sA"
+              "Ref": "GetCoachViewProgressLambdaVersiong2pB3xcl88qL9lACZFbvlkWoEoRphlVDGt0jEGnDEQU"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetCoachViewProgressLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-GetCoachViewProgressLambdaFunctionQualifiedArn"
+            }
+          },
+          "ListPlansLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ListPlansLambdaVersionfQu6Yk0wp5GA5TjHDqIxpLfprvGoDMUZS6Tsw5Weg"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-ListPlansLambdaFunctionQualifiedArn"
+            }
+          },
+          "AssignPlanLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "AssignPlanLambdaVersionX93Qj9hsO44yx4GQe4ejSsnsNugknkdT43kNGnQ6dzI"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-AssignPlanLambdaFunctionQualifiedArn"
             }
           },
           "ClearDatabaseLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ClearDatabaseLambdaVersionL3q98lFUIu7hV1tJ9As0TtoWU9mSOiWNPE1A2294"
+              "Ref": "ClearDatabaseLambdaVersiont2ANHIaJgsuD6jnqtyD0qOWpATuGNCAzcFRGLLv4A"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ClearDatabaseLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-ClearDatabaseLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetTrainerProgressLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetTrainerProgressLambdaVersionKQx6vaaoEZkUfItp64OtXykx1SiLKzZwn51YyTNwg"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-GetTrainerProgressLambdaFunctionQualifiedArn"
             }
           },
           "GetAdminExercisesLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAdminExercisesLambdaVersionRArgjcEcaGDxbSdMnpktpgYkPYApbvZbRl3CMFIVj0"
+              "Ref": "GetAdminExercisesLambdaVersionSt7kbnmKvrYrkVpPQAWorApH3OJUBWCI28wtbcjImk"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetAdminExercisesLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-GetAdminExercisesLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetTrainerPlansLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetTrainerPlansLambdaVersionoZSgN3WeYidmgWOf73yZ4Wo1mIINY1Z8yfZroo8co"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-GetTrainerPlansLambdaFunctionQualifiedArn"
             }
           },
           "GetAdminTrainingPlansLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAdminTrainingPlansLambdaVersion4OXBqO4niSeJXyNqK075kqGqqCnaIScXbXdzQsUKvI"
+              "Ref": "GetAdminTrainingPlansLambdaVersiontoY8Yqg3j3pHk8x1xim8CTi31jc6Bx8hqkm1rlhx8c"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetAdminTrainingPlansLambdaFunctionQualifiedArn"
-            }
-          },
-          "CopyAdminTrainingPlanLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "CopyAdminTrainingPlanLambdaVersioncgFNVSVJWIo038SfmWXtivb9LQSkCMxNuARFI8z14"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-CopyAdminTrainingPlanLambdaFunctionQualifiedArn"
-            }
-          },
-          "GetTraineeCustomPlansLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "GetTraineeCustomPlansLambdaVersione2ZAJufoG0Wg9zIqcGRQU8V8gLspNB2tzH7p2oe8"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetTraineeCustomPlansLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-GetAdminTrainingPlansLambdaFunctionQualifiedArn"
             }
           },
           "CopyAdminExerciseLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CopyAdminExerciseLambdaVersionMmQyaXBkNuwgFfStdycNspl7SM7RGiEEX5J1TStgc"
+              "Ref": "CopyAdminExerciseLambdaVersionJPYF4JZUrw0wn6UyYfg7iFTLs6JBy6HePmMolTqZaE"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-CopyAdminExerciseLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CopyAdminExerciseLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetTraineeCustomPlansLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetTraineeCustomPlansLambdaVersionrEJmXyjRPo6Q1htZEXdFlNpbwi4rXhH0ARNxsZfykws"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-GetTraineeCustomPlansLambdaFunctionQualifiedArn"
             }
           },
           "CreateCustomTrainingPlanLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateCustomTrainingPlanLambdaVersionOeP1EYCBkHCDq0mlHWAaDpE2wZB0jjbUxPyWhzcrw"
+              "Ref": "CreateCustomTrainingPlanLambdaVersionaac6ziV7VXdlWjwyoaxcytCoqpcUWcg60c3GMIhjI4"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-CreateCustomTrainingPlanLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-CreateCustomTrainingPlanLambdaFunctionQualifiedArn"
+            }
+          },
+          "CopyAdminTrainingPlanLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CopyAdminTrainingPlanLambdaVersionGZ017KZZAer4j9Ds6VSyq1e8cXlQwgK7ojDe82Tt4"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-CopyAdminTrainingPlanLambdaFunctionQualifiedArn"
             }
           },
           "MakeCustomPlanGenericLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MakeCustomPlanGenericLambdaVersionYf7X41iWrNvC85JyScUvHhWhzlORvi77ByFl8jsMw"
+              "Ref": "MakeCustomPlanGenericLambdaVersion0QW4NZR7TqQkOkfd1LS6IJtvPyUtRrv0wCXggGOF3M"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-MakeCustomPlanGenericLambdaFunctionQualifiedArn"
-            }
-          },
-          "DeleteTrainingPlanLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "DeleteTrainingPlanLambdaVersionhs9Pae3AdY5K2JkmqM7SPw5D63D4uskSyLD49xXoPOc"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-DeleteTrainingPlanLambdaFunctionQualifiedArn"
-            }
-          },
-          "UpdateTrainingPlanLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "UpdateTrainingPlanLambdaVersionnx4ck9e6iWOtkA0lVdZ9Jf1pkqjyCa405DnMMHZTBE"
-            },
-            "Export": {
-              "Name": "sls-matan-trainings-server-prod-UpdateTrainingPlanLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-MakeCustomPlanGenericLambdaFunctionQualifiedArn"
             }
           },
           "GetTrainingPlanLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetTrainingPlanLambdaVersion0ggOjW90nPPlnV8s33UtJfbPT4l1cTlIH6aJy5tgs"
+              "Ref": "GetTrainingPlanLambdaVersion0oiu1QF3KZxqklfd1XN0Vfgw5gDAy8epIy0cTkj10"
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-GetTrainingPlanLambdaFunctionQualifiedArn"
+              "Name": "sls-matan-trainings-server-dev-GetTrainingPlanLambdaFunctionQualifiedArn"
+            }
+          },
+          "DeleteTrainingPlanLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeleteTrainingPlanLambdaVersiondLveo6eSkm2lPA7YoJvFyfCnUaTE6ZqWRpPryYnJA"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-DeleteTrainingPlanLambdaFunctionQualifiedArn"
+            }
+          },
+          "UpdateTrainingPlanLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateTrainingPlanLambdaVersionT6lbtzXm5i5l1gy2dkvq9pTVPZQznksZ5yvgxNZIHA"
+            },
+            "Export": {
+              "Name": "sls-matan-trainings-server-dev-UpdateTrainingPlanLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -6109,12 +6109,12 @@
                   {
                     "Ref": "AWS::URLSuffix"
                   },
-                  "/prod"
+                  "/dev"
                 ]
               ]
             },
             "Export": {
-              "Name": "sls-matan-trainings-server-prod-ServiceEndpoint"
+              "Name": "sls-matan-trainings-server-dev-ServiceEndpoint"
             }
           }
         }
@@ -6251,7 +6251,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-health",
+        "name": "matan-trainings-server-dev-health",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6264,7 +6264,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "HealthLambdaVersionXRvJEKaeTYc9tLLHV3BwBzhyceDjU9qacRrWjRYVmQ"
+        "versionLogicalId": "HealthLambdaVersionzvNMCym4LOUe9cqd7vu0NlZFWaea5H6koTimhgeAX4"
       },
       "checkNickname": {
         "handler": "src/handlers/coaches.checkNickname",
@@ -6294,7 +6294,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-checkNickname",
+        "name": "matan-trainings-server-dev-checkNickname",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6307,7 +6307,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CheckNicknameLambdaVersionC43gcRVnfOxEpYAqNUry4pPiR3elJZKZgOPlZ6yNg"
+        "versionLogicalId": "CheckNicknameLambdaVersion9EQxv5veapR2c8UyuZT9WYYlCYlB8imgoCU8jSEfeqI"
       },
       "createCoach": {
         "handler": "src/handlers/coaches.createCoach",
@@ -6336,7 +6336,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createCoach",
+        "name": "matan-trainings-server-dev-createCoach",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6349,7 +6349,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateCoachLambdaVersionCQS2ZdrDYfhQcyhCC3k7GA6MzOJE7o4RH0BVWKD9qZ0"
+        "versionLogicalId": "CreateCoachLambdaVersionUjOusYPOPlRhjDiSHkjKz6CjpHVZXOzXM1KGfAG2g"
       },
       "loginCoach": {
         "handler": "src/handlers/coaches.loginCoach",
@@ -6378,7 +6378,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-loginCoach",
+        "name": "matan-trainings-server-dev-loginCoach",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6391,7 +6391,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "LoginCoachLambdaVersionEGT8FeTb4zP5vu57OsjyzThkZvHkinyz2wT1VD1I"
+        "versionLogicalId": "LoginCoachLambdaVersionkMVGPpCqSBtSToU9FP9jitIgB2Lkuj5p7VQtpeRFQ"
       },
       "getCoach": {
         "handler": "src/handlers/coaches.getCoach",
@@ -6421,7 +6421,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getCoach",
+        "name": "matan-trainings-server-dev-getCoach",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6434,7 +6434,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetCoachLambdaVersionFt3m8zEr3nGt4VfRdkNsX18t0jwowdNJyBDklCrZIs"
+        "versionLogicalId": "GetCoachLambdaVersionaARK7vkzR0enicuaFmlhvYYGNIqM4ACUeYT9Sbvtc"
       },
       "updateCoach": {
         "handler": "src/handlers/coaches.updateCoach",
@@ -6464,7 +6464,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-updateCoach",
+        "name": "matan-trainings-server-dev-updateCoach",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6477,7 +6477,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateCoachLambdaVersionUNZvSmR4ffe5gYGnDPy4qeALimGs24fhazoEOYUmU"
+        "versionLogicalId": "UpdateCoachLambdaVersionvBTRs2f3ojUzsYfm4bNFKjzVoGfefMd8h66b8ZO1DU"
       },
       "createTrainer": {
         "handler": "src/handlers/trainers.createTrainer",
@@ -6507,7 +6507,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createTrainer",
+        "name": "matan-trainings-server-dev-createTrainer",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6520,7 +6520,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateTrainerLambdaVersionFLQZWZJBNMH6waMYyKbzsvP3jRFGZxHWHy6EpcZh0k"
+        "versionLogicalId": "CreateTrainerLambdaVersionEs061gajmR7SiuB9YydK3tCpxOprL0InwghmAZblMLQ"
       },
       "listTrainers": {
         "handler": "src/handlers/trainers.listTrainers",
@@ -6550,7 +6550,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-listTrainers",
+        "name": "matan-trainings-server-dev-listTrainers",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6563,7 +6563,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ListTrainersLambdaVersionzBUoxy679zzZEjnUWxrdMIOvvJpM8KXmJ4Bau3Oy1w8"
+        "versionLogicalId": "ListTrainersLambdaVersionqeWOnqQHrOUabqxSoPGCU573RpItqXYTgA4Hig3as"
       },
       "getTrainer": {
         "handler": "src/handlers/trainers.getTrainer",
@@ -6593,7 +6593,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getTrainer",
+        "name": "matan-trainings-server-dev-getTrainer",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6606,7 +6606,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTrainerLambdaVersionX4V1P6l32YetFu49sRKtd6vEk7RqUrByHJJ1Bh0rJ0"
+        "versionLogicalId": "GetTrainerLambdaVersioniX109Ews7ry6h3t3KIqrXNhwIHMADns4rbd9BxMw"
       },
       "identifyTrainer": {
         "handler": "src/handlers/trainers.identifyTrainer",
@@ -6636,7 +6636,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-identifyTrainer",
+        "name": "matan-trainings-server-dev-identifyTrainer",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6649,7 +6649,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "IdentifyTrainerLambdaVersion9CvnJMWeTZswsTLdlcfsSvFnd8GJC7WDLpEfsQ1Tc"
+        "versionLogicalId": "IdentifyTrainerLambdaVersionw8M2AsCebdKRrFVjx1OyD4fcgSyPn2hsW5PX7rbBnQ"
       },
       "createExercise": {
         "handler": "src/handlers/exercises.createExercise",
@@ -6679,7 +6679,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createExercise",
+        "name": "matan-trainings-server-dev-createExercise",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6692,7 +6692,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateExerciseLambdaVersion1GNMvk98tmKpa2WVUKFMsutwDHixGva5BpiPlPtluS8"
+        "versionLogicalId": "CreateExerciseLambdaVersionq2UZZ3KQ2xfaj60KlKRLQLzjde7HuGSxFfRtPLDbQyM"
       },
       "listExercises": {
         "handler": "src/handlers/exercises.listExercises",
@@ -6722,7 +6722,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-listExercises",
+        "name": "matan-trainings-server-dev-listExercises",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6735,7 +6735,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ListExercisesLambdaVersiontOCwE7oTgNPF8BSNytXnZmDBcQDsYTHplYsXblP0s"
+        "versionLogicalId": "ListExercisesLambdaVersionmc9BGn7kc2YBfjZsh07IdFgioy2OKg5vnPUMsJuXx0U"
       },
       "createPlan": {
         "handler": "src/handlers/plans.createPlan",
@@ -6765,7 +6765,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createPlan",
+        "name": "matan-trainings-server-dev-createPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6778,7 +6778,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreatePlanLambdaVersion4JcySuMLoiwuFXYmE1HdwXwYqK78ayet25tb2wnvn4Y"
+        "versionLogicalId": "CreatePlanLambdaVersionQ9HYsq1KzpLcjaM8UEjGzuUsul9Jzxu2LRsawcEDU"
       },
       "listPlans": {
         "handler": "src/handlers/plans.listPlans",
@@ -6808,7 +6808,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-listPlans",
+        "name": "matan-trainings-server-dev-listPlans",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6821,7 +6821,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ListPlansLambdaVersionhthLLfqkFoWMKwPkMO5twweHhgfH5MRsSTWziNlr0"
+        "versionLogicalId": "ListPlansLambdaVersionfQu6Yk0wp5GA5TjHDqIxpLfprvGoDMUZS6Tsw5Weg"
       },
       "assignPlan": {
         "handler": "src/handlers/plans.assignPlan",
@@ -6851,7 +6851,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-assignPlan",
+        "name": "matan-trainings-server-dev-assignPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6864,7 +6864,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "AssignPlanLambdaVersionQkDBx00TNijDpzbHknm1F5xZjxdZJmRebrCvs0"
+        "versionLogicalId": "AssignPlanLambdaVersionX93Qj9hsO44yx4GQe4ejSsnsNugknkdT43kNGnQ6dzI"
       },
       "getTrainerPlans": {
         "handler": "src/handlers/plans.getTrainerPlans",
@@ -6894,7 +6894,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getTrainerPlans",
+        "name": "matan-trainings-server-dev-getTrainerPlans",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6907,7 +6907,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTrainerPlansLambdaVersion0GHrP8rKx1jbXLdvoyW88Zqj068YfQj0QpH8KntoQ"
+        "versionLogicalId": "GetTrainerPlansLambdaVersionoZSgN3WeYidmgWOf73yZ4Wo1mIINY1Z8yfZroo8co"
       },
       "createProgress": {
         "handler": "src/handlers/progress.createProgress",
@@ -6937,7 +6937,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createProgress",
+        "name": "matan-trainings-server-dev-createProgress",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6950,7 +6950,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateProgressLambdaVersionYUtg2G5a85LcRg0sorGOZrcaHlx6fJItOBnnlQw5jQ"
+        "versionLogicalId": "CreateProgressLambdaVersion08t2bAYz4yTuB63bTC8yDJslbGhfl8Aa2EaDtnyIBg"
       },
       "getTrainerProgress": {
         "handler": "src/handlers/progress.getTrainerProgress",
@@ -6980,7 +6980,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getTrainerProgress",
+        "name": "matan-trainings-server-dev-getTrainerProgress",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -6993,7 +6993,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTrainerProgressLambdaVersionMebEYzUjt69jDxQrkfRHtyFcUO3z9h6MOrZxaaTFU"
+        "versionLogicalId": "GetTrainerProgressLambdaVersionKQx6vaaoEZkUfItp64OtXykx1SiLKzZwn51YyTNwg"
       },
       "getCoachViewProgress": {
         "handler": "src/handlers/progress.getCoachViewProgress",
@@ -7023,7 +7023,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getCoachViewProgress",
+        "name": "matan-trainings-server-dev-getCoachViewProgress",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7036,7 +7036,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetCoachViewProgressLambdaVersionkaVrXIE1pp7OJVDXfATC2ViXRagxxZVFLYvqL23sA"
+        "versionLogicalId": "GetCoachViewProgressLambdaVersiong2pB3xcl88qL9lACZFbvlkWoEoRphlVDGt0jEGnDEQU"
       },
       "clearDatabase": {
         "handler": "src/handlers/admin.clearDatabase",
@@ -7066,7 +7066,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-clearDatabase",
+        "name": "matan-trainings-server-dev-clearDatabase",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7079,7 +7079,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ClearDatabaseLambdaVersionL3q98lFUIu7hV1tJ9As0TtoWU9mSOiWNPE1A2294"
+        "versionLogicalId": "ClearDatabaseLambdaVersiont2ANHIaJgsuD6jnqtyD0qOWpATuGNCAzcFRGLLv4A"
       },
       "getAdminExercises": {
         "handler": "src/handlers/admin.getAdminExercises",
@@ -7109,7 +7109,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getAdminExercises",
+        "name": "matan-trainings-server-dev-getAdminExercises",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7122,7 +7122,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetAdminExercisesLambdaVersionRArgjcEcaGDxbSdMnpktpgYkPYApbvZbRl3CMFIVj0"
+        "versionLogicalId": "GetAdminExercisesLambdaVersionSt7kbnmKvrYrkVpPQAWorApH3OJUBWCI28wtbcjImk"
       },
       "getAdminTrainingPlans": {
         "handler": "src/handlers/admin.getAdminTrainingPlans",
@@ -7152,7 +7152,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getAdminTrainingPlans",
+        "name": "matan-trainings-server-dev-getAdminTrainingPlans",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7165,7 +7165,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetAdminTrainingPlansLambdaVersion4OXBqO4niSeJXyNqK075kqGqqCnaIScXbXdzQsUKvI"
+        "versionLogicalId": "GetAdminTrainingPlansLambdaVersiontoY8Yqg3j3pHk8x1xim8CTi31jc6Bx8hqkm1rlhx8c"
       },
       "copyAdminExercise": {
         "handler": "src/handlers/coaches.copyAdminExercise",
@@ -7195,7 +7195,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-copyAdminExercise",
+        "name": "matan-trainings-server-dev-copyAdminExercise",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7208,7 +7208,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CopyAdminExerciseLambdaVersionMmQyaXBkNuwgFfStdycNspl7SM7RGiEEX5J1TStgc"
+        "versionLogicalId": "CopyAdminExerciseLambdaVersionJPYF4JZUrw0wn6UyYfg7iFTLs6JBy6HePmMolTqZaE"
       },
       "copyAdminTrainingPlan": {
         "handler": "src/handlers/coaches.copyAdminTrainingPlan",
@@ -7238,7 +7238,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-copyAdminTrainingPlan",
+        "name": "matan-trainings-server-dev-copyAdminTrainingPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7251,7 +7251,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CopyAdminTrainingPlanLambdaVersioncgFNVSVJWIo038SfmWXtivb9LQSkCMxNuARFI8z14"
+        "versionLogicalId": "CopyAdminTrainingPlanLambdaVersionGZ017KZZAer4j9Ds6VSyq1e8cXlQwgK7ojDe82Tt4"
       },
       "createCustomTrainingPlan": {
         "handler": "src/handlers/trainers.createCustomTrainingPlan",
@@ -7281,7 +7281,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-createCustomTrainingPlan",
+        "name": "matan-trainings-server-dev-createCustomTrainingPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7294,7 +7294,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateCustomTrainingPlanLambdaVersionOeP1EYCBkHCDq0mlHWAaDpE2wZB0jjbUxPyWhzcrw"
+        "versionLogicalId": "CreateCustomTrainingPlanLambdaVersionaac6ziV7VXdlWjwyoaxcytCoqpcUWcg60c3GMIhjI4"
       },
       "getTraineeCustomPlans": {
         "handler": "src/handlers/trainers.getTraineeCustomPlans",
@@ -7324,7 +7324,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getTraineeCustomPlans",
+        "name": "matan-trainings-server-dev-getTraineeCustomPlans",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7337,7 +7337,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTraineeCustomPlansLambdaVersione2ZAJufoG0Wg9zIqcGRQU8V8gLspNB2tzH7p2oe8"
+        "versionLogicalId": "GetTraineeCustomPlansLambdaVersionrEJmXyjRPo6Q1htZEXdFlNpbwi4rXhH0ARNxsZfykws"
       },
       "makeCustomPlanGeneric": {
         "handler": "src/handlers/plans.makeCustomPlanGeneric",
@@ -7367,7 +7367,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-makeCustomPlanGeneric",
+        "name": "matan-trainings-server-dev-makeCustomPlanGeneric",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7380,7 +7380,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "MakeCustomPlanGenericLambdaVersionYf7X41iWrNvC85JyScUvHhWhzlORvi77ByFl8jsMw"
+        "versionLogicalId": "MakeCustomPlanGenericLambdaVersion0QW4NZR7TqQkOkfd1LS6IJtvPyUtRrv0wCXggGOF3M"
       },
       "getTrainingPlan": {
         "handler": "src/handlers/plans.getTrainingPlan",
@@ -7410,7 +7410,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-getTrainingPlan",
+        "name": "matan-trainings-server-dev-getTrainingPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7423,7 +7423,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTrainingPlanLambdaVersion0ggOjW90nPPlnV8s33UtJfbPT4l1cTlIH6aJy5tgs"
+        "versionLogicalId": "GetTrainingPlanLambdaVersion0oiu1QF3KZxqklfd1XN0Vfgw5gDAy8epIy0cTkj10"
       },
       "updateTrainingPlan": {
         "handler": "src/handlers/plans.updateTrainingPlan",
@@ -7453,7 +7453,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-updateTrainingPlan",
+        "name": "matan-trainings-server-dev-updateTrainingPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7466,7 +7466,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateTrainingPlanLambdaVersionnx4ck9e6iWOtkA0lVdZ9Jf1pkqjyCa405DnMMHZTBE"
+        "versionLogicalId": "UpdateTrainingPlanLambdaVersionT6lbtzXm5i5l1gy2dkvq9pTVPZQznksZ5yvgxNZIHA"
       },
       "deleteTrainingPlan": {
         "handler": "src/handlers/plans.deleteTrainingPlan",
@@ -7496,7 +7496,7 @@
             }
           }
         ],
-        "name": "matan-trainings-server-prod-deleteTrainingPlan",
+        "name": "matan-trainings-server-dev-deleteTrainingPlan",
         "package": {
           "exclude": [
             "node_modules/serverless-plugin-typescript"
@@ -7509,7 +7509,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteTrainingPlanLambdaVersionhs9Pae3AdY5K2JkmqM7SPw5D63D4uskSyLD49xXoPOc"
+        "versionLogicalId": "DeleteTrainingPlanLambdaVersiondLveo6eSkm2lPA7YoJvFyfCnUaTE6ZqWRpPryYnJA"
       }
     },
     "resources": {
@@ -7517,7 +7517,7 @@
         "CoachesTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-coaches",
+            "TableName": "matan-trainings-server-dev-coaches",
             "AttributeDefinitions": [
               {
                 "AttributeName": "coachId",
@@ -7536,7 +7536,7 @@
         "TrainersTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-trainers",
+            "TableName": "matan-trainings-server-dev-trainers",
             "AttributeDefinitions": [
               {
                 "AttributeName": "trainerId",
@@ -7555,7 +7555,7 @@
         "ExercisesTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-exercises",
+            "TableName": "matan-trainings-server-dev-exercises",
             "AttributeDefinitions": [
               {
                 "AttributeName": "exerciseId",
@@ -7574,7 +7574,7 @@
         "PlansTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-plans",
+            "TableName": "matan-trainings-server-dev-plans",
             "AttributeDefinitions": [
               {
                 "AttributeName": "planId",
@@ -7593,7 +7593,7 @@
         "PlanAssignmentsTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-plan-assignments",
+            "TableName": "matan-trainings-server-dev-plan-assignments",
             "AttributeDefinitions": [
               {
                 "AttributeName": "assignmentId",
@@ -7612,7 +7612,7 @@
         "ProgressTable": {
           "Type": "AWS::DynamoDB::Table",
           "Properties": {
-            "TableName": "matan-trainings-server-prod-progress",
+            "TableName": "matan-trainings-server-dev-progress",
             "AttributeDefinitions": [
               {
                 "AttributeName": "progressId",
@@ -7652,8 +7652,8 @@
           "node_modules/bcryptjs/**",
           "node_modules/jsonwebtoken/**"
         ],
-        "artifactsS3KeyDirname": "serverless/matan-trainings-server/prod/code-artifacts",
-        "artifactDirectoryName": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z"
+        "artifactsS3KeyDirname": "serverless/matan-trainings-server/dev/code-artifacts",
+        "artifactDirectoryName": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z"
       },
       "custom": {
         "$ref": "$[\"service\"][\"custom\"]"
@@ -7670,7 +7670,7 @@
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/matan-trainings-server/prod/1758817398754-2025-09-25T16:23:18.754Z",
+    "artifactDirectoryName": "serverless/matan-trainings-server/dev/1758817552609-2025-09-25T16:25:52.609Z",
     "artifact": ""
   }
 }

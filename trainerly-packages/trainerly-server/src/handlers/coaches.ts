@@ -208,6 +208,7 @@ export const createCoach = async (
       nickname: canonical,
       passwordHash,
       valid: true,
+      isAdmin: false, // Default to false for new coaches
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
