@@ -4,18 +4,8 @@ import SettingsModal from './SettingsModal';
 import ExerciseManagement from './ExerciseManagement';
 import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
+import { apiService, Coach } from '../services/apiService';
 import './CoachDashboard.css';
-
-interface Coach {
-  coachId: string;
-  name: string;
-  email: string;
-  nickname: string;
-  phone?: string;
-  age?: number;
-  createdAt: string;
-  valid: boolean;
-}
 
 interface CoachDashboardProps {
   coachId: string;
@@ -42,26 +32,12 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
   const loadCoachProfile = async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual API service call
       console.log('Loading coach profile for:', coachId);
       
-      // Mock API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock coach data
-      const mockCoach: Coach = {
-        coachId,
-        name: 'Demo Coach',
-        email: 'demo@example.com',
-        nickname: 'demo_coach',
-        phone: '+972-50-123-4567',
-        age: 35,
-        createdAt: new Date().toISOString(),
-        valid: true
-      };
-      
-      setCoach(mockCoach);
+      const coachData = await apiService.getCoach(coachId, token);
+      setCoach(coachData);
     } catch (err: any) {
+      console.error('Failed to load coach profile:', err);
       setError(err.message || 'Failed to load coach profile');
     } finally {
       setLoading(false);

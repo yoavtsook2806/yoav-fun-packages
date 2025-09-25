@@ -39,6 +39,17 @@ export interface PrescribedExercise {
   prescriptionNote?: string; // additional notes specific to this training plan
 }
 
+export interface Coach {
+  coachId: string;
+  name: string;
+  email: string;
+  nickname: string;
+  phone?: string;
+  age?: number;
+  createdAt: string;
+  valid: boolean;
+}
+
 export interface Trainee {
   trainerId: string;
   coachId: string;
@@ -158,6 +169,34 @@ class ApiService {
     if (!response.ok) {
       throw new Error(`Failed to assign plan to trainee: ${response.statusText}`);
     }
+  }
+
+  // Coach Profile Management
+  async getCoach(coachId: string, token: string): Promise<Coach> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}`, {
+      method: 'GET',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch coach profile: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async updateCoach(coachId: string, token: string, updateData: Partial<Pick<Coach, 'name' | 'phone' | 'age'>>): Promise<Coach> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}`, {
+      method: 'PUT',
+      headers: this.getAuthHeaders(token),
+      body: JSON.stringify(updateData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update coach profile: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
   // Trainee Progress (for viewing)

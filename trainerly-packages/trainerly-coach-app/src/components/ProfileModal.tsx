@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { apiService, Coach } from '../services/apiService';
 import './ProfileModal.css';
-
-interface Coach {
-  coachId: string;
-  name: string;
-  email: string;
-  nickname: string;
-  phone?: string;
-  age?: number;
-  createdAt: string;
-  valid: boolean;
-}
 
 interface ProfileModalProps {
   coach: Coach;
@@ -66,19 +56,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         updateData.age = ageNum;
       }
 
-      // TODO: Replace with actual API service call
-      console.log('Updating coach profile:', updateData, 'with token:', token);
+      console.log('Updating coach profile:', updateData);
       
-      // Mock API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock updated coach data
-      const updatedCoach: Coach = {
-        ...coach,
-        name: updateData.name,
-        phone: updateData.phone,
-        age: updateData.age,
-      };
+      const updatedCoach = await apiService.updateCoach(coach.coachId, token, updateData);
       
       setSuccess(true);
       onUpdate(updatedCoach);
