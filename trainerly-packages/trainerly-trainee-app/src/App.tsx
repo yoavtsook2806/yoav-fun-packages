@@ -70,8 +70,11 @@ function App() {
   // Track if this is a fresh completion (to show congratulation only once)
   const [showCongratulation, setShowCongratulation] = useState(false);
   
-  // Settings modal state
-  const [showSettings, setShowSettings] = useState(false);
+  // Settings modal state - explicitly initialize to false to prevent hot reload issues
+  const [showSettings, setShowSettings] = useState(() => {
+    console.log('🔧 Initializing settings modal state to false');
+    return false;
+  });
   
   // Debug settings state changes
   useEffect(() => {
@@ -81,6 +84,14 @@ function App() {
       console.trace();
     }
   }, [showSettings]);
+
+  // Reset settings modal when authentication state changes
+  useEffect(() => {
+    if (showSettings && !isAuthenticated) {
+      console.log('🔧 Closing settings modal due to authentication change');
+      setShowSettings(false);
+    }
+  }, [isAuthenticated, showSettings]);
 
   // First-time setup state
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
