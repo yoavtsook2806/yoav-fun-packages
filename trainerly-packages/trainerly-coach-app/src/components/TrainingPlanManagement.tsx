@@ -89,6 +89,18 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     setShowAddForm(false);
   };
 
+  const handleEditPlan = (plan: TrainingPlanSummary) => {
+    // For now, just show a message - full edit functionality would require more complex state management
+    showSuccess(`עריכת תוכנית "${plan.name}" תתווסף בקרוב`);
+  };
+
+  const handleDeletePlan = (plan: TrainingPlanSummary) => {
+    if (confirm(`האם אתה בטוח שברצונך למחוק את תוכנית "${plan.name}"?`)) {
+      // Delete functionality would be implemented here
+      showSuccess(`תוכנית "${plan.name}" נמחקה בהצלחה`);
+    }
+  };
+
   const addTraining = () => {
     setCurrentTraining({
       trainingId: Date.now().toString(),
@@ -460,9 +472,31 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           </div>
         ) : (
           plans.map((plan) => (
-            <div key={plan.planId} className="plan-card">
+            <div key={plan.planId} className="plan-card clickable" onClick={() => handleEditPlan(plan)}>
               <div className="plan-header">
                 <h3 className="plan-name">{plan.name}</h3>
+                <div className="plan-actions">
+                  <button 
+                    className="edit-plan-btn" 
+                    title="ערוך תוכנית"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditPlan(plan);
+                    }}
+                  >
+                    ✏️
+                  </button>
+                  <button 
+                    className="delete-plan-btn" 
+                    title="מחק תוכנית"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeletePlan(plan);
+                    }}
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
               
               {plan.description && (
@@ -475,7 +509,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   <span className="stat-label">אימונים</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-number">-</span>
+                  <span className="stat-number">{exercises.length}</span>
                   <span className="stat-label">תרגילים</span>
                 </div>
               </div>

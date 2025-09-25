@@ -6,6 +6,7 @@ import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError } from './ToastContainer';
+import LoadingSpinner from './LoadingSpinner';
 import './CoachDashboard.css';
 
 interface CoachDashboardProps {
@@ -73,14 +74,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
   };
 
   if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="loading-container">
-          <div className="loading-spinner-large"></div>
-          <div className="loading-text">טוען פרופיל מאמן...</div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="טוען פרופיל המאמן..." fullScreen={true} />;
   }
 
   if (error) {

@@ -10,12 +10,12 @@ export interface CacheItem<T> {
 }
 
 export interface CacheConfig {
-  maxAge?: number; // Maximum age in milliseconds (default: 5 minutes)
+  maxAge?: number; // Maximum age in milliseconds (default: 30 days)
   version?: string; // Cache version for invalidation
 }
 
 class CacheService {
-  private readonly DEFAULT_MAX_AGE = 5 * 60 * 1000; // 5 minutes
+  private readonly DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days
   private readonly CACHE_VERSION = '1.0.0';
 
   /**
