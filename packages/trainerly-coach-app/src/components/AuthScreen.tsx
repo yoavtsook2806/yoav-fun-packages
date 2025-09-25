@@ -48,6 +48,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
     message: ''
   });
 
+  // Password visibility state
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+
   const checkNickname = async (nickname: string) => {
     if (!nickname.trim()) {
       setNicknameStatus({ checking: false, available: null, message: '' });
@@ -240,13 +244,21 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                 <div className="input-group">
                   <div className="input-icon">🔒</div>
                   <input
-                    type="password"
+                    type={showLoginPassword ? "text" : "password"}
                     placeholder="סיסמה"
                     value={loginData.password}
                     onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                     required
-                    className="modern-input"
+                    className="modern-input password-input"
                   />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    tabIndex={-1}
+                  >
+                    {showLoginPassword ? '🙈' : '👁️'}
+                  </button>
                 </div>
                 
                 {error && (
@@ -337,14 +349,22 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                 <div className="input-group">
                   <div className="input-icon">🔒</div>
                   <input
-                    type="password"
+                    type={showRegisterPassword ? "text" : "password"}
                     placeholder="סיסמה (לפחות 8 תווים)"
                     value={registerData.password}
                     onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
                     required
                     minLength={8}
-                    className="modern-input"
+                    className="modern-input password-input"
                   />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                    tabIndex={-1}
+                  >
+                    {showRegisterPassword ? '🙈' : '👁️'}
+                  </button>
                 </div>
                 
                 {error && (
