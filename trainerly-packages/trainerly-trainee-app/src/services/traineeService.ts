@@ -305,3 +305,79 @@ export const syncExerciseSession = async (
     return false;
   }
 };
+
+/**
+ * Load exercise sessions from server and populate local storage
+ */
+export const loadExerciseHistoryFromServer = async (traineeId: string): Promise<boolean> => {
+  try {
+    console.log('📥 Loading exercise history from server for trainee:', traineeId);
+
+    const response = await fetch(`${API_BASE_URL}/trainers/${traineeId}/exercise-sessions`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Server error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const exerciseSessions = result.items || [];
+    
+    console.log(`📊 Found ${exerciseSessions.length} exercise sessions on server`);
+
+    if (exerciseSessions.length === 0) {
+      console.log('ℹ️ No exercise sessions found on server');
+      return true;
+    }
+
+    // Import the localStorage functions we need
+    const { saveExerciseEntry } = await import('../utils/exerciseHistory');
+
+    // Group sessions by exercise and convert to the local storage format
+    const exerciseHistoryMap: Record<string, any[]> = {};
+
+    for (const session of exerciseSessions) {
+      const exerciseName = session.exerciseName;
+      
+      if (!exerciseHistoryMap[exerciseName]) {
+        exerciseHistoryMap[exerciseName] = [];
+      }
+
+      // Convert server format to local storage format
+      const historyEntry = {
+        date: session.completedAt,
+        weight: session.setsData?.[0]?.weight, // First set weight for display
+        repeats: session.setsData?.[0]?.repeats, // First set repeats for display
+        restTime: session.restTime || 60,
+        completedSets: session.completedSets,
+        totalSets: session.totalSets,
+        setsData: session.setsData || []
+      };
+
+      exerciseHistoryMap[exerciseName].push(historyEntry);
+    }
+
+    // Sort each exercise's history by date (most recent first) and save to localStorage
+    for (const [exerciseName, entries] of Object.entries(exerciseHistoryMap)) {
+      // Sort by date descending (most recent first)
+      entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      // Save each entry (saveExerciseEntry handles duplicates and limits)
+      for (const entry of entries) {
+        saveExerciseEntry(exerciseName, entry);
+      }
+    }
+
+    console.log(`✅ Successfully loaded exercise history for ${Object.keys(exerciseHistoryMap).length} exercises`);
+    return true;
+
+  } catch (error) {
+    console.error('❌ Failed to load exercise history from server:', error);
+    return false;
+  }
+};

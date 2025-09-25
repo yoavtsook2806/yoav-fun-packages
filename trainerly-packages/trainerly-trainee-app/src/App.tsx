@@ -6,7 +6,7 @@ import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import AuthScreen from './components/AuthScreen';
-import { fetchTraineeData, clearTraineeCache, syncExerciseSession } from './services/traineeService';
+import { fetchTraineeData, clearTraineeCache, syncExerciseSession, loadExerciseHistoryFromServer } from './services/traineeService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
   getLastUsedWeight,
@@ -94,6 +94,7 @@ function App() {
     setIsLoadingPlan(true);
     
     try {
+      // Load training plans
       const traineeData = await fetchTraineeData(traineeId, coachId);
       
       if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
@@ -106,6 +107,16 @@ function App() {
         setAllTrainingPlans([]);
         setCurrentTrainingPlan(createEmptyTrainingPlan());
       }
+
+      // Load exercise history from server and populate local storage
+      console.log('🔄 Loading exercise history from server...');
+      const historyLoaded = await loadExerciseHistoryFromServer(traineeId);
+      if (historyLoaded) {
+        console.log('✅ Exercise history loaded from server');
+      } else {
+        console.log('⚠️ Failed to load exercise history from server');
+      }
+      
     } catch (error) {
       console.error('❌ Failed to load trainee data:', error);
       setCurrentTrainingPlan(createEmptyTrainingPlan());
