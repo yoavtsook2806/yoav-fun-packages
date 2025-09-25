@@ -1,109 +1,67 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <!-- Shield gradient -->
-    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
-      <stop offset="25%" style="stop-color:#FF6B35;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#E91E63;stop-opacity:1" />
-      <stop offset="75%" style="stop-color:#9C27B0;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#673AB7;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Male figure gradient -->
-    <linearGradient id="maleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Female figure gradient -->
-    <linearGradient id="femaleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00E5FF;stop-opacity:1" />
-      <stop offset="25%" style="stop-color:#00BCD4;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#4CAF50;stop-opacity:1" />
-      <stop offset="75%" style="stop-color:#8BC34A;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#CDDC39;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Text gradient -->
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:1" />
-      <stop offset="16%" style="stop-color:#FFD700;stop-opacity:1" />
-      <stop offset="33%" style="stop-color:#8BC34A;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#4CAF50;stop-opacity:1" />
-      <stop offset="66%" style="stop-color:#00BCD4;stop-opacity:1" />
-      <stop offset="83%" style="stop-color:#00E5FF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9C27B0;stop-opacity:1" />
-    </linearGradient>
-  </defs>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#f5f5f5"/>
   
-  <!-- Dark background -->
-  <rect width="512" height="512" fill="#1e2a3a" rx="64"/>
-  
-  <!-- Shield shape -->
-  <path d="M256 60 C330 60, 380 85, 400 130 C420 175, 420 285, 400 340 C380 395, 330 420, 256 450 C182 420, 132 395, 112 340 C92 285, 92 175, 112 130 C132 85, 182 60, 256 60 Z" 
-        fill="none" 
-        stroke="url(#shieldGradient)" 
-        stroke-width="6"/>
-  
-  <!-- Male figure (left side) -->
-  <g fill="url(#maleGradient)">
-    <!-- Head -->
-    <circle cx="210" cy="150" r="22"/>
-    <!-- Neck -->
-    <rect x="206" y="170" width="8" height="10" rx="4"/>
-    <!-- Torso -->
-    <ellipse cx="210" cy="210" rx="32" ry="40"/>
-    <!-- Left arm (flexed) -->
-    <ellipse cx="175" cy="190" rx="10" ry="25" transform="rotate(-15 175 190)"/>
-    <ellipse cx="165" cy="165" rx="8" ry="18" transform="rotate(-45 165 165)"/>
-    <!-- Right arm -->
-    <ellipse cx="245" cy="195" rx="10" ry="28" transform="rotate(20 245 195)"/>
-    <!-- Abs definition -->
-    <rect x="202" y="195" width="16" height="4" rx="2" fill-opacity="0.3"/>
-    <rect x="202" y="205" width="16" height="4" rx="2" fill-opacity="0.3"/>
-    <!-- Left leg -->
-    <ellipse cx="195" cy="280" rx="12" ry="32"/>
-    <!-- Right leg -->
-    <ellipse cx="225" cy="280" rx="12" ry="32"/>
+  <!-- Coach figure -->
+  <g transform="translate(20, 30)">
+    <!-- Coach head -->
+    <circle cx="25" cy="25" r="15" fill="#1e3a5f"/>
+    
+    <!-- Coach body -->
+    <path d="M10 40 Q10 35 15 35 L35 35 Q40 35 40 40 L40 75 Q40 80 35 80 L30 80 L30 120 Q30 125 25 125 L20 125 Q15 125 15 120 L15 80 L10 80 Q5 80 5 75 L5 40" fill="#2563eb"/>
+    
+    <!-- Coach arms -->
+    <ellipse cx="45" cy="55" rx="8" ry="25" fill="#1e40af" transform="rotate(20 45 55)"/>
+    <ellipse cx="5" cy="55" rx="8" ry="25" fill="#1e40af" transform="rotate(-20 5 55)"/>
+    
+    <!-- Coach legs -->
+    <ellipse cx="18" cy="135" rx="6" ry="20" fill="#1e3a5f"/>
+    <ellipse cx="32" cy="135" rx="6" ry="20" fill="#1e3a5f"/>
   </g>
   
-  <!-- Female figure (right side) -->
-  <g fill="url(#femaleGradient)">
-    <!-- Head -->
-    <circle cx="302" cy="165" r="20"/>
-    <!-- Hair (ponytail style) -->
-    <path d="M282 155 C282 140, 295 135, 302 135 C309 135, 322 140, 322 155 C322 165, 318 170, 302 170 C286 170, 282 165, 282 155 Z"/>
-    <ellipse cx="325" cy="148" rx="8" ry="15" transform="rotate(25 325 148)" fill-opacity="0.8"/>
-    <!-- Neck -->
-    <rect x="299" y="183" width="6" height="8" rx="3"/>
-    <!-- Torso -->
-    <ellipse cx="302" cy="220" rx="28" ry="35"/>
-    <!-- Left arm -->
-    <ellipse cx="270" cy="205" rx="9" ry="22" transform="rotate(-10 270 205)"/>
-    <!-- Right arm with dumbbell -->
-    <ellipse cx="334" cy="205" rx="9" ry="22" transform="rotate(25 334 205)"/>
-    <!-- Dumbbell -->
-    <circle cx="348" cy="195" r="6" fill="#00E5FF"/>
-    <rect x="342" y="193" width="12" height="4" rx="2" fill="#4CAF50"/>
-    <circle cx="336" cy="195" r="4" fill="#00BCD4"/>
-    <!-- Left leg -->
-    <ellipse cx="285" cy="285" rx="11" ry="30"/>
-    <!-- Right leg -->
-    <ellipse cx="319" cy="285" rx="11" ry="30"/>
+  <!-- Trainee figure -->
+  <g transform="translate(80, 50)">
+    <!-- Trainee head -->
+    <circle cx="25" cy="20" r="12" fill="#f59e0b"/>
+    
+    <!-- Trainee body (lying on bench) -->
+    <path d="M10 32 Q10 30 12 30 L38 30 Q40 30 40 32 L40 50 Q40 52 38 52 L12 52 Q10 52 10 50 Z" fill="#f97316"/>
+    
+    <!-- Trainee arms (holding weights) -->
+    <ellipse cx="5" cy="40" rx="6" ry="15" fill="#ea580c"/>
+    <ellipse cx="45" cy="40" rx="6" ry="15" fill="#ea580c"/>
+    
+    <!-- Trainee legs -->
+    <ellipse cx="15" cy="65" rx="5" ry="15" fill="#dc2626"/>
+    <ellipse cx="35" cy="65" rx="5" ry="15" fill="#dc2626"/>
   </g>
   
-  <!-- Dumbbell weight plates -->
-  <circle cx="352" cy="195" r="3" fill="#FF6B35"/>
-  <circle cx="332" cy="195" r="3" fill="#FF6B35"/>
+  <!-- Bench -->
+  <g transform="translate(70, 75)">
+    <rect x="0" y="0" width="60" height="8" rx="4" fill="#b91c1c"/>
+    <!-- Bench legs -->
+    <rect x="5" y="8" width="4" height="15" fill="#991b1b"/>
+    <rect x="51" y="8" width="4" height="15" fill="#991b1b"/>
+  </g>
   
-  <!-- Text: TRAINERLY -->
-  <text x="256" y="400" 
-        font-family="Arial Black, Arial, sans-serif" 
-        font-size="44" 
-        font-weight="900" 
-        text-anchor="middle" 
-        fill="url(#textGradient)"
-        letter-spacing="2px">
-    TRAINERLY
-  </text>
+  <!-- Weights -->
+  <g transform="translate(60, 35)">
+    <!-- Left weight -->
+    <circle cx="0" cy="15" r="12" fill="#065f46"/>
+    <circle cx="0" cy="15" r="8" fill="#047857"/>
+    <circle cx="0" cy="15" r="3" fill="#6ee7b7"/>
+    
+    <!-- Right weight -->
+    <circle cx="80" cy="15" r="12" fill="#065f46"/>
+    <circle cx="80" cy="15" r="8" fill="#047857"/>
+    <circle cx="80" cy="15" r="3" fill="#6ee7b7"/>
+    
+    <!-- Barbell -->
+    <rect x="12" y="13" width="56" height="4" rx="2" fill="#f59e0b"/>
+  </g>
+  
+  <!-- TRAINERLY text -->
+  <g transform="translate(0, 140)">
+    <text x="100" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e3a5f">TRAINERLY</text>
+  </g>
 </svg>

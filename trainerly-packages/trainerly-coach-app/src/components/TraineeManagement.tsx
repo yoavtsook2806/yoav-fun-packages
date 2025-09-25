@@ -3,6 +3,7 @@ import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cach
 import { showError, showSuccess } from './ToastContainer';
 import CustomTraineePlanManager from './CustomTraineePlanManager';
 import TraineeTrainingHistoryModal from './TraineeTrainingHistory';
+import '../styles/design-system.css';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {

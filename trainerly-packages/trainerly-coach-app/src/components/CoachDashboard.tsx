@@ -7,6 +7,7 @@ import TraineeManagement from './TraineeManagement';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
+import '../styles/design-system.css';
 import './CoachDashboard.css';
 
 interface CoachDashboardProps {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './styles/design-system.css';
 import './App.css';
 
 // Components
