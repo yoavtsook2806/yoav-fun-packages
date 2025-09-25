@@ -93,7 +93,16 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create exercise: ${response.statusText}`);
+      let errorMessage = `Failed to create exercise: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // If we can't parse the error response, use the default message
+      }
+      throw new Error(errorMessage);
     }
 
     return response.json();

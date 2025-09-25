@@ -59,6 +59,23 @@ export const createExercise = async (
 
     // TODO: Verify JWT token and check if coach exists and is valid
 
+    // Check if exercise name already exists for this coach
+    const existingExercises = await db.getExercisesByCoach(coachId);
+    const nameExists = existingExercises.some(
+      (exercise) => exercise.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+    
+    if (nameExists) {
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({
+          error: 'DUPLICATE_NAME',
+          message: 'Exercise with this name already exists'
+        })
+      };
+    }
+
     const exercise: Exercise = {
       exerciseId: randomUUID(),
       coachId,

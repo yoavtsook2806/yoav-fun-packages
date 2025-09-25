@@ -57,7 +57,17 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       resetForm();
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save exercise');
+      console.error('Error saving exercise:', err);
+      if (err instanceof Error) {
+        // Check if it's a duplicate name error
+        if (err.message.includes('Exercise with this name already exists')) {
+          setError('תרגיל עם השם הזה כבר קיים. אנא בחר שם אחר.');
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('Failed to save exercise');
+      }
     } finally {
       setLoading(false);
     }
