@@ -324,6 +324,31 @@ functions:
           method: delete
           cors: true
 
+  # Exercise Sessions
+  createExerciseSession:
+    handler: src/handlers/exercise-sessions.createExerciseSession
+    events:
+      - http:
+          path: /trainers/{trainerId}/exercise-sessions
+          method: post
+          cors: true
+
+  getExerciseSessions:
+    handler: src/handlers/exercise-sessions.getExerciseSessions
+    events:
+      - http:
+          path: /trainers/{trainerId}/exercise-sessions
+          method: get
+          cors: true
+
+  getTrainerExerciseSessions:
+    handler: src/handlers/exercise-sessions.getTrainerExerciseSessions
+    events:
+      - http:
+          path: /coaches/{coachId}/trainers/{trainerId}/exercise-sessions
+          method: get
+          cors: true
+
 # DynamoDB tables
 resources:
   Resources:
@@ -351,6 +376,32 @@ resources:
         KeySchema:
           - AttributeName: trainerId
             KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    # Exercise Sessions Table
+    ExerciseSessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-exercise-sessions
+        AttributeDefinitions:
+          - AttributeName: sessionId
+            AttributeType: S
+          - AttributeName: trainerId
+            AttributeType: S
+          - AttributeName: completedAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: sessionId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: TrainerIdCompletedAtIndex
+            KeySchema:
+              - AttributeName: trainerId
+                KeyType: HASH
+              - AttributeName: completedAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
 
     # Exercises Table

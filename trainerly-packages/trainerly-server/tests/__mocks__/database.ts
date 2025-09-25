@@ -5,6 +5,7 @@ export const mockDatabase = {
   trainers: new Map<string, any>(),
   exercises: new Map<string, any>(),
   plans: new Map<string, any>(),
+  exerciseSessions: new Map<string, any>(),
 
   // Clear all data between tests
   clear() {
@@ -12,6 +13,7 @@ export const mockDatabase = {
     this.trainers.clear();
     this.exercises.clear();
     this.plans.clear();
+    this.exerciseSessions.clear();
   },
 
   // Coach operations
@@ -191,6 +193,29 @@ export const mockDatabase = {
       }
     }
     return customPlans;
+  },
+
+  // Exercise Session operations
+  async saveExerciseSession(session: any): Promise<boolean> {
+    this.exerciseSessions.set(session.sessionId, session);
+    return true;
+  },
+
+  async getExerciseSessionsByTrainer(trainerId: string, limit?: number): Promise<any[]> {
+    const sessions = [];
+    for (const session of this.exerciseSessions.values()) {
+      if (session.trainerId === trainerId) {
+        sessions.push(session);
+      }
+    }
+    // Sort by completedAt descending (newest first)
+    sessions.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+    
+    if (limit && sessions.length > limit) {
+      return sessions.slice(0, limit);
+    }
+    
+    return sessions;
   }
 };
 

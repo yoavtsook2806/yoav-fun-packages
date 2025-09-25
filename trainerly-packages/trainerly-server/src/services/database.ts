@@ -708,6 +708,44 @@ export class DatabaseService {
     }
   }
 
+  // Exercise Sessions
+  async saveExerciseSession(session: any): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: this.getTableName('exercise-sessions'),
+        Item: session
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Exercise session ${session.sessionId} saved successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error saving exercise session:', error);
+      return false;
+    }
+  }
+
+  async getExerciseSessionsByTrainer(trainerId: string, limit?: number): Promise<any[]> {
+    try {
+      const command = new QueryCommand({
+        TableName: this.getTableName('exercise-sessions'),
+        IndexName: 'TrainerIdCompletedAtIndex',
+        KeyConditionExpression: 'trainerId = :trainerId',
+        ExpressionAttributeValues: {
+          ':trainerId': trainerId
+        },
+        ScanIndexForward: false, // Sort by completedAt descending (newest first)
+        Limit: limit || 100
+      });
+      
+      const result = await this.client.send(command);
+      return result.Items || [];
+    } catch (error) {
+      console.error('❌ Error getting exercise sessions by trainer:', error);
+      return [];
+    }
+  }
+
   // Health check
   async healthCheck(): Promise<boolean> {
     try {

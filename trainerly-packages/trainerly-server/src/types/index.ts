@@ -24,6 +24,24 @@ export interface Trainer {
   createdAt: string;
 }
 
+// Exercise Session - individual exercise completion record
+export interface ExerciseSession {
+  sessionId: string;
+  trainerId: string;
+  coachId: string;
+  exerciseName: string;
+  trainingType: string; // e.g., "A", "B"
+  completedAt: string; // ISO date when exercise was completed
+  totalSets: number;
+  completedSets: number;
+  setsData: Array<{
+    weight?: number;
+    repeats?: number;
+  }>;
+  restTime?: number;
+  createdAt: string;
+}
+
 // Exercise definition - just the exercise info
 export interface Exercise {
   exerciseId: string;
@@ -240,6 +258,28 @@ export interface TrainerListResponse {
     createdAt: string;
     plans?: string[];
   }>;
+}
+
+// Exercise Session API types
+export interface ExerciseSessionCreateRequest {
+  exerciseName: string;
+  trainingType: string;
+  completedAt: string;
+  totalSets: number;
+  completedSets: number;
+  setsData: Array<{
+    weight?: number;
+    repeats?: number;
+  }>;
+  restTime?: number;
+}
+
+export interface ExerciseSessionCreateResponse {
+  sessionId: string;
+}
+
+export interface ExerciseSessionListResponse {
+  items: ExerciseSession[];
 }
 
 // Exercise management
