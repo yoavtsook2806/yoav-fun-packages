@@ -3,6 +3,20 @@
 ## Project Structure
 This is a monorepo containing multiple fun web applications and packages.
 
+## CRITICAL PACKAGE PROTECTION
+- **NEVER TOUCH `matan-training` PACKAGE** - This package must remain exactly as it is on the main branch
+- **DO NOT MODIFY ANY FILES** in `/packages/matan-training/` directory
+- **DO NOT UPDATE REFERENCES** to matan-training in any configuration files
+- **DO NOT CHANGE** matan-training's package.json, dependencies, or any code
+- matan-training is the original app and must stay completely untouched
+
+## Package Organization
+- **Original Package**: `matan-training` (untouchable - keep as-is from main branch)
+- **Trainerly Packages**: All new professional training platform packages
+  - `trainerly-coach-app`: Coach dashboard and management
+  - `trainerly-trainee-app`: Trainee mobile/web app with authentication
+  - `trainerly-server`: Backend API server
+
 ## Package Management
 - **Use yarn workspaces** for all package management operations
 - **Never use npm directly** - always use yarn workspace commands
@@ -10,12 +24,15 @@ This is a monorepo containing multiple fun web applications and packages.
 - To install dependencies: `yarn workspace [package-name] add [dependency]`
 - To build: `yarn workspace [package-name] build`
 
-## Current Packages
-- `matan-trainings`: Progressive Web App for workout tracking with Hebrew UI
-
 ## Development Commands
-- Start matan-trainings dev server: `yarn workspace matan-trainings dev`
-- Build matan-trainings: `yarn workspace matan-trainings build`
+### Original App (DO NOT CHANGE)
+- Start matan-training dev server: `yarn workspace matan-training dev`
+- Build matan-training: `yarn workspace matan-training build`
+
+### Trainerly Platform
+- Start trainerly-coach-app: `yarn workspace trainerly-coach-app dev`
+- Start trainerly-trainee-app: `yarn workspace trainerly-trainee-app dev`
+- Start trainerly-server: `yarn workspace trainerly-server dev`
 - Install root dependencies: `yarn install`
 
 ## Git Workflow

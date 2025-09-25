@@ -143,17 +143,17 @@ jobs:
         </body>
         </html>' > dist/index.html
         
-    - name: Copy package builds to dist
-      run: |
-        # Copy matan-training build (original app)
-        if [ -d "packages/matan-training/dist" ]; then
-          cp -r packages/matan-training/dist dist/matan-training
-        fi
-        
-        # Copy trainerly-trainee-app build (new professional app)
-        if [ -d "packages/trainerly-trainee-app/dist" ]; then
-          cp -r packages/trainerly-trainee-app/dist dist/trainerly-trainee-app
-        fi
+        - name: Copy package builds to dist
+          run: |
+            # Copy matan-training build (original app)
+            if [ -d "packages/matan-training/dist" ]; then
+              cp -r packages/matan-training/dist dist/matan-training
+            fi
+            
+            # Copy trainerly-trainee-app build (new professional app)
+            if [ -d "trainerly-packages/trainerly-trainee-app/dist" ]; then
+              cp -r trainerly-packages/trainerly-trainee-app/dist dist/trainerly-trainee-app
+            fi
       
     - name: Setup Pages
       uses: actions/configure-pages@v4

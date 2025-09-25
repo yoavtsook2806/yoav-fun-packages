@@ -407,6 +407,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .management-card.coming-soon {
@@ -479,6 +480,50 @@
   background: rgba(148, 163, 184, 0.2);
   color: #94a3b8;
   cursor: not-allowed;
+}
+
+/* Section Content */
+.section-content {
+  padding: 2rem;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #333;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.placeholder-content {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  margin-top: 2rem;
+  border: 2px dashed #e2e8f0;
+}
+
+.placeholder-content p {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0.5rem 0;
+}
+
+.placeholder-content p:first-child {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #334155;
 }
 
 .button-icon {

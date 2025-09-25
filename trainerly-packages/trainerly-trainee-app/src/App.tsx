@@ -6,6 +6,7 @@ import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
+import AuthScreen from './components/AuthScreen';
 import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData, getCurrentVersionForFetch } from './services/serverService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
@@ -56,30 +57,79 @@ function App() {
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
-  // Clean up duplicate history entries on app initialization and fetch new trainings
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [traineeId, setTraineeId] = useState<string | null>(null);
+  const [trainerName, setTrainerName] = useState<string | null>(null);
+
+  // Clean up duplicate history entries on app initialization and check authentication
   useEffect(() => {
     removeDuplicateHistoryEntries();
     
-    // Fetch new trainings on app load
+    // Check for existing authentication
+    const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
+    const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
+    
+    if (storedTraineeId && storedTrainerName) {
+      setTraineeId(storedTraineeId);
+      setTrainerName(storedTrainerName);
+      setIsAuthenticated(true);
+    }
+    
+    // Only fetch trainings if authenticated
+    if (storedTraineeId) {
+      // Fetch new trainings on app load
+      const initializeApp = async () => {
+        try {
+          // Get the appropriate version to check for updates
+          const versionToCheck = getCurrentVersionForFetch();
+          
+          console.log(`🚀 Initializing app - Version to check: ${versionToCheck || 'undefined'}`);
+          
+          const response = await fetchNewTrainings(versionToCheck);
+          if (response.success && response.data && response.data.length > 0) {
+            // Get the latest training plan from the response
+            const latestNewPlan = response.data[response.data.length - 1];
+            
+            // Update current training plan if we got newer data
+            if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
+              setCurrentTrainingPlan(latestNewPlan);
+              console.log('Updated to new training plan:', latestNewPlan.version);
+              console.log('Available versions:', response.data.map(p => p.version));
+            } else {
+              console.log('No newer training plans available');
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch new trainings:', error);
+        }
+      };
+      
+      initializeApp();
+    }
+  }, []);
+  
+  // No need to listen for URL parameter changes in Trainerly app
+
+  // Handle authentication
+  const handleAuthenticated = (newTraineeId: string, newTrainerName: string) => {
+    setTraineeId(newTraineeId);
+    setTrainerName(newTrainerName);
+    setIsAuthenticated(true);
+    
+    // Store in localStorage for persistence
+    localStorage.setItem('trainerly_trainee_id', newTraineeId);
+    localStorage.setItem('trainerly_trainer_name', newTrainerName);
+    
+    // Initialize app after authentication
     const initializeApp = async () => {
       try {
-        // Get the appropriate version to check for updates
         const versionToCheck = getCurrentVersionForFetch();
-        
-        console.log(`🚀 Initializing app - Version to check: ${versionToCheck || 'undefined'}`);
-        
         const response = await fetchNewTrainings(versionToCheck);
         if (response.success && response.data && response.data.length > 0) {
-          // Get the latest training plan from the response
           const latestNewPlan = response.data[response.data.length - 1];
-          
-          // Update current training plan if we got newer data
           if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
             setCurrentTrainingPlan(latestNewPlan);
-            console.log('Updated to new training plan:', latestNewPlan.version);
-            console.log('Available versions:', response.data.map(p => p.version));
-          } else {
-            console.log('No newer training plans available');
           }
         }
       } catch (error) {
@@ -88,9 +138,17 @@ function App() {
     };
     
     initializeApp();
-  }, []);
-  
-  // No need to listen for URL parameter changes in Trainerly app
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setTraineeId(null);
+    setTrainerName(null);
+    localStorage.removeItem('trainerly_trainee_id');
+    localStorage.removeItem('trainerly_trainer_name');
+    clearAllLocalStorageData();
+  };
 
   // Handle training plan change (session-only)
   const handleTrainingPlanChange = (version: string) => {
@@ -363,6 +421,11 @@ function App() {
 
   // Note: Removed automatic training completion check - now handled manually after last exercise feedback
 
+  // Show auth screen if not authenticated
+  if (!isAuthenticated) {
+    return <AuthScreen onAuthenticated={handleAuthenticated} />;
+  }
+
   if (trainingState.isTrainingComplete && showCongratulation) {
     return (
       <div className="app">
@@ -381,6 +444,8 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onClearAllHistory={handleClearAllHistory}
+            onLogout={handleLogout}
+            trainerName={trainerName}
             currentTrainingPlanVersion={currentTrainingPlan.version}
             onTrainingPlanChange={handleTrainingPlanChange}
           />
@@ -426,6 +491,8 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onClearAllHistory={handleClearAllHistory}
+            onLogout={handleLogout}
+            trainerName={trainerName}
             currentTrainingPlanVersion={currentTrainingPlan.version}
             onTrainingPlanChange={handleTrainingPlanChange}
           />

@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "trainerly-packages/*"
   ],
   "scripts": {
     "dev": "yarn workspace matan-training dev",

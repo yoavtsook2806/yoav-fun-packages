@@ -6,6 +6,8 @@ import { APP_VERSION } from '../constants';
 interface SettingsModalProps {
   onClose: () => void;
   onClearAllHistory: () => void;
+  onLogout: () => void;
+  trainerName: string | null;
   currentTrainingPlanVersion: string;
   onTrainingPlanChange: (version: string) => void;
 }
