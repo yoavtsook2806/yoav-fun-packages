@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getAvailableVersions } from '../data/trainingPlans';
 import { getVolume, saveVolume, internalToDisplayVolume, displayToInternalVolume, testSound } from '../utils/soundUtils';
 import { APP_VERSION } from '../constants';
 
 interface SettingsModalProps {
   onClose: () => void;
   onLogout: () => void;
-  currentTrainingPlanVersion: string;
-  onTrainingPlanChange: (version: string) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
-  onLogout,
-  currentTrainingPlanVersion,
-  onTrainingPlanChange
+  onLogout
 }) => {
-  const availableVersions = getAvailableVersions();
   const [volume, setVolume] = useState(0);
   // Trainerly always shows coach app (hardcoded)
 
@@ -48,26 +42,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
         
         <div className="modal-body">
-          {/* Training Plan Selection */}
-          <div className="settings-section">
-            <div className="settings-item">
-              <label className="settings-label">
-                <span>תוכנית אימונים</span>
-                <select
-                  value={currentTrainingPlanVersion}
-                  onChange={(e) => onTrainingPlanChange(e.target.value)}
-                  className="training-plan-select"
-                >
-                  {availableVersions.map(version => (
-                    <option key={version} value={version}>
-                      גרסה {version}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </div>
-
           {/* Sound Settings */}
           <div className="settings-section">
             <div className="settings-item">

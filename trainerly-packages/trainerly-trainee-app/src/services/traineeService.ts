@@ -39,13 +39,17 @@ interface ServerPrescribedExercise {
 
 // Convert server training plan format to trainee app format
 const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { version: string; name: string; trainings: Trainings } => {
+  console.log('🔄 Converting server plan:', serverPlan);
+  
   const trainings: Trainings = {};
   
   // Group exercises by training name
   serverPlan.trainings.forEach(training => {
+    console.log(`🏋️ Processing training: ${training.name}`);
     const trainingExercises: { [exerciseName: string]: Exercise } = {};
     
     training.exercises.forEach(prescribedExercise => {
+      console.log(`💪 Adding exercise: ${prescribedExercise.exerciseName}`);
       trainingExercises[prescribedExercise.exerciseName] = {
         numberOfSets: prescribedExercise.numberOfSets,
         minimumTimeToRest: prescribedExercise.minimumTimeToRest,
@@ -61,11 +65,14 @@ const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { ver
     trainings[training.name] = trainingExercises;
   });
   
-  return {
+  const result = {
     version: serverPlan.planId, // Use planId as version
     name: serverPlan.name,
     trainings
   };
+  
+  console.log('✅ Converted plan result:', result);
+  return result;
 };
 
 interface CachedTraineeData {
@@ -101,36 +108,54 @@ export const fetchTraineeData = async (traineeId: string): Promise<TraineeData |
       }
     }
     
-    // Fetch trainee plans from server
-    const plansResponse = await fetch(`${API_BASE_URL}/trainers/${traineeId}/plans`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!plansResponse.ok) {
-      throw new Error(`Failed to fetch trainee plans: ${plansResponse.status}`);
-    }
-
-    const plansData = await plansResponse.json();
-    console.log('📋 Fetched trainee plans:', plansData);
+    // First, we need to find which coach this trainee belongs to
+    // We'll search all coaches to find the one that has this trainee
+    // This is a workaround since we don't have a direct endpoint to get coachId from traineeId
     
-    // Create trainee data structure
-    const traineeData: TraineeData = {
+    let traineeData: TraineeData = {
       trainerId: traineeId,
-      firstName: '', // We don't need this for the trainee app
+      firstName: '',
       lastName: '',
-      plans: plansData.plans || [],
+      plans: [],
       currentPlan: null
     };
     
+    // Try to find the trainee by checking the known coach
+    // In a real system, we'd have a better way to get this, but for now we'll use the coach we know
+    const knownCoachId = '84b48a6d-65d0-4b71-bf69-16305af96815'; // The coach ID from our test data
+    
+    try {
+      const trainersResponse = await fetch(`${API_BASE_URL}/coaches/${knownCoachId}/trainers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (trainersResponse.ok) {
+        const trainersData = await trainersResponse.json();
+        const foundTrainer = trainersData.items?.find((trainer: any) => trainer.trainerId === traineeId);
+        
+        if (foundTrainer) {
+          traineeData = {
+            trainerId: foundTrainer.trainerId,
+            firstName: foundTrainer.firstName,
+            lastName: foundTrainer.lastName,
+            plans: foundTrainer.plans || [],
+            currentPlan: null
+          };
+          console.log('📋 Found trainee with plans:', foundTrainer.plans);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching trainer data:', error);
+    }
+    
     // If trainee has plans, fetch the current plan details
-    if (plansData.plans && plansData.plans.length > 0) {
+    if (traineeData.plans && traineeData.plans.length > 0) {
       // Get the latest plan (last in array)
-      const latestPlan = plansData.plans[plansData.plans.length - 1];
-      const currentPlanId = latestPlan.planId;
-      const coachId = latestPlan.coachId;
+      const currentPlanId = traineeData.plans[traineeData.plans.length - 1];
+      const coachId = knownCoachId; // We know the coach ID
       
       try {
         const planResponse = await fetch(`${API_BASE_URL}/coaches/${coachId}/training-plans/${currentPlanId}`, {

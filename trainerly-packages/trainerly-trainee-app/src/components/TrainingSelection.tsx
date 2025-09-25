@@ -4,7 +4,6 @@ import { getExerciseHistory, getDailyTrainingProgress } from '../utils/exerciseH
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
   availableTrainings: string[];
-  trainingPlanVersion: string;
   trainings: any; // Training data to get exercise lists
   trainerName?: string;
 }
@@ -12,7 +11,6 @@ interface TrainingSelectionProps {
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   onSelectTraining,
   availableTrainings,
-  trainingPlanVersion,
   trainings,
   trainerName,
 }) => {
@@ -149,7 +147,6 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   return (
     <div className="training-selection">
       <h1>{getWelcomeTitle()}</h1>
-      <div className="training-plan-version">{trainingPlanVersion}</div>
       
       <div className="training-buttons">
         {availableTrainings.map((training) => {

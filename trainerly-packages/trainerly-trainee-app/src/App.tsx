@@ -168,12 +168,6 @@ function App() {
     loadTraineeData(newTraineeId);
   };
 
-  // Handle training plan change (for settings - though we only have one plan from server)
-  const handleTrainingPlanChange = (version: string) => {
-    // In the new system, we only have one plan from the server
-    // This function is kept for compatibility with the settings modal
-    console.log('Training plan change requested, but using server plan:', version);
-  };
 
   const initializeTraining = (trainingType: string) => {
     const exercises = Object.keys(currentTrainingPlan.trainings[trainingType]);
@@ -423,8 +417,6 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onLogout={handleLogout}
-            currentTrainingPlanVersion={currentTrainingPlan.version}
-            onTrainingPlanChange={handleTrainingPlanChange}
           />
         )}
       </div>
@@ -459,7 +451,6 @@ function App() {
         <TrainingSelection
           onSelectTraining={initializeTraining}
           availableTrainings={Object.keys(currentTrainingPlan.trainings)}
-          trainingPlanVersion={currentTrainingPlan.version}
           trainings={currentTrainingPlan.trainings}
           trainerName={trainerName}
         />
@@ -469,8 +460,6 @@ function App() {
           <SettingsModal
             onClose={() => setShowSettings(false)}
             onLogout={handleLogout}
-            currentTrainingPlanVersion={currentTrainingPlan.version}
-            onTrainingPlanChange={handleTrainingPlanChange}
           />
         )}
       </div>
