@@ -314,15 +314,15 @@ export const createCustomTrainingPlan = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const coachId = event.pathParameters?.coachId;
-    const traineeId = event.pathParameters?.traineeId;
+    const trainerId = event.pathParameters?.trainerId;
 
-    if (!coachId || !traineeId) {
+    if (!coachId || !trainerId) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Coach ID and trainee ID are required'
+          message: 'Coach ID and trainer ID are required'
         })
       };
     }
@@ -413,21 +413,21 @@ export const getTraineeCustomPlans = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const coachId = event.pathParameters?.coachId;
-    const traineeId = event.pathParameters?.traineeId;
+    const trainerId = event.pathParameters?.trainerId;
 
-    if (!coachId || !traineeId) {
+    if (!coachId || !trainerId) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Coach ID and trainee ID are required'
+          message: 'Coach ID and trainer ID are required'
         })
       };
     }
 
     // Get trainee to get their name
-    const trainee = await db.getTrainer(traineeId);
+    const trainee = await db.getTrainer(trainerId);
     if (!trainee || trainee.coachId !== coachId) {
       return {
         statusCode: 404,

@@ -61,26 +61,17 @@ export class DatabaseService {
     }
   }
 
-  async saveTrainingPlan(plan: TrainingPlan): Promise<boolean> {
-    try {
-      const command = new PutCommand({
-        TableName: this.getTableName('training-plans'),
-        Item: plan
-      });
-      
-      await this.client.send(command);
-      return true;
-    } catch (error) {
-      console.error('Error saving training plan:', error);
-      return false;
-    }
-  }
 
   async saveTrainingPlans(plans: TrainingPlan[]): Promise<boolean> {
     try {
       // Save each plan individually (DynamoDB doesn't have batch put for different items)
-      const promises = plans.map(plan => this.saveTrainingPlan(plan));
-      await Promise.all(promises);
+      for (const plan of plans) {
+        const command = new PutCommand({
+          TableName: this.getTableName('training-plans'),
+          Item: plan
+        });
+        await this.client.send(command);
+      }
       return true;
     } catch (error) {
       console.error('Error saving training plans:', error);

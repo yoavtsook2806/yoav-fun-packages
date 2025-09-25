@@ -286,7 +286,7 @@ functions:
     handler: src/handlers/trainers.createCustomTrainingPlan
     events:
       - http:
-          path: /coaches/{coachId}/trainers/{traineeId}/custom-plan
+          path: /coaches/{coachId}/trainers/{trainerId}/custom-plan
           method: post
           cors: true
 
@@ -295,7 +295,7 @@ functions:
     handler: src/handlers/trainers.getTraineeCustomPlans
     events:
       - http:
-          path: /coaches/{coachId}/trainers/{traineeId}/custom-plans
+          path: /coaches/{coachId}/trainers/{trainerId}/custom-plans
           method: get
           cors: true
 
