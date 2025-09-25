@@ -1,8 +1,8 @@
-/* TraineeManagement - Modern Professional Design */
+/* TraineeManagement - Modern Dark Professional Design */
 
 .trainee-management {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+  background: var(--gradient-bg);
   font-family: var(--font-family-sans);
   direction: rtl;
   position: relative;
@@ -12,18 +12,18 @@
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 25% 25%, var(--primary-100) 0%, transparent 50%),
-              radial-gradient(circle at 75% 75%, var(--secondary-100) 0%, transparent 50%);
+  background: radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
   opacity: 0.4;
   z-index: -1;
 }
 
 /* Header */
 .management-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-glass);
   backdrop-filter: blur(20px);
-  border-bottom: var(--border-width-1) solid var(--neutral-200);
-  box-shadow: var(--shadow-sm);
+  border-bottom: var(--border-width-1) solid var(--border-primary);
+  box-shadow: var(--shadow-lg);
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
@@ -64,7 +64,7 @@
 .page-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--neutral-800);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -158,11 +158,11 @@
 }
 
 .trainee-card {
-  background: white;
-  border: var(--border-width-2) solid var(--neutral-200);
+  background: var(--bg-card);
+  border: var(--border-width-2) solid var(--border-primary);
   border-radius: var(--border-radius-2xl);
   padding: var(--space-8);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
@@ -175,13 +175,13 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: var(--gradient-brand);
+  background: var(--gradient-primary);
 }
 
 .trainee-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-color: var(--primary-300);
+  border-color: var(--border-accent);
 }
 
 .trainee-header {
@@ -198,7 +198,7 @@
 .trainee-name {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  color: var(--neutral-800);
+  color: var(--text-primary);
   margin: 0 0 var(--space-2) 0;
 }
 
@@ -267,7 +267,8 @@
 
 /* Plan Assignment */
 .plan-assignment {
-  background: var(--neutral-50);
+  background: var(--bg-glass);
+  border: var(--border-width-1) solid var(--border-primary);
   border-radius: var(--border-radius-lg);
   padding: var(--space-6);
   margin-bottom: var(--space-6);
@@ -279,30 +280,32 @@
 }
 
 .current-plan strong {
-  color: var(--neutral-700);
+  color: var(--text-secondary);
   font-weight: var(--font-weight-semibold);
   display: block;
   margin-bottom: var(--space-2);
 }
 
 .assigned-plan {
-  background: var(--success-100);
-  color: var(--success-700);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--border-radius-md);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-xs);
   display: inline-block;
+  border: var(--border-width-1) solid rgba(16, 185, 129, 0.2);
 }
 
 .no-plan {
-  background: var(--neutral-200);
-  color: var(--neutral-600);
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-muted);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--border-radius-md);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-xs);
   display: inline-block;
+  border: var(--border-width-1) solid var(--border-primary);
 }
 
 .plan-history {

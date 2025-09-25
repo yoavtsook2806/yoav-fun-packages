@@ -230,7 +230,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  color: var(--text-secondary);
+  color: var(--text-primary); /* Changed to primary for better contrast */
   transition: color var(--transition-base);
 }
 
@@ -238,18 +238,19 @@
   font-size: 3rem;
   margin-bottom: var(--space-2);
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  color: var(--primary); /* Add primary color to icons */
 }
 
 .simple-button-title {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   margin: 0;
-  color: inherit;
+  color: var(--text-primary); /* Ensure title is visible */
 }
 
 .simple-button-description {
   font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  color: var(--text-secondary); /* Keep secondary for description */
   margin: 0;
   line-height: 1.5;
 }
