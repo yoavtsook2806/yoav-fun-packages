@@ -124,12 +124,6 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
                 דשבורד מאמן • @{coach.nickname}
               </p>
             </div>
-            <div className="coach-status">
-              <div className="status-badge active">
-                <span className="status-dot"></span>
-                פעיל
-              </div>
-            </div>
           </div>
           <div className="header-actions">
             <button
@@ -151,7 +145,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
               <section className="logo-section">
                 <div className="logo-container">
                   <img 
-                    src="/trainerly-logo.svg" 
+                    src="/TrainerlyLogo.png" 
                     alt="Trainerly" 
                     className="trainerly-logo"
                   />

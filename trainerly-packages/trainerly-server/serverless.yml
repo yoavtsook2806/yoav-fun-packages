@@ -349,6 +349,23 @@ functions:
           method: get
           cors: true
 
+  # Comprehensive Trainee Data (all local storage data)
+  syncTraineeData:
+    handler: src/handlers/trainee-data.syncTraineeData
+    events:
+      - http:
+          path: /trainers/{trainerId}/data
+          method: post
+          cors: true
+
+  getTraineeData:
+    handler: src/handlers/trainee-data.getTraineeData
+    events:
+      - http:
+          path: /trainers/{trainerId}/data
+          method: get
+          cors: true
+
 # DynamoDB tables
 resources:
   Resources:
@@ -414,6 +431,19 @@ resources:
             AttributeType: S
         KeySchema:
           - AttributeName: exerciseId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    # Trainee Data Table (comprehensive local storage data)
+    TraineeDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-trainee_data
+        AttributeDefinitions:
+          - AttributeName: traineeId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: traineeId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 

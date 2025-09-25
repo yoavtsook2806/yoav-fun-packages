@@ -354,3 +354,101 @@ export interface ProgressCreateResponse {
   progressId: string;
 }
 
+// Trainee Data - New table for comprehensive data storage
+// Rule: All data in local storage must also be saved to server
+export interface TraineeData {
+  traineeId: string;
+  coachId: string;
+  // Exercise defaults (weights, reps, rest times set by user)
+  exerciseDefaults: Record<string, {
+    defaultWeight?: number;
+    defaultRepeats?: number;
+    defaultRestTime?: number;
+  }>;
+  // Training progress (current session progress)
+  trainingProgress: Record<string, {
+    date: string;
+    trainingType: string;
+    exerciseProgress: Record<string, number>; // exerciseName -> completedSets
+  }>;
+  // Exercise history (derived from exercise_sessions but cached for performance)
+  exerciseHistory: Record<string, Array<{
+    date: string;
+    weight?: number;
+    repeats?: number;
+    restTime?: number;
+    completedSets: number;
+    totalSets: number;
+    setsData?: Array<{
+      weight?: number;
+      repeats?: number;
+    }>;
+  }>>;
+  // First-time experience flags
+  firstTimeExperienceCompleted?: boolean;
+  customExerciseData?: Record<string, any>; // For any custom data
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
+}
+
+// API Request/Response types for comprehensive trainee data sync
+export interface TraineeDataSyncRequest {
+  exerciseDefaults?: Record<string, {
+    defaultWeight?: number;
+    defaultRepeats?: number;
+    defaultRestTime?: number;
+  }>;
+  trainingProgress?: Record<string, {
+    date: string;
+    trainingType: string;
+    exerciseProgress: Record<string, number>;
+  }>;
+  exerciseHistory?: Record<string, Array<{
+    date: string;
+    weight?: number;
+    repeats?: number;
+    restTime?: number;
+    completedSets: number;
+    totalSets: number;
+    setsData?: Array<{
+      weight?: number;
+      repeats?: number;
+    }>;
+  }>>;
+  firstTimeExperienceCompleted?: boolean;
+  customExerciseData?: Record<string, any>;
+}
+
+export interface TraineeDataSyncResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface TraineeDataGetResponse {
+  exerciseDefaults: Record<string, {
+    defaultWeight?: number;
+    defaultRepeats?: number;
+    defaultRestTime?: number;
+  }>;
+  trainingProgress: Record<string, {
+    date: string;
+    trainingType: string;
+    exerciseProgress: Record<string, number>;
+  }>;
+  exerciseHistory: Record<string, Array<{
+    date: string;
+    weight?: number;
+    repeats?: number;
+    restTime?: number;
+    completedSets: number;
+    totalSets: number;
+    setsData?: Array<{
+      weight?: number;
+      repeats?: number;
+    }>;
+  }>>;
+  firstTimeExperienceCompleted?: boolean;
+  customExerciseData?: Record<string, any>;
+}
+

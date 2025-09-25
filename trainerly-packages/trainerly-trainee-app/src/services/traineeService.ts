@@ -307,13 +307,14 @@ export const syncExerciseSession = async (
 };
 
 /**
- * Load exercise sessions from server and populate local storage
+ * Load comprehensive trainee data from server and populate local storage
+ * Rule: All data in local storage must be synced with server
  */
-export const loadExerciseHistoryFromServer = async (traineeId: string): Promise<boolean> => {
+export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<boolean> => {
   try {
-    console.log('📥 Loading exercise history from server for trainee:', traineeId);
+    console.log('📥 Loading all trainee data from server for trainee:', traineeId);
 
-    const response = await fetch(`${API_BASE_URL}/trainers/${traineeId}/exercise-sessions`, {
+    const response = await fetch(`${API_BASE_URL}/trainers/${traineeId}/data`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -325,59 +326,144 @@ export const loadExerciseHistoryFromServer = async (traineeId: string): Promise<
       throw new Error(errorData.message || `Server error: ${response.status}`);
     }
 
-    const result = await response.json();
-    const exerciseSessions = result.items || [];
+    const serverData = await response.json();
     
-    console.log(`📊 Found ${exerciseSessions.length} exercise sessions on server`);
+    console.log('📊 Received trainee data from server:', {
+      exerciseDefaults: Object.keys(serverData.exerciseDefaults || {}).length,
+      trainingProgress: Object.keys(serverData.trainingProgress || {}).length,
+      exerciseHistory: Object.keys(serverData.exerciseHistory || {}).length,
+      firstTimeExperienceCompleted: serverData.firstTimeExperienceCompleted
+    });
 
-    if (exerciseSessions.length === 0) {
-      console.log('ℹ️ No exercise sessions found on server');
-      return true;
-    }
+    // Import all the localStorage functions we need
+    const { 
+      saveExerciseEntry, 
+      saveTrainingProgress,
+      saveExerciseDefaults,
+      getExerciseDefaults,
+      getTrainingProgress,
+      getExerciseHistory
+    } = await import('../utils/exerciseHistory');
+    const { 
+      EXERCISE_DEFAULTS_KEY,
+      TRAINING_PROGRESS_KEY,
+      EXERCISE_HISTORY_KEY,
+      CUSTOM_EXERCISE_DATA_KEY
+    } = await import('../constants/localStorage');
 
-    // Import the localStorage functions we need
-    const { saveExerciseEntry } = await import('../utils/exerciseHistory');
-
-    // Group sessions by exercise and convert to the local storage format
-    const exerciseHistoryMap: Record<string, any[]> = {};
-
-    for (const session of exerciseSessions) {
-      const exerciseName = session.exerciseName;
-      
-      if (!exerciseHistoryMap[exerciseName]) {
-        exerciseHistoryMap[exerciseName] = [];
+    // 1. Load Exercise Defaults
+    if (serverData.exerciseDefaults && Object.keys(serverData.exerciseDefaults).length > 0) {
+      for (const [exerciseName, defaults] of Object.entries(serverData.exerciseDefaults)) {
+        saveExerciseDefaults(exerciseName, defaults);
       }
-
-      // Convert server format to local storage format
-      const historyEntry = {
-        date: session.completedAt,
-        weight: session.setsData?.[0]?.weight, // First set weight for display
-        repeats: session.setsData?.[0]?.repeats, // First set repeats for display
-        restTime: session.restTime || 60,
-        completedSets: session.completedSets,
-        totalSets: session.totalSets,
-        setsData: session.setsData || []
-      };
-
-      exerciseHistoryMap[exerciseName].push(historyEntry);
+      console.log('✅ Loaded exercise defaults from server');
     }
 
-    // Sort each exercise's history by date (most recent first) and save to localStorage
-    for (const [exerciseName, entries] of Object.entries(exerciseHistoryMap)) {
-      // Sort by date descending (most recent first)
-      entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // 2. Load Training Progress
+    if (serverData.trainingProgress && Object.keys(serverData.trainingProgress).length > 0) {
+      localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(serverData.trainingProgress));
+      console.log('✅ Loaded training progress from server');
+    }
+
+    // 3. Load Exercise History
+    if (serverData.exerciseHistory && Object.keys(serverData.exerciseHistory).length > 0) {
+      // Clear existing local history first
+      localStorage.setItem(EXERCISE_HISTORY_KEY, JSON.stringify({}));
       
-      // Save each entry (saveExerciseEntry handles duplicates and limits)
-      for (const entry of entries) {
-        saveExerciseEntry(exerciseName, entry);
+      // Load server history
+      for (const [exerciseName, entries] of Object.entries(serverData.exerciseHistory)) {
+        // Sort by date descending (most recent first)
+        const sortedEntries = (entries as any[]).sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        
+        // Save each entry (saveExerciseEntry handles duplicates and limits)
+        for (const entry of sortedEntries) {
+          saveExerciseEntry(exerciseName, entry);
+        }
       }
+      console.log('✅ Loaded exercise history from server');
     }
 
-    console.log(`✅ Successfully loaded exercise history for ${Object.keys(exerciseHistoryMap).length} exercises`);
+    // 4. Load First-time Experience Flag
+    if (serverData.firstTimeExperienceCompleted !== undefined) {
+      localStorage.setItem('trainerly_first_time_completed', 
+        JSON.stringify(serverData.firstTimeExperienceCompleted));
+      console.log('✅ Loaded first-time experience flag from server');
+    }
+
+    // 5. Load Custom Exercise Data
+    if (serverData.customExerciseData && Object.keys(serverData.customExerciseData).length > 0) {
+      localStorage.setItem(CUSTOM_EXERCISE_DATA_KEY, JSON.stringify(serverData.customExerciseData));
+      console.log('✅ Loaded custom exercise data from server');
+    }
+
+    console.log('✅ Successfully loaded all trainee data from server');
     return true;
 
   } catch (error) {
-    console.error('❌ Failed to load exercise history from server:', error);
+    console.error('❌ Failed to load trainee data from server:', error);
+    return false;
+  }
+};
+
+/**
+ * Sync all local storage data to server
+ * Rule: All data in local storage must also be saved to server
+ */
+export const syncAllTraineeDataToServer = async (traineeId: string): Promise<boolean> => {
+  try {
+    console.log('💾 Syncing all trainee data to server for trainee:', traineeId);
+
+    // Import all the localStorage functions we need
+    const { 
+      getExerciseDefaults,
+      getTrainingProgress,
+      getExerciseHistory
+    } = await import('../utils/exerciseHistory');
+    const { 
+      CUSTOM_EXERCISE_DATA_KEY
+    } = await import('../constants/localStorage');
+
+    // Collect all local storage data
+    const localData = {
+      exerciseDefaults: getExerciseDefaults(),
+      trainingProgress: getTrainingProgress(),
+      exerciseHistory: getExerciseHistory(),
+      firstTimeExperienceCompleted: JSON.parse(
+        localStorage.getItem('trainerly_first_time_completed') || 'false'
+      ),
+      customExerciseData: JSON.parse(
+        localStorage.getItem(CUSTOM_EXERCISE_DATA_KEY) || '{}'
+      )
+    };
+
+    console.log('📤 Sending trainee data to server:', {
+      exerciseDefaults: Object.keys(localData.exerciseDefaults || {}).length,
+      trainingProgress: Object.keys(localData.trainingProgress || {}).length,
+      exerciseHistory: Object.keys(localData.exerciseHistory || {}).length,
+      firstTimeExperienceCompleted: localData.firstTimeExperienceCompleted
+    });
+
+    const response = await fetch(`${API_BASE_URL}/trainers/${traineeId}/data`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(localData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Server error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('✅ All trainee data synced successfully to server');
+    return true;
+
+  } catch (error) {
+    console.error('❌ Failed to sync trainee data to server:', error);
     return false;
   }
 };
