@@ -175,15 +175,17 @@
 
 .modern-input {
   width: 100%;
-  padding: 1rem 1rem 1rem 3.5rem;
+  padding: 1rem 3.5rem 1rem 1rem;
   border: 2px solid #e2e8f0;
   border-radius: 16px;
   font-size: 1rem;
   font-family: inherit;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   outline: none;
+  color: #1e293b;
+  font-weight: 500;
 }
 
 .modern-input:focus {
@@ -387,7 +389,7 @@
   }
   
   .modern-input {
-    padding: 0.875rem 0.875rem 0.875rem 3rem;
+    padding: 0.875rem 3rem 0.875rem 0.875rem;
     font-size: 0.95rem;
   }
   

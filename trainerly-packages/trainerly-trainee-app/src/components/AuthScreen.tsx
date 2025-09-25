@@ -18,51 +18,32 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     setError(null);
 
     try {
-      // First, get the coach by nickname
-      const coachResponse = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/nicknames/check?nickname=${encodeURIComponent(coachNickname)}`);
-      
-      if (!coachResponse.ok) {
-        throw new Error('כינוי המאמן לא נמצא');
+      // Use the trainer identification endpoint
+      const identifyResponse = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/auth/trainer/identify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          coachNickname: coachNickname.trim(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim()
+        })
+      });
+
+      if (!identifyResponse.ok) {
+        const errorData = await identifyResponse.json().catch(() => ({}));
+        if (identifyResponse.status === 404) {
+          throw new Error('מתאמן לא נמצא. אנא בדוק את הפרטים ונסה שוב.');
+        } else if (identifyResponse.status === 400) {
+          throw new Error('נתונים חסרים. אנא מלא את כל השדות.');
+        } else {
+          throw new Error(errorData.message || 'שגיאה בזיהוי המתאמן');
+        }
       }
 
-      const coachData = await coachResponse.json();
-      if (!coachData.available) {
-        // Coach exists, get the coach ID
-        // We need to find a way to get the coach ID from the nickname
-        // For now, let's use a direct endpoint that returns coach info by nickname
-        const coachInfoResponse = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/coaches/by-nickname/${encodeURIComponent(coachNickname)}`);
-        
-        if (!coachInfoResponse.ok) {
-          throw new Error('שגיאה בקבלת פרטי המאמן');
-        }
-
-        const coachInfo = await coachInfoResponse.json();
-        const coachId = coachInfo.coachId;
-
-        // Now get all trainees for this coach
-        const traineesResponse = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/coaches/${coachId}/trainers`);
-        
-        if (!traineesResponse.ok) {
-          throw new Error('שגיאה בקבלת רשימת המתאמנים');
-        }
-
-        const traineesData = await traineesResponse.json();
-        
-        // Find the trainee by first and last name
-        const matchingTrainee = traineesData.items?.find((trainee: any) => 
-          trainee.firstName.toLowerCase() === firstName.toLowerCase() && 
-          trainee.lastName.toLowerCase() === lastName.toLowerCase()
-        );
-
-        if (!matchingTrainee) {
-          throw new Error('המתאמן לא נמצא במערכת. אנא בדקו את הפרטים או פנו למאמן שלכם.');
-        }
-
-        // Authentication successful
-        onAuthenticated(matchingTrainee.trainerId, `${firstName} ${lastName}`);
-      } else {
-        throw new Error('כינוי המאמן לא נמצא במערכת');
-      }
+      const trainerData = await identifyResponse.json();
+      onAuthenticated(trainerData.trainerId, `${firstName} ${lastName}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'שגיאה לא צפויה');
     } finally {
