@@ -214,12 +214,12 @@ class CachedApiService {
     console.log('🗑️ CACHED API - Trainees cache invalidated');
   }
 
-  // Trainee Progress
-  async getTraineeProgress(coachId: string, traineeId: string, token: string, options?: LoadOptions): Promise<CachedData<any[]>> {
+  // Trainee Exercise Sessions (History)
+  async getTraineeExerciseSessions(coachId: string, traineeId: string, token: string, limit?: number, options?: LoadOptions): Promise<CachedData<any[]>> {
     return this.loadWithCache(
-      CACHE_KEYS.TRAINEE_PROGRESS(traineeId),
+      CACHE_KEYS.TRAINEE_PROGRESS(traineeId), // Reuse the same cache key for now
       coachId,
-      () => apiService.getTraineeProgress(coachId, traineeId, token),
+      () => apiService.getTraineeExerciseSessions(coachId, traineeId, token, limit),
       options
     );
   }

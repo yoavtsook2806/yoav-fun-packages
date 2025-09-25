@@ -123,14 +123,15 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const viewProgress = async (trainee: Trainee) => {
     try {
       setLoading(true);
-      const progressResult = await cachedApiService.getTraineeProgress(coachId, trainee.trainerId, token);
-      const progress = progressResult.data;
-      setTraineeProgress(progress);
+      const sessionsResult = await cachedApiService.getTraineeExerciseSessions(coachId, trainee.trainerId, token, 50); // Get last 50 sessions
+      const sessions = sessionsResult.data;
+      setTraineeProgress(sessions);
       setSelectedTrainee(trainee);
       setShowProgressModal(true);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load progress');
+      setError(err instanceof Error ? err.message : 'Failed to load exercise history');
+      showError(err instanceof Error ? err.message : 'Failed to load exercise history');
     } finally {
       setLoading(false);
     }
@@ -284,27 +285,49 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
             <div className="progress-content">
               {traineeProgress.length === 0 ? (
                 <div className="empty-progress">
-                  <div className="empty-icon">📊</div>
-                  <h3>אין נתוני התקדמות עדיין</h3>
-                  <p>המתאמן עדיין לא החל באימונים</p>
+                  <div className="empty-icon">🏋️</div>
+                  <h3>אין היסטוריית אימונים עדיין</h3>
+                  <p>המתאמן עדיין לא השלים תרגילים</p>
                 </div>
               ) : (
                 <div className="progress-list">
                   {traineeProgress.map((session, index) => (
-                    <div key={index} className="progress-session">
+                    <div key={session.sessionId || index} className="progress-session">
                       <div className="session-header">
-                        <h4>אימון מתאריך {formatDate(session.date)}</h4>
+                        <h4>{session.exerciseName}</h4>
                         <span className="session-type">{session.trainingType}</span>
                       </div>
-                      <div className="session-exercises">
-                        {session.exercises?.map((exercise: any, exIndex: number) => (
-                          <div key={exIndex} className="exercise-progress">
-                            <span className="exercise-name">{exercise.name}</span>
-                            <span className="exercise-performance">
-                              {exercise.sets}×{exercise.reps} - {exercise.weight}ק״ג
-                            </span>
+                      <div className="session-details">
+                        <div className="session-meta">
+                          <span className="session-date">
+                            📅 {formatDate(session.completedAt)}
+                          </span>
+                          <span className="session-completion">
+                            ✅ {session.completedSets}/{session.totalSets} סטים
+                          </span>
+                        </div>
+                        {session.setsData && session.setsData.length > 0 && (
+                          <div className="sets-data">
+                            <h5>פרטי הסטים:</h5>
+                            <div className="sets-grid">
+                              {session.setsData.map((set: any, setIndex: number) => (
+                                <div key={setIndex} className="set-item">
+                                  <span className="set-number">#{setIndex + 1}</span>
+                                  <span className="set-details">
+                                    {set.weight ? `${set.weight}ק״ג` : ''} 
+                                    {set.weight && set.repeats ? ' × ' : ''}
+                                    {set.repeats ? `${set.repeats} חזרות` : ''}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        ))}
+                        )}
+                        {session.restTime && (
+                          <div className="rest-time">
+                            ⏱️ זמן מנוחה: {session.restTime} שניות
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

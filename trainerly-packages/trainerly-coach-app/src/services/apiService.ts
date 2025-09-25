@@ -241,18 +241,20 @@ class ApiService {
     return response.json();
   }
 
-  // Trainee Progress (for viewing)
-  async getTraineeProgress(coachId: string, traineeId: string, token: string): Promise<any[]> {
-    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/trainers/${traineeId}/progress`, {
+  // Trainee Exercise Sessions (for viewing history)
+  async getTraineeExerciseSessions(coachId: string, traineeId: string, token: string, limit?: number): Promise<any[]> {
+    const url = `${this.baseUrl}/coaches/${coachId}/trainers/${traineeId}/exercise-sessions${limit ? `?limit=${limit}` : ''}`;
+    const response = await fetch(url, {
       method: 'GET',
       headers: this.getAuthHeaders(token),
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch trainee progress: ${response.statusText}`);
+      throw new Error(`Failed to fetch trainee exercise sessions: ${response.statusText}`);
     }
 
-    return response.json();
+    const result = await response.json();
+    return result.items || [];
   }
 
   // Admin Exercise Bank (בנק התרגילים)
