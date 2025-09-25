@@ -20,8 +20,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
     name: '',
     short: '',
     note: '',
-    link: '',
-    muscleGroup: '' as 'legs' | 'back' | 'chest' | 'shoulders' | 'arms' | 'core' | 'full_body' | 'other' | ''
+    link: ''
   });
 
   useEffect(() => {
@@ -69,8 +68,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       name: '',
       short: '',
       note: '',
-      link: '',
-      muscleGroup: ''
+      link: ''
     });
     setShowAddForm(false);
     setEditingExercise(null);
@@ -81,8 +79,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       name: exercise.name,
       short: exercise.short || '',
       note: exercise.note || '',
-      link: exercise.link || '',
-      muscleGroup: exercise.muscleGroup || ''
+      link: exercise.link || ''
     });
     setEditingExercise(exercise);
     setShowAddForm(true);
@@ -171,33 +168,14 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                 />
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>קישור לסרטון</label>
-                  <input
-                    type="url"
-                    value={formData.link}
-                    onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
-                    placeholder="https://youtube.com/watch?v=..."
-                  />
-                </div>
-                <div className="form-group">
-                  <label>קבוצת שרירים</label>
-                  <select
-                    value={formData.muscleGroup}
-                    onChange={(e) => setFormData(prev => ({ ...prev, muscleGroup: e.target.value as any }))}
-                  >
-                    <option value="">בחר קבוצת שרירים</option>
-                    <option value="legs">רגליים</option>
-                    <option value="back">גב</option>
-                    <option value="chest">חזה</option>
-                    <option value="shoulders">כתפיים</option>
-                    <option value="arms">זרועות</option>
-                    <option value="core">ליבה</option>
-                    <option value="full_body">כל הגוף</option>
-                    <option value="other">אחר</option>
-                  </select>
-                </div>
+              <div className="form-group">
+                <label>קישור לסרטון</label>
+                <input
+                  type="url"
+                  value={formData.link}
+                  onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
+                  placeholder="https://youtube.com/watch?v=..."
+                />
               </div>
 
 
@@ -205,7 +183,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                 <button type="button" onClick={resetForm} className="cancel-button">
                   ביטול
                 </button>
-                <button type="submit" className="save-button" disabled={loading}>
+                <button type="submit" className="save-button" disabled={loading || !formData.name.trim() || !formData.short.trim()}>
                   {loading ? 'שומר...' : editingExercise ? 'עדכן תרגיל' : 'הוסף תרגיל'}
                 </button>
               </div>
@@ -244,19 +222,6 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                 <p className="exercise-instructions">{exercise.note}</p>
               )}
               
-              <div className="exercise-details">
-                {exercise.muscleGroup && (
-                  <span className="detail-badge category">
-                    📂 {exercise.muscleGroup === 'legs' ? 'רגליים' :
-                         exercise.muscleGroup === 'back' ? 'גב' :
-                         exercise.muscleGroup === 'chest' ? 'חזה' :
-                         exercise.muscleGroup === 'shoulders' ? 'כתפיים' :
-                         exercise.muscleGroup === 'arms' ? 'זרועות' :
-                         exercise.muscleGroup === 'core' ? 'ליבה' :
-                         exercise.muscleGroup === 'full_body' ? 'כל הגוף' : 'אחר'}
-                  </span>
-                )}
-              </div>
               
               {exercise.link && (
                 <div className="exercise-video">
