@@ -73,7 +73,6 @@ export interface Trainee {
   firstName: string;
   lastName: string;
   email?: string;
-  trainerCode?: string; // auto-generated for easy identification
   plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;
 }
@@ -199,7 +198,18 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to assign plan to trainee: ${response.statusText}`);
+      let errorMessage = `Failed to assign plan to trainee: ${response.statusText}`;
+      
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // If can't parse JSON, use default message
+      }
+      
+      throw new Error(errorMessage);
     }
   }
 

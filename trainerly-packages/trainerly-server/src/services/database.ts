@@ -408,21 +408,6 @@ export class DatabaseService {
     }
   }
 
-  async getTrainerByCode(trainerCode: string): Promise<any | null> {
-    try {
-      const command = new ScanCommand({
-        TableName: this.getTableName('trainers'),
-        FilterExpression: 'trainerCode = :trainerCode',
-        ExpressionAttributeValues: { ':trainerCode': trainerCode }
-      });
-      
-      const result = await this.client.send(command);
-      return result.Items?.[0] || null;
-    } catch (error) {
-      console.error('❌ Error getting trainer by code:', error);
-      return null;
-    }
-  }
 
   // Exercise management methods
   async saveExercise(exercise: any): Promise<boolean> {

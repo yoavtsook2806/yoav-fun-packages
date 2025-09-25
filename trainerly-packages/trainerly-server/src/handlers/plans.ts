@@ -231,6 +231,20 @@ export const assignPlan = async (
 
     // Add planId to trainer's plans array (last one is current)
     const currentPlans = trainer.plans || [];
+    
+    // Check if plan is already assigned
+    if (currentPlans.includes(planId)) {
+      console.log('⚠️ ASSIGN PLAN - Plan already assigned to this trainee');
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Plan is already assigned to this trainee'
+        })
+      };
+    }
+    
     const updatedPlans = [...currentPlans, planId];
     const updatedTrainer = {
       ...trainer,

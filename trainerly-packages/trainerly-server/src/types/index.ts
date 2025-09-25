@@ -20,7 +20,6 @@ export interface Trainer {
   firstName: string;
   lastName: string;
   email?: string;
-  trainerCode?: string; // auto-generated for easy identification
   plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;
 }
@@ -222,12 +221,10 @@ export interface TrainerCreateResponse {
 }
 
 export interface TrainerIdentifyRequest {
-  // Option 1: by coach nickname + trainer name
-  coachNickname?: string;
-  firstName?: string;
-  lastName?: string;
-  // Option 2: by trainer code
-  trainerCode?: string;
+  // Identify by coach nickname + trainer name
+  coachNickname: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface TrainerIdentifyResponse {
@@ -241,6 +238,7 @@ export interface TrainerListResponse {
     lastName: string;
     email?: string;
     createdAt: string;
+    plans?: string[];
   }>;
 }
 

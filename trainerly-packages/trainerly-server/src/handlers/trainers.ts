@@ -17,10 +17,6 @@ const headers = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
 };
 
-// Generate a simple trainer code (6 characters)
-function generateTrainerCode(): string {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
-}
 
 export const createTrainer = async (
   event: APIGatewayProxyEvent
@@ -66,22 +62,12 @@ export const createTrainer = async (
 
     // TODO: Verify JWT token and check if coach exists and is valid
 
-    // Generate unique trainer code
-    let trainerCode: string;
-    let isUnique = false;
-    do {
-      trainerCode = generateTrainerCode();
-      const existing = await db.getTrainerByCode(trainerCode);
-      isUnique = !existing;
-    } while (!isUnique);
-
     const trainer: Trainer = {
       trainerId: randomUUID(),
       coachId,
       firstName,
       lastName,
       email,
-      trainerCode,
       createdAt: new Date().toISOString()
     };
 
@@ -136,7 +122,8 @@ export const listTrainers = async (
         firstName: trainer.firstName,
         lastName: trainer.lastName,
         email: trainer.email,
-        createdAt: trainer.createdAt
+        createdAt: trainer.createdAt,
+        plans: trainer.plans || []
       }))
     };
 
@@ -245,15 +232,12 @@ export const identifyTrainer = async (
     }
 
     const requestData: TrainerIdentifyRequest = JSON.parse(event.body);
-    const { coachNickname, firstName, lastName, trainerCode } = requestData;
+    const { coachNickname, firstName, lastName } = requestData;
 
     let trainer: Trainer | null = null;
 
-    if (trainerCode) {
-      // Option 2: Identify by trainer code
-      trainer = await db.getTrainerByCode(trainerCode);
-    } else if (coachNickname && firstName && lastName) {
-      // Option 1: Identify by coach nickname + trainer name
+    if (coachNickname && firstName && lastName) {
+      // Identify by coach nickname + trainer name
       const coach = await db.getCoachByNickname(coachNickname.toLowerCase().trim());
       if (coach) {
         const trainers = await db.getTrainersByCoach(coach.coachId);
@@ -268,7 +252,7 @@ export const identifyTrainer = async (
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Either provide trainerCode OR (coachNickname + firstName + lastName)'
+          message: 'coachNickname, firstName and lastName are required'
         })
       };
     }

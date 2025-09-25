@@ -332,9 +332,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
               <div className="trainee-header">
                 <div className="trainee-info">
                   <h3 className="trainee-name">{trainee.firstName} {trainee.lastName}</h3>
-                  {trainee.trainerCode && (
-                    <span className="trainee-age">קוד: {trainee.trainerCode}</span>
-                  )}
                 </div>
                 <div className="trainee-actions">
                   <button 
