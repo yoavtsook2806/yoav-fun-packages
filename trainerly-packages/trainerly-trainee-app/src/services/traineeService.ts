@@ -89,6 +89,20 @@ interface CachedTraineeData {
 const API_BASE_URL = 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
+// Exercise Session types for server API
+interface ExerciseSessionData {
+  exerciseName: string;
+  trainingType: string;
+  completedAt: string;
+  totalSets: number;
+  completedSets: number;
+  setsData: Array<{
+    weight?: number;
+    repeats?: number;
+  }>;
+  restTime?: number;
+}
+
 export const fetchTraineeData = async (traineeId: string): Promise<TraineeData | null> => {
   try {
     console.log(`🔄 Fetching trainee data for ID: ${traineeId}`);
@@ -221,4 +235,44 @@ export const clearTraineeCache = (traineeId: string) => {
   const cacheKey = `trainerly_trainee_data_${traineeId}`;
   localStorage.removeItem(cacheKey);
   console.log('🗑️ Cleared trainee cache');
+};
+
+/**
+ * Sync exercise completion to server
+ */
+export const syncExerciseSession = async (
+  traineeId: string,
+  exerciseSessionData: ExerciseSessionData
+): Promise<boolean> => {
+  try {
+    console.log('🔄 Syncing exercise session to server:', {
+      traineeId,
+      exerciseName: exerciseSessionData.exerciseName,
+      trainingType: exerciseSessionData.trainingType,
+      completedSets: exerciseSessionData.completedSets,
+      totalSets: exerciseSessionData.totalSets
+    });
+
+    const response = await fetch(`${API_BASE_URL}/trainers/${traineeId}/exercise-sessions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(exerciseSessionData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Server error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('✅ Exercise session synced successfully:', result.sessionId);
+    return true;
+
+  } catch (error) {
+    console.error('❌ Failed to sync exercise session:', error);
+    // Don't throw error - we want to continue even if sync fails
+    return false;
+  }
 };

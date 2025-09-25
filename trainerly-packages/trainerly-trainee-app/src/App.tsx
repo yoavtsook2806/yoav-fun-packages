@@ -6,7 +6,7 @@ import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import AuthScreen from './components/AuthScreen';
-import { fetchTraineeData, clearTraineeCache } from './services/traineeService';
+import { fetchTraineeData, clearTraineeCache, syncExerciseSession } from './services/traineeService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
   getLastUsedWeight,
@@ -339,11 +339,34 @@ function App() {
         };
         
         // Use setTimeout to avoid potential React batching issues
-        setTimeout(() => {
+        setTimeout(async () => {
           // Save to local history
           saveExerciseEntry(exerciseName, historyEntry);
           
-          // Note: Server sync functionality removed since we're focusing on local storage
+          // Sync to server if authenticated
+          if (authenticatedTraineeId) {
+            try {
+              const exerciseSessionData = {
+                exerciseName,
+                trainingType: prev.selectedTraining!,
+                completedAt: historyEntry.date,
+                totalSets: historyEntry.totalSets,
+                completedSets: historyEntry.completedSets,
+                setsData: historyEntry.setsData || [],
+                restTime: historyEntry.restTime
+              };
+              
+              const syncSuccess = await syncExerciseSession(authenticatedTraineeId, exerciseSessionData);
+              if (syncSuccess) {
+                console.log('✅ Exercise synced to server:', exerciseName);
+              } else {
+                console.log('⚠️ Exercise saved locally but server sync failed:', exerciseName);
+              }
+            } catch (error) {
+              console.error('❌ Server sync error:', error);
+            }
+          }
+          
           console.log('Exercise completed:', exerciseName, historyEntry);
         }, 0);
       }
