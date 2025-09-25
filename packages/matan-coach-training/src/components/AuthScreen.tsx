@@ -6,6 +6,9 @@ interface Coach {
   email: string;
   nickname: string;
   valid: boolean;
+  phone?: string;
+  age?: number;
+  createdAt: string;
 }
 
 interface AuthScreenProps {
@@ -110,7 +113,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
             name: coachData.name,
             email: coachData.email,
             nickname: coachData.nickname,
-            valid: data.valid
+            valid: data.valid,
+            phone: coachData.phone,
+            age: coachData.age,
+            createdAt: coachData.createdAt
           }, data.token);
         } else {
           // Fallback if coach details fetch fails
@@ -119,7 +125,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
             name: '',
             email: loginData.email,
             nickname: '',
-            valid: data.valid
+            valid: data.valid,
+            createdAt: new Date().toISOString()
           }, data.token);
         }
       } else {
@@ -160,7 +167,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           name: registerData.name,
           email: registerData.email,
           nickname: data.nickname,
-          valid: data.valid
+          valid: data.valid,
+          createdAt: new Date().toISOString()
         }, data.token);
       } else {
         setError(data.message || 'שגיאה ברישום');

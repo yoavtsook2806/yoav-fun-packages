@@ -44,7 +44,7 @@ function App() {
     return (
       <div className="app">
         <iframe
-          src="http://localhost:3001/"
+          src="http://localhost:3002/coach/"
           style={{
             width: '100%',
             height: '100vh',

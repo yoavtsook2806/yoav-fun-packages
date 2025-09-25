@@ -66,7 +66,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       }
 
       // TODO: Replace with actual API service call
-      console.log('Updating coach profile:', updateData);
+      console.log('Updating coach profile:', updateData, 'with token:', token);
       
       // Mock API call for now
       await new Promise(resolve => setTimeout(resolve, 1000));

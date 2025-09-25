@@ -5,7 +5,6 @@ import {
   SERVER_TRAINING_PLAN_KEY, 
   USER_EXERCISE_DATA_KEY, 
   USER_ID_KEY,
-  EXERCISE_HISTORY_KEY,
   clearAllLocalStorageData 
 } from '../constants/localStorage';
 
