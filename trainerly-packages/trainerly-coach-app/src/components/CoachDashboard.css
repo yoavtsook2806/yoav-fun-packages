@@ -1,35 +1,36 @@
-/* CoachDashboard - Modern Professional Design */
+/* CoachDashboard - Modern Dark Theme */
 
 .coach-dashboard {
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+  height: 100vh;
+  background: var(--gradient-bg);
   font-family: var(--font-family-sans);
   direction: rtl;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .dashboard-background {
   position: fixed;
   inset: 0;
   z-index: -1;
-  overflow: hidden;
 }
 
 .dashboard-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, var(--primary-100) 0%, transparent 50%),
-              radial-gradient(circle at 70% 80%, var(--secondary-100) 0%, transparent 50%);
+  background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
   opacity: 0.6;
 }
 
 /* Header */
 .dashboard-header {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-glass);
   backdrop-filter: blur(20px);
-  border-bottom: var(--border-width-1) solid var(--neutral-200);
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
+  border-bottom: var(--border-width-1) solid var(--border-primary);
+  box-shadow: var(--shadow-lg);
+  flex-shrink: 0;
   z-index: var(--z-sticky);
 }
 
@@ -57,7 +58,7 @@
 .welcome-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--neutral-800);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -71,7 +72,7 @@
 
 .welcome-subtitle {
   font-size: var(--font-size-sm);
-  color: var(--neutral-600);
+  color: var(--text-secondary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -82,41 +83,6 @@
   font-size: var(--font-size-base);
 }
 
-.coach-status {
-  display: flex;
-  align-items: center;
-}
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  background: var(--success-100);
-  color: var(--success-700);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  border: var(--border-width-1) solid var(--success-200);
-}
-
-.status-badge.active .status-dot {
-  width: var(--space-2);
-  height: var(--space-2);
-  background: var(--success-500);
-  border-radius: var(--border-radius-full);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
 .header-actions {
   display: flex;
   align-items: center;
@@ -124,56 +90,65 @@
 }
 
 .action-button {
-  width: var(--space-12);
-  height: var(--space-12);
-  border: none;
-  border-radius: var(--border-radius-full);
-  background: var(--gradient-primary);
-  color: white;
-  font-size: var(--font-size-lg);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-xl);
+  width: 48px;
+  height: 48px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: var(--transition-base);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: var(--font-size-lg);
   box-shadow: var(--shadow-sm);
 }
 
 .action-button:hover {
-  transform: translateY(-2px) scale(1.05);
+  background: var(--gradient-primary);
+  color: white;
+  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
 }
 
 .action-button.settings {
-  background: var(--gradient-secondary);
+  background: var(--bg-card);
 }
 
 /* Main Content */
 .dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-6);
+  padding: var(--space-4) var(--space-6);
+  width: 100%;
+  overflow-y: auto;
 }
 
 /* Logo Section */
 .logo-section {
   text-align: center;
-  margin-bottom: var(--space-16);
-  padding: var(--space-8) 0;
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) 0;
+  flex-shrink: 0;
 }
 
 .logo-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-3);
 }
 
 .trainerly-logo {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
   transition: all var(--transition-base);
 }
 
@@ -183,12 +158,9 @@
 }
 
 .app-title {
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-extrabold);
-  background: var(--gradient-rainbow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   margin: 0;
   text-align: center;
   letter-spacing: -0.02em;
@@ -196,7 +168,7 @@
 
 .app-subtitle {
   font-size: var(--font-size-lg);
-  color: var(--neutral-600);
+  color: var(--text-secondary);
   margin: 0;
   font-weight: var(--font-weight-medium);
   text-align: center;
@@ -216,14 +188,14 @@
 }
 
 .simple-manage-button {
-  background: white;
-  border: var(--border-width-2) solid var(--neutral-200);
+  background: var(--bg-card);
+  border: var(--border-width-2) solid var(--border-primary);
   border-radius: var(--border-radius-2xl);
   padding: var(--space-10) var(--space-8);
   cursor: pointer;
   transition: all var(--transition-base);
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
 }
@@ -232,7 +204,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--gradient-brand);
+  background: var(--gradient-primary);
   opacity: 0;
   transition: opacity var(--transition-base);
 }
@@ -240,191 +212,114 @@
 .simple-manage-button:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  border-color: var(--primary-300);
+  border-color: var(--border-accent);
 }
 
 .simple-manage-button:hover::before {
-  opacity: 0.05;
+  opacity: 0.1;
 }
 
-.simple-manage-button:hover .simple-button-icon {
-  transform: scale(1.1);
+.simple-manage-button:hover .simple-button-content {
+  color: var(--text-primary);
 }
 
-.simple-manage-button:hover .simple-button-text {
-  color: var(--primary-700);
+.simple-button-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--text-secondary);
+  transition: color var(--transition-base);
 }
 
 .simple-button-icon {
-  font-size: 4rem;
-  margin-bottom: var(--space-4);
-  transition: all var(--transition-base);
-  position: relative;
-  z-index: 1;
+  font-size: 3rem;
+  margin-bottom: var(--space-2);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
-.simple-button-text {
+.simple-button-title {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--neutral-700);
+  font-weight: var(--font-weight-bold);
   margin: 0;
-  transition: all var(--transition-base);
-  position: relative;
-  z-index: 1;
+  color: inherit;
 }
 
-/* Error State */
-.dashboard-error {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-8);
-  background: linear-gradient(135deg, var(--error-50) 0%, var(--neutral-50) 100%);
-}
-
-.error-container {
-  background: white;
-  border-radius: var(--border-radius-2xl);
-  padding: var(--space-12);
-  text-align: center;
-  max-width: 500px;
-  box-shadow: var(--shadow-xl);
-  border: var(--border-width-1) solid var(--error-200);
-}
-
-.error-icon {
-  font-size: 4rem;
-  margin-bottom: var(--space-6);
-}
-
-.error-text {
-  color: var(--error-700);
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--space-8);
-  font-weight: var(--font-weight-medium);
-}
-
-.retry-button {
-  background: var(--gradient-error);
-  color: white;
-  border: none;
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--border-radius-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin: 0 auto;
-  box-shadow: var(--shadow-sm);
-}
-
-.retry-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.button-icon {
-  font-size: var(--font-size-base);
+.simple-button-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .dashboard-main {
-    padding: var(--space-6) var(--space-4);
+@media (max-width: 768px) {
+  .header-content {
+    padding: var(--space-3) var(--space-4);
   }
-  
+
+  .welcome-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .welcome-icon {
+    font-size: var(--font-size-2xl);
+  }
+
+  .dashboard-main {
+    padding: var(--space-3) var(--space-4);
+  }
+
   .simple-management-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: var(--space-6);
   }
-  
-  .header-content {
-    padding: var(--space-3) var(--space-4);
-  }
-}
 
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: var(--space-4);
-    align-items: center;
-  }
-  
-  .header-info {
-    flex-direction: column;
-    gap: var(--space-3);
-    text-align: center;
-  }
-  
-  .welcome-title {
-    font-size: var(--font-size-xl);
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  
-  .trainerly-logo {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .app-title {
-    font-size: var(--font-size-3xl);
-  }
-  
-  .app-subtitle {
-    font-size: var(--font-size-base);
-  }
-  
-  .simple-management-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-  
   .simple-manage-button {
     padding: var(--space-8) var(--space-6);
   }
-  
+
   .simple-button-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
-  
-  .simple-button-text {
+
+  .simple-button-title {
     font-size: var(--font-size-lg);
   }
-  
-  .logo-section {
-    margin-bottom: var(--space-12);
-    padding: var(--space-6) 0;
+
+  .trainerly-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .app-title {
+    font-size: var(--font-size-2xl);
   }
 }
 
 @media (max-width: 480px) {
-  .dashboard-main {
-    padding: var(--space-4) var(--space-3);
+  .header-content {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
   }
-  
+
+  .header-actions {
+    align-self: flex-end;
+  }
+
+  .simple-management-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
   .simple-manage-button {
     padding: var(--space-6) var(--space-4);
   }
-  
+
   .simple-button-icon {
-    font-size: 2.5rem;
-    margin-bottom: var(--space-3);
-  }
-  
-  .simple-button-text {
-    font-size: var(--font-size-base);
-  }
-  
-  .error-container {
-    padding: var(--space-8);
-  }
-  
-  .error-icon {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 }

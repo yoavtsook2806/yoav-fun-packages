@@ -177,12 +177,10 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
       <div className="logo-section">
         <div className="logo-container">
           <img 
-            src="/trainerly-logo.svg" 
+            src="/TrainerlyLogo.png" 
             alt="Trainerly" 
             className="trainerly-logo"
           />
-          <h1 className="app-title">Trainerly</h1>
-          <p className="app-subtitle">אפליקציית המתאמנים</p>
         </div>
       </div>
       
