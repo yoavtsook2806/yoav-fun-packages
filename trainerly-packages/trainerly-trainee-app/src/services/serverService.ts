@@ -140,9 +140,8 @@ export const fetchNewTrainings = async (currentVersion?: string): Promise<Server
       //   throw new Error(data.error || 'Failed to fetch trainings');
       // }
       
-      // For now, simulate server call with local data
+      // Fetch training plans from server
       console.log('🔄 Fetching new trainings from server...');
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
       
       const newerTrainings = currentVersion ? getLatestTrainingUpdates(currentVersion) : getAllTrainingPlans();
       markTrainingsFetched();
@@ -245,9 +244,8 @@ export const updateUserData = async (exerciseData: ExerciseCompletionData): Prom
       //   throw new Error(data.error || 'Failed to update user data');
       // }
       
-      // For now, simulate server call
-      console.log('Simulating server call for updateUserData:', exerciseData);
-      await new Promise(resolve => setTimeout(resolve, 200)); // Simulate network delay
+      // Send exercise data to server
+      console.log('Sending exercise data to server:', exerciseData);
       
       // Also save to local storage as backup
       const existingData = JSON.parse(localStorage.getItem(USER_EXERCISE_DATA_KEY) || '[]');

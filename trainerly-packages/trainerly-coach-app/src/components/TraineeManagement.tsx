@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, Trainee, TrainingPlan } from '../services/apiService';
+import { apiService, Trainee, TrainingPlanSummary } from '../services/apiService';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -10,7 +10,7 @@ interface TraineeManagementProps {
 
 const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, onBack }) => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
-  const [plans, setPlans] = useState<TrainingPlan[]>([]);
+  const [plans, setPlans] = useState<TrainingPlanSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);

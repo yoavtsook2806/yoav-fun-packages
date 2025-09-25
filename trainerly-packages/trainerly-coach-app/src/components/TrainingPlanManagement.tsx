@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiService, TrainingPlan, Exercise, TrainingItem, PrescribedExercise } from '../services/apiService';
+import { apiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/apiService';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -9,7 +9,7 @@ interface TrainingPlanManagementProps {
 }
 
 const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId, token, onBack }) => {
-  const [plans, setPlans] = useState<TrainingPlan[]>([]);
+  const [plans, setPlans] = useState<TrainingPlanSummary[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -459,24 +459,17 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               
               <div className="plan-stats">
                 <div className="stat">
-                  <span className="stat-number">{plan.trainings.length}</span>
+                  <span className="stat-number">{plan.trainingsCount}</span>
                   <span className="stat-label">אימונים</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-number">
-                    {plan.trainings.reduce((total, training) => total + training.exercises.length, 0)}
-                  </span>
+                  <span className="stat-number">-</span>
                   <span className="stat-label">תרגילים</span>
                 </div>
               </div>
               
-              <div className="plan-trainings">
-                {plan.trainings.map((training, index) => (
-                  <div key={training.trainingId} className="training-summary">
-                    <strong>אימון {training.name}</strong>
-                    <span>{training.exercises.length} תרגילים</span>
-                  </div>
-                ))}
+              <div className="plan-created">
+                <span className="created-date">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
               </div>
             </div>
           ))

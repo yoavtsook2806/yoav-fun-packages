@@ -22,6 +22,14 @@ export interface TrainingPlan {
   updatedAt: string;
 }
 
+export interface TrainingPlanSummary {
+  planId: string;
+  name: string;
+  description?: string;
+  trainingsCount: number;
+  createdAt: string;
+}
+
 export interface TrainingItem {
   trainingId: string;
   name: string;
@@ -101,7 +109,9 @@ class ApiService {
       throw new Error(`Failed to fetch exercises: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    // Server returns { items: Exercise[] }, we need just the array
+    return data.items || [];
   }
 
   // Training Plan Management
@@ -119,7 +129,7 @@ class ApiService {
     return response.json();
   }
 
-  async getTrainingPlans(coachId: string, token: string): Promise<TrainingPlan[]> {
+  async getTrainingPlans(coachId: string, token: string): Promise<TrainingPlanSummary[]> {
     const response = await fetch(`${this.baseUrl}/coaches/${coachId}/plans`, {
       method: 'GET',
       headers: this.getAuthHeaders(token),
@@ -129,7 +139,9 @@ class ApiService {
       throw new Error(`Failed to fetch training plans: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    // Server returns { items: TrainingPlanSummary[] }, we need just the array
+    return data.items || [];
   }
 
   // Trainee Management
@@ -157,7 +169,9 @@ class ApiService {
       throw new Error(`Failed to fetch trainees: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    // Server returns { items: Trainee[] }, we need just the array
+    return data.items || [];
   }
 
   async assignPlanToTrainee(coachId: string, traineeId: string, planId: string, token: string): Promise<void> {
