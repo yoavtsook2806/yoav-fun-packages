@@ -442,6 +442,38 @@ export class DatabaseService {
     }
   }
 
+  async deleteExercise(exerciseId: string): Promise<boolean> {
+    try {
+      const command = new DeleteCommand({
+        TableName: this.getTableName('exercises'),
+        Key: { exerciseId }
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Exercise ${exerciseId} deleted successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error deleting exercise:', error);
+      return false;
+    }
+  }
+
+  async updateExercise(exercise: any): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: this.getTableName('exercises'),
+        Item: exercise
+      });
+      
+      await this.client.send(command);
+      console.log(`✅ Exercise ${exercise.exerciseId} updated successfully`);
+      return true;
+    } catch (error) {
+      console.error('❌ Error updating exercise:', error);
+      return false;
+    }
+  }
+
   // Training plan management methods (updated for new structure)
   async savePlan(plan: any): Promise<boolean> {
     try {

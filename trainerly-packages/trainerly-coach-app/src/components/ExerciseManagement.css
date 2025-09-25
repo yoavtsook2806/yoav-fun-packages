@@ -373,7 +373,20 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  animation: slideInUp 0.3s ease;
 }
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 .exercise-card:hover {
   transform: translateY(-5px);
@@ -419,6 +432,7 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
 }
+
 
 .exercise-description {
   color: #64748b;

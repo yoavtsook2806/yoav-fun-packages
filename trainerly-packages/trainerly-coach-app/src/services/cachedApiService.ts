@@ -143,6 +143,24 @@ class CachedApiService {
     return newExercise;
   }
 
+  async updateExercise(coachId: string, exerciseId: string, token: string, exerciseData: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>): Promise<Exercise> {
+    const updatedExercise = await apiService.updateExercise(coachId, exerciseId, token, exerciseData);
+    
+    // Update exercises cache by replacing the updated exercise
+    const cachedExercises = cacheService.get<Exercise[]>(coachId, CACHE_KEYS.EXERCISES) || [];
+    const updatedExercises = cachedExercises.map(exercise => 
+      exercise.exerciseId === exerciseId ? updatedExercise : exercise
+    );
+    cacheService.set(coachId, CACHE_KEYS.EXERCISES, updatedExercises);
+    
+    // Dispatch cache update event
+    window.dispatchEvent(new CustomEvent('cacheUpdated', {
+      detail: { key: 'exercises', coachId }
+    }));
+    
+    return updatedExercise;
+  }
+
   // Training Plans
   async getTrainingPlans(coachId: string, token: string, options?: LoadOptions): Promise<CachedData<TrainingPlanSummary[]>> {
     return this.loadWithCache(

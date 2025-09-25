@@ -178,6 +178,22 @@ functions:
           method: get
           cors: true
 
+  deleteExercise:
+    handler: src/handlers/exercises.deleteExercise
+    events:
+      - http:
+          path: /coaches/{coachId}/exercises/{exerciseId}
+          method: delete
+          cors: true
+
+  updateExercise:
+    handler: src/handlers/exercises.updateExercise
+    events:
+      - http:
+          path: /coaches/{coachId}/exercises/{exerciseId}
+          method: put
+          cors: true
+
   # Training plan management
   createPlan:
     handler: src/handlers/plans.createPlan

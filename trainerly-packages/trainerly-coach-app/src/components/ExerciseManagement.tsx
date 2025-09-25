@@ -72,8 +72,8 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       setLoading(true);
       
       if (editingExercise) {
-        // Update existing exercise (would need an update endpoint)
-        console.log('Update exercise functionality would go here');
+        // Update existing exercise
+        await cachedApiService.updateExercise(coachId, editingExercise.exerciseId, token, formData);
       } else {
         // Create new exercise
         await cachedApiService.createExercise(coachId, token, formData);
@@ -121,6 +121,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
     setEditingExercise(exercise);
     setShowAddForm(true);
   };
+
 
 
   if (loading && exercises.length === 0) {
@@ -253,7 +254,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
           </div>
         ) : (
           exercises.map((exercise) => (
-            <div key={exercise.exerciseId} className="exercise-card">
+            <div key={exercise.exerciseId} data-exercise-id={exercise.exerciseId} className="exercise-card">
               <div className="exercise-header">
                 <h3 className="exercise-name">{exercise.name}</h3>
                 <div className="exercise-actions">

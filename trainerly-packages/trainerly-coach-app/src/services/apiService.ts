@@ -283,6 +283,31 @@ class ApiService {
     return response.json();
   }
 
+  async updateExercise(coachId: string, exerciseId: string, token: string, exerciseData: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>): Promise<Exercise> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/exercises/${exerciseId}`, {
+      method: 'PUT',
+      headers: this.getAuthHeaders(token),
+      body: JSON.stringify(exerciseData),
+    });
+
+    if (!response.ok) {
+      let errorMessage = `Failed to update exercise: ${response.statusText}`;
+      
+      try {
+        const errorData = await response.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // If can't parse JSON, use default message
+      }
+      
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  }
+
   // Admin Training Plan Bank
   async getAdminTrainingPlans(token: string): Promise<TrainingPlanSummary[]> {
     const response = await fetch(`${this.baseUrl}/admin/training-plans`, {
