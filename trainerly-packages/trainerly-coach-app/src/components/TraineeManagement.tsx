@@ -123,7 +123,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const viewProgress = async (trainee: Trainee) => {
     try {
       setLoading(true);
-      const sessionsResult = await cachedApiService.getTraineeExerciseSessions(coachId, trainee.trainerId, token, 50); // Get last 50 sessions
+      // Force refresh to bypass cache - exercise sessions change frequently
+      const sessionsResult = await cachedApiService.getTraineeExerciseSessions(coachId, trainee.trainerId, token, 50, { forceRefresh: true }); // Get last 50 sessions
       const sessions = sessionsResult.data;
       setTraineeProgress(sessions);
       setSelectedTrainee(trainee);
