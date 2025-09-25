@@ -5,8 +5,6 @@ export const mockDatabase = {
   trainers: new Map<string, any>(),
   exercises: new Map<string, any>(),
   plans: new Map<string, any>(),
-  assignments: new Map<string, any>(),
-  progress: new Map<string, any>(),
 
   // Clear all data between tests
   clear() {
@@ -14,8 +12,6 @@ export const mockDatabase = {
     this.trainers.clear();
     this.exercises.clear();
     this.plans.clear();
-    this.assignments.clear();
-    this.progress.clear();
   },
 
   // Coach operations
@@ -140,54 +136,21 @@ export const mockDatabase = {
     return null;
   },
 
-  // Plan assignment operations
-  async savePlanAssignment(assignment: any): Promise<boolean> {
-    this.assignments.set(assignment.assignmentId, assignment);
-    return true;
-  },
-
+  // Trainer plans (using trainer.plans array instead of assignments)
   async getPlansByTrainer(trainerId: string): Promise<any[]> {
-    const assignments = [];
-    for (const assignment of this.assignments.values()) {
-      if (assignment.trainerId === trainerId && assignment.active) {
-        const plan = this.plans.get(assignment.planId);
-        if (plan) {
-          assignments.push(plan);
-        }
+    const trainer = this.trainers.get(trainerId);
+    if (!trainer || !trainer.plans || trainer.plans.length === 0) {
+      return [];
+    }
+    
+    const plans = [];
+    for (const planId of trainer.plans) {
+      const plan = this.plans.get(planId);
+      if (plan) {
+        plans.push(plan);
       }
     }
-    return assignments;
-  },
-
-  // Progress operations
-  async saveProgress(progress: any): Promise<boolean> {
-    const key = `${progress.trainerId}_${progress.planId}_${progress.trainingId}`;
-    this.progress.set(key, progress);
-    return true;
-  },
-
-  async getProgressByTrainer(trainerId: string): Promise<any[]> {
-    const progressList = [];
-    for (const progress of this.progress.values()) {
-      if (progress.trainerId === trainerId) {
-        progressList.push(progress);
-      }
-    }
-    return progressList;
-  },
-
-  async getProgressByCoachAndTrainer(coachId: string, trainerId: string): Promise<any[]> {
-    const progressList = [];
-    for (const progress of this.progress.values()) {
-      if (progress.trainerId === trainerId) {
-        // Check if trainer belongs to coach
-        const trainer = this.trainers.get(trainerId);
-        if (trainer && trainer.coachId === coachId) {
-          progressList.push(progress);
-        }
-      }
-    }
-    return progressList;
+    return plans;
   },
 
   // Admin operations

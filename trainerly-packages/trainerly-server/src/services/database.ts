@@ -545,68 +545,7 @@ export class DatabaseService {
     }
   }
 
-  // Plan assignment methods
-  async savePlanAssignment(assignment: any): Promise<boolean> {
-    try {
-      const command = new PutCommand({
-        TableName: this.getTableName('plan-assignments'),
-        Item: assignment
-      });
-      
-      await this.client.send(command);
-      console.log(`✅ Plan assignment ${assignment.assignmentId} saved successfully`);
-      return true;
-    } catch (error) {
-      console.error('❌ Error saving plan assignment:', error);
-      return false;
-    }
-  }
 
-  // Progress tracking methods
-  async saveProgress(progress: any): Promise<boolean> {
-    try {
-      const command = new PutCommand({
-        TableName: this.getTableName('progress'),
-        Item: progress
-      });
-      
-      await this.client.send(command);
-      console.log(`✅ Progress ${progress.progressId} saved successfully`);
-      return true;
-    } catch (error) {
-      console.error('❌ Error saving progress:', error);
-      return false;
-    }
-  }
-
-  async getProgressByTrainer(trainerId: string, filters?: any): Promise<any[]> {
-    try {
-      let filterExpression = 'trainerId = :trainerId';
-      const expressionAttributeValues: any = { ':trainerId': trainerId };
-
-      if (filters?.planId) {
-        filterExpression += ' AND planId = :planId';
-        expressionAttributeValues[':planId'] = filters.planId;
-      }
-
-      if (filters?.trainingId) {
-        filterExpression += ' AND trainingId = :trainingId';
-        expressionAttributeValues[':trainingId'] = filters.trainingId;
-      }
-
-      const command = new ScanCommand({
-        TableName: this.getTableName('progress'),
-        FilterExpression: filterExpression,
-        ExpressionAttributeValues: expressionAttributeValues
-      });
-      
-      const result = await this.client.send(command);
-      return result.Items || [];
-    } catch (error) {
-      console.error('❌ Error getting progress by trainer:', error);
-      return [];
-    }
-  }
 
   // Admin functionality
   async getAdminExercises(): Promise<any[]> {

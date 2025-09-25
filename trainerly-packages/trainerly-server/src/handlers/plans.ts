@@ -5,10 +5,8 @@ import {
   PlanCreateRequest, 
   PlanCreateResponse, 
   PlanListResponse,
-  PlanAssignResponse,
   TrainerPlansListResponse,
-  TrainingPlan,
-  PlanAssignment 
+  TrainingPlan
 } from '../types';
 
 const headers = {
@@ -219,22 +217,20 @@ export const assignPlan = async (
       };
     }
 
-    const assignment: PlanAssignment = {
-      assignmentId: randomUUID(),
+    // Add planId to trainer's plans array (last one is current)
+    const updatedPlans = trainer.plans ? [...trainer.plans, planId] : [planId];
+    const updatedTrainer = {
+      ...trainer,
+      plans: updatedPlans
+    };
+
+    await db.saveTrainer(updatedTrainer);
+
+    const response = {
       trainerId,
       planId,
       assignedAt: new Date().toISOString(),
-      active: true
-    };
-
-    await db.savePlanAssignment(assignment);
-
-    const response: PlanAssignResponse = {
-      assignmentId: assignment.assignmentId,
-      trainerId: assignment.trainerId,
-      planId: assignment.planId,
-      assignedAt: assignment.assignedAt,
-      active: assignment.active
+      currentPlan: planId
     };
 
     return {

@@ -67,13 +67,6 @@ export interface TrainingPlan {
   updatedAt: string;
 }
 
-export interface PlanAssignment {
-  assignmentId: string;
-  trainerId: string;
-  planId: string;
-  assignedAt: string;
-  active: boolean;
-}
 
 export interface SetResult {
   setIndex: number;
@@ -89,15 +82,6 @@ export interface ExerciseProgressItem {
   results: SetResult[];
 }
 
-export interface TrainingProgress {
-  progressId: string;
-  trainerId: string;
-  planId: string;
-  trainingId: string;
-  performedAt: string;
-  exercises: ExerciseProgressItem[];
-  createdAt: string;
-}
 
 export interface ExerciseCompletionData {
   userId: string;
@@ -309,13 +293,6 @@ export interface PlanListResponse {
   }>;
 }
 
-export interface PlanAssignResponse {
-  assignmentId: string;
-  trainerId: string;
-  planId: string;
-  assignedAt: string;
-  active: boolean;
-}
 
 export interface TrainerPlansListResponse {
   items: Array<{
