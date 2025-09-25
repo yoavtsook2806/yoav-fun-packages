@@ -64,10 +64,10 @@ const TraineeTrainingHistoryModal: React.FC<TraineeTrainingHistoryModalProps> = 
   const [exerciseHistory, setExerciseHistory] = useState<ExerciseHistoryEntry[]>([]);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && trainee) {
       loadTrainingHistory();
     }
-  }, [isOpen, trainee.trainerId]);
+  }, [isOpen, trainee?.trainerId]);
 
   const loadTrainingHistory = async () => {
     try {
@@ -175,7 +175,7 @@ const TraineeTrainingHistoryModal: React.FC<TraineeTrainingHistoryModalProps> = 
     setExerciseHistory([]);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !trainee) return null;
 
   return (
     <div className="modal-overlay">

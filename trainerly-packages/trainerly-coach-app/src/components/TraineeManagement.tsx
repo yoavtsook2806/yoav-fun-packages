@@ -400,13 +400,15 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       )}
 
       {/* Training History Modal */}
-      <TraineeTrainingHistoryModal
-        trainee={historyTrainee!}
-        coachId={coachId}
-        token={token}
-        isOpen={showTrainingHistory}
-        onClose={closeTrainingHistory}
-      />
+      {historyTrainee && (
+        <TraineeTrainingHistoryModal
+          trainee={historyTrainee}
+          coachId={coachId}
+          token={token}
+          isOpen={showTrainingHistory}
+          onClose={closeTrainingHistory}
+        />
+      )}
     </div>
   );
 };
