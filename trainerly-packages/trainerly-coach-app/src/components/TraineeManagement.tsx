@@ -123,6 +123,12 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const viewProgress = async (trainee: Trainee) => {
     try {
       setLoading(true);
+      
+      // Clear any stale cache for this trainee first
+      const cacheKey = `trainee_progress_${trainee.trainerId}`;
+      localStorage.removeItem(`coach_${coachId}_${cacheKey}`);
+      console.log('🗑️ Cleared stale cache for trainee:', trainee.trainerId);
+      
       // Force refresh to bypass cache - exercise sessions change frequently
       const sessionsResult = await cachedApiService.getTraineeExerciseSessions(coachId, trainee.trainerId, token, 50, { forceRefresh: true }); // Get last 50 sessions
       const sessions = sessionsResult.data;
