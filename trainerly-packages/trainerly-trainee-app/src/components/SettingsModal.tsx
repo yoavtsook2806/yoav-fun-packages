@@ -15,6 +15,8 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   onClearAllHistory,
+  onLogout,
+  trainerName,
   currentTrainingPlanVersion,
   onTrainingPlanChange
 }) => {
@@ -131,8 +133,33 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           )}
 
+          {/* User Info */}
+          {trainerName && (
+            <div className="settings-section">
+              <div className="settings-item">
+                <h3>👤 מתאמן מחובר</h3>
+                <p className="user-name">{trainerName}</p>
+                <p className="settings-description">
+                  מחובר למערכת האימונים
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* App Actions */}
           <div className="settings-section">
+            <div className="settings-item">
+              <button 
+                className="logout-button"
+                onClick={onLogout}
+              >
+                🚪 התנתק מהמערכת
+              </button>
+              <p className="settings-description">
+                התנתקות תחזיר אותך למסך הכניסה
+              </p>
+            </div>
+            
             <div className="settings-item">
               <button 
                 className="danger-button"

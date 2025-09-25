@@ -332,9 +332,16 @@ export const getCurrentVersionForFetch = (): string | undefined => {
 export const clearServerData = clearAllLocalStorageData;
 
 /**
- * Get user ID from local storage or generate one
+ * Get user ID from local storage (trainee ID from authentication)
  */
 export const getUserId = (): string => {
+  // Use the authenticated trainee ID as the user ID
+  const traineeId = localStorage.getItem('trainerly_trainee_id');
+  if (traineeId) {
+    return traineeId;
+  }
+  
+  // Fallback to old behavior if no trainee ID (shouldn't happen in authenticated app)
   let userId = localStorage.getItem(USER_ID_KEY);
   if (!userId) {
     userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

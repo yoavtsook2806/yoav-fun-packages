@@ -12847,9 +12847,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"trainerly-coach-app@workspace:packages/trainerly-coach-app":
+"trainerly-coach-app@workspace:trainerly-packages/trainerly-coach-app":
   version: 0.0.0-use.local
-  resolution: "trainerly-coach-app@workspace:packages/trainerly-coach-app"
+  resolution: "trainerly-coach-app@workspace:trainerly-packages/trainerly-coach-app"
   dependencies:
     "@types/react": "npm:^18.2.66"
     "@types/react-dom": "npm:^18.2.22"
@@ -12866,9 +12866,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"trainerly-server@workspace:packages/trainerly-server":
+"trainerly-server@workspace:trainerly-packages/trainerly-server":
   version: 0.0.0-use.local
-  resolution: "trainerly-server@workspace:packages/trainerly-server"
+  resolution: "trainerly-server@workspace:trainerly-packages/trainerly-server"
   dependencies:
     "@aws-sdk/client-dynamodb": "npm:^3.896.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.896.0"
@@ -12898,9 +12898,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"trainerly-trainee-app@workspace:packages/trainerly-trainee-app":
+"trainerly-trainee-app@workspace:trainerly-packages/trainerly-trainee-app":
   version: 0.0.0-use.local
-  resolution: "trainerly-trainee-app@workspace:packages/trainerly-trainee-app"
+  resolution: "trainerly-trainee-app@workspace:trainerly-packages/trainerly-trainee-app"
   dependencies:
     "@types/react": "npm:^18.2.43"
     "@types/react-dom": "npm:^18.2.17"

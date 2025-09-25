@@ -62,6 +62,30 @@ function App() {
   const [traineeId, setTraineeId] = useState<string | null>(null);
   const [trainerName, setTrainerName] = useState<string | null>(null);
 
+  // Handle logout
+  const handleLogout = () => {
+    console.log('🚪 Logging out user');
+    setIsAuthenticated(false);
+    setTraineeId(null);
+    setTrainerName(null);
+    localStorage.removeItem('trainerly_trainee_id');
+    localStorage.removeItem('trainerly_trainer_name');
+    localStorage.removeItem('trainerly_auth_timestamp');
+    clearAllLocalStorageData();
+  };
+
+  // Check if authentication has expired (1 month)
+  const isAuthExpired = (): boolean => {
+    const authTimestamp = localStorage.getItem('trainerly_auth_timestamp');
+    if (!authTimestamp) return true;
+    
+    const authDate = new Date(parseInt(authTimestamp));
+    const now = new Date();
+    const oneMonth = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    
+    return (now.getTime() - authDate.getTime()) > oneMonth;
+  };
+
   // Clean up duplicate history entries on app initialization and check authentication
   useEffect(() => {
     removeDuplicateHistoryEntries();
@@ -70,10 +94,14 @@ function App() {
     const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
     const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
     
-    if (storedTraineeId && storedTrainerName) {
+    if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
       setTraineeId(storedTraineeId);
       setTrainerName(storedTrainerName);
       setIsAuthenticated(true);
+    } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
+      // Authentication expired, clear stored data
+      console.log('Authentication expired, requiring re-login');
+      handleLogout();
     }
     
     // Only fetch trainings if authenticated
@@ -117,9 +145,12 @@ function App() {
     setTrainerName(newTrainerName);
     setIsAuthenticated(true);
     
-    // Store in localStorage for persistence
+    // Store in localStorage for persistence with timestamp
     localStorage.setItem('trainerly_trainee_id', newTraineeId);
     localStorage.setItem('trainerly_trainer_name', newTrainerName);
+    localStorage.setItem('trainerly_auth_timestamp', Date.now().toString());
+    
+    console.log(`✅ Authentication successful for ${newTrainerName} (ID: ${newTraineeId})`);
     
     // Initialize app after authentication
     const initializeApp = async () => {
@@ -138,16 +169,6 @@ function App() {
     };
     
     initializeApp();
-  };
-
-  // Handle logout
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setTraineeId(null);
-    setTrainerName(null);
-    localStorage.removeItem('trainerly_trainee_id');
-    localStorage.removeItem('trainerly_trainer_name');
-    clearAllLocalStorageData();
   };
 
   // Handle training plan change (session-only)

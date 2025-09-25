@@ -714,3 +714,115 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Simple Management Section */
+.simple-management-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.simple-management-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+}
+
+.simple-manage-button {
+  background: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  min-height: 80px;
+  text-align: right;
+}
+
+.simple-manage-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.simple-manage-button:hover .simple-button-icon,
+.simple-manage-button:hover .simple-button-text {
+  filter: brightness(0) invert(1);
+}
+
+.simple-manage-button:active {
+  transform: translateY(-2px);
+}
+
+.simple-button-icon {
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.simple-button-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+/* Settings button styles */
+.action-button.settings {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #4a5568;
+  padding: 12px;
+  min-width: auto;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button.settings:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.action-button.settings .button-icon {
+  font-size: 18px;
+}
+
+/* Update mobile responsiveness for simple management */
+@media (max-width: 768px) {
+  .simple-management-section {
+    min-height: 50vh;
+    padding: 1rem;
+  }
+  
+  .simple-management-grid {
+    gap: 1rem;
+    max-width: 400px;
+  }
+  
+  .simple-manage-button {
+    padding: 1.25rem 1.5rem;
+    min-height: 70px;
+  }
+  
+  .simple-button-icon {
+    font-size: 1.75rem;
+  }
+  
+  .simple-button-text {
+    font-size: 1.1rem;
+  }
+}
