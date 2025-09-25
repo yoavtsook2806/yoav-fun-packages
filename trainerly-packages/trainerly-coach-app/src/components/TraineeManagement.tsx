@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import CustomTraineePlanManager from './CustomTraineePlanManager';
-import TraineeTrainingHistory from './TraineeTrainingHistory';
+import TraineeTrainingHistoryModal from './TraineeTrainingHistory';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -17,9 +17,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [showProgressModal, setShowProgressModal] = useState(false);
-  const [selectedTrainee, setSelectedTrainee] = useState<Trainee | null>(null);
-  const [traineeProgress, setTraineeProgress] = useState<any[]>([]);
   const [showCustomPlanManager, setShowCustomPlanManager] = useState(false);
   const [customPlanTrainee, setCustomPlanTrainee] = useState<Trainee | null>(null);
   const [showTrainingHistory, setShowTrainingHistory] = useState(false);
@@ -118,30 +115,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       console.error('❌ CLIENT - Plan assignment failed:', err);
       setError(errorMsg);
       showError(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const viewProgress = async (trainee: Trainee) => {
-    try {
-      setLoading(true);
-      
-      // Clear any stale cache for this trainee first
-      const cacheKey = `trainee_progress_${trainee.trainerId}`;
-      localStorage.removeItem(`coach_${coachId}_${cacheKey}`);
-      console.log('🗑️ Cleared stale cache for trainee:', trainee.trainerId);
-      
-      // Force refresh to bypass cache - exercise sessions change frequently
-      const sessionsResult = await cachedApiService.getTraineeExerciseSessions(coachId, trainee.trainerId, token, 50, { forceRefresh: true }); // Get last 50 sessions
-      const sessions = sessionsResult.data;
-      setTraineeProgress(sessions);
-      setSelectedTrainee(trainee);
-      setShowProgressModal(true);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load exercise history');
-      showError(err instanceof Error ? err.message : 'Failed to load exercise history');
     } finally {
       setLoading(false);
     }
@@ -310,70 +283,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
         </div>
       )}
 
-      {/* Progress Modal */}
-      {showProgressModal && selectedTrainee && (
-        <div className="modal-overlay">
-          <div className="progress-modal">
-            <div className="modal-header">
-              <h2>התקדמות - {selectedTrainee.firstName} {selectedTrainee.lastName}</h2>
-              <button onClick={() => setShowProgressModal(false)} className="close-button">✕</button>
-            </div>
-            
-            <div className="progress-content">
-              {traineeProgress.length === 0 ? (
-                <div className="empty-progress">
-                  <div className="empty-icon">🏋️</div>
-                  <h3>אין היסטוריית אימונים עדיין</h3>
-                  <p>המתאמן עדיין לא השלים תרגילים</p>
-                </div>
-              ) : (
-                <div className="progress-list">
-                  {traineeProgress.map((session, index) => (
-                    <div key={session.sessionId || index} className="progress-session">
-                      <div className="session-header">
-                        <h4>{session.exerciseName}</h4>
-                        <span className="session-type">{session.trainingType}</span>
-                      </div>
-                      <div className="session-details">
-                        <div className="session-meta">
-                          <span className="session-date">
-                            📅 {formatDate(session.completedAt)}
-                          </span>
-                          <span className="session-completion">
-                            ✅ {session.completedSets}/{session.totalSets} סטים
-                          </span>
-                        </div>
-                        {session.setsData && session.setsData.length > 0 && (
-                          <div className="sets-data">
-                            <h5>פרטי הסטים:</h5>
-                            <div className="sets-grid">
-                              {session.setsData.map((set: any, setIndex: number) => (
-                                <div key={setIndex} className="set-item">
-                                  <span className="set-number">#{setIndex + 1}</span>
-                                  <span className="set-details">
-                                    {set.weight ? `${set.weight}ק״ג` : ''} 
-                                    {set.weight && set.repeats ? ' × ' : ''}
-                                    {set.repeats ? `${set.repeats} חזרות` : ''}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {session.restTime && (
-                          <div className="rest-time">
-                            ⏱️ זמן מנוחה: {session.restTime} שניות
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Trainees Grid */}
       <div className="trainees-grid">
@@ -403,15 +312,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                   </button>
                   <button 
                     onClick={() => openTrainingHistory(trainee)} 
-                    className="history-button"
-                    title="היסטוריית אימונים מלאה"
-                  >
-                    📋
-                  </button>
-                  <button 
-                    onClick={() => viewProgress(trainee)} 
-                    className="progress-button"
-                    title="סקירת התקדמות מהירה"
+                    className="data-button"
+                    title="נתוני אימונים מלאים"
                   >
                     📊
                   </button>
@@ -497,15 +399,14 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
         />
       )}
 
-      {/* Training History View */}
-      {showTrainingHistory && historyTrainee && (
-        <TraineeTrainingHistory
-          trainee={historyTrainee}
-          coachId={coachId}
-          token={token}
-          onBack={closeTrainingHistory}
-        />
-      )}
+      {/* Training History Modal */}
+      <TraineeTrainingHistoryModal
+        trainee={historyTrainee!}
+        coachId={coachId}
+        token={token}
+        isOpen={showTrainingHistory}
+        onClose={closeTrainingHistory}
+      />
     </div>
   );
 };

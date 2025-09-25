@@ -286,7 +286,7 @@ describe('Coach Authentication API', () => {
     it('should login successfully with correct credentials', async () => {
       // Mock: coach exists
       mockDynamoScan.mockImplementation((params: any, callback: any) => {
-        callback(null, { Items: [mockCoach] });
+    th    callback(null, { Items: [mockCoach] });
       });
 
       // Mock bcrypt.compare to return true
