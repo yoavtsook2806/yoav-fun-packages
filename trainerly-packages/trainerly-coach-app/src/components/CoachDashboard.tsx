@@ -5,6 +5,7 @@ import ExerciseManagement from './ExerciseManagement';
 import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
 import { cachedApiService, Coach } from '../services/cachedApiService';
+import { showError } from './ToastContainer';
 import './CoachDashboard.css';
 
 interface CoachDashboardProps {
@@ -59,7 +60,9 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
       setError(null);
     } catch (err: any) {
       console.error('Failed to load coach profile:', err);
-      setError(err.message || 'Failed to load coach profile');
+      const errorMsg = err.message || 'שגיאה בטעינת פרופיל המאמן';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }

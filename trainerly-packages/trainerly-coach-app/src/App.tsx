@@ -4,6 +4,7 @@ import './App.css';
 // Components
 import AuthScreen from './components/AuthScreen';
 import CoachDashboard from './components/CoachDashboard';
+import ToastContainer from './components/ToastContainer';
 
 // Types
 interface Coach {
@@ -77,17 +78,19 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app">
-      {!authState.isAuthenticated ? (
-        <AuthScreen onLogin={handleLogin} />
-      ) : (
-        <CoachDashboard 
-          coachId={authState.coach!.coachId}
-          token={authState.token!}
-          onLogout={handleLogout}
-        />
-      )}
-    </div>
+    <ToastContainer>
+      <div className="app">
+        {!authState.isAuthenticated ? (
+          <AuthScreen onLogin={handleLogin} />
+        ) : (
+          <CoachDashboard 
+            coachId={authState.coach!.coachId}
+            token={authState.token!}
+            onLogout={handleLogout}
+          />
+        )}
+      </div>
+    </ToastContainer>
   );
 };
 

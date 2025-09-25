@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/cachedApiService';
+import { showError, showSuccess } from './ToastContainer';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -53,7 +54,9 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
       
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
+      const errorMsg = err instanceof Error ? err.message : 'שגיאה בטעינת הנתונים';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -67,8 +70,11 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
       await loadData();
       resetPlanForm();
       setError(null);
+      showSuccess('תוכנית אימון נשמרה בהצלחה!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save training plan');
+      const errorMsg = err instanceof Error ? err.message : 'שגיאה בשמירת תוכנית האימון';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
+import { showError, showSuccess } from './ToastContainer';
 import './TraineeManagement.css';
 
 interface TraineeManagementProps {
@@ -67,8 +68,11 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       await loadData();
       resetForm();
       setError(null);
+      showSuccess('מתאמן חדש נוסף בהצלחה!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save trainee');
+      const errorMsg = err instanceof Error ? err.message : 'שגיאה בהוספת המתאמן';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }

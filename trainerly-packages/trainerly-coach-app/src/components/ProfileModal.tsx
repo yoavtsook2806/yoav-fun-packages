@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Coach } from '../services/cachedApiService';
+import { showError, showSuccess } from './ToastContainer';
 import './ProfileModal.css';
 
 interface ProfileModalProps {
@@ -49,7 +50,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       if (age.trim()) {
         const ageNum = parseInt(age.trim());
         if (isNaN(ageNum) || ageNum < 18 || ageNum > 120) {
-          setError('Age must be a number between 18 and 120');
+          const errorMsg = 'הגיל חייב להיות מספר בין 18 ל-120';
+          setError(errorMsg);
+          showError(errorMsg);
           setLoading(false);
           return;
         }
@@ -62,13 +65,16 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       
       setSuccess(true);
       onUpdate(updatedCoach);
+      showSuccess('הפרופיל עודכן בהצלחה!');
       
       setTimeout(() => {
         onClose();
       }, 1500);
       
     } catch (err: any) {
-      setError(err.message || 'Failed to update profile');
+      const errorMsg = err.message || 'שגיאה בעדכון הפרופיל';
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise } from '../services/cachedApiService';
+import { showError, showSuccess } from './ToastContainer';
 import './ExerciseManagement.css';
 
 interface ExerciseManagementProps {
@@ -54,7 +55,9 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load exercises');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load exercises';
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -76,17 +79,18 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
       await loadExercises();
       resetForm();
       setError(null);
+      showSuccess(editingExercise ? 'תרגיל עודכן בהצלחה!' : 'תרגיל חדש נוסף בהצלחה!');
     } catch (err) {
       console.error('Error saving exercise:', err);
       if (err instanceof Error) {
         // Check if it's a duplicate name error
         if (err.message.includes('Exercise with this name already exists')) {
-          setError('תרגיל עם השם הזה כבר קיים. אנא בחר שם אחר.');
+          showError('תרגיל עם השם הזה כבר קיים. אנא בחר שם אחר.');
         } else {
-          setError(err.message);
+          showError(err.message);
         }
       } else {
-        setError('Failed to save exercise');
+        showError('Failed to save exercise');
       }
     } finally {
       setLoading(false);
