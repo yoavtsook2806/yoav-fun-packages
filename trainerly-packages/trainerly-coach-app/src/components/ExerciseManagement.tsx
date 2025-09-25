@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { cachedApiService, Exercise } from '../services/cachedApiService';
+import { cachedApiService, Exercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
+import AdminExerciseBank from './AdminExerciseBank';
 import './ExerciseManagement.css';
 
 interface ExerciseManagementProps {
   coachId: string;
   token: string;
+  coach: Coach; // Add coach prop to check if admin
   onBack: () => void;
 }
 
-const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token, onBack }) => {
+const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token, coach, onBack }) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
+  const [showAdminBank, setShowAdminBank] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -142,14 +145,26 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
             <span className="title-icon">💪</span>
             ניהול תרגילים
           </h1>
-          <button 
-            onClick={() => setShowAddForm(true)} 
-            className="add-button"
-            disabled={loading}
-          >
-            <span className="button-icon">➕</span>
-            הוסף תרגיל חדש
-          </button>
+          <div className="header-actions">
+            {!coach.isAdmin && (
+              <button 
+                onClick={() => setShowAdminBank(true)} 
+                className="admin-bank-button"
+                disabled={loading}
+              >
+                <span className="button-icon">🏦</span>
+                בנק התרגילים
+              </button>
+            )}
+            <button 
+              onClick={() => setShowAddForm(true)} 
+              className="add-button"
+              disabled={loading}
+            >
+              <span className="button-icon">➕</span>
+              הוסף תרגיל חדש
+            </button>
+          </div>
         </div>
       </div>
 
@@ -268,6 +283,18 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
           ))
         )}
       </div>
+
+      {/* Admin Exercise Bank Modal */}
+      <AdminExerciseBank
+        coachId={coachId}
+        token={token}
+        isOpen={showAdminBank}
+        onClose={() => setShowAdminBank(false)}
+        onExerciseCopied={(exercise) => {
+          // Refresh exercises after copying
+          loadExercises();
+        }}
+      />
     </div>
   );
 };

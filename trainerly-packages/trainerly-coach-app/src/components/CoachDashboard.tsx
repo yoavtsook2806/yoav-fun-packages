@@ -185,18 +185,20 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
             </>
           )}
 
-          {activeSection === 'exercises' && (
+          {activeSection === 'exercises' && coach && (
             <ExerciseManagement
               coachId={coachId}
               token={token}
+              coach={coach}
               onBack={() => setActiveSection('dashboard')}
             />
           )}
 
-          {activeSection === 'plans' && (
+          {activeSection === 'plans' && coach && (
             <TrainingPlanManagement
               coachId={coachId}
               token={token}
+              coach={coach}
               onBack={() => setActiveSection('dashboard')}
             />
           )}

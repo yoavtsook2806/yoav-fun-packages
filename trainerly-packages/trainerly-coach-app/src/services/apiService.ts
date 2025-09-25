@@ -9,6 +9,8 @@ export interface Exercise {
   link?: string; // video URL
   note?: string; // instructions/notes
   muscleGroup?: 'legs' | 'back' | 'chest' | 'shoulders' | 'arms' | 'core' | 'full_body' | 'other';
+  isAdminExercise?: boolean; // True if created by admin, available to all coaches
+  originalExerciseId?: string; // Reference to original admin exercise if this is a copy
   createdAt: string;
 }
 
@@ -18,6 +20,9 @@ export interface TrainingPlan {
   name: string;
   description?: string;
   trainings: TrainingItem[];
+  isAdminPlan?: boolean; // True if created by admin, available to all coaches
+  originalPlanId?: string; // Reference to original admin plan if this is a copy
+  customTrainee?: string; // Trainee name if this is a custom plan for specific trainee
   createdAt: string;
   updatedAt: string;
 }
@@ -27,6 +32,9 @@ export interface TrainingPlanSummary {
   name: string;
   description?: string;
   trainingsCount: number;
+  isAdminPlan?: boolean; // True if created by admin, available to all coaches
+  originalPlanId?: string; // Reference to original admin plan if this is a copy
+  customTrainee?: string; // Trainee name if this is a custom plan for specific trainee
   createdAt: string;
 }
 
@@ -54,6 +62,7 @@ export interface Coach {
   nickname: string;
   phone?: string;
   age?: number;
+  isAdmin?: boolean; // Admin coaches can create exercises/plans for all coaches
   createdAt: string;
   valid: boolean;
 }
@@ -234,6 +243,114 @@ class ApiService {
     }
 
     return response.json();
+  }
+
+  // Admin Exercise Bank (בנק התרגילים)
+  async getAdminExercises(token: string): Promise<Exercise[]> {
+    const response = await fetch(`${this.baseUrl}/admin/exercises`, {
+      method: 'GET',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch admin exercises: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.items || [];
+  }
+
+  async copyAdminExercise(coachId: string, adminExerciseId: string, token: string): Promise<Exercise> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/exercises/copy-admin/${adminExerciseId}`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to copy admin exercise: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Admin Training Plan Bank
+  async getAdminTrainingPlans(token: string): Promise<TrainingPlanSummary[]> {
+    const response = await fetch(`${this.baseUrl}/admin/training-plans`, {
+      method: 'GET',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch admin training plans: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.items || [];
+  }
+
+  async copyAdminTrainingPlan(coachId: string, adminPlanId: string, token: string): Promise<TrainingPlan> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/copy-admin/${adminPlanId}`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to copy admin training plan: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Custom Trainee Training Plans
+  async createCustomTrainingPlan(
+    coachId: string, 
+    traineeId: string, 
+    traineeName: string,
+    basePlanId: string, 
+    token: string
+  ): Promise<TrainingPlan> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/trainers/${traineeId}/custom-plan`, {
+      method: 'POST',
+      headers: this.getAuthHeaders(token),
+      body: JSON.stringify({ 
+        basePlanId, 
+        traineeName 
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create custom training plan: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async makeCustomPlanGeneric(coachId: string, planId: string, token: string): Promise<TrainingPlan> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/${planId}/make-generic`, {
+      method: 'PUT',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to make custom plan generic: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Get custom plans for specific trainee
+  async getTraineeCustomPlans(coachId: string, traineeId: string, token: string): Promise<TrainingPlanSummary[]> {
+    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/trainers/${traineeId}/custom-plans`, {
+      method: 'GET',
+      headers: this.getAuthHeaders(token),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch trainee custom plans: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.items || [];
   }
 }
 

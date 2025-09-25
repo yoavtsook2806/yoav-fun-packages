@@ -212,6 +212,110 @@ class CachedApiService {
   getCacheStats(coachId: string) {
     return cacheService.getStats(coachId);
   }
+
+  // Admin Exercise Bank Methods
+  async getAdminExercises(token: string, options?: LoadOptions): Promise<CachedData<Exercise[]>> {
+    return this.loadWithCache(
+      'admin_exercises',
+      'admin', // Use 'admin' as coachId for admin exercises
+      () => apiService.getAdminExercises(token),
+      options
+    );
+  }
+
+  async copyAdminExercise(coachId: string, adminExerciseId: string, token: string): Promise<Exercise> {
+    const copiedExercise = await apiService.copyAdminExercise(coachId, adminExerciseId, token);
+    
+    // Update the coach's exercises cache
+    const cachedExercises = cacheService.get<Exercise[]>(coachId, CACHE_KEYS.EXERCISES) || [];
+    const updatedExercises = [...cachedExercises, copiedExercise];
+    cacheService.set(coachId, CACHE_KEYS.EXERCISES, updatedExercises);
+    
+    return copiedExercise;
+  }
+
+  // Admin Training Plan Bank Methods
+  async getAdminTrainingPlans(token: string, options?: LoadOptions): Promise<CachedData<TrainingPlanSummary[]>> {
+    return this.loadWithCache(
+      'admin_training_plans',
+      'admin', // Use 'admin' as coachId for admin training plans
+      () => apiService.getAdminTrainingPlans(token),
+      options
+    );
+  }
+
+  async copyAdminTrainingPlan(coachId: string, adminPlanId: string, token: string): Promise<TrainingPlan> {
+    const copiedPlan = await apiService.copyAdminTrainingPlan(coachId, adminPlanId, token);
+    
+    // Update the coach's training plans cache
+    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
+    const newPlanSummary: TrainingPlanSummary = {
+      planId: copiedPlan.planId,
+      name: copiedPlan.name,
+      description: copiedPlan.description,
+      trainingsCount: copiedPlan.trainings.length,
+      isAdminPlan: copiedPlan.isAdminPlan,
+      originalPlanId: copiedPlan.originalPlanId,
+      customTrainee: copiedPlan.customTrainee,
+      createdAt: copiedPlan.createdAt
+    };
+    const updatedPlans = [...cachedPlans, newPlanSummary];
+    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
+    
+    return copiedPlan;
+  }
+
+  // Custom Trainee Training Plan Methods
+  async createCustomTrainingPlan(
+    coachId: string, 
+    traineeId: string, 
+    traineeName: string,
+    basePlanId: string, 
+    token: string
+  ): Promise<TrainingPlan> {
+    const customPlan = await apiService.createCustomTrainingPlan(coachId, traineeId, traineeName, basePlanId, token);
+    
+    // Update the coach's training plans cache
+    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
+    const newPlanSummary: TrainingPlanSummary = {
+      planId: customPlan.planId,
+      name: customPlan.name,
+      description: customPlan.description,
+      trainingsCount: customPlan.trainings.length,
+      isAdminPlan: customPlan.isAdminPlan,
+      originalPlanId: customPlan.originalPlanId,
+      customTrainee: customPlan.customTrainee,
+      createdAt: customPlan.createdAt
+    };
+    const updatedPlans = [...cachedPlans, newPlanSummary];
+    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
+    
+    return customPlan;
+  }
+
+  async makeCustomPlanGeneric(coachId: string, planId: string, token: string): Promise<TrainingPlan> {
+    const updatedPlan = await apiService.makeCustomPlanGeneric(coachId, planId, token);
+    
+    // Update the training plans cache
+    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
+    const updatedPlans = cachedPlans.map(plan => 
+      plan.planId === planId 
+        ? { ...plan, customTrainee: undefined } 
+        : plan
+    );
+    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
+    
+    return updatedPlan;
+  }
+
+  async getTraineeCustomPlans(coachId: string, traineeId: string, token: string, options?: LoadOptions): Promise<CachedData<TrainingPlanSummary[]>> {
+    return this.loadWithCache(
+      `trainee_custom_plans_${traineeId}`,
+      coachId,
+      () => apiService.getTraineeCustomPlans(coachId, traineeId, token),
+      options
+    );
+  }
 }
 
 export const cachedApiService = new CachedApiService();

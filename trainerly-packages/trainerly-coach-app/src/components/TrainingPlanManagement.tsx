@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/cachedApiService';
+import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
+import AdminTrainingPlanBank from './AdminTrainingPlanBank';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
   coachId: string;
   token: string;
+  coach: Coach; // Add coach prop to check if admin
   onBack: () => void;
 }
 
-const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId, token, onBack }) => {
+const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId, token, coach, onBack }) => {
   const [plans, setPlans] = useState<TrainingPlanSummary[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAdminPlanBank, setShowAdminPlanBank] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
@@ -199,14 +202,26 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             <span className="title-icon">📋</span>
             ניהול תוכניות אימון
           </h1>
-          <button 
-            onClick={() => setShowAddForm(true)} 
-            className="add-button"
-            disabled={loading}
-          >
-            <span className="button-icon">➕</span>
-            הוסף תוכנית חדשה
-          </button>
+          <div className="header-actions">
+            {!coach.isAdmin && (
+              <button 
+                onClick={() => setShowAdminPlanBank(true)} 
+                className="admin-bank-button"
+                disabled={loading}
+              >
+                <span className="button-icon">🏦</span>
+                בנק תוכניות האימון
+              </button>
+            )}
+            <button 
+              onClick={() => setShowAddForm(true)} 
+              className="add-button"
+              disabled={loading}
+            >
+              <span className="button-icon">➕</span>
+              הוסף תוכנית חדשה
+            </button>
+          </div>
         </div>
       </div>
 
@@ -521,6 +536,18 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           ))
         )}
       </div>
+
+      {/* Admin Training Plan Bank Modal */}
+      <AdminTrainingPlanBank
+        coachId={coachId}
+        token={token}
+        isOpen={showAdminPlanBank}
+        onClose={() => setShowAdminPlanBank(false)}
+        onPlanCopied={(plan) => {
+          // Refresh plans after copying
+          loadData();
+        }}
+      />
     </div>
   );
 };
