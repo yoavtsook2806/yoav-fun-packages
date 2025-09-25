@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { TrainingState, ExerciseState } from './types';
+import { getLatestTrainingPlan, getTrainingPlanByVersion } from './data/trainingPlans';
 import TrainingSelection from './components/TrainingSelection';
 import ExerciseFlow from './components/ExerciseFlow';
 import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import AuthScreen from './components/AuthScreen';
-import { fetchTraineeData, clearTraineeCache } from './services/traineeService';
+import { fetchNewTrainings, updateUserData, getUserId, ExerciseCompletionData, getCurrentVersionForFetch } from './services/serverService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
   getLastUsedWeight,
@@ -25,31 +26,16 @@ import {
   saveExerciseDefaults
 } from './utils/exerciseHistory';
 
-// Default empty training plan structure
-const createEmptyTrainingPlan = () => ({
-  planId: 'no-plan',
-  name: 'אין תוכנית אימונים',
-  version: '1.0',
-  trainings: {
-    'אין תוכנית': {
-      'אין תרגילים': {
-        numberOfSets: 1,
-        minimumTimeToRest: 60,
-        maximumTimeToRest: 120,
-        minimumNumberOfRepeasts: 1,
-        maximumNumberOfRepeasts: 10,
-        note: 'לא הוקצתה תוכנית אימונים. אנא פנה למאמן שלך.',
-        short: 'אין תרגילים',
-        link: ''
-      }
-    }
-  }
-});
-
 function App() {
-  // Current training plan (loaded from server)
-  const [currentTrainingPlan, setCurrentTrainingPlan] = useState(createEmptyTrainingPlan());
-  const [isLoadingPlan, setIsLoadingPlan] = useState(false);
+  // Get the latest training plan as default
+  const latestPlan = getLatestTrainingPlan();
+  
+  // Current training plan (session-only, not saved to localStorage)
+  const [currentTrainingPlan, setCurrentTrainingPlan] = useState(latestPlan);
+  
+  // Log config for debugging
+  console.log('App config: useServerData=true, showCoachApp=true (hardcoded for Trainerly)');
+  
   
   const [trainingState, setTrainingState] = useState<TrainingState>({
     selectedTraining: null,
@@ -58,7 +44,7 @@ function App() {
     exercises: [],
     exerciseStates: {},
     isTrainingComplete: false,
-    trainingPlanVersion: '1.0',
+    trainingPlanVersion: latestPlan.version,
   });
   
   // Track if this is a fresh completion (to show congratulation only once)
@@ -76,29 +62,6 @@ function App() {
   const [traineeId, setTraineeId] = useState<string | null>(null);
   const [trainerName, setTrainerName] = useState<string | null>(null);
 
-  // Load trainee data from server
-  const loadTraineeData = async (traineeId: string) => {
-    console.log('🔄 Loading trainee data...');
-    setIsLoadingPlan(true);
-    
-    try {
-      const traineeData = await fetchTraineeData(traineeId);
-      
-      if (traineeData?.currentPlan) {
-        setCurrentTrainingPlan(traineeData.currentPlan);
-        console.log('✅ Loaded training plan:', traineeData.currentPlan.name);
-      } else {
-        console.log('⚠️ No training plan assigned to trainee');
-        setCurrentTrainingPlan(createEmptyTrainingPlan());
-      }
-    } catch (error) {
-      console.error('❌ Failed to load trainee data:', error);
-      setCurrentTrainingPlan(createEmptyTrainingPlan());
-    } finally {
-      setIsLoadingPlan(false);
-    }
-  };
-
   // Handle logout
   const handleLogout = () => {
     console.log('🚪 Logging out user');
@@ -108,12 +71,6 @@ function App() {
     localStorage.removeItem('trainerly_trainee_id');
     localStorage.removeItem('trainerly_trainer_name');
     localStorage.removeItem('trainerly_auth_timestamp');
-    
-    // Clear trainee data cache
-    if (traineeId) {
-      clearTraineeCache(traineeId);
-    }
-    
     clearAllLocalStorageData();
   };
 
@@ -141,15 +98,46 @@ function App() {
       setTraineeId(storedTraineeId);
       setTrainerName(storedTrainerName);
       setIsAuthenticated(true);
-      
-      // Load trainee data
-      loadTraineeData(storedTraineeId);
     } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
       // Authentication expired, clear stored data
       console.log('Authentication expired, requiring re-login');
       handleLogout();
     }
+    
+    // Only fetch trainings if authenticated
+    if (storedTraineeId) {
+      // Fetch new trainings on app load
+      const initializeApp = async () => {
+        try {
+          // Get the appropriate version to check for updates
+          const versionToCheck = getCurrentVersionForFetch();
+          
+          console.log(`🚀 Initializing app - Version to check: ${versionToCheck || 'undefined'}`);
+          
+          const response = await fetchNewTrainings(versionToCheck);
+          if (response.success && response.data && response.data.length > 0) {
+            // Get the latest training plan from the response
+            const latestNewPlan = response.data[response.data.length - 1];
+            
+            // Update current training plan if we got newer data
+            if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
+              setCurrentTrainingPlan(latestNewPlan);
+              console.log('Updated to new training plan:', latestNewPlan.version);
+              console.log('Available versions:', response.data.map(p => p.version));
+            } else {
+              console.log('No newer training plans available');
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch new trainings:', error);
+        }
+      };
+      
+      initializeApp();
+    }
   }, []);
+  
+  // No need to listen for URL parameter changes in Trainerly app
 
   // Handle authentication
   const handleAuthenticated = (newTraineeId: string, newTrainerName: string) => {
@@ -164,15 +152,58 @@ function App() {
     
     console.log(`✅ Authentication successful for ${newTrainerName} (ID: ${newTraineeId})`);
     
-    // Load trainee data
-    loadTraineeData(newTraineeId);
+    // Initialize app after authentication
+    const initializeApp = async () => {
+      try {
+        const versionToCheck = getCurrentVersionForFetch();
+        const response = await fetchNewTrainings(versionToCheck);
+        if (response.success && response.data && response.data.length > 0) {
+          const latestNewPlan = response.data[response.data.length - 1];
+          if (latestNewPlan && latestNewPlan.version !== currentTrainingPlan.version) {
+            setCurrentTrainingPlan(latestNewPlan);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch new trainings:', error);
+      }
+    };
+    
+    initializeApp();
   };
 
-  // Handle training plan change (for settings - though we only have one plan from server)
+  // Handle training plan change (session-only)
   const handleTrainingPlanChange = (version: string) => {
-    // In the new system, we only have one plan from the server
-    // This function is kept for compatibility with the settings modal
-    console.log('Training plan change requested, but using server plan:', version);
+    const newPlan = getTrainingPlanByVersion(version);
+    if (newPlan) {
+      setCurrentTrainingPlan(newPlan);
+      // Reset training state when changing plans
+      setTrainingState(prev => ({
+        ...prev,
+        selectedTraining: null,
+        currentExerciseIndex: 0,
+        exercises: [],
+        exerciseStates: {},
+        isTrainingComplete: false,
+        trainingPlanVersion: version,
+      }));
+      setShowCongratulation(false);
+    }
+  };
+
+  const handleClearAllHistory = () => {
+    const confirmed = window.confirm(
+      'האם אתה בטוח שברצונך למחוק את כל ההיסטוריה של התרגילים?\n\nפעולה זו לא ניתנת לביטול.'
+    );
+    
+    if (confirmed) {
+      console.log('Clearing all storage data...');
+      clearAllLocalStorageData();
+      console.log('All storage data cleared successfully');
+      alert('כל ההיסטוריה נמחקה בהצלחה!');
+      
+      // Optionally reload the page to reset the app state
+      window.location.reload();
+    }
   };
 
   const initializeTraining = (trainingType: string) => {
@@ -295,7 +326,7 @@ function App() {
         }, 0);
       }
       
-      // If exercise is being completed for the first time, save to history
+      // If exercise is being completed for the first time, save to history and server
       if (!currentState.completed && updates.completed === true) {
         const exercise = currentTrainingPlan.trainings[prev.selectedTraining!][exerciseName];
         
@@ -315,12 +346,33 @@ function App() {
         };
         
         // Use setTimeout to avoid potential React batching issues
-        setTimeout(() => {
+        setTimeout(async () => {
           // Save to local history
           saveExerciseEntry(exerciseName, historyEntry);
           
-          // Note: Server sync functionality removed since we're focusing on local storage
-          console.log('Exercise completed:', exerciseName, historyEntry);
+          // Send to server
+          try {
+            const exerciseData: ExerciseCompletionData = {
+              userId: getUserId(),
+              exerciseName,
+              trainingType: prev.selectedTraining!,
+              date: historyEntry.date,
+              weight: firstSetWeight,
+              repeats: firstSetRepeats,
+              restTime: historyEntry.restTime,
+              setsData: newState.setsData,
+              completed: true
+            };
+            
+            const response = await updateUserData(exerciseData);
+            if (response.success) {
+              console.log('Exercise data sent to server successfully');
+            } else {
+              console.warn('Failed to send exercise data to server:', response.error);
+            }
+          } catch (error) {
+            console.error('Error sending exercise data to server:', error);
+          }
         }, 0);
       }
       
@@ -388,21 +440,11 @@ function App() {
     // If we reach here, all exercises are completed (shouldn't happen due to check above)
   };
 
+  // Note: Removed automatic training completion check - now handled manually after last exercise feedback
+
   // Show auth screen if not authenticated
   if (!isAuthenticated) {
     return <AuthScreen onAuthenticated={handleAuthenticated} />;
-  }
-
-  // Show loading if we're still loading the training plan
-  if (isLoadingPlan) {
-    return (
-      <div className="app">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>טוען תוכנית אימונים...</p>
-        </div>
-      </div>
-    );
   }
 
   if (trainingState.isTrainingComplete && showCongratulation) {

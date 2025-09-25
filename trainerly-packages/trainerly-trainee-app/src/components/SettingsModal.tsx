@@ -5,18 +5,14 @@ import { APP_VERSION } from '../constants';
 
 interface SettingsModalProps {
   onClose: () => void;
-  onClearAllHistory: () => void;
   onLogout: () => void;
-  trainerName: string | null;
   currentTrainingPlanVersion: string;
   onTrainingPlanChange: (version: string) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
-  onClearAllHistory,
   onLogout,
-  trainerName,
   currentTrainingPlanVersion,
   onTrainingPlanChange
 }) => {
@@ -40,21 +36,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     testSound();
   };
 
-  const handleClearHistory = () => {
-    const confirmed = window.confirm(
-      'האם אתה בטוח שברצונך למחוק את כל ההיסטוריה של התרגילים?\n\nפעולה זו לא ניתנת לביטול.'
-    );
-
-    if (confirmed) {
-      onClearAllHistory();
-      onClose();
-    }
-  };
-  
-  const handleOpenCoachApp = () => {
-    // Open trainerly coach app in a new tab
-    window.open('http://localhost:3001/coach/', '_blank');
-  };
 
 
 
@@ -116,59 +97,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* Coach App Access - always shown in Trainerly */}
-          {(
-            <div className="settings-section">
-              <div className="settings-item">
-                <button 
-                  className="coach-app-button"
-                  onClick={handleOpenCoachApp}
-                >
-                  👨‍💼 אפליקציית המאמן
-                </button>
-                <p className="settings-description">
-                  פתח את אפליקציית הניהול של המאמן
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* User Info */}
-          {trainerName && (
-            <div className="settings-section">
-              <div className="settings-item">
-                <h3>👤 מתאמן מחובר</h3>
-                <p className="user-name">{trainerName}</p>
-                <p className="settings-description">
-                  מחובר למערכת האימונים
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* App Actions */}
-          <div className="settings-section">
+          <div className="settings-section logout-section">
             <div className="settings-item">
               <button 
-                className="logout-button"
+                className="danger-button logout-danger-button"
                 onClick={onLogout}
               >
                 🚪 התנתק מהמערכת
               </button>
               <p className="settings-description">
                 התנתקות תחזיר אותך למסך הכניסה
-              </p>
-            </div>
-            
-            <div className="settings-item">
-              <button 
-                className="danger-button"
-                onClick={handleClearHistory}
-              >
-                🗑️ מחק את כל ההיסטוריה
-              </button>
-              <p className="settings-description">
-                פעולה זו תמחק את כל ההיסטוריה, ההתקדמות וההגדרות השמורות
               </p>
             </div>
           </div>

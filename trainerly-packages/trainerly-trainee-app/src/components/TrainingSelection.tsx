@@ -6,6 +6,7 @@ interface TrainingSelectionProps {
   availableTrainings: string[];
   trainingPlanVersion: string;
   trainings: any; // Training data to get exercise lists
+  trainerName?: string;
 }
 
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
@@ -13,6 +14,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   availableTrainings,
   trainingPlanVersion,
   trainings,
+  trainerName,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
   
@@ -136,9 +138,17 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     }
   };
 
+  const getWelcomeTitle = () => {
+    if (trainerName) {
+      const firstName = trainerName.split(' ')[0];
+      return `${firstName}, בואו נתחיל להתאמן! 💪`;
+    }
+    return 'בואו נתחיל להתאמן! 💪';
+  };
+
   return (
     <div className="training-selection">
-      <h1>קדי לא פראייר</h1>
+      <h1>{getWelcomeTitle()}</h1>
       <div className="training-plan-version">{trainingPlanVersion}</div>
       
       <div className="training-buttons">
