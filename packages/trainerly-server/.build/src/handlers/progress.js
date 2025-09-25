@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCoachViewProgress = exports.getTrainerProgress = exports.createProgress = void 0;
-const uuid_1 = require("uuid");
+const crypto_1 = require("crypto");
 const database_1 = require("../services/database");
 const headers = {
     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const createProgress = async (event) => {
             };
         }
         const progress = {
-            progressId: (0, uuid_1.v4)(),
+            progressId: (0, crypto_1.randomUUID)(),
             trainerId,
             planId,
             trainingId,

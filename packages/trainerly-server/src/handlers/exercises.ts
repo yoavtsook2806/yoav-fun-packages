@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { db } from '../services/database';
 import { 
   ExerciseCreateRequest, 
@@ -60,7 +60,7 @@ export const createExercise = async (
     // TODO: Verify JWT token and check if coach exists and is valid
 
     const exercise: Exercise = {
-      exerciseId: uuidv4(),
+      exerciseId: randomUUID(),
       coachId,
       name,
       link,

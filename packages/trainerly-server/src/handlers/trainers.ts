@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { db } from '../services/database';
 import { 
   TrainerCreateRequest, 
@@ -76,7 +76,7 @@ export const createTrainer = async (
     } while (!isUnique);
 
     const trainer: Trainer = {
-      trainerId: uuidv4(),
+      trainerId: randomUUID(),
       coachId,
       firstName,
       lastName,

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTrainerPlans = exports.assignPlan = exports.listPlans = exports.createPlan = void 0;
-const uuid_1 = require("uuid");
+const crypto_1 = require("crypto");
 const database_1 = require("../services/database");
 const headers = {
     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const createPlan = async (event) => {
         }
         // TODO: Verify JWT token and check if coach exists and is valid
         const plan = {
-            planId: (0, uuid_1.v4)(),
+            planId: (0, crypto_1.randomUUID)(),
             coachId,
             name,
             description,
@@ -182,7 +182,7 @@ const assignPlan = async (event) => {
             };
         }
         const assignment = {
-            assignmentId: (0, uuid_1.v4)(),
+            assignmentId: (0, crypto_1.randomUUID)(),
             trainerId,
             planId,
             assignedAt: new Date().toISOString(),

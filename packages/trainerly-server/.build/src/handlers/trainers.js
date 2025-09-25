@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.identifyTrainer = exports.getTrainer = exports.listTrainers = exports.createTrainer = void 0;
-const uuid_1 = require("uuid");
+const crypto_1 = require("crypto");
 const database_1 = require("../services/database");
 const headers = {
     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const createTrainer = async (event) => {
             isUnique = !existing;
         } while (!isUnique);
         const trainer = {
-            trainerId: (0, uuid_1.v4)(),
+            trainerId: (0, crypto_1.randomUUID)(),
             coachId,
             firstName,
             lastName,

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.listExercises = exports.createExercise = void 0;
-const uuid_1 = require("uuid");
+const crypto_1 = require("crypto");
 const database_1 = require("../services/database");
 const headers = {
     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const createExercise = async (event) => {
         }
         // TODO: Verify JWT token and check if coach exists and is valid
         const exercise = {
-            exerciseId: (0, uuid_1.v4)(),
+            exerciseId: (0, crypto_1.randomUUID)(),
             coachId,
             name,
             link,

@@ -41,6 +41,9 @@ package:
     - '!node_modules/**'
     - 'node_modules/@aws-sdk/**'
     - 'node_modules/zod/**'
+    - 'node_modules/uuid/**'
+    - 'node_modules/bcryptjs/**'
+    - 'node_modules/jsonwebtoken/**'
 
 custom:
   # Environment-specific configurations

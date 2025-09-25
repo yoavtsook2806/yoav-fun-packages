@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { db } from '../services/database';
 import { 
   ProgressCreateRequest, 
@@ -57,7 +57,7 @@ export const createProgress = async (
     }
 
     const progress: TrainingProgress = {
-      progressId: uuidv4(),
+      progressId: randomUUID(),
       trainerId,
       planId,
       trainingId,

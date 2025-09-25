@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { db } from '../services/database';
 import { 
   PlanCreateRequest, 
@@ -63,7 +63,7 @@ export const createPlan = async (
     // TODO: Verify JWT token and check if coach exists and is valid
 
     const plan: TrainingPlan = {
-      planId: uuidv4(),
+      planId: randomUUID(),
       coachId,
       name,
       description,
@@ -217,7 +217,7 @@ export const assignPlan = async (
     }
 
     const assignment: PlanAssignment = {
-      assignmentId: uuidv4(),
+      assignmentId: randomUUID(),
       trainerId,
       planId,
       assignedAt: new Date().toISOString(),
