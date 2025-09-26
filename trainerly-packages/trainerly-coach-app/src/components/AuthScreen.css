@@ -626,18 +626,25 @@
   }
   
   .feature-highlights {
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0.5rem;
   }
   
   .feature {
-    flex-direction: row;
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    flex: 1;
   }
   
   .feature-icon {
     font-size: 1.2rem;
     margin-bottom: 0;
+  }
+  
+  .feature span:last-child {
+    font-size: 0.8rem;
   }
 }
 

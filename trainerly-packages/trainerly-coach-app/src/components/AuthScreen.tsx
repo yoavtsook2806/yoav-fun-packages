@@ -227,12 +227,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           {isLogin ? (
               <form onSubmit={handleLogin} className="auth-form">
               <div className="form-section">
-                <h2 className="form-title">
-                  <span className="form-icon">👋</span>
-                  ברוכים השבים!
-                </h2>
-                <p className="form-description">התחברו לחשבון המאמן שלכם</p>
-                
                 <div className="input-group">
                   <div className="input-icon">📧</div>
                   <input
@@ -294,12 +288,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           ) : (
               <form onSubmit={handleRegister} className="auth-form">
               <div className="form-section">
-                <h2 className="form-title">
-                  <span className="form-icon">🌟</span>
-                  הצטרפו אלינו!
-                </h2>
-                <p className="form-description">צרו חשבון מאמן חדש והתחילו לנהל את המתאמנים שלכם</p>
-                
                 <div className="input-group">
                   <div className="input-icon">👤</div>
                     <input
