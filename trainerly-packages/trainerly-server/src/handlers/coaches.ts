@@ -60,11 +60,16 @@ export const checkNickname = async (
       };
     }
 
+    console.log('🔧 Validating nickname format...');
+    // First validate the original nickname format (no spaces allowed)
+    const validFormat = /^[\u0590-\u05FFa-zA-Z0-9_]+$/.test(nickname.trim());
+    console.log('✅ Nickname format valid:', validFormat);
+    
     console.log('🔧 Normalizing nickname...');
     const canonical = normalizeNickname(nickname);
     console.log('🔧 Canonical nickname:', canonical);
     
-    const valid = canonical.length > 0 && /^[\u0590-\u05FFa-zA-Z0-9_]+$/.test(canonical);
+    const valid = validFormat && canonical.length > 0;
     console.log('✅ Nickname valid:', valid);
     
     let available = true;
@@ -79,17 +84,16 @@ export const checkNickname = async (
       reason = 'NICKNAME_RESERVED';
       console.log('❌ Nickname reserved');
     } else {
-      console.log('🗄️ Skipping database check for now - assuming available');
-      // Temporarily skip database check to isolate the issue
-      // TODO: Re-enable database check once basic function works
-      /*
       try {
         console.log(`🔍 Checking nickname in database: ${canonical}`);
-        const existingCoach = await db.getCoachByNickname(canonical);
+        const existingCoach = await db.getCoachByNickname(canonical.toLowerCase());
         console.log(`🔍 Database result:`, existingCoach);
         if (existingCoach) {
           available = false;
           reason = 'NICKNAME_TAKEN';
+          console.log('❌ Nickname taken');
+        } else {
+          console.log('✅ Nickname available');
         }
       } catch (dbError) {
         console.error('❌ Database error in checkNickname:', dbError);
@@ -98,7 +102,6 @@ export const checkNickname = async (
         available = true;
         reason = undefined;
       }
-      */
     }
 
     const response: NicknameCheckResponse = {
