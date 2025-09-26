@@ -43,7 +43,8 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     // Mock successful loading of admin exercises
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: mockAdminExercises,
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // Mock copyAdminExercise to fail
@@ -93,7 +94,8 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     // Mock successful loading of admin exercises
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: mockAdminExercises,
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // Mock successful copy
@@ -150,7 +152,8 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     // Mock successful loading of admin exercises
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: mockAdminExercises,
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // Mock copyAdminExercise to take some time

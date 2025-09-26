@@ -1,53 +1,107 @@
-/* Exercise Management - Modern, Responsive Design */
+/* Exercise Management - Modal Content */
 
-.exercise-management {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+.exercise-management-content {
   direction: rtl;
+  font-family: var(--font-family-sans);
+}
+
+.management-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-start;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width-1) solid var(--border-primary);
 }
 
 .management-header {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-10);
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.management-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+}
+
+.back-icon-button {
+  position: absolute;
+  top: var(--space-6);
+  left: var(--space-6);
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-full);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-base);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-md);
+}
+
+.back-icon-button:hover {
+  background: var(--gradient-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-6);
 }
 
 .page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-3);
+  letter-spacing: -0.02em;
 }
 
 .title-icon {
-  font-size: 2.5rem;
+  font-size: var(--font-size-5xl);
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
 }
 
 .add-button {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: var(--gradient-success);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  gap: var(--space-2);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-family-sans);
 }
 
 .add-button:hover:not(:disabled) {
@@ -58,28 +112,30 @@
 .add-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .header-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
 }
 
 .admin-bank-button {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: var(--gradient-warning);
   color: white;
   border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  gap: var(--space-2);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-family-sans);
 }
 
 .admin-bank-button:hover:not(:disabled) {
@@ -90,10 +146,11 @@
 .admin-bank-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .button-icon {
-  font-size: 1.2rem;
+  font-size: var(--font-size-lg);
 }
 
 /* Loading States */
@@ -154,7 +211,7 @@
 }
 
 .exercise-form-modal {
-  background: white;
+  background: var(--bg-card);
   border-radius: 20px;
   width: 100%;
   max-width: 800px;
@@ -175,7 +232,7 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .close-button {
@@ -183,7 +240,7 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #64748b;
+  color: var(--text-secondary);
   padding: 0.5rem;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -191,7 +248,7 @@
 
 .close-button:hover {
   background: #f1f5f9;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 /* Form Styles */
@@ -213,7 +270,7 @@
 .form-group label {
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
@@ -319,7 +376,7 @@
 
 .cancel-button {
   background: #f1f5f9;
-  color: #64748b;
+  color: var(--text-secondary);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
@@ -331,7 +388,7 @@
 
 .cancel-button:hover {
   background: #e2e8f0;
-  color: #475569;
+  color: var(--text-primary);
 }
 
 .save-button {
@@ -366,14 +423,31 @@
 }
 
 .exercise-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
   animation: slideInUp 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.exercise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.exercise-card:hover::before {
+  opacity: 1;
 }
 
 @keyframes slideInUp {
@@ -389,8 +463,9 @@
 
 
 .exercise-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
 }
 
 .exercise-header {
@@ -403,7 +478,7 @@
 .exercise-name {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
   flex: 1;
 }
@@ -435,14 +510,14 @@
 
 
 .exercise-description {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 1rem;
 }
 
 .exercise-muscle-group {
-  color: #6366f1;
+  color: var(--accent-primary);
   font-size: 0.85rem;
   font-weight: 600;
   background: rgba(99, 102, 241, 0.1);
@@ -496,7 +571,7 @@
 .equipment-list strong {
   display: block;
   font-size: 0.85rem;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
@@ -508,7 +583,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #667eea;
+  color: var(--accent-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
@@ -516,7 +591,7 @@
 }
 
 .video-link:hover {
-  color: #5a67d8;
+  color: var(--accent-secondary);
   text-decoration: underline;
 }
 

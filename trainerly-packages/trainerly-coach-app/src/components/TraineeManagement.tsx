@@ -178,25 +178,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   }
 
   return (
-    <div className="trainee-management" dir="rtl">
-      <div className="management-header">
-        <button onClick={onBack} className="back-button">
-          ← חזרה לדשבורד
+    <div className="trainee-management-content">
+      <div className="management-actions">
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="btn-primary"
+          disabled={loading}
+        >
+          <span className="btn-icon">➕</span>
+          הוסף מתאמן חדש
         </button>
-        <div className="header-content">
-          <h1 className="page-title">
-            <span className="title-icon">👥</span>
-            ניהול מתאמנים
-          </h1>
-          <button 
-            onClick={() => setShowAddForm(true)} 
-            className="add-button"
-            disabled={loading}
-          >
-            <span className="button-icon">➕</span>
-            הוסף מתאמן חדש
-          </button>
-        </div>
       </div>
 
       {error && (
@@ -337,7 +328,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                 
                 {trainee.plans && trainee.plans.length > 1 && (
                   <div className="plan-history">
-                    <small style={{ color: '#64748b' }}>
+                    <small style={{ color: 'var(--text-muted)' }}>
                       תוכניות קודמות: {trainee.plans.slice(0, -1).map(planId => getPlanName(planId)).join(', ')}
                     </small>
                   </div>

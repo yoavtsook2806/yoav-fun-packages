@@ -4,6 +4,7 @@ import SettingsModal from './SettingsModal';
 import ExerciseManagement from './ExerciseManagement';
 import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
+import Modal from './Modal';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
@@ -110,21 +111,9 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
         <div className="dashboard-gradient"></div>
       </div>
       
-      {/* Header */}
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="header-info">
-            <div className="welcome-section">
-              <h1 className="welcome-title">
-                <span className="welcome-icon">👋</span>
-                שלום {coach.name}
-              </h1>
-              <p className="welcome-subtitle">
-                <span className="dashboard-icon">📊</span>
-                דשבורד מאמן • @{coach.nickname}
-              </p>
-            </div>
-          </div>
+
+        {/* Main Content */}
+        <main className="dashboard-main">
           <div className="header-actions">
             <button
               onClick={() => setIsSettingsModalOpen(true)}
@@ -134,11 +123,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
               <span className="button-icon">⚙️</span>
             </button>
           </div>
-        </div>
-      </header>
 
-        {/* Main Content */}
-        <main className="dashboard-main">
           {activeSection === 'dashboard' && (
             <>
               {/* Trainerly Logo */}
@@ -157,61 +142,84 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
               {/* Simple Management Buttons */}
               <section className="simple-management-section">
                 <div className="simple-management-grid">
-                  <button 
+                  <button
                     className="simple-manage-button"
                     onClick={() => setActiveSection('exercises')}
                   >
                     <div className="simple-button-icon">💪</div>
                     <div className="simple-button-text">ניהול תרגילים</div>
                   </button>
-                  
-                  <button 
+
+                  <button
                     className="simple-manage-button"
                     onClick={() => setActiveSection('plans')}
                   >
                     <div className="simple-button-icon">📋</div>
                     <div className="simple-button-text">תוכניות אימון</div>
                   </button>
-                  
-                  <button 
+
+                  <button
                     className="simple-manage-button"
                     onClick={() => setActiveSection('trainees')}
                   >
                     <div className="simple-button-icon">👥</div>
                     <div className="simple-button-text">ניהול מתאמנים</div>
                   </button>
-                  
+
                 </div>
               </section>
             </>
           )}
 
-          {activeSection === 'exercises' && coach && (
-            <ExerciseManagement
-              coachId={coachId}
-              token={token}
-              coach={coach}
-              onBack={() => setActiveSection('dashboard')}
-            />
-          )}
-
-          {activeSection === 'plans' && coach && (
-            <TrainingPlanManagement
-              coachId={coachId}
-              token={token}
-              coach={coach}
-              onBack={() => setActiveSection('dashboard')}
-            />
-          )}
-
-          {activeSection === 'trainees' && (
-            <TraineeManagement
-              coachId={coachId}
-              token={token}
-              onBack={() => setActiveSection('dashboard')}
-            />
-          )}
         </main>
+
+      <Modal
+        isOpen={activeSection === 'exercises'}
+        onClose={() => setActiveSection('dashboard')}
+        title="ניהול תרגילים"
+        icon="💪"
+        size="xl"
+      >
+        {coach && (
+          <ExerciseManagement
+            coachId={coachId}
+            token={token}
+            coach={coach}
+            onBack={() => setActiveSection('dashboard')}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={activeSection === 'plans'}
+        onClose={() => setActiveSection('dashboard')}
+        title="ניהול תוכניות אימון"
+        icon="📋"
+        size="xl"
+      >
+        {coach && (
+          <TrainingPlanManagement
+            coachId={coachId}
+            token={token}
+            coach={coach}
+            onBack={() => setActiveSection('dashboard')}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={activeSection === 'trainees'}
+        onClose={() => setActiveSection('dashboard')}
+        title="ניהול מתאמנים"
+        icon="👥"
+        size="xl"
+      >
+        <TraineeManagement
+          coachId={coachId}
+          token={token}
+          onBack={() => setActiveSection('dashboard')}
+        />
+      </Modal>
 
       {/* Profile Modal */}
       <ProfileModal

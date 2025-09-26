@@ -3,6 +3,7 @@ import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, Prescrib
 import { showError, showSuccess } from './ToastContainer';
 import AdminTrainingPlanBank from './AdminTrainingPlanBank';
 import EditTrainingPlan from './EditTrainingPlan';
+import Card from './Card';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -227,37 +228,26 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   }
 
   return (
-    <div className="training-plan-management" dir="rtl">
-      <div className="management-header">
-        <button onClick={onBack} className="back-button">
-          ← חזרה לדשבורד
+    <div className="training-plan-management-content">
+      <div className="management-actions">
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="btn-primary"
+          disabled={loading}
+        >
+          <span className="btn-icon">➕</span>
+          הוסף תוכנית חדשה
         </button>
-        <div className="header-content">
-          <h1 className="page-title">
-            <span className="title-icon">📋</span>
-            ניהול תוכניות אימון
-          </h1>
-          <div className="header-actions">
-            {!coach.isAdmin && (
-              <button 
-                onClick={() => setShowAdminPlanBank(true)} 
-                className="admin-bank-button"
-                disabled={loading}
-              >
-                <span className="button-icon">🏦</span>
-                בנק תוכניות האימון
-              </button>
-            )}
-            <button 
-              onClick={() => setShowAddForm(true)} 
-              className="add-button"
-              disabled={loading}
-            >
-              <span className="button-icon">➕</span>
-              הוסף תוכנית חדשה
-            </button>
-          </div>
-        </div>
+        {!coach.isAdmin && (
+          <button
+            onClick={() => setShowAdminPlanBank(true)}
+            className="btn-secondary"
+            disabled={loading}
+          >
+            <span className="btn-icon">🏦</span>
+            בנק תוכניות מנהל
+          </button>
+        )}
       </div>
 
       {error && (
@@ -514,22 +504,29 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
       {/* Plans Grid */}
       <div className="plans-grid">
         {plans.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">📋</div>
-            <h3>אין תוכניות אימון עדיין</h3>
-            <p>התחל ביצירת התוכנית הראשונה שלך</p>
-            <button onClick={() => setShowAddForm(true)} className="empty-action-button">
-              צור תוכנית ראשונה
-            </button>
-          </div>
+          <Card>
+            <div className="empty-state">
+              <div className="empty-icon">📋</div>
+              <h3>אין תוכניות אימון עדיין</h3>
+              <p>התחל ביצירת התוכנית הראשונה שלך</p>
+              <button onClick={() => setShowAddForm(true)} className="btn-primary">
+                צור תוכנית ראשונה
+              </button>
+            </div>
+          </Card>
         ) : (
           plans.filter(plan => !plan.customTrainee).map((plan) => (
-            <div key={plan.planId} data-plan-id={plan.planId} className="plan-card clickable" onClick={() => handleEditPlan(plan)}>
-              <div className="plan-header">
-                <h3 className="plan-name">{plan.name}</h3>
-                <div className="plan-actions">
-                  <button 
-                    className="edit-plan-btn" 
+            <Card key={plan.planId} data-id={plan.planId} clickable onClick={() => handleEditPlan(plan)}>
+              <div className="card-header">
+                <div>
+                  <h3 className="card-title">{plan.name}</h3>
+                  {plan.description && (
+                    <p className="card-subtitle">{plan.description}</p>
+                  )}
+                </div>
+                <div className="card-actions">
+                  <button
+                    className="card-action-button"
                     title="ערוך תוכנית"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -538,8 +535,8 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   >
                     ✏️
                   </button>
-                  <button 
-                    className="delete-plan-btn" 
+                  <button
+                    className="card-action-button"
                     title="מחק תוכנית"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -550,26 +547,22 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   </button>
                 </div>
               </div>
-              
-              {plan.description && (
-                <p className="plan-description">{plan.description}</p>
-              )}
-              
-              <div className="plan-stats">
-                <div className="stat">
-                  <span className="stat-number">{plan.trainingsCount}</span>
-                  <span className="stat-label">אימונים</span>
+
+              <div className="card-stats">
+                <div className="card-stat">
+                  <span className="card-stat-number">{plan.trainingsCount}</span>
+                  <span className="card-stat-label">אימונים</span>
                 </div>
-                <div className="stat">
-                  <span className="stat-number">{exercises.length}</span>
-                  <span className="stat-label">תרגילים</span>
+                <div className="card-stat">
+                  <span className="card-stat-number">{exercises.length}</span>
+                  <span className="card-stat-label">תרגילים</span>
                 </div>
               </div>
-              
-              <div className="plan-created">
-                <span className="created-date">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
+
+              <div className="card-footer">
+                <span className="card-meta">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
               </div>
-            </div>
+            </Card>
           ))
         )}
       </div>

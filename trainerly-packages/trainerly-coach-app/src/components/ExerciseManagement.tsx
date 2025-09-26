@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import AdminExerciseBank from './AdminExerciseBank';
+import Card from './Card';
 import { MUSCLE_GROUPS } from '../constants/muscleGroups';
 import './ExerciseManagement.css';
 
@@ -137,37 +138,26 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   }
 
   return (
-    <div className="exercise-management" dir="rtl">
-      <div className="management-header">
-        <button onClick={onBack} className="back-button">
-          ← חזרה לדשבורד
+    <div className="exercise-management-content">
+      <div className="management-actions">
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="btn-primary"
+          disabled={loading}
+        >
+          <span className="btn-icon">➕</span>
+          הוסף תרגיל חדש
         </button>
-        <div className="header-content">
-          <h1 className="page-title">
-            <span className="title-icon">💪</span>
-            ניהול תרגילים
-          </h1>
-          <div className="header-actions">
-            {!coach.isAdmin && (
-              <button 
-                onClick={() => setShowAdminBank(true)} 
-                className="admin-bank-button"
-                disabled={loading}
-              >
-                <span className="button-icon">🏦</span>
-                בנק התרגילים
-              </button>
-            )}
-            <button 
-              onClick={() => setShowAddForm(true)} 
-              className="add-button"
-              disabled={loading}
-            >
-              <span className="button-icon">➕</span>
-              הוסף תרגיל חדש
-            </button>
-          </div>
-        </div>
+        {!coach.isAdmin && (
+          <button
+            onClick={() => setShowAdminBank(true)}
+            className="btn-secondary"
+            disabled={loading}
+          >
+            <span className="btn-icon">🏦</span>
+            בנק תרגילים מנהל
+          </button>
+        )}
       </div>
 
       {error && (
@@ -250,43 +240,47 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
 
       <div className="exercises-grid">
         {exercises.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">💪</div>
-            <h3>אין תרגילים עדיין</h3>
-            <p>התחל בהוספת התרגיל הראשון שלך</p>
-            <button onClick={() => setShowAddForm(true)} className="empty-action-button">
-              הוסף תרגיל ראשון
-            </button>
-          </div>
+          <Card>
+            <div className="empty-state">
+              <div className="empty-icon">💪</div>
+              <h3>אין תרגילים עדיין</h3>
+              <p>התחל בהוספת התרגיל הראשון שלך</p>
+              <button onClick={() => setShowAddForm(true)} className="btn-primary">
+                הוסף תרגיל ראשון
+              </button>
+            </div>
+          </Card>
         ) : (
           exercises.map((exercise) => (
-            <div key={exercise.exerciseId} data-exercise-id={exercise.exerciseId} className="exercise-card">
-              <div className="exercise-header">
-                <h3 className="exercise-name">{exercise.name}</h3>
-                <div className="exercise-actions">
-                  <button onClick={() => handleEdit(exercise)} className="edit-button">
+            <Card key={exercise.exerciseId} data-id={exercise.exerciseId}>
+              <div className="card-header">
+                <div>
+                  <h3 className="card-title">{exercise.name}</h3>
+                  {exercise.muscleGroup && (
+                    <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+                  )}
+                </div>
+                <div className="card-actions">
+                  <button onClick={() => handleEdit(exercise)} className="card-action-button" title="ערוך תרגיל">
                     ✏️
                   </button>
                 </div>
               </div>
-              
-              {exercise.muscleGroup && (
-                <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
-              )}
-              
+
               {exercise.note && (
-                <p className="exercise-instructions">{exercise.note}</p>
+                <div className="card-content">
+                  <p>{exercise.note}</p>
+                </div>
               )}
-              
-              
+
               {exercise.link && (
-                <div className="exercise-video">
+                <div className="card-footer">
                   <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
                     🎥 צפה בסרטון
                   </a>
                 </div>
               )}
-            </div>
+            </Card>
           ))
         )}
       </div>

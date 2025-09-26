@@ -1,26 +1,121 @@
-/* Training Plan Management - Modern, Responsive Design */
+/* Training Plan Management - 2025 Professional Design */
 
 .training-plan-management {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+  background: var(--gradient-bg);
+  padding: var(--space-8) var(--space-6);
   direction: rtl;
+  font-family: var(--font-family-sans);
 }
 
 /* Plan Form Modal */
 .plan-form-modal,
 .training-form-modal {
-  background: white;
-  border-radius: 20px;
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-2xl);
   width: 100%;
   max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
+  position: relative;
+}
+
+.plan-form-modal::before,
+.training-form-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  border-radius: var(--border-radius-2xl) var(--border-radius-2xl) 0 0;
 }
 
 .plan-form {
-  padding: 2rem;
+  padding: var(--space-8);
+}
+
+/* Management Header */
+.management-header {
+  margin-bottom: var(--space-10);
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.management-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+}
+
+.back-icon-button {
+  position: absolute;
+  top: var(--space-6);
+  left: var(--space-6);
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-full);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-base);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-md);
+}
+
+.back-icon-button:hover {
+  background: var(--gradient-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.page-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  letter-spacing: -0.02em;
+}
+
+.title-icon {
+  font-size: var(--font-size-5xl);
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
 }
 
 /* Trainings Section */
@@ -43,7 +138,7 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .add-training-button {
@@ -93,7 +188,7 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .training-actions {
@@ -132,14 +227,14 @@
 }
 
 .training-exercises {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .empty-trainings {
   text-align: center;
   padding: 2rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .empty-trainings p {
@@ -183,7 +278,7 @@
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .available-exercises {
@@ -221,7 +316,7 @@
 
 .exercise-name {
   font-weight: 500;
-  color: #374151;
+  color: var(--text-primary);
   font-size: 0.9rem;
 }
 
@@ -272,7 +367,7 @@
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .training-exercise-item {
@@ -288,7 +383,7 @@
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .exercise-params {
@@ -306,7 +401,7 @@
 .param-group label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -332,7 +427,7 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
@@ -369,7 +464,7 @@
 .empty-exercises {
   text-align: center;
   padding: 2rem;
-  color: #64748b;
+  color: var(--text-secondary);
   border: 2px dashed #e2e8f0;
   border-radius: 12px;
 }
@@ -478,12 +573,12 @@
 .plan-name {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .plan-description {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 1.5rem;
@@ -512,7 +607,7 @@
 
 .stat-label {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -533,12 +628,12 @@
 }
 
 .training-summary strong {
-  color: #374151;
+  color: var(--text-primary);
   font-size: 0.9rem;
 }
 
 .training-summary span {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 

@@ -24,69 +24,15 @@
   opacity: 0.6;
 }
 
-/* Header */
-.dashboard-header {
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  border-bottom: var(--border-width-1) solid var(--border-primary);
-  box-shadow: var(--shadow-lg);
-  flex-shrink: 0;
-  z-index: var(--z-sticky);
-}
-
-.header-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-6);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-info {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-}
-
-.welcome-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.welcome-title {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.welcome-icon {
-  font-size: var(--font-size-3xl);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.welcome-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.dashboard-icon {
-  font-size: var(--font-size-base);
-}
-
+/* Header Actions */
 .header-actions {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  z-index: var(--z-sticky);
 }
 
 .action-button {
@@ -145,8 +91,8 @@
 }
 
 .trainerly-logo {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
   transition: all var(--transition-base);
@@ -189,15 +135,19 @@
 
 .simple-manage-button {
   background: var(--bg-card);
-  border: var(--border-width-2) solid var(--border-primary);
+  border: var(--border-width-1) solid var(--border-primary);
   border-radius: var(--border-radius-2xl);
   padding: var(--space-10) var(--space-8);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: var(--transition-base);
   text-align: center;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
 }
 
 .simple-manage-button::before {
@@ -207,66 +157,80 @@
   background: var(--gradient-primary);
   opacity: 0;
   transition: opacity var(--transition-base);
+  border-radius: inherit;
+}
+
+.simple-manage-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
 }
 
 .simple-manage-button:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-6px);
+  box-shadow:
+    var(--shadow-xl),
+    var(--shadow-glow);
   border-color: var(--border-accent);
 }
 
 .simple-manage-button:hover::before {
-  opacity: 0.1;
+  opacity: 0.05;
 }
 
-.simple-manage-button:hover .simple-button-content {
-  color: var(--text-primary);
+.simple-manage-button:hover::after {
+  opacity: 1;
 }
 
-.simple-button-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  color: var(--text-primary); /* Changed to primary for better contrast */
-  transition: color var(--transition-base);
+.simple-manage-button:active {
+  transform: translateY(-2px);
 }
 
 .simple-button-icon {
-  font-size: 3rem;
-  margin-bottom: var(--space-2);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-  color: var(--primary); /* Add primary color to icons */
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+  transition: all var(--transition-base);
+  position: relative;
+  z-index: 2;
 }
 
-.simple-button-title {
+.simple-button-text {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  margin: 0;
-  color: var(--text-primary); /* Ensure title is visible */
+  color: var(--text-primary);
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-base);
 }
 
-.simple-button-description {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary); /* Keep secondary for description */
-  margin: 0;
-  line-height: 1.5;
+.simple-manage-button:hover .simple-button-icon {
+  transform: scale(1.1) rotateY(10deg);
+  filter: drop-shadow(0 8px 20px rgba(99, 102, 241, 0.4));
+}
+
+.simple-manage-button:hover .simple-button-text {
+  color: var(--primary);
+}
+
+/* Add gradient text effect on hover */
+.simple-manage-button:hover .simple-button-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .header-content {
-    padding: var(--space-3) var(--space-4);
-  }
-
-  .welcome-title {
-    font-size: var(--font-size-xl);
-  }
-
-  .welcome-icon {
-    font-size: var(--font-size-2xl);
+  .header-actions {
+    top: var(--space-4);
+    right: var(--space-4);
   }
 
   .dashboard-main {
@@ -291,8 +255,8 @@
   }
 
   .trainerly-logo {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
   }
 
   .app-title {
@@ -301,14 +265,9 @@
 }
 
 @media (max-width: 480px) {
-  .header-content {
-    flex-direction: column;
-    gap: var(--space-3);
-    align-items: flex-start;
-  }
-
   .header-actions {
-    align-self: flex-end;
+    top: var(--space-3);
+    right: var(--space-3);
   }
 
   .simple-management-grid {

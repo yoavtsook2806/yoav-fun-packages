@@ -197,8 +197,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <div className="logo-icon">💪</div>
-              <h1>Trainerly</h1>
+              <img
+                src="/TrainerlyLogo.png"
+                alt="Trainerly"
+                className="trainerly-logo"
+              />
+              <h1>Trainerly Coach</h1>
               <p className="auth-subtitle">מערכת ניהול אימונים מקצועית</p>
             </div>
           </div>
@@ -272,7 +276,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                   </div>
                 )}
                 
-                <button type="submit" disabled={loading || !loginData.email.trim() || !loginData.password.trim()} className="primary-button">
+                <button type="submit" disabled={loading || !loginData.email.trim() || !loginData.password.trim()} className="btn-primary auth-button">
                   {loading ? (
                     <>
                       <span className="loading-spinner"></span>
@@ -386,10 +390,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                   </div>
                 )}
                 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading || !nicknameStatus.available}
-                  className="primary-button"
+                  className="btn-primary auth-button"
                 >
                   {loading ? (
                     <>
