@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import AdminExerciseBank from './AdminExerciseBank';
+import { MUSCLE_GROUPS } from '../constants/muscleGroups';
 import './ExerciseManagement.css';
 
 interface ExerciseManagementProps {
@@ -22,7 +23,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   // Form state
   const [formData, setFormData] = useState({
     name: '',
-    short: '',
+    muscleGroup: '',
     note: '',
     link: ''
   });
@@ -103,7 +104,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   const resetForm = () => {
     setFormData({
       name: '',
-      short: '',
+      muscleGroup: '',
       note: '',
       link: ''
     });
@@ -114,7 +115,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   const handleEdit = (exercise: Exercise) => {
     setFormData({
       name: exercise.name,
-      short: exercise.short || '',
+      muscleGroup: exercise.muscleGroup || '',
       note: exercise.note || '',
       link: exercise.link || ''
     });
@@ -197,14 +198,19 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                   />
                 </div>
                 <div className="form-group">
-                  <label>תיאור קצר *</label>
-                  <input
-                    type="text"
-                    value={formData.short}
-                    onChange={(e) => setFormData(prev => ({ ...prev, short: e.target.value }))}
+                  <label>קבוצת שרירים *</label>
+                  <select
+                    value={formData.muscleGroup}
+                    onChange={(e) => setFormData(prev => ({ ...prev, muscleGroup: e.target.value }))}
                     required
-                    placeholder="לדוגמה: סקוואט"
-                  />
+                  >
+                    <option value="">בחר קבוצת שרירים...</option>
+                    {MUSCLE_GROUPS.map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -233,7 +239,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                 <button type="button" onClick={resetForm} className="cancel-button">
                   ביטול
                 </button>
-                <button type="submit" className="save-button" disabled={loading || !formData.name.trim() || !formData.short.trim()}>
+                <button type="submit" className="save-button" disabled={loading || !formData.name.trim() || !formData.muscleGroup.trim()}>
                   {loading ? 'שומר...' : editingExercise ? 'עדכן תרגיל' : 'הוסף תרגיל'}
                 </button>
               </div>
@@ -264,8 +270,8 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                 </div>
               </div>
               
-              {exercise.short && (
-                <p className="exercise-description">{exercise.short}</p>
+              {exercise.muscleGroup && (
+                <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
               )}
               
               {exercise.note && (

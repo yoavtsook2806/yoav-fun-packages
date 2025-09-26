@@ -3,7 +3,7 @@
  * Provides cache-first loading with background updates
  */
 
-import { apiService, Coach, Exercise, TrainingPlanSummary, Trainee } from './apiService';
+import { apiService, Coach, Exercise, TrainingPlanSummary } from './apiService';
 import { cacheService, CACHE_KEYS } from './cacheService';
 
 export interface CachedData<T> {
@@ -388,4 +388,4 @@ class CachedApiService {
 export const cachedApiService = new CachedApiService();
 
 // Re-export types for convenience
-export type { Coach, Exercise, TrainingPlanSummary, Trainee } from './apiService';
+export type { Coach, Exercise, TrainingPlanSummary } from './apiService';

@@ -3,25 +3,33 @@
  * Provides mock data and utilities for testing both server and client applications
  */
 
-import { Coach, Exercise, TrainingPlan, Trainee, ExerciseSession } from '../types';
+import { Coach, Exercise, TrainingPlan, Trainer, ExerciseSession } from '../types';
 
 // Mock Data
 export const mockCoaches: Coach[] = [
   {
     coachId: 'coach-001',
     name: 'אבי כהן',
+    email: 'avi@example.com',
     nickname: 'avi_coach',
+    passwordHash: 'hashed_password_1',
+    valid: true,
     phone: '0501234567',
     age: 35,
-    createdAt: '2024-01-15T10:00:00Z'
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-15T10:00:00Z'
   },
   {
     coachId: 'coach-002', 
     name: 'שרה לוי',
+    email: 'sarah@example.com',
     nickname: 'sarah_trainer',
+    passwordHash: 'hashed_password_2',
+    valid: true,
     phone: '0507654321',
     age: 29,
-    createdAt: '2024-02-20T14:30:00Z'
+    createdAt: '2024-02-20T14:30:00Z',
+    updatedAt: '2024-02-20T14:30:00Z'
   }
 ];
 
@@ -30,57 +38,27 @@ export const mockExercises: Exercise[] = [
     exerciseId: 'exercise-001',
     coachId: 'coach-001',
     name: 'סקוואט',
-    description: 'כיפוף ברכיים עם משקל גוף',
-    videoUrl: 'https://example.com/squat-video.mp4',
-    imageUrl: 'https://example.com/squat-image.jpg',
-    muscleGroups: ['רגליים', 'ישבן'],
-    equipment: ['משקל גוף'],
-    difficulty: 'בינוני',
-    instructions: ['עמוד עם רגליים ברוחב כתפיים', 'רד לכיוון הרצפה', 'עלה חזרה למעלה'],
-    tips: ['שמור על הגב ישר', 'אל תיתן לברכיים ליפול פנימה'],
-    minimumNumberOfRepeasts: 8,
-    maximumNumberOfRepeasts: 15,
-    minimumTimeToRest: 60,
-    maximumTimeToRest: 120,
-    numberOfSets: 3,
+    note: 'כיפוף ברכיים עם משקל גוף - שמור על הגב ישר',
+    link: 'https://www.youtube.com/watch?v=ultWZbUMPL8',
+    muscleGroup: 'ירך קדמי',
     createdAt: '2024-03-01T09:00:00Z'
   },
   {
     exerciseId: 'exercise-002',
     coachId: 'coach-001',
     name: 'שכיבות סמיכה',
-    description: 'חיזוק שרירי החזה והזרועות',
-    videoUrl: 'https://example.com/pushup-video.mp4',
-    imageUrl: 'https://example.com/pushup-image.jpg',
-    muscleGroups: ['חזה', 'זרועות', 'כתפיים'],
-    equipment: ['משקל גוף'],
-    difficulty: 'קל',
-    instructions: ['שכב על הבטן', 'הרם את הגוף עם הזרועות', 'רד בשליטה'],
-    tips: ['שמור על קו ישר מהראש לעקבים', 'נשום נכון'],
-    minimumNumberOfRepeasts: 5,
-    maximumNumberOfRepeasts: 20,
-    minimumTimeToRest: 45,
-    maximumTimeToRest: 90,
-    numberOfSets: 3,
+    note: 'דחיפת פלג גוף עליון - שמור על גוף ישר',
+    link: 'https://www.youtube.com/watch?v=IODxDxX7oi4',
+    muscleGroup: 'חזה אמצעי',
     createdAt: '2024-03-02T11:15:00Z'
   },
   {
     exerciseId: 'exercise-003',
     coachId: 'coach-001',
     name: 'פלאנק',
-    description: 'חיזוק שרירי הליבה',
-    videoUrl: 'https://example.com/plank-video.mp4',
-    imageUrl: 'https://example.com/plank-image.jpg',
-    muscleGroups: ['ליבה', 'כתפיים'],
-    equipment: ['משקל גוף'],
-    difficulty: 'בינוני',
-    instructions: ['שכב על הבטן', 'הרם את הגוף על המרפקים', 'החזק את המצב'],
-    tips: ['אל תיתן לירכיים ליפול', 'שמור על נשימה קבועה'],
-    minimumNumberOfRepeasts: 30,
-    maximumNumberOfRepeasts: 120,
-    minimumTimeToRest: 60,
-    maximumTimeToRest: 90,
-    numberOfSets: 3,
+    note: 'החזקת מנח לחיזוק הליבה - נשום באופן קבוע',
+    link: 'https://www.youtube.com/watch?v=ASdvN_XEl_c',
+    muscleGroup: 'ליבה',
     createdAt: '2024-03-03T16:45:00Z'
   }
 ];
@@ -91,90 +69,62 @@ export const mockTrainingPlans: TrainingPlan[] = [
     coachId: 'coach-001',
     name: 'תוכנית למתחילים',
     description: 'תוכנית בסיסית למתחילים בספורט',
-    trainings: {
-      'A': {
-        'סקוואט': {
-          exerciseId: 'exercise-001',
-          numberOfSets: 3,
-          minimumNumberOfRepeasts: 8,
-          maximumNumberOfRepeasts: 12,
-          minimumTimeToRest: 60,
-          maximumTimeToRest: 90
-        },
-        'שכיבות סמיכה': {
-          exerciseId: 'exercise-002',
-          numberOfSets: 3,
-          minimumNumberOfRepeasts: 5,
-          maximumNumberOfRepeasts: 10,
-          minimumTimeToRest: 45,
-          maximumTimeToRest: 75
-        }
-      },
-      'B': {
-        'פלאנק': {
-          exerciseId: 'exercise-003',
-          numberOfSets: 3,
-          minimumNumberOfRepeasts: 30,
-          maximumNumberOfRepeasts: 60,
-          minimumTimeToRest: 60,
-          maximumTimeToRest: 90
-        }
+    trainings: [
+      {
+        trainingId: 'training-A',
+        name: 'אימון A',
+        order: 1,
+        exercises: [
+          {
+            exerciseName: 'סקוואט',
+            numberOfSets: 3,
+            minimumNumberOfRepeasts: 8,
+            maximumNumberOfRepeasts: 12,
+            minimumTimeToRest: 60,
+            maximumTimeToRest: 90
+          },
+          {
+            exerciseName: 'שכיבות סמיכה',
+            numberOfSets: 3,
+            minimumNumberOfRepeasts: 5,
+            maximumNumberOfRepeasts: 10,
+            minimumTimeToRest: 45,
+            maximumTimeToRest: 75
+          }
+        ]
       }
-    },
-    isAdminPlan: false,
-    createdAt: '2024-03-10T12:00:00Z'
+    ],
+    createdAt: '2024-03-10T12:00:00Z',
+    updatedAt: '2024-03-10T12:00:00Z'
   },
   {
     planId: 'plan-002',
     coachId: 'coach-001',
     name: 'תוכנית מתקדמים',
     description: 'תוכנית מאתגרת למתאמנים מנוסים',
-    trainings: {
-      'A': {
-        'סקוואט': {
-          exerciseId: 'exercise-001',
-          numberOfSets: 4,
-          minimumNumberOfRepeasts: 12,
-          maximumNumberOfRepeasts: 18,
-          minimumTimeToRest: 90,
-          maximumTimeToRest: 120
-        },
-        'שכיבות סמיכה': {
-          exerciseId: 'exercise-002',
-          numberOfSets: 4,
-          minimumNumberOfRepeasts: 15,
-          maximumNumberOfRepeasts: 25,
-          minimumTimeToRest: 60,
-          maximumTimeToRest: 90
-        }
-      },
-      'B': {
-        'פלאנק': {
-          exerciseId: 'exercise-003',
-          numberOfSets: 4,
-          minimumNumberOfRepeasts: 60,
-          maximumNumberOfRepeasts: 120,
-          minimumTimeToRest: 90,
-          maximumTimeToRest: 120
-        }
-      },
-      'C': {
-        'סקוואט': {
-          exerciseId: 'exercise-001',
-          numberOfSets: 3,
-          minimumNumberOfRepeasts: 10,
-          maximumNumberOfRepeasts: 15,
-          minimumTimeToRest: 75,
-          maximumTimeToRest: 105
-        }
+    trainings: [
+      {
+        trainingId: 'training-A',
+        name: 'אימון A',
+        order: 1,
+        exercises: [
+          {
+            exerciseName: 'סקוואט',
+            numberOfSets: 4,
+            minimumNumberOfRepeasts: 12,
+            maximumNumberOfRepeasts: 18,
+            minimumTimeToRest: 90,
+            maximumTimeToRest: 120
+          }
+        ]
       }
-    },
-    isAdminPlan: false,
-    createdAt: '2024-03-15T14:20:00Z'
+    ],
+    createdAt: '2024-03-15T14:20:00Z',
+    updatedAt: '2024-03-15T14:20:00Z'
   }
 ];
 
-export const mockTrainees: Trainee[] = [
+export const mockTrainers: Trainer[] = [
   {
     trainerId: 'trainee-001',
     coachId: 'coach-001',
@@ -305,13 +255,13 @@ export const getTrainingPlansByCoachId = (coachId: string): TrainingPlan[] => {
   return mockTrainingPlans.filter(plan => plan.coachId === coachId);
 };
 
-export const getTraineesByCoachId = (coachId: string): Trainee[] => {
-  return mockTrainees.filter(trainee => trainee.coachId === coachId);
+export const getTrainersByCoachId = (coachId: string): Trainer[] => {
+  return mockTrainers.filter(trainer => trainer.coachId === coachId);
 };
 
-export const getExerciseSessionsByTraineeId = (traineeId: string, limit?: number): ExerciseSession[] => {
+export const getExerciseSessionsByTrainerId = (trainerId: string, limit?: number): ExerciseSession[] => {
   const sessions = mockExerciseSessions
-    .filter(session => session.trainerId === traineeId)
+    .filter(session => session.trainerId === trainerId)
     .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
   
   return limit ? sessions.slice(0, limit) : sessions;
@@ -359,7 +309,7 @@ export const testScenarios = {
     coach: mockCoaches[0],
     exercises: getExercisesByCoachId('coach-001'),
     trainingPlans: getTrainingPlansByCoachId('coach-001'),
-    trainees: getTraineesByCoachId('coach-001'),
+    trainers: getTrainersByCoachId('coach-001'),
     sessions: getExerciseSessionsByCoachId('coach-001')
   },
   
@@ -368,19 +318,19 @@ export const testScenarios = {
     coach: mockCoaches[1],
     exercises: [],
     trainingPlans: [],
-    trainees: [],
+    trainers: [],
     sessions: []
   },
   
-  // Trainee with progress
-  traineeWithProgressScenario: {
-    trainee: mockTrainees[0],
-    sessions: getExerciseSessionsByTraineeId('trainee-001')
+  // Trainer with progress
+  trainerWithProgressScenario: {
+    trainer: mockTrainers[0],
+    sessions: getExerciseSessionsByTrainerId('trainee-001')
   },
-  
-  // Trainee without progress
-  traineeWithoutProgressScenario: {
-    trainee: mockTrainees[2],
+
+  // Trainer without progress
+  trainerWithoutProgressScenario: {
+    trainer: mockTrainers[2],
     sessions: []
   }
 };
@@ -390,14 +340,14 @@ export default {
   coaches: mockCoaches,
   exercises: mockExercises,
   trainingPlans: mockTrainingPlans,
-  trainees: mockTrainees,
+  trainers: mockTrainers,
   exerciseSessions: mockExerciseSessions,
   utils: {
     getCoachById,
     getExercisesByCoachId,
     getTrainingPlansByCoachId,
-    getTraineesByCoachId,
-    getExerciseSessionsByTraineeId,
+    getTrainersByCoachId,
+    getExerciseSessionsByTrainerId,
     getExerciseSessionsByCoachId,
     createMockApiResponse,
     createMockListResponse

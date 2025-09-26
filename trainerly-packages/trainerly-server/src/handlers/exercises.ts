@@ -44,15 +44,15 @@ export const createExercise = async (
     }
 
     const requestData: ExerciseCreateRequest = JSON.parse(event.body);
-    const { name, link, note, short } = requestData;
+    const { name, link, note, muscleGroup } = requestData;
 
-    if (!name || !short) {
+    if (!name || !muscleGroup) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Name and short description are required'
+          message: 'Name and muscle group are required'
         })
       };
     }
@@ -86,7 +86,7 @@ export const createExercise = async (
       name,
       link,
       note,
-      short,
+      muscleGroup,
       createdAt: new Date().toISOString(),
       isAdminExercise
     };

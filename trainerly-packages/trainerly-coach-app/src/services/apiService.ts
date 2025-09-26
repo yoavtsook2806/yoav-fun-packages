@@ -5,10 +5,9 @@ export interface Exercise {
   exerciseId: string;
   coachId: string;
   name: string;
-  short: string; // short description
+  muscleGroup: string; // muscle group in Hebrew
   link?: string; // video URL
   note?: string; // instructions/notes
-  muscleGroup?: 'legs' | 'back' | 'chest' | 'shoulders' | 'arms' | 'core' | 'full_body' | 'other';
   isAdminExercise?: boolean; // True if created by admin, available to all coaches
   originalExerciseId?: string; // Reference to original admin exercise if this is a copy
   createdAt: string;

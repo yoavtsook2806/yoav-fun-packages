@@ -49,7 +49,7 @@ export interface Exercise {
   name: string; // e.g., "פרפר, מ. יד/מכונה"
   link?: string; // video URL
   note?: string; // exercise instructions/notes
-  short: string; // short description, e.g., "פרפר"
+  muscleGroup: string; // muscle group, e.g., "חזה אמצעי"
   isAdminExercise?: boolean; // True if created by admin, available to all coaches
   originalExerciseId?: string; // Reference to original admin exercise if this is a copy
   createdAt: string;
@@ -288,7 +288,7 @@ export interface ExerciseCreateRequest {
   name: string; // e.g., "פרפר, מ. יד/מכונה"
   link?: string; // video URL
   note?: string; // exercise instructions
-  short: string; // short description, e.g., "פרפר"
+  muscleGroup: string; // muscle group, e.g., "חזה אמצעי"
 }
 
 export interface ExerciseCreateResponse {
@@ -301,7 +301,7 @@ export interface ExerciseListResponse {
     name: string;
     link?: string;
     note?: string;
-    short: string;
+    muscleGroup: string;
     isAdminExercise?: boolean;
     originalExerciseId?: string;
     createdAt: string;

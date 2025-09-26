@@ -66,7 +66,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
 
   const filteredExercises = adminExercises.filter(exercise =>
     exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    exercise.short.toLowerCase().includes(searchTerm.toLowerCase())
+    (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (!isOpen) return null;
@@ -110,7 +110,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
                         <div className="admin-badge">מאמן מנהל</div>
                       </div>
                       
-                      <p className="exercise-short">{exercise.short}</p>
+                      <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
                       
                       {exercise.note && (
                         <p className="exercise-note">{exercise.note}</p>
