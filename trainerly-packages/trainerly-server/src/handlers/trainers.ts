@@ -1,0 +1,478 @@
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { randomUUID } from 'crypto';
+import { db } from '../services/database';
+import { 
+  TrainerCreateRequest, 
+  TrainerCreateResponse, 
+  TrainerIdentifyRequest,
+  TrainerIdentifyResponse,
+  TrainerListResponse,
+  Trainer 
+} from '../types';
+
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+};
+
+
+export const createTrainer = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    
+    if (!coachId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID is required'
+        })
+      };
+    }
+
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Request body is required'
+        })
+      };
+    }
+
+    const requestData: TrainerCreateRequest = JSON.parse(event.body);
+    const { nickname, email } = requestData;
+
+    if (!nickname) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Nickname is required'
+        })
+      };
+    }
+
+    // Check if nickname is unique per coach
+    const existingTrainers = await db.getTrainersByCoach(coachId);
+    const nicknameExists = existingTrainers.some(t => 
+      t.nickname.toLowerCase() === nickname.toLowerCase()
+    );
+
+    if (nicknameExists) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'NICKNAME_TAKEN',
+          message: 'Nickname already exists for this coach'
+        })
+      };
+    }
+
+    // TODO: Verify JWT token and check if coach exists and is valid
+
+    const trainer: Trainer = {
+      trainerId: randomUUID(),
+      coachId,
+      nickname,
+      email,
+      createdAt: new Date().toISOString()
+    };
+
+    await db.saveTrainer(trainer);
+
+    const response: TrainerCreateResponse = {
+      trainerId: trainer.trainerId
+    };
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(response)
+    };
+  } catch (error) {
+    console.error('Error creating trainer:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+export const listTrainers = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    
+    if (!coachId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID is required'
+        })
+      };
+    }
+
+    // TODO: Verify JWT token and check if coach exists and is valid
+
+    const trainers = await db.getTrainersByCoach(coachId);
+
+    const response: TrainerListResponse = {
+      items: trainers.map(trainer => ({
+        trainerId: trainer.trainerId,
+        firstName: trainer.firstName,
+        lastName: trainer.lastName,
+        email: trainer.email,
+        createdAt: trainer.createdAt,
+        plans: trainer.plans || []
+      }))
+    };
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(response)
+    };
+  } catch (error) {
+    console.error('Error listing trainers:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+export const getTrainer = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const trainerId = event.pathParameters?.trainerId;
+    
+    if (!coachId || !trainerId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and Trainer ID are required'
+        })
+      };
+    }
+
+    // TODO: Verify JWT token and check if coach exists and is valid
+
+    const trainer = await db.getTrainer(trainerId);
+    if (!trainer) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Trainer not found'
+        })
+      };
+    }
+
+    // Security check: Verify that this trainer belongs to the requesting coach
+    if (trainer.coachId !== coachId) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'FORBIDDEN',
+          message: 'Access denied: Trainer does not belong to this coach'
+        })
+      };
+    }
+
+    const response = {
+      trainerId: trainer.trainerId,
+      coachId: trainer.coachId,
+      firstName: trainer.firstName,
+      lastName: trainer.lastName,
+      email: trainer.email,
+      createdAt: trainer.createdAt
+    };
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(response)
+    };
+  } catch (error) {
+    console.error('Error getting trainer:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+export const identifyTrainer = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Request body is required'
+        })
+      };
+    }
+
+    const requestData: TrainerIdentifyRequest = JSON.parse(event.body);
+    const { coachNickname, traineeNickname } = requestData;
+
+    let trainer: Trainer | null = null;
+
+    if (coachNickname && traineeNickname) {
+      // Identify by coach nickname + trainee nickname
+      const coach = await db.getCoachByNickname(coachNickname.toLowerCase().trim());
+      if (coach) {
+        const trainers = await db.getTrainersByCoach(coach.coachId);
+        trainer = trainers.find(t => 
+          t.nickname.toLowerCase() === traineeNickname.toLowerCase()
+        ) || null;
+      }
+    } else {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'coachNickname and traineeNickname are required'
+        })
+      };
+    }
+
+    if (!trainer) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Trainer not found'
+        })
+      };
+    }
+
+    const response: TrainerIdentifyResponse = {
+      trainerId: trainer.trainerId,
+      coachId: trainer.coachId
+    };
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(response)
+    };
+  } catch (error) {
+    console.error('Error identifying trainer:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Create a custom training plan for a specific trainee
+ */
+export const createCustomTrainingPlan = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const trainerId = event.pathParameters?.trainerId;
+
+    if (!coachId || !trainerId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and trainer ID are required'
+        })
+      };
+    }
+
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Request body is required'
+        })
+      };
+    }
+
+    const { basePlanId, traineeName } = JSON.parse(event.body);
+
+    if (!basePlanId || !traineeName) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Base plan ID and trainee name are required'
+        })
+      };
+    }
+
+    // Get the base training plan
+    const basePlan = await db.getTrainingPlan(basePlanId);
+    if (!basePlan || basePlan.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Base training plan not found or not owned by coach'
+        })
+      };
+    }
+
+    // Create a custom plan for the trainee
+    const customPlan = {
+      ...basePlan,
+      planId: randomUUID(),
+      name: `${basePlan.name} - ${traineeName}`,
+      customTrainee: traineeName,
+      originalPlanId: basePlanId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const success = await db.saveTrainingPlan(customPlan);
+    if (!success) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'INTERNAL_ERROR',
+          message: 'Failed to create custom training plan'
+        })
+      };
+    }
+
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify(customPlan)
+    };
+  } catch (error) {
+    console.error('Error creating custom training plan:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};
+
+/**
+ * Get custom training plans for a specific trainee
+ */
+export const getTraineeCustomPlans = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const coachId = event.pathParameters?.coachId;
+    const trainerId = event.pathParameters?.trainerId;
+
+    if (!coachId || !trainerId) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'VALIDATION_ERROR',
+          message: 'Coach ID and trainer ID are required'
+        })
+      };
+    }
+
+    // Get trainee to get their name
+    const trainee = await db.getTrainer(trainerId);
+    if (!trainee || trainee.coachId !== coachId) {
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({
+          error: 'NOT_FOUND',
+          message: 'Trainee not found'
+        })
+      };
+    }
+
+    const traineeName = `${trainee.firstName} ${trainee.lastName}`;
+    
+    // Get custom plans for this trainee
+    const customPlans = await db.getCustomTrainingPlansForTrainee(coachId, traineeName);
+
+    // Convert to summary format
+    const planSummaries = customPlans.map(plan => ({
+      planId: plan.planId,
+      name: plan.name,
+      description: plan.description,
+      trainingsCount: plan.trainings?.length || 0,
+      isAdminPlan: plan.isAdminPlan,
+      originalPlanId: plan.originalPlanId,
+      customTrainee: plan.customTrainee,
+      createdAt: plan.createdAt
+    }));
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        items: planSummaries,
+        count: planSummaries.length
+      })
+    };
+  } catch (error) {
+    console.error('Error getting trainee custom plans:', error);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'INTERNAL_ERROR',
+        message: 'Internal server error'
+      })
+    };
+  }
+};

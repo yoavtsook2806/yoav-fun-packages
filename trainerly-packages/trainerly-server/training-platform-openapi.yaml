@@ -1,0 +1,881 @@
+
+openapi: 3.1.0
+info:
+  title: Training Platform API
+  version: 1.1.0
+  description: |
+    API for a coaching & training platform connecting Coaches and Trainers.
+
+    ## Nickname Normalization & Uniqueness
+    - Nickname is **required** and must be **globally unique**.
+    - Normalization pipeline (server-side):
+      1) `trim()` leading/trailing whitespace
+      2) convert to **lowercase** (ASCII)
+      3) replace consecutive spaces with single underscore
+      4) allow only `[a-z0-9_]+` after normalization
+      5) collapse multiple underscores to single underscore
+      6) strip leading/trailing underscores
+      7) compare uniqueness **case-insensitively** against stored canonical form
+    - Reserved nicknames (reject with NICKNAME_RESERVED): `admin`, `root`, `support`, `help`, `api`, `billing`, `system`, `null`, `undefined`.
+
+    Errors:
+      - `NICKNAME_INVALID` — fails regex or empty after normalization
+      - `NICKNAME_TAKEN` — already in use (case-insensitive match on canonical form)
+      - `ACCOUNT_INACTIVE` — Coach valid=false attempted restricted route
+servers:
+  - url: https://api.yourapp.com
+security:
+  - CoachBearerAuth: []
+
+paths:
+  /nicknames/check:
+    get:
+      summary: Check nickname availability (preflight)
+      description: Validate and normalize the provided nickname and return availability + canonical form.
+      security: []
+      parameters:
+        - in: query
+          name: nickname
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 50
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NicknameCheckResponse'
+        '400':
+          description: Invalid nickname
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NicknameInvalidResponse'
+  /coaches:
+    post:
+      summary: Create Coach
+      description: Create a new coach and return an auth token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoachCreateRequest'
+      responses:
+        '201':
+          description: Coach created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoachCreateResponse'
+        '400':
+          description: Validation error (including nickname issues)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /coaches/{coachId}:
+    get:
+      summary: Get Coach
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Coach details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoachGetResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/coach/login:
+    post:
+      summary: Coach Login
+      description: Login with email and password to receive a JWT.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoachLoginRequest'
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoachLoginResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /coaches/{coachId}/status:
+    patch:
+      summary: Update Coach Status (valid on/off)
+      description: Update coach 'valid' state. Intended for admin or billing webhooks.
+      security: []  # secure via shared-secret header / IP allowlist
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoachStatusPatchRequest'
+      responses:
+        '200':
+          description: Coach status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoachStatusPatchResponse'
+        '400':
+          description: Validation or signature error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /coaches/{coachId}/trainers:
+    post:
+      summary: Create Trainer (by Coach)
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainerCreateRequest'
+      responses:
+        '201':
+          description: Trainer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerCreateResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+    get:
+      summary: List Coach's Trainers
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Trainers list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+  /trainers/{trainerId}:
+    get:
+      summary: Get Trainer (simple identify)
+      security: []
+      parameters:
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Trainer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerGetResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/trainer/identify:
+    post:
+      summary: Identify Trainer (no password)
+      description: Identify by coachNickname + firstName + lastName OR trainerCode. Returns trainerId to store locally.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainerIdentifyRequest'
+      responses:
+        '200':
+          description: Identified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerIdentifyResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /coaches/{coachId}/exercises:
+    post:
+      summary: Create Exercise (Coach library)
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseCreateRequest'
+      responses:
+        '201':
+          description: Exercise created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseCreateResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+    get:
+      summary: List Coach Exercises
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Exercises list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseListResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+  /coaches/{coachId}/plans:
+    post:
+      summary: Create Training Plan
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanCreateRequest'
+      responses:
+        '201':
+          description: Plan created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanCreateResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+    get:
+      summary: List Training Plans (by Coach)
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Plans list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanListResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+  /trainers/{trainerId}/plans/{planId}/assign:
+    post:
+      summary: Assign Plan to Trainer
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - in: path
+          name: planId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanAssignResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+  /trainers/{trainerId}/plans:
+    get:
+      summary: List Plans visible to Trainer
+      security: []
+      parameters:
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Plans for trainer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainerPlansListResponse'
+        '404':
+          description: Trainer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /trainers/{trainerId}/progress:
+    post:
+      summary: Create Training Progress entry
+      security: []
+      parameters:
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgressCreateRequest'
+      responses:
+        '201':
+          description: Progress created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressCreateResponse'
+        '404':
+          description: Not found / invalid linkages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      summary: List Trainer Progress
+      security: []
+      parameters:
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - in: query
+          name: from
+          schema:
+            $ref: '#/components/schemas/ISODateTime'
+        - in: query
+          name: to
+          schema:
+            $ref: '#/components/schemas/ISODateTime'
+        - in: query
+          name: planId
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - in: query
+          name: trainingId
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Progress list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressListTrainerResponse'
+  /coaches/{coachId}/trainers/{trainerId}/progress:
+    get:
+      summary: Coach view of a Trainer's Progress
+      security:
+        - CoachBearerAuth: []
+      parameters:
+        - in: path
+          name: coachId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - in: path
+          name: trainerId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - in: query
+          name: from
+          schema:
+            $ref: '#/components/schemas/ISODateTime'
+        - in: query
+          name: to
+          schema:
+            $ref: '#/components/schemas/ISODateTime'
+      responses:
+        '200':
+          description: Progress list (coach view)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgressListCoachViewResponse'
+        '403':
+          description: Coach account inactive (valid=false)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInactiveResponse'
+
+components:
+  securitySchemes:
+    CoachBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Primitives / Common
+    UUID:
+      type: string
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+    ISODateTime:
+      type: string
+      format: date-time
+    MuscleGroup:
+      type: string
+      enum: [legs, back, chest, shoulders, arms, core, full_body, other]
+
+    ErrorResponse:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          examples: [NOT_FOUND, VALIDATION_ERROR, ACCOUNT_INACTIVE, NICKNAME_INVALID, NICKNAME_TAKEN, NICKNAME_RESERVED]
+        message:
+          type: string
+        details:
+          type: object
+
+    AccountInactiveResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              type: string
+              enum: [ACCOUNT_INACTIVE]
+            message:
+              type: string
+              example: Coach account is inactive. Please update your billing to continue.
+
+    # Nickname check
+    NicknameCheckResponse:
+      type: object
+      required: [input, canonical, available, valid]
+      properties:
+        input: { type: string }
+        canonical: { type: string, description: "Normalized lowercase canonical nickname" }
+        valid: { type: boolean }
+        available: { type: boolean }
+        reason:
+          type: string
+          description: Optional reason when not valid/available.
+          examples: [NICKNAME_INVALID, NICKNAME_TAKEN, NICKNAME_RESERVED]
+
+    NicknameInvalidResponse:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              type: string
+              enum: [NICKNAME_INVALID, NICKNAME_RESERVED]
+            message:
+              type: string
+
+    # Coach
+    CoachCreateRequest:
+      type: object
+      required: [name, email, password, nickname]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 80 }
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8, maxLength: 128 }
+        nickname:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Raw nickname; server normalizes to canonical & enforces uniqueness.
+    CoachCreateResponse:
+      type: object
+      required: [coachId, token, valid, nickname]
+      properties:
+        coachId: { $ref: '#/components/schemas/UUID' }
+        token: { type: string }
+        valid: { type: boolean }
+        nickname: { type: string, description: "Canonical nickname (lowercase, underscores)" }
+    CoachGetResponse:
+      type: object
+      required: [coachId, name, email, createdAt, valid, nickname]
+      properties:
+        coachId: { $ref: '#/components/schemas/UUID' }
+        name: { type: string }
+        email: { type: string, format: email }
+        createdAt: { $ref: '#/components/schemas/ISODateTime' }
+        valid: { type: boolean }
+        nickname: { type: string }
+    CoachLoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8, maxLength: 128 }
+    CoachLoginResponse:
+      type: object
+      required: [coachId, token, valid]
+      properties:
+        coachId: { $ref: '#/components/schemas/UUID' }
+        token: { type: string }
+        valid: { type: boolean }
+
+    CoachStatusPatchRequest:
+      type: object
+      required: [valid]
+      properties:
+        valid: { type: boolean }
+        reason: { type: string, maxLength: 200 }
+    CoachStatusPatchResponse:
+      type: object
+      required: [coachId, valid, updatedAt]
+      properties:
+        coachId: { $ref: '#/components/schemas/UUID' }
+        valid: { type: boolean }
+        updatedAt: { $ref: '#/components/schemas/ISODateTime' }
+
+    # Trainer
+    TrainerCreateRequest:
+      type: object
+      required: [firstName, lastName]
+      properties:
+        firstName: { type: string, minLength: 1, maxLength: 50 }
+        lastName:  { type: string, minLength: 1, maxLength: 50 }
+        email:     { type: string, format: email }
+    TrainerCreateResponse:
+      type: object
+      required: [trainerId]
+      properties:
+        trainerId: { $ref: '#/components/schemas/UUID' }
+    TrainerListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [trainerId, firstName, lastName, createdAt]
+            properties:
+              trainerId: { $ref: '#/components/schemas/UUID' }
+              firstName: { type: string }
+              lastName:  { type: string }
+              email:     { type: string, format: email }
+              createdAt: { $ref: '#/components/schemas/ISODateTime' }
+    TrainerGetResponse:
+      type: object
+      required: [trainerId, coachId, firstName, lastName, createdAt]
+      properties:
+        trainerId: { $ref: '#/components/schemas/UUID' }
+        coachId:   { $ref: '#/components/schemas/UUID' }
+        firstName: { type: string }
+        lastName:  { type: string }
+        email:     { type: string, format: email }
+        createdAt: { $ref: '#/components/schemas/ISODateTime' }
+
+    # Exercises
+    ExerciseCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:        { type: string, minLength: 2, maxLength: 100 }
+        description: { type: string, maxLength: 2000 }
+        videoUrl:    { type: string, format: uri }
+        muscleGroup: { $ref: '#/components/schemas/MuscleGroup' }
+    ExerciseCreateResponse:
+      type: object
+      required: [exerciseId]
+      properties:
+        exerciseId: { $ref: '#/components/schemas/UUID' }
+    ExerciseListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [exerciseId, name, createdAt]
+            properties:
+              exerciseId: { $ref: '#/components/schemas/UUID' }
+              name:        { type: string }
+              description: { type: string }
+              videoUrl:    { type: string, format: uri }
+              muscleGroup: { $ref: '#/components/schemas/MuscleGroup' }
+              createdAt:   { $ref: '#/components/schemas/ISODateTime' }
+
+    # Plans
+    PrescribedExercise:
+      type: object
+      required: [exerciseId, sets]
+      properties:
+        exerciseId: { $ref: '#/components/schemas/UUID' }
+        sets: { type: integer, minimum: 1, maximum: 20 }
+        reps: { type: integer, minimum: 1, maximum: 100 }
+        timeSec: { type: integer, minimum: 1, maximum: 3600 }
+        restSec: { type: integer, minimum: 0, maximum: 600 }
+        notes: { type: string, maxLength: 1000 }
+        targetRPE: { type: integer, minimum: 1, maximum: 10 }
+      allOf:
+        - anyOf:
+          - required: [reps]
+          - required: [timeSec]
+    TrainingItem:
+      type: object
+      required: [name, order, exercises]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 80 }
+        order: { type: integer, minimum: 1 }
+        exercises:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/PrescribedExercise'
+    PlanCreateRequest:
+      type: object
+      required: [name, trainings]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 100 }
+        description: { type: string, maxLength: 2000 }
+        trainings:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/TrainingItem'
+    PlanCreateResponse:
+      type: object
+      required: [planId]
+      properties:
+        planId: { $ref: '#/components/schemas/UUID' }
+    PlanListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [planId, name, createdAt]
+            properties:
+              planId: { $ref: '#/components/schemas/UUID' }
+              name: { type: string }
+              description: { type: string }
+              trainingsCount: { type: integer, minimum: 0 }
+              createdAt: { $ref: '#/components/schemas/ISODateTime' }
+    PlanAssignResponse:
+      type: object
+      required: [assignmentId, trainerId, planId, assignedAt, active]
+      properties:
+        assignmentId: { $ref: '#/components/schemas/UUID' }
+        trainerId: { $ref: '#/components/schemas/UUID' }
+        planId: { $ref: '#/components/schemas/UUID' }
+        assignedAt: { $ref: '#/components/schemas/ISODateTime' }
+        active: { type: boolean }
+    TrainerPlansListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [planId, name, trainings]
+            properties:
+              planId: { $ref: '#/components/schemas/UUID' }
+              name: { type: string }
+              description: { type: string }
+              trainings:
+                type: array
+                minItems: 1
+                items:
+                  $ref: '#/components/schemas/TrainingItem'
+
+    # Progress
+    SetResult:
+      type: object
+      required: [setIndex]
+      properties:
+        setIndex: { type: integer, minimum: 1 }
+        repsDone: { type: integer, minimum: 0, maximum: 1000 }
+        timeSecDone: { type: integer, minimum: 0, maximum: 7200 }
+        weightKg: { type: number, minimum: 0, maximum: 1000 }
+        rpe: { type: integer, minimum: 1, maximum: 10 }
+        notes: { type: string, maxLength: 1000 }
+      allOf:
+        - anyOf:
+          - required: [repsDone]
+          - required: [timeSecDone]
+    ExerciseProgressItem:
+      type: object
+      required: [exerciseId, results]
+      properties:
+        exerciseId: { $ref: '#/components/schemas/UUID' }
+        results:
+          type: array
+          minItems: 1
+          items: { $ref: '#/components/schemas/SetResult' }
+    ProgressCreateRequest:
+      type: object
+      required: [planId, trainingId, performedAt, exercises]
+      properties:
+        planId: { $ref: '#/components/schemas/UUID' }
+        trainingId: { $ref: '#/components/schemas/UUID' }
+        performedAt: { $ref: '#/components/schemas/ISODateTime' }
+        exercises:
+          type: array
+          minItems: 1
+          items: { $ref: '#/components/schemas/ExerciseProgressItem' }
+    ProgressCreateResponse:
+      type: object
+      required: [progressId]
+      properties:
+        progressId: { $ref: '#/components/schemas/UUID' }
+    ProgressListTrainerResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [progressId, planId, trainingId, performedAt, exercises]
+            properties:
+              progressId: { $ref: '#/components/schemas/UUID' }
+              planId: { $ref: '#/components/schemas/UUID' }
+              trainingId: { $ref: '#/components/schemas/UUID' }
+              performedAt: { $ref: '#/components/schemas/ISODateTime' }
+              exercises:
+                type: array
+                minItems: 1
+                items: { $ref: '#/components/schemas/ExerciseProgressItem' }
+    ProgressListCoachViewResponse:
+      type: object
+      required: [trainer, items]
+      properties:
+        trainer:
+          type: object
+          required: [trainerId, firstName, lastName]
+          properties:
+            trainerId: { $ref: '#/components/schemas/UUID' }
+            firstName: { type: string }
+            lastName: { type: string }
+        items:
+          $ref: '#/components/schemas/ProgressListTrainerResponse/properties/items'

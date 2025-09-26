@@ -1,0 +1,333 @@
+/* CoachDashboard - Modern Dark Theme */
+
+.coach-dashboard {
+  height: 100vh;
+  background: var(--gradient-bg);
+  font-family: var(--font-family-sans);
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.dashboard-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+  opacity: 0.6;
+}
+
+/* Header Actions */
+.header-actions {
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  z-index: var(--z-sticky);
+}
+
+.action-button {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-xl);
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.action-button:hover {
+  background: var(--gradient-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
+}
+
+.action-button.settings {
+  background: var(--bg-card);
+}
+
+/* Main Content */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6);
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* Logo Section */
+.logo-section {
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) 0;
+  flex-shrink: 0;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.trainerly-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+  transition: all var(--transition-base);
+}
+
+.trainerly-logo:hover {
+  transform: scale(1.05) rotate(2deg);
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.15));
+}
+
+.app-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--text-primary);
+  margin: 0;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* Management Section */
+.simple-management-section {
+  margin-bottom: var(--space-12);
+}
+
+.simple-management-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.simple-manage-button {
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-6);
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 140px;
+}
+
+/* Top accent line */
+.simple-manage-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0.7;
+  transition: opacity var(--transition-base);
+}
+
+/* Hover background overlay */
+.simple-manage-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  border-radius: inherit;
+}
+
+.simple-manage-button:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-accent);
+}
+
+.simple-manage-button:hover::before {
+  opacity: 1;
+}
+
+.simple-manage-button:hover::after {
+  opacity: 0.03;
+}
+
+/* Card action buttons in top right */
+.manage-card-actions {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  gap: var(--space-1);
+  z-index: 2;
+}
+
+.manage-action-button {
+  background: var(--bg-secondary);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+.simple-manage-button:hover .manage-action-button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.manage-action-button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+  transform: scale(1.05);
+}
+
+/* Divider between elements */
+.manage-card-divider {
+  width: 60%;
+  height: 1px;
+  background: var(--border-primary);
+  margin: var(--space-2) 0;
+}
+
+.simple-manage-button:active {
+  transform: translateY(-2px);
+}
+
+.simple-button-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.3));
+  transition: all var(--transition-base);
+  position: relative;
+  z-index: 2;
+}
+
+.simple-button-text {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-base);
+}
+
+.simple-manage-button:hover .simple-button-icon {
+  transform: scale(1.1) rotateY(10deg);
+  filter: drop-shadow(0 8px 20px rgba(99, 102, 241, 0.4));
+}
+
+.simple-manage-button:hover .simple-button-text {
+  color: var(--primary);
+}
+
+/* Add gradient text effect on hover */
+.simple-manage-button:hover .simple-button-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-actions {
+    top: var(--space-4);
+    right: var(--space-4);
+  }
+
+  .dashboard-main {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .simple-management-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .simple-manage-button {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .simple-button-icon {
+    font-size: 2.5rem;
+  }
+
+  .simple-button-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .trainerly-logo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .app-title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-actions {
+    top: var(--space-3);
+    right: var(--space-3);
+  }
+
+  .simple-management-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .simple-manage-button {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .simple-button-icon {
+    font-size: 2rem;
+  }
+}

@@ -1,0 +1,360 @@
+/* Custom Trainee Plan Manager Modal */
+.custom-trainee-plan-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  direction: rtl;
+}
+
+.custom-trainee-plan-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.plans-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.plans-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.plans-section {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.section-icon {
+  font-size: 1.3rem;
+}
+
+.empty-section {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.plan-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.custom-plan {
+  border-left: 4px solid #8b5cf6;
+}
+
+.generic-plan {
+  border-left: 4px solid #10b981;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.plan-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.custom-badge {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.generic-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.plan-description {
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+}
+
+.plan-stats {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  min-width: 60px;
+}
+
+.stat-number {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 0.1rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.plan-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.create-custom-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+}
+
+.create-custom-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.make-generic-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+}
+
+.make-generic-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.create-custom-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.edit-custom-plan-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.edit-custom-plan-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.make-generic-btn {
+  flex: 1;
+}
+
+.make-generic-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .custom-trainee-plan-overlay {
+    padding: 10px;
+  }
+  
+  .modal-header {
+    padding: 1.5rem;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .plans-content {
+    padding: 1.5rem;
+  }
+  
+  .plans-sections {
+    gap: 1.5rem;
+  }
+  
+  .plans-section {
+    padding: 1.25rem;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+  }
+  
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .plan-card {
+    padding: 1rem;
+  }
+  
+  .plan-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .custom-badge,
+  .generic-badge {
+    align-self: flex-start;
+  }
+}

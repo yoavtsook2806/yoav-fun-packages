@@ -4,13 +4,28 @@
   "version": "1.0.0",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "trainerly-packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspace matan-trainings dev",
-    "build": "yarn workspace matan-trainings build",
-    "preview": "yarn workspace matan-trainings preview",
-    "type-check": "yarn workspaces foreach run type-check"
+    "dev": "yarn workspace matan-training dev",
+    "dev:server": "yarn workspace trainerly-server dev",
+    "dev:trainerly": "yarn workspace trainerly-trainee-app dev",
+    "dev:coach": "yarn workspace trainerly-coach-app dev",
+    "build": "yarn workspace matan-training build",
+    "build:server": "yarn workspace trainerly-server build",
+    "build:trainerly": "yarn workspace trainerly-trainee-app build",
+    "build:coach": "yarn workspace trainerly-coach-app build",
+    "build:all": "yarn build && yarn build:server && yarn build:trainerly && yarn build:coach",
+    "preview": "yarn workspace matan-training preview",
+    "deploy:server": "yarn workspace trainerly-server deploy",
+    "type-check": "yarn workspaces foreach run type-check",
+    "test": "node scripts/test-all.cjs",
+    "test:server": "yarn workspace trainerly-server test",
+    "test:coach": "yarn workspace trainerly-coach-app test",
+    "test:trainee": "yarn workspace trainerly-trainee-app test",
+    "test:watch": "yarn workspaces foreach -pi run test:watch",
+    "test:coverage": "yarn workspace trainerly-server test:coverage && yarn workspace trainerly-coach-app test:coverage && yarn workspace trainerly-trainee-app test:coverage"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
