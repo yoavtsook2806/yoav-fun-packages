@@ -71,17 +71,17 @@ describe('ExerciseFlow - Muscle Group Display Bug', () => {
   it('should display muscle group for each exercise in exercise-row', () => {
     render(<ExerciseFlow {...mockProps} />);
     
-    // Check that muscle groups are visible in the exercise row
-    expect(screen.getByText('🎯 חזה עליון')).toBeInTheDocument();
-    expect(screen.getByText('🎯 גב רחב')).toBeInTheDocument();
+    // Check that muscle groups are visible in the exercise row (without target icon)
+    expect(screen.getByText('חזה עליון')).toBeInTheDocument();
+    expect(screen.getByText('גב רחב')).toBeInTheDocument();
   });
 
   it('should display muscle group with proper styling', () => {
     render(<ExerciseFlow {...mockProps} />);
     
-    // Find the muscle group elements
-    const muscleGroup1 = screen.getByText('🎯 חזה עליון');
-    const muscleGroup2 = screen.getByText('🎯 גב רחב');
+    // Find the muscle group elements (without target icon)
+    const muscleGroup1 = screen.getByText('חזה עליון');
+    const muscleGroup2 = screen.getByText('גב רחב');
     
     // Check that they have the correct CSS class
     expect(muscleGroup1).toHaveClass('exercise-row-muscle-group');
@@ -92,18 +92,22 @@ describe('ExerciseFlow - Muscle Group Display Bug', () => {
     expect(muscleGroup2).toBeVisible();
   });
 
-  it('should show muscle group between exercise name and sets info', () => {
+  it('should show muscle group instead of exercise name', () => {
     render(<ExerciseFlow {...mockProps} />);
     
     // Find elements by className since they might not have role="button"
     const exerciseItems = document.querySelectorAll('.exercise-row-item');
-    const firstExercise = Array.from(exerciseItems).find(item => 
-      item.textContent?.includes('Test Exercise 1')
-    );
+    const firstExercise = Array.from(exerciseItems)[0]; // Get first exercise
     
     expect(firstExercise).toBeDefined();
     
-    // The muscle group should be visible within the exercise item
-    expect(firstExercise?.textContent).toContain('🎯 חזה עליון');
+    // The muscle group should be visible within the exercise item (without target icon)
+    expect(firstExercise?.textContent).toContain('חזה עליון');
+    
+    // The exercise name should NOT be visible in the exercise row
+    expect(firstExercise?.textContent).not.toContain('Test Exercise 1');
+    
+    // But the exercise name should still be in the title attribute for hover
+    expect(firstExercise?.getAttribute('title')).toContain('Test Exercise 1');
   });
 });
