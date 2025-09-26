@@ -24,13 +24,16 @@ global.localStorage = localStorageMock as any;
 // Comprehensive fix for webidl-conversions error in jsdom environment
 // The error occurs because webidl-conversions expects certain globals to be available
 
-// Ensure all required globals are available
-Object.assign(global, {
-  Symbol: global.Symbol || Symbol,
-  WeakMap: global.WeakMap || WeakMap,
-  Map: global.Map || Map,
-  Set: global.Set || Set,
-});
+// Ensure all required globals are available on both global and globalThis
+const requiredGlobals = {
+  Symbol: globalThis.Symbol || Symbol,
+  WeakMap: globalThis.WeakMap || WeakMap,
+  Map: globalThis.Map || Map,
+  Set: globalThis.Set || Set,
+};
+
+Object.assign(global, requiredGlobals);
+Object.assign(globalThis, requiredGlobals);
 
 // Mock URL constructor for jsdom compatibility with proper prototype chain
 if (typeof global.URL === 'undefined') {

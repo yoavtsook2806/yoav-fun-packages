@@ -14,5 +14,8 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
       '@testkit': resolve(__dirname, '../trainerly-server/src/testkit'),
     }
+  },
+  define: {
+    global: 'globalThis',
   }
 })
