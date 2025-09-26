@@ -23,8 +23,5 @@ export default defineConfig({
     'global.Map': 'globalThis.Map || Map',
     'global.Set': 'globalThis.Set || Set',
     'global.Symbol': 'globalThis.Symbol || Symbol',
-    // Ensure prototype methods are available
-    'global.WeakMap.prototype': 'globalThis.WeakMap.prototype',
-    'global.Map.prototype': 'globalThis.Map.prototype',
   }
 })

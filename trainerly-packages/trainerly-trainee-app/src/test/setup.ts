@@ -2,51 +2,35 @@
 // The error occurs when webidl-conversions tries to access WeakMap.prototype.get
 // and it's undefined in the jsdom environment
 
-// Polyfill WeakMap completely if it doesn't exist or is incomplete
-if (!globalThis.WeakMap || !globalThis.WeakMap.prototype || !globalThis.WeakMap.prototype.get) {
-  const originalWeakMap = globalThis.WeakMap || WeakMap;
-  
-  // Create a proper WeakMap polyfill with all methods
-  globalThis.WeakMap = class WeakMap {
-    private _data = new Map<any, any>();
-    
-    constructor(iterable?: readonly [any, any][] | null) {
-      if (iterable) {
-        for (const [key, value] of iterable) {
-          this.set(key, value);
-        }
-      }
-    }
-    
-    get(key: any): any {
-      return this._data.get(key);
-    }
-    
-    set(key: any, value: any): this {
-      this._data.set(key, value);
-      return this;
-    }
-    
-    has(key: any): boolean {
-      return this._data.has(key);
-    }
-    
-    delete(key: any): boolean {
-      return this._data.delete(key);
-    }
-  } as any;
-  
-  // Ensure prototype methods are available
-  globalThis.WeakMap.prototype = globalThis.WeakMap.prototype || {};
-  globalThis.WeakMap.prototype.get = globalThis.WeakMap.prototype.get || function(key: any) { return (this as any)._data.get(key); };
-  globalThis.WeakMap.prototype.set = globalThis.WeakMap.prototype.set || function(key: any, value: any) { (this as any)._data.set(key, value); return this; };
-  globalThis.WeakMap.prototype.has = globalThis.WeakMap.prototype.has || function(key: any) { return (this as any)._data.has(key); };
-  globalThis.WeakMap.prototype.delete = globalThis.WeakMap.prototype.delete || function(key: any) { return (this as any)._data.delete(key); };
+// Instead of modifying native prototypes (which are read-only), ensure globals exist
+// The key insight is that jsdom might not properly initialize WeakMap/Map globals
+
+// Ensure WeakMap exists and has proper prototype
+if (!globalThis.WeakMap) {
+  globalThis.WeakMap = WeakMap;
 }
 
-// Also ensure global.WeakMap exists and matches globalThis.WeakMap
+// Ensure Map exists and has proper prototype
+if (!globalThis.Map) {
+  globalThis.Map = Map;
+}
+
+// Ensure Set exists and has proper prototype
+if (!globalThis.Set) {
+  globalThis.Set = Set;
+}
+
+// Ensure Symbol exists
+if (!globalThis.Symbol) {
+  globalThis.Symbol = Symbol;
+}
+
+// Make sure global namespace matches globalThis
 if (typeof global !== 'undefined') {
   global.WeakMap = globalThis.WeakMap;
+  global.Map = globalThis.Map;
+  global.Set = globalThis.Set;
+  global.Symbol = globalThis.Symbol;
 }
 
 import '@testing-library/jest-dom';
