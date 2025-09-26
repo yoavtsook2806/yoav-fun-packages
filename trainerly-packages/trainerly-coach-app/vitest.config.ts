@@ -8,6 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
+    pool: 'forks', // Use forked processes to avoid global pollution
   },
   resolve: {
     alias: {
@@ -17,5 +18,10 @@ export default defineConfig({
   },
   define: {
     global: 'globalThis',
+    // Add webidl-conversions polyfills directly
+    'global.WeakMap': 'globalThis.WeakMap || WeakMap',
+    'global.Map': 'globalThis.Map || Map',
+    'global.Set': 'globalThis.Set || Set',
+    'global.Symbol': 'globalThis.Symbol || Symbol',
   }
 })
