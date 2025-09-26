@@ -475,7 +475,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               className += ' current';
             }
 
-            const muscleGroup = trainings[trainingState.selectedTraining!][exerciseName].muscleGroup;
+            const muscleGroup = trainings[trainingState.selectedTraining!][exerciseName].muscleGroup || 'כללי';
 
             return (
               <div
