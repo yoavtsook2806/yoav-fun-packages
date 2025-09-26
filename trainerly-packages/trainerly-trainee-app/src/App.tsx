@@ -39,7 +39,7 @@ const createEmptyTrainingPlan = () => ({
         minimumNumberOfRepeasts: 1,
         maximumNumberOfRepeasts: 10,
         note: 'לא הוקצתה תוכנית אימונים. אנא פנה למאמן שלך.',
-        short: 'אין תרגילים',
+        muscleGroup: 'כללי',
         link: ''
       }
     }

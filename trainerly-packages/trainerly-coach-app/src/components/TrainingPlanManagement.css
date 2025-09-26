@@ -213,10 +213,27 @@
   background: #f1f5f9;
 }
 
+.available-exercise .exercise-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .exercise-name {
   font-weight: 500;
   color: #374151;
   font-size: 0.9rem;
+}
+
+.available-exercise .exercise-muscle-group {
+  font-size: 0.75rem;
+  color: #6366f1;
+  font-weight: 500;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  align-self: flex-start;
 }
 
 .add-exercise-button {

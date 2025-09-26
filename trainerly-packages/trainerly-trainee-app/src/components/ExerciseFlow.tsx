@@ -475,7 +475,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
               className += ' current';
             }
 
-            const shortName = trainings[trainingState.selectedTraining!][exerciseName].short;
+            const muscleGroup = trainings[trainingState.selectedTraining!][exerciseName].muscleGroup;
 
             return (
               <div
@@ -485,7 +485,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                 title={exerciseName} // Show full name on hover
               >
                 <div className="exercise-row-number">{index + 1}</div>
-                <div className="exercise-row-name">{shortName}</div>
+                <div className="exercise-row-name">{exerciseName}</div>
+                <div className="exercise-row-muscle-group">🎯 {muscleGroup}</div>
                 <div className="exercise-row-sets">
                   {exerciseState.currentSet}/{exercise.numberOfSets}
                 </div>

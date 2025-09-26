@@ -6,7 +6,7 @@ export interface Exercise {
   minimumNumberOfRepeasts: number;
   maximumNumberOfRepeasts: number;
   note: string;
-  short: string;
+  muscleGroup: string; // muscle group in Hebrew
 }
 
 export interface Training {

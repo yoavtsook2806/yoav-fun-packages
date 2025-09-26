@@ -378,7 +378,12 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   <div className="available-exercises">
                     {exercises.map((exercise) => (
                       <div key={exercise.exerciseId} className="available-exercise">
-                        <span className="exercise-name">{exercise.name}</span>
+                        <div className="exercise-info">
+                          <span className="exercise-name">{exercise.name}</span>
+                          {exercise.muscleGroup && (
+                            <span className="exercise-muscle-group">🎯 {exercise.muscleGroup}</span>
+                          )}
+                        </div>
                         <button 
                           type="button" 
                           onClick={() => addExerciseToTraining(exercise)}

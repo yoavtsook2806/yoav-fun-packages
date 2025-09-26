@@ -63,7 +63,7 @@ const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { ver
         minimumNumberOfRepeasts: prescribedExercise.minimumNumberOfRepeasts,
         maximumNumberOfRepeasts: prescribedExercise.maximumNumberOfRepeasts,
         note: prescribedExercise.prescriptionNote || '',
-        short: prescribedExercise.exerciseName, // Use exercise name as short description
+        muscleGroup: 'כללי', // Default muscle group until we get proper data from server
         link: '' // We don't have links in the current structure
       };
     });
