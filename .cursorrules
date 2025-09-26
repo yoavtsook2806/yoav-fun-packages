@@ -59,7 +59,11 @@ When the user writes "bug: ${packageName}" follow this EXACT workflow:
 2. **Verify the test fails** by running it
 3. **Fix the bug** with minimal changes
 4. **Run all tests** in the package to ensure everything passes (including the new test)
-5. **If other tests fail** that used to pass:
+5. **If the test you wrote is not good** (e.g., doesn't properly test the bug, has wrong assertions, etc.):
+   - You can modify/rewrite the test
+   - ALWAYS ensure the test fails BEFORE making the bug fix
+   - ALWAYS ensure the test passes AFTER making the bug fix
+6. **If other tests fail** that used to pass:
    - Ask the user if we should change the test or try another fix
    - NEVER change previously passing tests without user approval
 
