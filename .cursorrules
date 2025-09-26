@@ -68,6 +68,33 @@ When the user writes "bug:" (without specifying package name) follow this EXACT 
    - Ask the user if we should change the test or try another fix
    - NEVER change previously passing tests without user approval
 
+## New Product Development Protocol
+When the user writes "new product:" follow this EXACT TDD workflow:
+1. **Find the right package** - Analyze the product description and codebase to identify which package(s) need the implementation
+2. **Write failing tests** that define the expected behavior of the new product:
+   - Change relevant existing tests if they need updates for the new product
+   - Create new test files if no relevant tests exist
+   - Tests should comprehensively cover the new product's functionality
+   - ALWAYS ensure the tests FAIL initially (red phase of TDD)
+3. **Verify the tests fail** by running them - this confirms we're testing the right thing
+4. **Implement the new product** with minimal code to make tests pass:
+   - Follow TDD principles: write only enough code to make tests pass
+   - Implement incrementally if the product is complex
+   - Focus on making tests green, not on perfect code initially
+5. **Run all tests** to ensure:
+   - The new product tests pass (green phase of TDD)
+   - All existing tests in the package still pass
+   - No regressions were introduced
+6. **If existing tests fail** that used to pass:
+   - Analyze if it's a legitimate bug you introduced
+   - Determine if it's something you missed and should have changed
+   - If you're not sure, STOP and ask the user for guidance
+   - NEVER change previously passing tests without user approval unless it's clearly correct
+7. **Refactor if needed** (refactor phase of TDD):
+   - Clean up code while keeping tests green
+   - Optimize implementation
+   - Ensure code quality and maintainability
+
 ## Code Style
 - Use TypeScript for all new code
 - Follow React best practices
