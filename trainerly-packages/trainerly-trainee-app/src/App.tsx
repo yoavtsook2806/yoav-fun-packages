@@ -48,8 +48,21 @@ const createEmptyTrainingPlan = () => ({
 });
 
 function App() {
-  // Current training plan (loaded from server)
-  const [currentTrainingPlan, setCurrentTrainingPlan] = useState(createEmptyTrainingPlan());
+  // Current training plan (loaded from server) - initialize from localStorage if available
+  const [currentTrainingPlan, setCurrentTrainingPlan] = useState(() => {
+    const storedPlan = localStorage.getItem('trainerly_current_plan');
+    if (storedPlan) {
+      try {
+        const parsedPlan = JSON.parse(storedPlan);
+        console.log('🔄 Restored training plan from localStorage:', parsedPlan.name);
+        return parsedPlan;
+      } catch (error) {
+        console.error('❌ Error parsing stored training plan:', error);
+      }
+    }
+    return createEmptyTrainingPlan();
+  });
+  
   const [allTrainingPlans, setAllTrainingPlans] = useState<Array<{
     planId: string;
     name: string;
@@ -59,7 +72,10 @@ function App() {
   const [isLoadingPlan, setIsLoadingPlan] = useState(false);
   
   // Track if we've loaded a real plan from server (not just the initial empty plan)
-  const [hasLoadedRealPlan, setHasLoadedRealPlan] = useState(false);
+  const [hasLoadedRealPlan, setHasLoadedRealPlan] = useState(() => {
+    const stored = localStorage.getItem('trainerly_has_loaded_real_plan');
+    return stored === 'true';
+  });
   
   const [trainingState, setTrainingState] = useState<TrainingState>({
     selectedTraining: null,
@@ -137,6 +153,25 @@ function App() {
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
+  // Helper functions for training plan persistence
+  const saveTrainingPlanToLocalStorage = (plan: any) => {
+    try {
+      localStorage.setItem('trainerly_current_plan', JSON.stringify(plan));
+      console.log('💾 Saved training plan to localStorage:', plan.name);
+    } catch (error) {
+      console.error('❌ Error saving training plan to localStorage:', error);
+    }
+  };
+
+  const saveHasLoadedRealPlanToLocalStorage = (hasLoaded: boolean) => {
+    try {
+      localStorage.setItem('trainerly_has_loaded_real_plan', hasLoaded.toString());
+      console.log('💾 Saved hasLoadedRealPlan to localStorage:', hasLoaded);
+    } catch (error) {
+      console.error('❌ Error saving hasLoadedRealPlan to localStorage:', error);
+    }
+  };
+
   // Load trainee data from server (with loading screen - for new authentication)
   const loadTraineeData = async (traineeId: string, coachId?: string) => {
     console.log('🔄 Loading trainee data...');
@@ -159,15 +194,26 @@ function App() {
       
       if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
         setAllTrainingPlans(traineeData.allPlans);
-        setCurrentTrainingPlan(traineeData.currentPlan || traineeData.allPlans[0] as any);
-        setHasLoadedRealPlan(true); // Mark that we've loaded a real plan
+        const newPlan = traineeData.currentPlan || traineeData.allPlans[0] as any;
+        setCurrentTrainingPlan(newPlan);
+        setHasLoadedRealPlan(true);
+        
+        // Save to localStorage
+        saveTrainingPlanToLocalStorage(newPlan);
+        saveHasLoadedRealPlanToLocalStorage(true);
+        
         console.log('✅ Loaded training plans:', traineeData.allPlans.map(p => p.name));
-        console.log('✅ Current plan:', traineeData.currentPlan?.name);
+        console.log('✅ Current plan:', newPlan?.name);
       } else {
         console.log('⚠️ No training plans assigned to trainee');
         setAllTrainingPlans([]);
-        setCurrentTrainingPlan(createEmptyTrainingPlan());
-        setHasLoadedRealPlan(false); // No real plan loaded
+        const emptyPlan = createEmptyTrainingPlan();
+        setCurrentTrainingPlan(emptyPlan);
+        setHasLoadedRealPlan(false);
+        
+        // Save to localStorage
+        saveTrainingPlanToLocalStorage(emptyPlan);
+        saveHasLoadedRealPlanToLocalStorage(false);
       }
       
     } catch (error) {
@@ -183,13 +229,27 @@ function App() {
     console.log('🔄 Background loading trainee data...');
     
     try {
-      // Store current plan for comparison (only if we've loaded a real plan before)
-      const previousPlanName = hasLoadedRealPlan ? currentTrainingPlan?.name : null;
-      const previousPlanVersion = hasLoadedRealPlan ? currentTrainingPlan?.version : null;
-      const wasEmptyPlan = currentTrainingPlan?.planId === 'no-plan';
+      // Get the CURRENT stored plan for comparison (before any updates)
+      const storedPlan = localStorage.getItem('trainerly_current_plan');
+      const storedHasLoadedRealPlan = localStorage.getItem('trainerly_has_loaded_real_plan') === 'true';
+      
+      let previousPlanName: string | null = null;
+      let previousPlanVersion: string | null = null;
+      let wasEmptyPlan = true;
+      
+      if (storedPlan) {
+        try {
+          const parsedStoredPlan = JSON.parse(storedPlan);
+          previousPlanName = parsedStoredPlan.name;
+          previousPlanVersion = parsedStoredPlan.version;
+          wasEmptyPlan = parsedStoredPlan.planId === 'no-plan';
+        } catch (error) {
+          console.error('❌ Error parsing stored plan for comparison:', error);
+        }
+      }
       
       console.log('🔍 Plan comparison state:', {
-        hasLoadedRealPlan,
+        storedHasLoadedRealPlan,
         previousPlanName,
         previousPlanVersion,
         wasEmptyPlan
@@ -211,21 +271,24 @@ function App() {
         setAllTrainingPlans(traineeData.allPlans);
         const newCurrentPlan = traineeData.currentPlan || traineeData.allPlans[0] as any;
         setCurrentTrainingPlan(newCurrentPlan);
+        setHasLoadedRealPlan(true);
+        
+        // Save to localStorage
+        saveTrainingPlanToLocalStorage(newCurrentPlan);
+        saveHasLoadedRealPlanToLocalStorage(true);
+        
         console.log('✅ Background: Loaded training plans:', traineeData.allPlans.map(p => p.name));
         console.log('✅ Background: Current plan:', newCurrentPlan?.name);
         
-        // Mark that we've now loaded a real plan
-        setHasLoadedRealPlan(true);
-        
         // Check if training plan was ACTUALLY updated (not just initial load)
-        const isRealPlanUpdate = hasLoadedRealPlan && 
+        const isRealPlanUpdate = storedHasLoadedRealPlan && 
           !wasEmptyPlan && 
           previousPlanName && 
           (newCurrentPlan.name !== previousPlanName || newCurrentPlan.version !== previousPlanVersion);
         
         console.log('🔍 Plan update check:', {
           isRealPlanUpdate,
-          hasLoadedRealPlan,
+          storedHasLoadedRealPlan,
           wasEmptyPlan,
           previousPlanName,
           newPlanName: newCurrentPlan.name,
@@ -239,7 +302,7 @@ function App() {
             to: `${newCurrentPlan.name} (${newCurrentPlan.version})` 
           });
           showSuccess(`תוכנית האימונים עודכנה ל"${newCurrentPlan.name}"`, 6000);
-        } else if (!hasLoadedRealPlan) {
+        } else if (!storedHasLoadedRealPlan) {
           console.log('✅ First time loading real plan - no toast notification needed');
         } else {
           console.log('✅ Plan unchanged - no toast notification needed');
@@ -247,9 +310,13 @@ function App() {
       } else {
         console.log('⚠️ Background: No training plans assigned to trainee');
         setAllTrainingPlans([]);
-        setCurrentTrainingPlan(createEmptyTrainingPlan());
-        // Don't mark as loaded real plan if we're going back to empty
+        const emptyPlan = createEmptyTrainingPlan();
+        setCurrentTrainingPlan(emptyPlan);
         setHasLoadedRealPlan(false);
+        
+        // Save to localStorage
+        saveTrainingPlanToLocalStorage(emptyPlan);
+        saveHasLoadedRealPlanToLocalStorage(false);
       }
       
     } catch (error) {
@@ -265,11 +332,16 @@ function App() {
     setTraineeId(null);
     setTrainerName(null);
     setCoachId(null);
-    setHasLoadedRealPlan(false); // Reset plan loading state
+    setHasLoadedRealPlan(false);
+    setCurrentTrainingPlan(createEmptyTrainingPlan());
+    
+    // Clear all authentication and training plan data
     localStorage.removeItem('trainerly_trainee_id');
     localStorage.removeItem('trainerly_trainer_name');
     localStorage.removeItem('trainerly_coach_id');
     localStorage.removeItem('trainerly_auth_timestamp');
+    localStorage.removeItem('trainerly_current_plan');
+    localStorage.removeItem('trainerly_has_loaded_real_plan');
     
     // Clear trainee data cache
     if (traineeId) {
