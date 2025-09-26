@@ -272,7 +272,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                   </div>
                 )}
                 
-                <button type="submit" disabled={loading} className="primary-button">
+                <button type="submit" disabled={loading || !loginData.email.trim() || !loginData.password.trim()} className="primary-button">
                   {loading ? (
                     <>
                       <span className="loading-spinner"></span>

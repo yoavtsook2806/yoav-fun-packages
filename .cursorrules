@@ -53,6 +53,16 @@ This is a monorepo containing multiple fun web applications and packages.
 - Deploy immediately after committing server-side changes
 - Server endpoints must be deployed before client can use them
 
+## Bug Fix Protocol
+When the user writes "bug: ${packageName}" follow this EXACT workflow:
+1. **Write a failing test** that reproduces the bug
+2. **Verify the test fails** by running it
+3. **Fix the bug** with minimal changes
+4. **Run all tests** in the package to ensure everything passes (including the new test)
+5. **If other tests fail** that used to pass:
+   - Ask the user if we should change the test or try another fix
+   - NEVER change previously passing tests without user approval
+
 ## Code Style
 - Use TypeScript for all new code
 - Follow React best practices

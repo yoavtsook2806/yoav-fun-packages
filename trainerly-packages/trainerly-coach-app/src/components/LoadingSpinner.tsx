@@ -15,7 +15,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   const containerClass = fullScreen ? 'loading-spinner-fullscreen' : 'loading-spinner-container';
   
   return (
-    <div className={containerClass}>
+    <div className={containerClass} data-testid="loading-spinner">
       <div className="loading-spinner-content">
         <div className={`loading-spinner ${size}`}>
           <div className="spinner-ring">

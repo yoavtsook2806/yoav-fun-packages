@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk-mock';
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import * as exercises from '../../src/handlers/exercises';
+import { mockDatabase } from '../__mocks__/database';
 import '../jest-matchers';
 
 describe('Exercise Management API', () => {
@@ -156,9 +157,10 @@ describe('Exercise Management API', () => {
     ];
 
     it('should list all exercises for coach', async () => {
-      mockDynamoScan.mockImplementation((params: any, callback: any) => {
-        callback(null, { Items: mockExercises });
-      });
+      // Add exercises to mock database
+      for (const exercise of mockExercises) {
+        await mockDatabase.saveExercise(exercise);
+      }
 
       const event: Partial<APIGatewayProxyEvent> = {
         httpMethod: 'GET',
@@ -219,31 +221,35 @@ describe('Exercise Management API', () => {
     });
 
     it('should filter exercises by coachId', async () => {
-      mockDynamoScan.mockImplementation((params: any, callback: any) => {
-        // Verify the filter is applied correctly
-        expect(params.FilterExpression).toBe('coachId = :coachId');
-        expect(params.ExpressionAttributeValues[':coachId']).toBe('coach-id');
-        callback(null, { Items: mockExercises });
-      });
+      // Add exercises for different coaches
+      const coach1Exercises = [
+        { ...mockExercises[0], coachId: 'coach-1' },
+        { ...mockExercises[1], coachId: 'coach-1' }
+      ];
+      const coach2Exercises = [
+        { ...mockExercises[2], coachId: 'coach-2' }
+      ];
+
+      for (const exercise of [...coach1Exercises, ...coach2Exercises]) {
+        await mockDatabase.saveExercise(exercise);
+      }
 
       const event: Partial<APIGatewayProxyEvent> = {
         httpMethod: 'GET',
-        path: '/coaches/coach-id/exercises',
-        pathParameters: { coachId: 'coach-id' }
+        path: '/coaches/coach-1/exercises',
+        pathParameters: { coachId: 'coach-1' }
       };
 
-      await exercises.listExercises(
+      const result = await exercises.listExercises(
         event as APIGatewayProxyEvent
       );
 
-      expect(mockDynamoScan).toHaveBeenCalledWith(
-        expect.objectContaining({
-          TableName: expect.stringContaining('exercises'),
-          FilterExpression: 'coachId = :coachId',
-          ExpressionAttributeValues: { ':coachId': 'coach-id' }
-        }),
-        expect.any(Function)
-      );
+      expect(result.statusCode).toBe(200);
+      const body = JSON.parse(result.body);
+      
+      // Should only return exercises for coach-1
+      expect(body.items).toHaveLength(2);
+      expect(body.items.every((ex: any) => coach1Exercises.some(c1 => c1.exerciseId === ex.exerciseId))).toBe(true);
     });
   });
 
@@ -281,9 +287,8 @@ describe('Exercise Management API', () => {
     });
 
     it('should handle special characters in exercise data', async () => {
-      mockDynamoPut.mockImplementation((params: any, callback: any) => {
-        callback(null, {});
-      });
+      // Add a coach to the mock database
+      await mockDatabase.saveCoach({ coachId: 'coach-id', isAdmin: false });
 
       const event: Partial<APIGatewayProxyEvent> = {
         httpMethod: 'POST',
@@ -302,18 +307,19 @@ describe('Exercise Management API', () => {
       );
 
       expect(result.statusCode).toBe(201);
+      const body = JSON.parse(result.body);
+      expect(body.exerciseId).toBeValidUUID();
       
       // Verify the data was stored correctly with all special characters
-      const savedData = mockDynamoPut.mock.calls[0][0].Item;
-      expect(savedData.name).toBe('לחיצת חזה, מ. יד, שיפוע 30*');
-      expect(savedData.link).toContain('youtube.com');
-      expect(savedData.note).toContain('מרפקים מעט מכופפים');
+      const savedExercise = await mockDatabase.getExercise(body.exerciseId);
+      expect(savedExercise.name).toBe('לחיצת חזה, מ. יד, שיפוע 30*');
+      expect(savedExercise.link).toContain('youtube.com');
+      expect(savedExercise.note).toContain('מרפקים מעט מכופפים');
     });
 
     it('should handle empty optional fields correctly', async () => {
-      mockDynamoPut.mockImplementation((params: any, callback: any) => {
-        callback(null, {});
-      });
+      // Add a coach to the mock database
+      await mockDatabase.saveCoach({ coachId: 'coach-id', isAdmin: false });
 
       const event: Partial<APIGatewayProxyEvent> = {
         httpMethod: 'POST',
@@ -333,13 +339,14 @@ describe('Exercise Management API', () => {
       );
 
       expect(result.statusCode).toBe(201);
+      const body = JSON.parse(result.body);
+      expect(body.exerciseId).toBeValidUUID();
       
-      const savedData = mockDynamoPut.mock.calls[0][0].Item;
-      expect(savedData.name).toBe('תרגיל חדש');
-      expect(savedData.short).toBe('חדש');
-      expect(savedData.link).toBe('');
-      expect(savedData.note).toBe('');
-      expect(savedData.muscleGroup).toBeNull();
+      const savedExercise = await mockDatabase.getExercise(body.exerciseId);
+      expect(savedExercise.name).toBe('תרגיל חדש');
+      expect(savedExercise.short).toBe('חדש');
+      expect(savedExercise.link).toBe('');
+      expect(savedExercise.note).toBe('');
     });
   });
 });

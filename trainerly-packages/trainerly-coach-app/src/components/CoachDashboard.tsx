@@ -105,7 +105,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
   }
 
   return (
-    <div className="coach-dashboard" dir="rtl">
+    <div className="coach-dashboard" dir="rtl" data-testid="coach-dashboard">
       <div className="dashboard-background">
         <div className="dashboard-gradient"></div>
       </div>
