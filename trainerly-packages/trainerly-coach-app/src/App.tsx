@@ -26,24 +26,47 @@ interface AuthState {
 }
 
 const App: React.FC = () => {
-  const [authState, setAuthState] = useState<AuthState>({
-    isAuthenticated: false,
-    coach: null,
-    token: null
+  // Initialize auth state optimistically based on localStorage
+  const [authState, setAuthState] = useState<AuthState>(() => {
+    const savedToken = localStorage.getItem('coach_token');
+    const savedCoach = localStorage.getItem('coach_data');
+    
+    if (savedToken && savedCoach) {
+      try {
+        const coachData = JSON.parse(savedCoach);
+        console.log('🚀 Optimistically showing app with stored credentials');
+        return {
+          isAuthenticated: true,
+          coach: coachData,
+          token: savedToken
+        };
+      } catch (error) {
+        console.error('Error parsing stored coach data:', error);
+        // Clear invalid data immediately
+        localStorage.removeItem('coach_token');
+        localStorage.removeItem('coach_data');
+      }
+    }
+    
+    return {
+      isAuthenticated: false,
+      coach: null,
+      token: null
+    };
   });
 
-  // Check for existing auth on app load and validate user exists in DB
+  // Validate user exists in DB in the background
   useEffect(() => {
-    const validateAndRestoreAuth = async () => {
+    const validateUserInBackground = async () => {
       const savedToken = localStorage.getItem('coach_token');
       const savedCoach = localStorage.getItem('coach_data');
       
-      if (savedToken && savedCoach) {
+      // Only validate if we have stored credentials
+      if (savedToken && savedCoach && authState.isAuthenticated) {
         try {
           const coachData = JSON.parse(savedCoach);
           
-          // Validate that the coach still exists in the database
-          console.log('🔍 Validating coach exists in database...');
+          console.log('🔍 Background validation: checking if coach exists in database...');
           const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/coaches/${coachData.coachId}`, {
             method: 'GET',
             headers: {
@@ -53,20 +76,20 @@ const App: React.FC = () => {
 
           if (response.ok) {
             const serverCoachData = await response.json();
-            console.log('✅ Coach validation successful');
+            console.log('✅ Background validation successful');
             
             // Update local data with server data to get any updates
             const updatedCoachData = { ...coachData, ...serverCoachData };
             localStorage.setItem('coach_data', JSON.stringify(updatedCoachData));
             
-            setAuthState({
-              isAuthenticated: true,
-              coach: updatedCoachData,
-              token: savedToken
-            });
+            // Update state with fresh server data
+            setAuthState(prevState => ({
+              ...prevState,
+              coach: updatedCoachData
+            }));
           } else {
-            console.log('❌ Coach no longer exists in database, logging out...');
-            // Coach doesn't exist anymore, clear auth
+            console.log('❌ Background validation failed: coach no longer exists, logging out...');
+            // Coach doesn't exist anymore, clear auth and show login screen
             localStorage.removeItem('coach_token');
             localStorage.removeItem('coach_data');
             setAuthState({
@@ -76,8 +99,8 @@ const App: React.FC = () => {
             });
           }
         } catch (error) {
-          console.error('Error validating coach auth:', error);
-          // Clear invalid data on any error
+          console.error('Error in background validation:', error);
+          // Clear invalid data and show login screen
           localStorage.removeItem('coach_token');
           localStorage.removeItem('coach_data');
           setAuthState({
@@ -89,8 +112,10 @@ const App: React.FC = () => {
       }
     };
 
-    validateAndRestoreAuth();
-  }, []);
+    // Run validation in background after a brief delay to allow UI to render
+    const timeoutId = setTimeout(validateUserInBackground, 100);
+    return () => clearTimeout(timeoutId);
+  }, [authState.isAuthenticated]);
 
   const handleLogin = (coach: Coach, token: string) => {
     setAuthState({

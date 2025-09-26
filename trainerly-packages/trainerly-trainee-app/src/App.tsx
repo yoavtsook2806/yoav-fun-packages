@@ -70,11 +70,41 @@ function App() {
   // Track if this is a fresh completion (to show congratulation only once)
   const [showCongratulation, setShowCongratulation] = useState(false);
   
-  // Authentication state - declare early to avoid hoisting issues
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [traineeId, setTraineeId] = useState<string | null>(null);
-  const [trainerName, setTrainerName] = useState<string | null>(null);
-  const [coachId, setCoachId] = useState<string | null>(null);
+  // Check if authentication has expired (1 month) - defined early for state initialization
+  const isAuthExpired = (): boolean => {
+    const authTimestamp = localStorage.getItem('trainerly_auth_timestamp');
+    if (!authTimestamp) return true;
+    
+    const authDate = new Date(parseInt(authTimestamp));
+    const now = new Date();
+    const oneMonth = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    
+    return (now.getTime() - authDate.getTime()) > oneMonth;
+  };
+  
+  // Initialize authentication state optimistically based on localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
+    const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
+    
+    if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
+      console.log('🚀 Optimistically showing app with stored credentials');
+      return true;
+    }
+    return false;
+  });
+  
+  const [traineeId, setTraineeId] = useState<string | null>(() => {
+    return localStorage.getItem('trainerly_trainee_id');
+  });
+  
+  const [trainerName, setTrainerName] = useState<string | null>(() => {
+    return localStorage.getItem('trainerly_trainer_name');
+  });
+  
+  const [coachId, setCoachId] = useState<string | null>(() => {
+    return localStorage.getItem('trainerly_coach_id');
+  });
   
   // Settings modal state - explicitly initialize to false to prevent hot reload issues
   const [showSettings, setShowSettings] = useState(() => {
@@ -162,35 +192,30 @@ function App() {
     clearAllLocalStorageData();
   };
 
-  // Check if authentication has expired (1 month)
-  const isAuthExpired = (): boolean => {
-    const authTimestamp = localStorage.getItem('trainerly_auth_timestamp');
-    if (!authTimestamp) return true;
-    
-    const authDate = new Date(parseInt(authTimestamp));
-    const now = new Date();
-    const oneMonth = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-    
-    return (now.getTime() - authDate.getTime()) > oneMonth;
-  };
 
-  // Clean up duplicate history entries on app initialization and check authentication
+  // Clean up duplicate history entries and validate user in background
   useEffect(() => {
-    const validateAndRestoreAuth = async () => {
-      console.log('🔄 App initialization - checking authentication...');
-      removeDuplicateHistoryEntries();
-      
-      // Check for existing authentication
+    // Clean up duplicate history entries immediately
+    console.log('🔄 App initialization - cleaning up history...');
+    removeDuplicateHistoryEntries();
+    
+    const validateUserInBackground = async () => {
       const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
       const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
       const storedCoachId = localStorage.getItem('trainerly_coach_id');
       
       console.log('🔍 Stored auth data:', { storedTraineeId, storedTrainerName, storedCoachId });
       
-      if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
+      // Only validate if we have stored credentials and are currently authenticated
+      if (storedTraineeId && storedTrainerName && isAuthenticated) {
+        if (isAuthExpired()) {
+          console.log('⏰ Authentication expired, requiring re-login');
+          handleLogout();
+          return;
+        }
+        
         try {
-          // Validate that the trainee still exists in the database
-          console.log('🔍 Validating trainee exists in database...');
+          console.log('🔍 Background validation: checking if trainee exists in database...');
           const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/trainers/${storedTraineeId}/data`, {
             method: 'GET',
             headers: {
@@ -199,35 +224,26 @@ function App() {
           });
 
           if (response.ok) {
-            console.log('✅ Trainee validation successful, logging in...');
-            setTraineeId(storedTraineeId);
-            setTrainerName(storedTrainerName);
-            setCoachId(storedCoachId);
-            setIsAuthenticated(true);
-            
-            // Load trainee data
+            console.log('✅ Background validation successful');
+            // Load trainee data if authenticated
             loadTraineeData(storedTraineeId, storedCoachId);
           } else {
-            console.log('❌ Trainee no longer exists in database, logging out...');
+            console.log('❌ Background validation failed: trainee no longer exists, logging out...');
             // Trainee doesn't exist anymore, clear auth
             handleLogout();
           }
         } catch (error) {
-          console.error('Error validating trainee auth:', error);
-          // Clear invalid data on any error
+          console.error('Error in background validation:', error);
+          // Clear invalid data and show login screen
           handleLogout();
         }
-      } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
-        // Authentication expired, clear stored data
-        console.log('⏰ Authentication expired, requiring re-login');
-        handleLogout();
-      } else {
-        console.log('❌ No valid authentication found');
       }
     };
 
-    validateAndRestoreAuth();
-  }, []);
+    // Run validation in background after a brief delay to allow UI to render
+    const timeoutId = setTimeout(validateUserInBackground, 100);
+    return () => clearTimeout(timeoutId);
+  }, [isAuthenticated]);
 
   // Handle authentication
   const handleAuthenticated = (newTraineeId: string, newTrainerName: string, newCoachId?: string) => {
