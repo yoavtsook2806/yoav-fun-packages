@@ -17,8 +17,7 @@ export interface Coach {
 export interface Trainer {
   trainerId: string;
   coachId: string;
-  firstName: string;
-  lastName: string;
+  nickname: string; // Unique per coach
   email?: string;
   plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;
@@ -229,8 +228,7 @@ export interface CoachUpdateResponse {
 
 // Trainer management
 export interface TrainerCreateRequest {
-  firstName: string;
-  lastName: string;
+  nickname: string; // Unique per coach
   email?: string;
 }
 
@@ -239,10 +237,9 @@ export interface TrainerCreateResponse {
 }
 
 export interface TrainerIdentifyRequest {
-  // Identify by coach nickname + trainer name
+  // Identify by coach nickname + trainer nickname
   coachNickname: string;
-  firstName: string;
-  lastName: string;
+  traineeNickname: string; // Unique per coach
 }
 
 export interface TrainerIdentifyResponse {

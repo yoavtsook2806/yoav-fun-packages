@@ -3,7 +3,7 @@
  * Provides cache-first loading with background updates
  */
 
-import { apiService, Coach, Exercise, TrainingPlanSummary, TrainingPlan, TrainingItem, PrescribedExercise, Trainee } from './apiService';
+import { apiService, Coach, Exercise, TrainingPlanSummary, TrainingPlan, Trainee } from './apiService';
 import { cacheService, CACHE_KEYS } from './cacheService';
 
 export interface CachedData<T> {

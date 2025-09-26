@@ -6,8 +6,7 @@ interface AuthScreenProps {
 }
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [traineeNickname, setTraineeNickname] = useState('');
   const [coachNickname, setCoachNickname] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +25,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         },
         body: JSON.stringify({
           coachNickname: coachNickname.trim(),
-          firstName: firstName.trim(),
-          lastName: lastName.trim()
+          traineeNickname: traineeNickname.trim()
         })
       });
 
@@ -43,7 +41,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       }
 
       const trainerData = await identifyResponse.json();
-      onAuthenticated(trainerData.trainerId, `${firstName} ${lastName}`, trainerData.coachId);
+      onAuthenticated(trainerData.trainerId, traineeNickname, trainerData.coachId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'שגיאה לא צפויה');
     } finally {
@@ -80,27 +78,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 <div className="input-icon">👤</div>
                 <input
                   type="text"
-                  placeholder="שם פרטי"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="כינוי המתאמן"
+                  value={traineeNickname}
+                  onChange={(e) => setTraineeNickname(e.target.value)}
                   required
                   className="modern-input"
                   inputMode="text"
-                  autoComplete="given-name"
-                />
-              </div>
-              
-              <div className="input-group">
-                <div className="input-icon">👤</div>
-                <input
-                  type="text"
-                  placeholder="שם משפחה"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                  className="modern-input"
-                  inputMode="text"
-                  autoComplete="family-name"
+                  autoComplete="username"
                 />
               </div>
               

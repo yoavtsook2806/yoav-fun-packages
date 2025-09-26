@@ -69,8 +69,7 @@ export interface Coach {
 export interface Trainee {
   trainerId: string;
   coachId: string;
-  firstName: string;
-  lastName: string;
+  nickname: string; // Unique per coach
   email?: string;
   plans?: string[]; // Array of planIds, last one is current active plan
   createdAt: string;

@@ -62,12 +62,12 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
       const customPlan = await cachedApiService.createCustomTrainingPlan(
         coachId, 
         trainee.trainerId, 
-        `${trainee.firstName} ${trainee.lastName}`,
+        trainee.nickname,
         basePlan.planId, 
         token
       );
       
-      showSuccess(`תוכנית מותאמת "${customPlan.name}" נוצרה עבור ${trainee.firstName}!`);
+      showSuccess(`תוכנית מותאמת "${customPlan.name}" נוצרה עבור ${trainee.nickname}!`);
       
       // Refresh data to show the new custom plan
       await loadData();
@@ -103,7 +103,7 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
     <div className="custom-trainee-plan-overlay">
       <div className="custom-trainee-plan-modal">
         <div className="modal-header">
-          <h2>תוכניות אימון עבור {trainee.firstName} {trainee.lastName}</h2>
+          <h2>תוכניות אימון עבור {trainee.nickname}</h2>
           <button onClick={onClose} className="close-button">✕</button>
         </div>
 
@@ -116,12 +116,12 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
               <div className="plans-section">
                 <h3 className="section-title">
                   <span className="section-icon">👤</span>
-                  תוכניות מותאמות עבור {trainee.firstName}
+                  תוכניות מותאמות עבור {trainee.nickname}
                 </h3>
                 
                 {customPlans.length === 0 ? (
                   <div className="empty-section">
-                    <p>עדיין לא נוצרו תוכניות מותאמות עבור {trainee.firstName}</p>
+                    <p>עדיין לא נוצרו תוכניות מותאמות עבור {trainee.nickname}</p>
                   </div>
                 ) : (
                   <div className="plans-grid">
@@ -219,7 +219,7 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
                               </>
                             ) : (
                               <>
-                                👤 צור מותאם עבור {trainee.firstName}
+                                👤 צור מותאם עבור {trainee.nickname}
                               </>
                             )}
                           </button>

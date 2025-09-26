@@ -128,8 +128,7 @@ export const mockTrainers: Trainer[] = [
   {
     trainerId: 'trainee-001',
     coachId: 'coach-001',
-    firstName: 'דני',
-    lastName: 'רוזן',
+    nickname: 'דני123',
     email: 'danny@example.com',
     plans: ['plan-001'],
     createdAt: '2024-03-20T08:30:00Z'
@@ -137,8 +136,7 @@ export const mockTrainers: Trainer[] = [
   {
     trainerId: 'trainee-002',
     coachId: 'coach-001',
-    firstName: 'מיכל',
-    lastName: 'גולד',
+    nickname: 'מיכל456',
     email: 'michal@example.com',
     plans: ['plan-001', 'plan-002'],
     createdAt: '2024-03-22T10:15:00Z'
@@ -146,8 +144,7 @@ export const mockTrainers: Trainer[] = [
   {
     trainerId: 'trainee-003',
     coachId: 'coach-001',
-    firstName: 'רון',
-    lastName: 'כהן',
+    nickname: 'רון789',
     email: 'ron@example.com',
     plans: ['plan-002'],
     createdAt: '2024-03-25T13:45:00Z'

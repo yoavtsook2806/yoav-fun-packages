@@ -47,15 +47,32 @@ export const createTrainer = async (
     }
 
     const requestData: TrainerCreateRequest = JSON.parse(event.body);
-    const { firstName, lastName, email } = requestData;
+    const { nickname, email } = requestData;
 
-    if (!firstName || !lastName) {
+    if (!nickname) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'First name and last name are required'
+          message: 'Nickname is required'
+        })
+      };
+    }
+
+    // Check if nickname is unique per coach
+    const existingTrainers = await db.getTrainersByCoach(coachId);
+    const nicknameExists = existingTrainers.some(t => 
+      t.nickname.toLowerCase() === nickname.toLowerCase()
+    );
+
+    if (nicknameExists) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'NICKNAME_TAKEN',
+          message: 'Nickname already exists for this coach'
         })
       };
     }
@@ -65,8 +82,7 @@ export const createTrainer = async (
     const trainer: Trainer = {
       trainerId: randomUUID(),
       coachId,
-      firstName,
-      lastName,
+      nickname,
       email,
       createdAt: new Date().toISOString()
     };
@@ -232,18 +248,17 @@ export const identifyTrainer = async (
     }
 
     const requestData: TrainerIdentifyRequest = JSON.parse(event.body);
-    const { coachNickname, firstName, lastName } = requestData;
+    const { coachNickname, traineeNickname } = requestData;
 
     let trainer: Trainer | null = null;
 
-    if (coachNickname && firstName && lastName) {
-      // Identify by coach nickname + trainer name
+    if (coachNickname && traineeNickname) {
+      // Identify by coach nickname + trainee nickname
       const coach = await db.getCoachByNickname(coachNickname.toLowerCase().trim());
       if (coach) {
         const trainers = await db.getTrainersByCoach(coach.coachId);
         trainer = trainers.find(t => 
-          t.firstName.toLowerCase() === firstName.toLowerCase() &&
-          t.lastName.toLowerCase() === lastName.toLowerCase()
+          t.nickname.toLowerCase() === traineeNickname.toLowerCase()
         ) || null;
       }
     } else {
@@ -252,7 +267,7 @@ export const identifyTrainer = async (
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'coachNickname, firstName and lastName are required'
+          message: 'coachNickname and traineeNickname are required'
         })
       };
     }

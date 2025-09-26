@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee } from '../services/cachedApiService';
 import { showError } from './ToastContainer';
-import LoadingSpinner from './LoadingSpinner';
 import './TraineeTrainingHistory.css';
 
 interface ExerciseSession {
@@ -181,7 +180,7 @@ const TraineeTrainingHistoryModal: React.FC<TraineeTrainingHistoryModalProps> = 
     <div className="modal-overlay">
       <div className="training-history-modal" dir="rtl">
         <div className="modal-header">
-          <h2>נתוני אימונים - {trainee.firstName} {trainee.lastName}</h2>
+          <h2>נתוני אימונים - {trainee.nickname}</h2>
           <button onClick={onClose} className="close-button">✕</button>
         </div>
         

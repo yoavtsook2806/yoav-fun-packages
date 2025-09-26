@@ -351,27 +351,74 @@ export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<b
       CUSTOM_EXERCISE_DATA_KEY
     } = await import('../constants/localStorage');
 
-    // 1. Load Exercise Defaults
-    if (serverData.exerciseDefaults && Object.keys(serverData.exerciseDefaults).length > 0) {
-      for (const [exerciseName, defaults] of Object.entries(serverData.exerciseDefaults)) {
-        saveExerciseDefaults(exerciseName, defaults);
+    // 1. Load Exercise Defaults with cleanup
+    const serverExerciseDefaults = serverData.exerciseDefaults || {};
+    const localExerciseDefaults = getExerciseDefaults();
+    
+    // Remove local exercise defaults that don't exist on server
+    const localExerciseNames = Object.keys(localExerciseDefaults);
+    const serverExerciseNames = Object.keys(serverExerciseDefaults);
+    const exercisesToRemove = localExerciseNames.filter(name => !serverExerciseNames.includes(name));
+    
+    if (exercisesToRemove.length > 0) {
+      console.log('🧹 Removing exercise defaults not found on server:', exercisesToRemove);
+      exercisesToRemove.forEach(exerciseName => {
+        // Remove from localStorage by saving empty defaults
+        // Clear exercise defaults by removing from localStorage
+        const exerciseDefaults = JSON.parse(localStorage.getItem('trainerly_exercise_defaults') || '{}');
+        delete exerciseDefaults[exerciseName];
+        localStorage.setItem('trainerly_exercise_defaults', JSON.stringify(exerciseDefaults));
+      });
+    }
+    
+    // Load server exercise defaults
+    if (Object.keys(serverExerciseDefaults).length > 0) {
+      for (const [exerciseName, defaults] of Object.entries(serverExerciseDefaults)) {
+        saveExerciseDefaults(exerciseName, defaults as any);
       }
       console.log('✅ Loaded exercise defaults from server');
     }
 
-    // 2. Load Training Progress
-    if (serverData.trainingProgress && Object.keys(serverData.trainingProgress).length > 0) {
-      localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(serverData.trainingProgress));
+    // 2. Load Training Progress with cleanup
+    const serverTrainingProgress = serverData.trainingProgress || {};
+    const localTrainingProgress = getTrainingProgress();
+    
+    // Remove local training progress that don't exist on server
+    const localProgressKeys = Object.keys(localTrainingProgress);
+    const serverProgressKeys = Object.keys(serverTrainingProgress);
+    const progressToRemove = localProgressKeys.filter(key => !serverProgressKeys.includes(key));
+    
+    if (progressToRemove.length > 0) {
+      console.log('🧹 Removing training progress not found on server:', progressToRemove);
+    }
+    
+    // Always replace with server data (this handles cleanup automatically)
+    localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(serverTrainingProgress));
+    if (Object.keys(serverTrainingProgress).length > 0) {
       console.log('✅ Loaded training progress from server');
+    } else {
+      console.log('✅ Cleared training progress (no server data)');
     }
 
-    // 3. Load Exercise History
-    if (serverData.exerciseHistory && Object.keys(serverData.exerciseHistory).length > 0) {
-      // Clear existing local history first
-      localStorage.setItem(EXERCISE_HISTORY_KEY, JSON.stringify({}));
-      
-      // Load server history
-      for (const [exerciseName, entries] of Object.entries(serverData.exerciseHistory)) {
+    // 3. Load Exercise History with cleanup
+    const serverExerciseHistory = serverData.exerciseHistory || {};
+    const localExerciseHistory = getExerciseHistory();
+    
+    // Remove local exercise history that don't exist on server
+    const localHistoryKeys = Object.keys(localExerciseHistory);
+    const serverHistoryKeys = Object.keys(serverExerciseHistory);
+    const historyToRemove = localHistoryKeys.filter(key => !serverHistoryKeys.includes(key));
+    
+    if (historyToRemove.length > 0) {
+      console.log('🧹 Removing exercise history not found on server:', historyToRemove);
+    }
+    
+    // Clear existing local history first (this handles cleanup)
+    localStorage.setItem(EXERCISE_HISTORY_KEY, JSON.stringify({}));
+    
+    // Load server history
+    if (Object.keys(serverExerciseHistory).length > 0) {
+      for (const [exerciseName, entries] of Object.entries(serverExerciseHistory)) {
         // Sort by date descending (most recent first)
         const sortedEntries = (entries as any[]).sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -383,6 +430,8 @@ export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<b
         }
       }
       console.log('✅ Loaded exercise history from server');
+    } else {
+      console.log('✅ Cleared exercise history (no server data)');
     }
 
     // 4. Load First-time Experience Flag
@@ -392,10 +441,25 @@ export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<b
       console.log('✅ Loaded first-time experience flag from server');
     }
 
-    // 5. Load Custom Exercise Data
-    if (serverData.customExerciseData && Object.keys(serverData.customExerciseData).length > 0) {
-      localStorage.setItem(CUSTOM_EXERCISE_DATA_KEY, JSON.stringify(serverData.customExerciseData));
+    // 5. Load Custom Exercise Data with cleanup
+    const serverCustomData = serverData.customExerciseData || {};
+    const localCustomData = JSON.parse(localStorage.getItem(CUSTOM_EXERCISE_DATA_KEY) || '{}');
+    
+    // Remove local custom data that don't exist on server
+    const localCustomKeys = Object.keys(localCustomData);
+    const serverCustomKeys = Object.keys(serverCustomData);
+    const customDataToRemove = localCustomKeys.filter(key => !serverCustomKeys.includes(key));
+    
+    if (customDataToRemove.length > 0) {
+      console.log('🧹 Removing custom exercise data not found on server:', customDataToRemove);
+    }
+    
+    // Always replace with server data (this handles cleanup automatically)
+    localStorage.setItem(CUSTOM_EXERCISE_DATA_KEY, JSON.stringify(serverCustomData));
+    if (Object.keys(serverCustomData).length > 0) {
       console.log('✅ Loaded custom exercise data from server');
+    } else {
+      console.log('✅ Cleared custom exercise data (no server data)');
     }
 
     console.log('✅ Successfully loaded all trainee data from server');

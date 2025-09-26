@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/cachedApiService';
+import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
 import './EditTrainingPlan.css';

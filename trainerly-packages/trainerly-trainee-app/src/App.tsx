@@ -125,7 +125,7 @@ function App() {
       
       if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
         setAllTrainingPlans(traineeData.allPlans);
-        setCurrentTrainingPlan(traineeData.currentPlan || traineeData.allPlans[0]);
+        setCurrentTrainingPlan(traineeData.currentPlan || traineeData.allPlans[0] as any);
         console.log('✅ Loaded training plans:', traineeData.allPlans.map(p => p.name));
         console.log('✅ Current plan:', traineeData.currentPlan?.name);
       } else {

@@ -25,8 +25,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
 
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    nickname: '',
     email: '',
     initialPlanId: '' // Plan to assign after creating trainee
   });
@@ -84,8 +83,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
+      nickname: '',
       email: '',
       initialPlanId: ''
     });
@@ -96,7 +94,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     try {
       console.log('🎯 CLIENT - Starting plan assignment:', {
         traineeId: trainee.trainerId,
-        traineeName: `${trainee.firstName} ${trainee.lastName}`,
+        traineeName: trainee.nickname,
         planId,
         planName: getPlanName(planId),
         currentPlans: trainee.plans
@@ -110,7 +108,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       
       console.log('🎉 CLIENT - Data refreshed successfully');
       setError(null);
-      showSuccess(`תוכנית "${getPlanName(planId)}" הוקצתה בהצלחה ל${trainee.firstName} ${trainee.lastName}`);
+      showSuccess(`תוכנית "${getPlanName(planId)}" הוקצתה בהצלחה ל${trainee.nickname}`);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to assign plan';
       console.error('❌ CLIENT - Plan assignment failed:', err);
@@ -220,24 +218,17 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
             <form onSubmit={handleSubmit} className="trainee-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label>שם פרטי *</label>
+                  <label>כינוי *</label>
                   <input
                     type="text"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                    value={formData.nickname}
+                    onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
                     required
-                    placeholder="שם פרטי"
+                    placeholder="כינוי המתאמן (ייחודי למאמן)"
                   />
                 </div>
                 <div className="form-group">
-                  <label>שם משפחה *</label>
-                  <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    required
-                    placeholder="שם משפחה"
-                  />
+                  {/* Empty for consistent layout */}
                 </div>
               </div>
 
@@ -259,8 +250,8 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
               <div className="form-group">
                 <label>הקצאת תוכנית אימון</label>
                 <select
-                  value={formData.assignedPlanId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, assignedPlanId: e.target.value }))}
+                  value={formData.initialPlanId}
+                  onChange={(e) => setFormData(prev => ({ ...prev, initialPlanId: e.target.value }))}
                 >
                   <option value="">בחר תוכנית (אופציונלי)</option>
                   {plans.map((plan) => (
@@ -301,7 +292,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
             <div key={trainee.trainerId} className="trainee-card">
               <div className="trainee-header">
                 <div className="trainee-info">
-                  <h3 className="trainee-name">{trainee.firstName} {trainee.lastName}</h3>
+                  <h3 className="trainee-name">{trainee.nickname}</h3>
                 </div>
                 <div className="trainee-actions">
                   <button 
@@ -379,7 +370,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                 <div className="access-info">
                   <strong>פרטי כניסה לאפליקציה:</strong>
                   <div className="access-details">
-                    <span>שם: <code>{trainee.firstName} {trainee.lastName}</code></span>
+                    <span>כינוי: <code>{trainee.nickname}</code></span>
                     <span>כינוי מאמן: <code>1</code></span>
                   </div>
                 </div>
