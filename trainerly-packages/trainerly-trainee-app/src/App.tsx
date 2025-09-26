@@ -6,6 +6,7 @@ import TrainingComplete from './components/TrainingComplete';
 import SettingsModal from './components/SettingsModal';
 import FirstTimeSetup from './components/FirstTimeSetup';
 import AuthScreen from './components/AuthScreen';
+import ToastContainer, { showSuccess, showError } from './components/ToastContainer';
 import { fetchTraineeData, clearTraineeCache, syncExerciseSession, loadAllTraineeDataFromServer, syncAllTraineeDataToServer } from './services/traineeService';
 import { clearAllLocalStorageData } from './constants/localStorage';
 import {
@@ -133,7 +134,7 @@ function App() {
   const [showFirstTimeSetup, setShowFirstTimeSetup] = useState(false);
   const [firstTimeTrainingType, setFirstTimeTrainingType] = useState<string | null>(null);
 
-  // Load trainee data from server
+  // Load trainee data from server (with loading screen - for new authentication)
   const loadTraineeData = async (traineeId: string, coachId?: string) => {
     console.log('🔄 Loading trainee data...');
     setIsLoadingPlan(true);
@@ -169,6 +170,59 @@ function App() {
       setCurrentTrainingPlan(createEmptyTrainingPlan());
     } finally {
       setIsLoadingPlan(false);
+    }
+  };
+
+  // Load trainee data in background (no loading screen - for already authenticated users)
+  const loadTraineeDataInBackground = async (traineeId: string, coachId?: string) => {
+    console.log('🔄 Background loading trainee data...');
+    
+    try {
+      // Store current plan for comparison
+      const previousPlanName = currentTrainingPlan?.name;
+      const previousPlanVersion = currentTrainingPlan?.version;
+      
+      // FIRST: Load ALL trainee data from server and populate local storage
+      console.log('🔄 Background loading all trainee data from server...');
+      const dataLoaded = await loadAllTraineeDataFromServer(traineeId);
+      if (dataLoaded) {
+        console.log('✅ Background: All trainee data loaded from server');
+      } else {
+        console.log('⚠️ Background: Failed to load trainee data from server');
+      }
+
+      // THEN: Load training plans
+      const traineeData = await fetchTraineeData(traineeId, coachId);
+      
+      if (traineeData?.allPlans && traineeData.allPlans.length > 0) {
+        setAllTrainingPlans(traineeData.allPlans);
+        const newCurrentPlan = traineeData.currentPlan || traineeData.allPlans[0] as any;
+        setCurrentTrainingPlan(newCurrentPlan);
+        console.log('✅ Background: Loaded training plans:', traineeData.allPlans.map(p => p.name));
+        console.log('✅ Background: Current plan:', newCurrentPlan?.name);
+        
+        // Check if training plan was updated
+        const isNewPlan = previousPlanName && (
+          newCurrentPlan.name !== previousPlanName || 
+          newCurrentPlan.version !== previousPlanVersion
+        );
+        
+        if (isNewPlan) {
+          console.log('🔔 Training plan updated:', { 
+            from: `${previousPlanName} (${previousPlanVersion})`, 
+            to: `${newCurrentPlan.name} (${newCurrentPlan.version})` 
+          });
+          showSuccess(`תוכנית האימונים עודכנה ל"${newCurrentPlan.name}"`, 6000);
+        }
+      } else {
+        console.log('⚠️ Background: No training plans assigned to trainee');
+        setAllTrainingPlans([]);
+        setCurrentTrainingPlan(createEmptyTrainingPlan());
+      }
+      
+    } catch (error) {
+      console.error('❌ Background: Failed to load trainee data:', error);
+      showError('שגיאה בטעינת תוכנית האימונים', 4000);
     }
   };
 
@@ -225,8 +279,8 @@ function App() {
 
           if (response.ok) {
             console.log('✅ Background validation successful');
-            // Load trainee data if authenticated
-            loadTraineeData(storedTraineeId, storedCoachId);
+            // Load trainee data in background (no loading screen)
+            loadTraineeDataInBackground(storedTraineeId, storedCoachId);
           } else {
             console.log('❌ Background validation failed: trainee no longer exists, logging out...');
             // Trainee doesn't exist anymore, clear auth
@@ -550,119 +604,133 @@ function App() {
   // Show auth screen if not authenticated
   if (!isAuthenticated) {
     console.log('🔒 Rendering AuthScreen - not authenticated');
-    return <AuthScreen onAuthenticated={handleAuthenticated} />;
+    return (
+      <ToastContainer>
+        <AuthScreen onAuthenticated={handleAuthenticated} />
+      </ToastContainer>
+    );
   }
 
   // Show loading if we're still loading the training plan
   if (isLoadingPlan) {
     return (
-      <div className="app">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>טוען תוכנית אימונים...</p>
+      <ToastContainer>
+        <div className="app">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>טוען תוכנית אימונים...</p>
+          </div>
         </div>
-      </div>
+      </ToastContainer>
     );
   }
 
   if (trainingState.isTrainingComplete && showCongratulation) {
     return (
-      <div className="app">
-        {/* Settings button - top right corner */}
-        <button
-          className="settings-btn"
-          onClick={() => {
-            console.log('⚙️ Settings button clicked (training selection screen)');
-            setShowSettings(true);
-          }}
-          title="הגדרות"
-        >
-          ⚙️
-        </button>
-        <TrainingComplete onRestart={resetTraining} />
-        
-        {/* Settings Modal */}
-        {showSettings && (
-          <SettingsModal
-            onClose={() => setShowSettings(false)}
-            onLogout={handleLogout}
-            availablePlans={allTrainingPlans.map(plan => ({
-              planId: plan.planId,
-              name: plan.name,
-              isCurrent: plan.planId === currentTrainingPlan.planId
-            }))}
-            onPlanChange={handlePlanChange}
-          />
-        )}
-      </div>
+      <ToastContainer>
+        <div className="app">
+          {/* Settings button - top right corner */}
+          <button
+            className="settings-btn"
+            onClick={() => {
+              console.log('⚙️ Settings button clicked (training selection screen)');
+              setShowSettings(true);
+            }}
+            title="הגדרות"
+          >
+            ⚙️
+          </button>
+          <TrainingComplete onRestart={resetTraining} />
+          
+          {/* Settings Modal */}
+          {showSettings && (
+            <SettingsModal
+              onClose={() => setShowSettings(false)}
+              onLogout={handleLogout}
+              availablePlans={allTrainingPlans.map(plan => ({
+                planId: plan.planId,
+                name: plan.name,
+                isCurrent: plan.planId === currentTrainingPlan.planId
+              }))}
+              onPlanChange={handlePlanChange}
+            />
+          )}
+        </div>
+      </ToastContainer>
     );
   }
 
   if (showFirstTimeSetup && firstTimeTrainingType) {
     return (
-      <div className="app">
-        <FirstTimeSetup
-          trainingType={firstTimeTrainingType}
-          exercises={Object.keys(currentTrainingPlan.trainings[firstTimeTrainingType])}
-          trainings={currentTrainingPlan.trainings}
-          onComplete={handleFirstTimeSetupComplete}
-          onCancel={handleFirstTimeSetupCancel}
-        />
-      </div>
+      <ToastContainer>
+        <div className="app">
+          <FirstTimeSetup
+            trainingType={firstTimeTrainingType}
+            exercises={Object.keys(currentTrainingPlan.trainings[firstTimeTrainingType])}
+            trainings={currentTrainingPlan.trainings}
+            onComplete={handleFirstTimeSetupComplete}
+            onCancel={handleFirstTimeSetupCancel}
+          />
+        </div>
+      </ToastContainer>
     );
   }
 
   if (!trainingState.selectedTraining) {
     console.log('🏠 Rendering home screen - showSettings:', showSettings);
     return (
-      <div className="app">
-        {/* Settings button - top right corner */}
-        <button
-          className="settings-btn"
-          onClick={() => {
-            console.log('⚙️ Settings button clicked');
-            setShowSettings(true);
-          }}
-          title="הגדרות"
-        >
-          ⚙️
-        </button>
-        <TrainingSelection
-          onSelectTraining={initializeTraining}
-          availableTrainings={Object.keys(currentTrainingPlan.trainings)}
-          trainings={currentTrainingPlan.trainings}
-          trainerName={trainerName}
-        />
-
-        {/* Settings Modal */}
-        {showSettings && (
-          <SettingsModal
-            onClose={() => {
-              console.log('❌ Settings modal closed');
-              setShowSettings(false);
+      <ToastContainer>
+        <div className="app">
+          {/* Settings button - top right corner */}
+          <button
+            className="settings-btn"
+            onClick={() => {
+              console.log('⚙️ Settings button clicked');
+              setShowSettings(true);
             }}
-            onLogout={handleLogout}
-            availablePlans={allTrainingPlans.map(plan => ({
-              planId: plan.planId,
-              name: plan.name,
-              isCurrent: plan.planId === currentTrainingPlan.planId
-            }))}
-            onPlanChange={handlePlanChange}
+            title="הגדרות"
+          >
+            ⚙️
+          </button>
+          <TrainingSelection
+            onSelectTraining={initializeTraining}
+            availableTrainings={Object.keys(currentTrainingPlan.trainings)}
+            trainings={currentTrainingPlan.trainings}
+            trainerName={trainerName}
           />
-        )}
-      </div>
+
+          {/* Settings Modal */}
+          {showSettings && (
+            <SettingsModal
+              onClose={() => {
+                console.log('❌ Settings modal closed');
+                setShowSettings(false);
+              }}
+              onLogout={handleLogout}
+              availablePlans={allTrainingPlans.map(plan => ({
+                planId: plan.planId,
+                name: plan.name,
+                isCurrent: plan.planId === currentTrainingPlan.planId
+              }))}
+              onPlanChange={handlePlanChange}
+            />
+          )}
+        </div>
+      </ToastContainer>
     );
   }
 
   return (
-    <ExerciseFlow
-      trainingState={trainingState}
-      trainings={currentTrainingPlan.trainings}
-      onUpdateExerciseState={updateExerciseState}
-      onGoToExercise={goToExercise}
-      onNextExercise={nextExercise}
-      onResetTraining={resetTraining}
-    />
+    <ToastContainer>
+      <ExerciseFlow
+        trainingState={trainingState}
+        trainings={currentTrainingPlan.trainings}
+        onUpdateExerciseState={updateExerciseState}
+        onGoToExercise={goToExercise}
+        onNextExercise={nextExercise}
+        onResetTraining={resetTraining}
+      />
+    </ToastContainer>
   );
 }
 
