@@ -176,32 +176,57 @@ function App() {
 
   // Clean up duplicate history entries on app initialization and check authentication
   useEffect(() => {
-    console.log('🔄 App initialization - checking authentication...');
-    removeDuplicateHistoryEntries();
-    
-    // Check for existing authentication
-    const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
-    const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
-    const storedCoachId = localStorage.getItem('trainerly_coach_id');
-    
-    console.log('🔍 Stored auth data:', { storedTraineeId, storedTrainerName, storedCoachId });
-    
-    if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
-      console.log('✅ Valid authentication found, logging in...');
-      setTraineeId(storedTraineeId);
-      setTrainerName(storedTrainerName);
-      setCoachId(storedCoachId);
-      setIsAuthenticated(true);
+    const validateAndRestoreAuth = async () => {
+      console.log('🔄 App initialization - checking authentication...');
+      removeDuplicateHistoryEntries();
       
-      // Load trainee data
-      loadTraineeData(storedTraineeId, storedCoachId);
-    } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
-      // Authentication expired, clear stored data
-      console.log('Authentication expired, requiring re-login');
-      handleLogout();
-    } else {
-      console.log('❌ No valid authentication found');
-    }
+      // Check for existing authentication
+      const storedTraineeId = localStorage.getItem('trainerly_trainee_id');
+      const storedTrainerName = localStorage.getItem('trainerly_trainer_name');
+      const storedCoachId = localStorage.getItem('trainerly_coach_id');
+      
+      console.log('🔍 Stored auth data:', { storedTraineeId, storedTrainerName, storedCoachId });
+      
+      if (storedTraineeId && storedTrainerName && !isAuthExpired()) {
+        try {
+          // Validate that the trainee still exists in the database
+          console.log('🔍 Validating trainee exists in database...');
+          const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/trainers/${storedTraineeId}/data`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            console.log('✅ Trainee validation successful, logging in...');
+            setTraineeId(storedTraineeId);
+            setTrainerName(storedTrainerName);
+            setCoachId(storedCoachId);
+            setIsAuthenticated(true);
+            
+            // Load trainee data
+            loadTraineeData(storedTraineeId, storedCoachId);
+          } else {
+            console.log('❌ Trainee no longer exists in database, logging out...');
+            // Trainee doesn't exist anymore, clear auth
+            handleLogout();
+          }
+        } catch (error) {
+          console.error('Error validating trainee auth:', error);
+          // Clear invalid data on any error
+          handleLogout();
+        }
+      } else if (storedTraineeId && storedTrainerName && isAuthExpired()) {
+        // Authentication expired, clear stored data
+        console.log('⏰ Authentication expired, requiring re-login');
+        handleLogout();
+      } else {
+        console.log('❌ No valid authentication found');
+      }
+    };
+
+    validateAndRestoreAuth();
   }, []);
 
   // Handle authentication

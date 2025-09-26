@@ -32,26 +32,64 @@ const App: React.FC = () => {
     token: null
   });
 
-  // Check for existing auth on app load
+  // Check for existing auth on app load and validate user exists in DB
   useEffect(() => {
-    const savedToken = localStorage.getItem('coach_token');
-    const savedCoach = localStorage.getItem('coach_data');
-    
-    if (savedToken && savedCoach) {
-      try {
-        const coachData = JSON.parse(savedCoach);
-        setAuthState({
-          isAuthenticated: true,
-          coach: coachData,
-          token: savedToken
-        });
-      } catch (error) {
-        console.error('Error parsing saved coach data:', error);
-        // Clear invalid data
-        localStorage.removeItem('coach_token');
-        localStorage.removeItem('coach_data');
+    const validateAndRestoreAuth = async () => {
+      const savedToken = localStorage.getItem('coach_token');
+      const savedCoach = localStorage.getItem('coach_data');
+      
+      if (savedToken && savedCoach) {
+        try {
+          const coachData = JSON.parse(savedCoach);
+          
+          // Validate that the coach still exists in the database
+          console.log('🔍 Validating coach exists in database...');
+          const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/coaches/${coachData.coachId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            const serverCoachData = await response.json();
+            console.log('✅ Coach validation successful');
+            
+            // Update local data with server data to get any updates
+            const updatedCoachData = { ...coachData, ...serverCoachData };
+            localStorage.setItem('coach_data', JSON.stringify(updatedCoachData));
+            
+            setAuthState({
+              isAuthenticated: true,
+              coach: updatedCoachData,
+              token: savedToken
+            });
+          } else {
+            console.log('❌ Coach no longer exists in database, logging out...');
+            // Coach doesn't exist anymore, clear auth
+            localStorage.removeItem('coach_token');
+            localStorage.removeItem('coach_data');
+            setAuthState({
+              isAuthenticated: false,
+              coach: null,
+              token: null
+            });
+          }
+        } catch (error) {
+          console.error('Error validating coach auth:', error);
+          // Clear invalid data on any error
+          localStorage.removeItem('coach_token');
+          localStorage.removeItem('coach_data');
+          setAuthState({
+            isAuthenticated: false,
+            coach: null,
+            token: null
+          });
+        }
       }
-    }
+    };
+
+    validateAndRestoreAuth();
   }, []);
 
   const handleLogin = (coach: Coach, token: string) => {
