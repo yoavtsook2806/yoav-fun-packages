@@ -58,6 +58,15 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
       expect(screen.getByText('לחיצת חזה במוט')).toBeInTheDocument();
     });
 
+    // Click on the exercise card to expand it
+    const exerciseCard = screen.getByText('לחיצת חזה במוט');
+    fireEvent.click(exerciseCard);
+
+    // Wait for the card to expand and copy button to appear
+    await waitFor(() => {
+      expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
+    });
+
     // Find and click the copy button
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
@@ -90,7 +99,7 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     expect(screen.queryByText('מעתיק...')).not.toBeInTheDocument();
   });
 
-  it('should successfully copy admin exercise', async () => {
+  it('should successfully copy admin exercise but NOT close modal', async () => {
     // Mock successful loading of admin exercises
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: mockAdminExercises,
@@ -120,6 +129,15 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
       expect(screen.getByText('לחיצת חזה במוט')).toBeInTheDocument();
     });
 
+    // Click on the exercise card to expand it
+    const exerciseCard = screen.getByText('לחיצת חזה במוט');
+    fireEvent.click(exerciseCard);
+
+    // Wait for the card to expand and copy button to appear
+    await waitFor(() => {
+      expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
+    });
+
     // Find and click the copy button
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
@@ -144,8 +162,8 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     // Should call onExerciseCopied
     expect(mockProps.onExerciseCopied).toHaveBeenCalledWith(copiedExercise);
 
-    // Should close modal
-    expect(mockProps.onClose).toHaveBeenCalled();
+    // BUG: Should NOT close modal after successful copy
+    expect(mockProps.onClose).not.toHaveBeenCalled();
   });
 
   it('should prevent double-clicking during copy operation', async () => {
@@ -168,6 +186,15 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     // Wait for exercises to load
     await waitFor(() => {
       expect(screen.getByText('לחיצת חזה במוט')).toBeInTheDocument();
+    });
+
+    // Click on the exercise card to expand it
+    const exerciseCard = screen.getByText('לחיצת חזה במוט');
+    fireEvent.click(exerciseCard);
+
+    // Wait for the card to expand and copy button to appear
+    await waitFor(() => {
+      expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
     });
 
     // Find and click the copy button

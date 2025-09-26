@@ -56,8 +56,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
         onExerciseCopied(copiedExercise);
       }
 
-      // Close modal after successful copy
-      onClose();
+      // Don't close modal after successful copy - let user copy multiple exercises
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'שגיאה בהעתקת התרגיל';
       showError(errorMsg);
