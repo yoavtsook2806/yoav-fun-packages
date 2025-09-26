@@ -5,7 +5,16 @@
   background: var(--gradient-bg);
   font-family: var(--font-family-sans);
   direction: rtl;
+  text-align: right;
   position: relative;
+}
+
+.trainee-management-content {
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  background: var(--gradient-bg);
+  font-family: var(--font-family-sans);
 }
 
 .trainee-management::before {
@@ -155,6 +164,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: var(--space-8);
+  direction: rtl;
 }
 
 .trainee-card {
@@ -166,6 +176,8 @@
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  direction: rtl;
+  text-align: right;
 }
 
 .trainee-card::before {
@@ -263,6 +275,8 @@
 .detail-text {
   color: var(--neutral-700);
   font-weight: var(--font-weight-medium);
+  direction: rtl;
+  text-align: right;
 }
 
 /* Plan Assignment */
@@ -272,6 +286,8 @@
   border-radius: var(--border-radius-lg);
   padding: var(--space-6);
   margin-bottom: var(--space-6);
+  direction: rtl;
+  text-align: right;
 }
 
 .current-plan {
@@ -474,6 +490,9 @@
 
 .trainee-form {
   padding: var(--space-8);
+  background: var(--bg-primary);
+  direction: rtl;
+  text-align: right;
 }
 
 .form-row {
@@ -492,23 +511,121 @@
 .form-group label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--neutral-700);
+  color: var(--text-secondary);
+  direction: rtl;
+  text-align: right;
 }
 
 .form-group input,
 .form-group select {
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-base);
-  border: var(--border-width-1) solid var(--neutral-300);
+  border: var(--border-width-1) solid var(--border-primary);
   border-radius: var(--border-radius-lg);
-  transition: all var(--transition-fast);
+  transition: var(--transition-base);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-family-sans);
+  direction: rtl;
+  text-align: right;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px var(--primary-100);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.form-group input::placeholder {
+  color: var(--text-disabled);
+}
+
+/* Collapsible Card Styles */
+.card-header.clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-base);
+  padding: var(--space-4);
+  margin: calc(-1 * var(--space-8));
+  margin-bottom: 0;
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.trainee-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.trainee-info .card-title {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  direction: rtl;
+  text-align: right;
+  /* Ensure high contrast for visibility */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card-header.clickable:hover {
+  background: var(--bg-tertiary);
+}
+
+.card-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.expand-icon {
+  font-size: var(--font-size-lg);
+  transition: var(--transition-base);
+  color: var(--text-secondary);
+}
+
+.card.collapsed {
+  padding: var(--space-4);
+}
+
+.card.expanded {
+  padding: var(--space-4) var(--space-4) var(--space-6);
+}
+
+.card-details {
+  padding-top: var(--space-4);
+  animation: slideDown 0.3s ease-out;
+}
+
+.card-actions-section {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--border-width-1) solid var(--border-primary);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    padding-top: var(--space-4);
+  }
 }
 
 .form-actions {

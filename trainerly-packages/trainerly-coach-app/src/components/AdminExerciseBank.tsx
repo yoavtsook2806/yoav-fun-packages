@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
+import Modal from './Modal';
 import './AdminExerciseBank.css';
 
 interface AdminExerciseBankProps {
@@ -23,6 +24,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [copying, setCopying] = useState<string | null>(null); // exerciseId being copied
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
@@ -47,13 +49,13 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     try {
       setCopying(adminExercise.exerciseId);
       const copiedExercise = await cachedApiService.copyAdminExercise(coachId, adminExercise.exerciseId, token);
-      
+
       showSuccess(`תרגיל "${adminExercise.name}" הועתק בהצלחה!`);
-      
+
       if (onExerciseCopied) {
         onExerciseCopied(copiedExercise);
       }
-      
+
       // Close modal after successful copy
       onClose();
     } catch (err) {
@@ -64,93 +66,116 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     }
   };
 
+  const toggleCardExpansion = (exerciseId: string) => {
+    const newExpandedCards = new Set(expandedCards);
+    if (expandedCards.has(exerciseId)) {
+      newExpandedCards.delete(exerciseId);
+    } else {
+      newExpandedCards.add(exerciseId);
+    }
+    setExpandedCards(newExpandedCards);
+  };
+
   const filteredExercises = adminExercises.filter(exercise =>
     exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  if (!isOpen) return null;
-
   return (
-    <div className="admin-exercise-bank-overlay">
-      <div className="admin-exercise-bank-modal">
-        <div className="modal-header">
-          <h2>בנק התרגילים</h2>
-          <button onClick={onClose} className="close-button">✕</button>
-        </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="בנק התרגילים"
+      icon="🏦"
+      size="xl"
+    >
+      <div className="search-section">
+        <input
+          type="text"
+          placeholder="חפש תרגיל..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+          dir="rtl"
+        />
+      </div>
 
-        <div className="search-section">
-          <input
-            type="text"
-            placeholder="חפש תרגיל..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-            dir="rtl"
-          />
-        </div>
-
-        <div className="exercises-content">
-          {loading ? (
-            <LoadingSpinner message="טוען בנק התרגילים..." />
-          ) : (
-            <>
-              {filteredExercises.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">💪</div>
-                  <h3>{searchTerm ? 'לא נמצאו תרגילים' : 'בנק התרגילים ריק'}</h3>
-                  <p>{searchTerm ? 'נסה מילות חיפוש אחרות' : 'אין תרגילים זמינים בבנק'}</p>
-                </div>
-              ) : (
-                <div className="exercises-grid">
-                  {filteredExercises.map((exercise) => (
-                    <div key={exercise.exerciseId} className="admin-exercise-card">
-                      <div className="exercise-header">
+      <div className="exercises-content">
+        {loading ? (
+          <LoadingSpinner message="טוען בנק התרגילים..." />
+        ) : (
+          <>
+            {filteredExercises.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-icon">💪</div>
+                <h3>{searchTerm ? 'לא נמצאו תרגילים' : 'בנק התרגילים ריק'}</h3>
+                <p>{searchTerm ? 'נסה מילות חיפוש אחרות' : 'אין תרגילים זמינים בבנק'}</p>
+              </div>
+            ) : (
+              <div className="exercises-grid">
+                {filteredExercises.map((exercise) => {
+                  const isExpanded = expandedCards.has(exercise.exerciseId);
+                  return (
+                    <div key={exercise.exerciseId} className={`admin-exercise-card ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                      <div
+                        className="exercise-header clickable"
+                        onClick={() => toggleCardExpansion(exercise.exerciseId)}
+                      >
                         <h3 className="exercise-name">{exercise.name}</h3>
-                        <div className="admin-badge">מאמן מנהל</div>
+                        <div className="card-controls">
+                          <div className="admin-badge">מאמן מנהל</div>
+                          <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                        </div>
                       </div>
-                      
-                      <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
-                      
-                      {exercise.note && (
-                        <p className="exercise-note">{exercise.note}</p>
-                      )}
-                      
-                      {exercise.link && (
-                        <div className="exercise-link">
-                          <a href={exercise.link} target="_blank" rel="noopener noreferrer">
-                            🎥 צפה בסרטון
-                          </a>
+
+                      {isExpanded && (
+                        <div className="exercise-details">
+                          <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
+
+                          {exercise.note && (
+                            <p className="exercise-note">{exercise.note}</p>
+                          )}
+
+                          {exercise.link && (
+                            <div className="exercise-link">
+                              <a href={exercise.link} target="_blank" rel="noopener noreferrer">
+                                🎥 צפה בסרטון
+                              </a>
+                            </div>
+                          )}
+
+                          <div className="exercise-actions">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyExercise(exercise);
+                              }}
+                              disabled={copying === exercise.exerciseId}
+                              className="copy-exercise-btn"
+                            >
+                              {copying === exercise.exerciseId ? (
+                                <>
+                                  <span className="loading-spinner-small"></span>
+                                  מעתיק...
+                                </>
+                              ) : (
+                                <>
+                                  📋 העתק תרגיל
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       )}
-                      
-                      <div className="exercise-actions">
-                        <button
-                          onClick={() => handleCopyExercise(exercise)}
-                          disabled={copying === exercise.exerciseId}
-                          className="copy-exercise-btn"
-                        >
-                          {copying === exercise.exerciseId ? (
-                            <>
-                              <span className="loading-spinner-small"></span>
-                              מעתיק...
-                            </>
-                          ) : (
-                            <>
-                              📋 העתק תרגיל
-                            </>
-                          )}
-                        </button>
-                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </div>
+    </Modal>
   );
 };
 

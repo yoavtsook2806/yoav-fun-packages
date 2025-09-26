@@ -21,6 +21,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAdminPlanBank, setShowAdminPlanBank] = useState(false);
   const [editingPlan, setEditingPlan] = useState<TrainingPlanSummary | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   
   // Form state
   const [formData, setFormData] = useState({
@@ -214,6 +215,16 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
 
   const getExerciseName = (exerciseName: string) => {
     return exerciseName || 'תרגיל לא נמצא';
+  };
+
+  const toggleCardExpansion = (planId: string) => {
+    const newExpandedCards = new Set(expandedCards);
+    if (expandedCards.has(planId)) {
+      newExpandedCards.delete(planId);
+    } else {
+      newExpandedCards.add(planId);
+    }
+    setExpandedCards(newExpandedCards);
   };
 
   if (loading && plans.length === 0) {
@@ -515,55 +526,72 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             </div>
           </Card>
         ) : (
-          plans.filter(plan => !plan.customTrainee).map((plan) => (
-            <Card key={plan.planId} data-id={plan.planId} clickable onClick={() => handleEditPlan(plan)}>
-              <div className="card-header">
-                <div>
-                  <h3 className="card-title">{plan.name}</h3>
-                  {plan.description && (
-                    <p className="card-subtitle">{plan.description}</p>
-                  )}
+          plans.filter(plan => !plan.customTrainee).map((plan) => {
+            const isExpanded = expandedCards.has(plan.planId);
+            return (
+              <Card key={plan.planId} data-id={plan.planId} className={isExpanded ? 'expanded' : 'collapsed'}>
+                <div
+                  className="card-header clickable"
+                  onClick={() => toggleCardExpansion(plan.planId)}
+                >
+                  <div>
+                    <h3 className="card-title">{plan.name}</h3>
+                  </div>
+                  <div className="card-controls">
+                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                  </div>
                 </div>
-                <div className="card-actions">
-                  <button
-                    className="card-action-button"
-                    title="ערוך תוכנית"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditPlan(plan);
-                    }}
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    className="card-action-button"
-                    title="מחק תוכנית"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeletePlan(plan);
-                    }}
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
 
-              <div className="card-stats">
-                <div className="card-stat">
-                  <span className="card-stat-number">{plan.trainingsCount}</span>
-                  <span className="card-stat-label">אימונים</span>
-                </div>
-                <div className="card-stat">
-                  <span className="card-stat-number">{exercises.length}</span>
-                  <span className="card-stat-label">תרגילים</span>
-                </div>
-              </div>
+                {isExpanded && (
+                  <div className="card-details">
+                    {plan.description && (
+                      <p className="card-subtitle">{plan.description}</p>
+                    )}
 
-              <div className="card-footer">
-                <span className="card-meta">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
-              </div>
-            </Card>
-          ))
+                    <div className="card-stats">
+                      <div className="card-stat">
+                        <span className="card-stat-number">{plan.trainingsCount}</span>
+                        <span className="card-stat-label">אימונים</span>
+                      </div>
+                      <div className="card-stat">
+                        <span className="card-stat-number">{exercises.length}</span>
+                        <span className="card-stat-label">תרגילים</span>
+                      </div>
+                    </div>
+
+                    <div className="card-footer">
+                      <span className="card-meta">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
+                    </div>
+
+                    <div className="card-actions-section">
+                      <button
+                        className="btn-secondary btn-sm"
+                        title="ערוך תוכנית"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditPlan(plan);
+                        }}
+                      >
+                        <span className="btn-icon">✏️</span>
+                        ערוך תוכנית
+                      </button>
+                      <button
+                        className="btn-warning btn-sm"
+                        title="מחק תוכנית"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeletePlan(plan);
+                        }}
+                      >
+                        <span className="btn-icon">🗑️</span>
+                        מחק תוכנית
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Card>
+            );
+          })
         )}
       </div>
 

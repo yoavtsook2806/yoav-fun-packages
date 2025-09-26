@@ -60,7 +60,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         <div className="auth-card">
           <div className="auth-header">
             <div className="auth-logo">
-              <div className="logo-icon">💪</div>
+              <img
+                src="/TrainerlyLogo.png"
+                alt="Trainerly"
+                className="trainerly-logo"
+              />
               <h1>Trainerly</h1>
               <p className="auth-subtitle">אפליקציית המתאמנים</p>
             </div>

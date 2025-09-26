@@ -3,6 +3,7 @@ import { cachedApiService, Exercise, Coach } from '../services/cachedApiService'
 import { showError, showSuccess } from './ToastContainer';
 import AdminExerciseBank from './AdminExerciseBank';
 import Card from './Card';
+import Modal from './Modal';
 import { MUSCLE_GROUPS } from '../constants/muscleGroups';
 import './ExerciseManagement.css';
 
@@ -20,6 +21,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
   const [showAdminBank, setShowAdminBank] = useState(false);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   // Form state
   const [formData, setFormData] = useState({
@@ -124,6 +126,16 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
     setShowAddForm(true);
   };
 
+  const toggleCardExpansion = (exerciseId: string) => {
+    const newExpandedCards = new Set(expandedCards);
+    if (expandedCards.has(exerciseId)) {
+      newExpandedCards.delete(exerciseId);
+    } else {
+      newExpandedCards.add(exerciseId);
+    }
+    setExpandedCards(newExpandedCards);
+  };
+
 
 
   if (loading && exercises.length === 0) {
@@ -167,76 +179,77 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
         </div>
       )}
 
-      {showAddForm && (
-        <div className="modal-overlay">
-          <div className="exercise-form-modal">
-            <div className="modal-header">
-              <h2>{editingExercise ? 'עריכת תרגיל' : 'הוספת תרגיל חדש'}</h2>
-              <button onClick={resetForm} className="close-button">✕</button>
+      <Modal
+        isOpen={showAddForm}
+        onClose={resetForm}
+        title={editingExercise ? 'עריכת תרגיל' : 'הוספת תרגיל חדש'}
+        icon="💪"
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className="exercise-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label>שם התרגיל *</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                required
+                placeholder="לדוגמה: סקוואט"
+              />
             </div>
-            
-            <form onSubmit={handleSubmit} className="exercise-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>שם התרגיל *</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    required
-                    placeholder="לדוגמה: סקוואט"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>קבוצת שרירים *</label>
-                  <select
-                    value={formData.muscleGroup}
-                    onChange={(e) => setFormData(prev => ({ ...prev, muscleGroup: e.target.value }))}
-                    required
-                  >
-                    <option value="">בחר קבוצת שרירים...</option>
-                    {MUSCLE_GROUPS.map((group) => (
-                      <option key={group} value={group}>
-                        {group}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>הוראות ביצוע</label>
-                <textarea
-                  value={formData.note}
-                  onChange={(e) => setFormData(prev => ({ ...prev, note: e.target.value }))}
-                  placeholder="הוראות מפורטות לביצוע התרגיל"
-                  rows={4}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>קישור לסרטון</label>
-                <input
-                  type="url"
-                  value={formData.link}
-                  onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
-                  placeholder="https://youtube.com/watch?v=..."
-                />
-              </div>
-
-
-              <div className="form-actions">
-                <button type="button" onClick={resetForm} className="cancel-button">
-                  ביטול
-                </button>
-                <button type="submit" className="save-button" disabled={loading || !formData.name.trim() || !formData.muscleGroup.trim()}>
-                  {loading ? 'שומר...' : editingExercise ? 'עדכן תרגיל' : 'הוסף תרגיל'}
-                </button>
-              </div>
-            </form>
+            <div className="form-group">
+              <label>קבוצת שרירים *</label>
+              <select
+                value={formData.muscleGroup}
+                onChange={(e) => setFormData(prev => ({ ...prev, muscleGroup: e.target.value }))}
+                required
+              >
+                <option value="">בחר קבוצת שרירים...</option>
+                {MUSCLE_GROUPS.map((group) => (
+                  <option key={group} value={group}>
+                    {group}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-      )}
+
+          <div className="form-group">
+            <label>הוראות ביצוע</label>
+            <textarea
+              value={formData.note}
+              onChange={(e) => setFormData(prev => ({ ...prev, note: e.target.value }))}
+              placeholder="הוראות מפורטות לביצוע התרגיל"
+              rows={4}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>קישור לסרטון</label>
+            <input
+              type="url"
+              value={formData.link}
+              onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
+              placeholder="https://youtube.com/watch?v=..."
+            />
+          </div>
+
+          <div className="button-group justify-end">
+            <button type="button" onClick={resetForm} className="btn-secondary">
+              ביטול
+            </button>
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={loading || !formData.name.trim() || !formData.muscleGroup.trim()}
+            >
+              <span className="btn-icon">{loading ? '⏳' : editingExercise ? '✏️' : '➕'}</span>
+              {loading ? 'שומר...' : editingExercise ? 'עדכן תרגיל' : 'הוסף תרגיל'}
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="exercises-grid">
         {exercises.length === 0 ? (
@@ -251,37 +264,60 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
             </div>
           </Card>
         ) : (
-          exercises.map((exercise) => (
-            <Card key={exercise.exerciseId} data-id={exercise.exerciseId}>
-              <div className="card-header">
-                <div>
-                  <h3 className="card-title">{exercise.name}</h3>
-                  {exercise.muscleGroup && (
-                    <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-                  )}
+          exercises.map((exercise) => {
+            const isExpanded = expandedCards.has(exercise.exerciseId);
+            return (
+              <Card key={exercise.exerciseId} data-id={exercise.exerciseId} className={isExpanded ? 'expanded' : 'collapsed'}>
+                <div
+                  className="card-header clickable"
+                  onClick={() => toggleCardExpansion(exercise.exerciseId)}
+                >
+                  <div>
+                    <h3 className="card-title">{exercise.name}</h3>
+                  </div>
+                  <div className="card-controls">
+                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                  </div>
                 </div>
-                <div className="card-actions">
-                  <button onClick={() => handleEdit(exercise)} className="card-action-button" title="ערוך תרגיל">
-                    ✏️
-                  </button>
-                </div>
-              </div>
 
-              {exercise.note && (
-                <div className="card-content">
-                  <p>{exercise.note}</p>
-                </div>
-              )}
+                {isExpanded && (
+                  <div className="card-details">
+                    {exercise.muscleGroup && (
+                      <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+                    )}
 
-              {exercise.link && (
-                <div className="card-footer">
-                  <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
-                    🎥 צפה בסרטון
-                  </a>
-                </div>
-              )}
-            </Card>
-          ))
+                    {exercise.note && (
+                      <div className="card-content">
+                        <p>{exercise.note}</p>
+                      </div>
+                    )}
+
+                    {exercise.link && (
+                      <div className="card-footer">
+                        <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
+                          🎥 צפה בסרטון
+                        </a>
+                      </div>
+                    )}
+
+                    <div className="card-actions-section">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(exercise);
+                        }}
+                        className="btn-secondary btn-sm"
+                        title="ערוך תרגיל"
+                      >
+                        <span className="btn-icon">✏️</span>
+                        ערוך תרגיל
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Card>
+            );
+          })
         )}
       </div>
 

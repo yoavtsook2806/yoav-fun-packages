@@ -296,6 +296,8 @@ body {
   background: var(--bg-card);
   color: var(--text-primary);
   transition: all var(--transition-fast);
+  direction: rtl;
+  text-align: right;
 }
 
 .form-input:focus {

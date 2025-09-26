@@ -716,3 +716,83 @@
     left: 0.5rem;
   }
 }
+
+/* Collapsible Card Styles */
+.card-header.clickable {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-base);
+  padding: var(--space-4);
+  margin: calc(-1 * var(--space-8));
+  margin-bottom: 0;
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.card-header.clickable > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-header.clickable .card-title {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-header.clickable:hover {
+  background: var(--bg-tertiary);
+}
+
+.card-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.expand-icon {
+  font-size: var(--font-size-lg);
+  transition: var(--transition-base);
+  color: var(--text-secondary);
+}
+
+.card.collapsed {
+  padding: var(--space-4);
+}
+
+.card.expanded {
+  padding: var(--space-4) var(--space-4) var(--space-6);
+}
+
+.card-details {
+  padding-top: var(--space-4);
+  animation: slideDown 0.3s ease-out;
+}
+
+.card-actions-section {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--border-width-1) solid var(--border-primary);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    padding-top: var(--space-4);
+  }
+}

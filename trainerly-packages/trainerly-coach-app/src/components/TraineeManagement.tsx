@@ -3,6 +3,8 @@ import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cach
 import { showError, showSuccess } from './ToastContainer';
 import CustomTraineePlanManager from './CustomTraineePlanManager';
 import TraineeTrainingHistoryModal from './TraineeTrainingHistory';
+import Card from './Card';
+import Modal from './Modal';
 import '../styles/design-system.css';
 import './TraineeManagement.css';
 
@@ -22,6 +24,7 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const [customPlanTrainee, setCustomPlanTrainee] = useState<Trainee | null>(null);
   const [showTrainingHistory, setShowTrainingHistory] = useState(false);
   const [historyTrainee, setHistoryTrainee] = useState<Trainee | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   // Form state
   const [formData, setFormData] = useState({
@@ -139,6 +142,16 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     setHistoryTrainee(null);
   };
 
+  const toggleCardExpansion = (traineeId: string) => {
+    const newExpandedCards = new Set(expandedCards);
+    if (expandedCards.has(traineeId)) {
+      newExpandedCards.delete(traineeId);
+    } else {
+      newExpandedCards.add(traineeId);
+    }
+    setExpandedCards(newExpandedCards);
+  };
+
   const getPlanName = (planId: string) => {
     const plan = plans.find(p => p.planId === planId);
     return plan?.name || 'תוכנית לא נמצאה';
@@ -198,73 +211,62 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
       )}
 
       {/* Add Trainee Modal */}
-      {showAddForm && (
-        <div className="modal-overlay">
-          <div className="trainee-form-modal">
-            <div className="modal-header">
-              <h2>הוספת מתאמן חדש</h2>
-              <button onClick={resetForm} className="close-button">✕</button>
+      <Modal
+        isOpen={showAddForm}
+        onClose={resetForm}
+        title="הוספת מתאמן חדש"
+        icon="👤"
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className="trainee-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label>כינוי *</label>
+              <input
+                type="text"
+                value={formData.nickname}
+                onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
+                required
+                placeholder="כינוי המתאמן (ייחודי למאמן)"
+              />
             </div>
-            
-            <form onSubmit={handleSubmit} className="trainee-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>כינוי *</label>
-                  <input
-                    type="text"
-                    value={formData.nickname}
-                    onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
-                    required
-                    placeholder="כינוי המתאמן (ייחודי למאמן)"
-                  />
-                </div>
-                <div className="form-group">
-                  {/* Empty for consistent layout */}
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label>אימייל</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="כתובת אימייל"
-                  />
-                </div>
-                <div className="form-group">
-                  {/* Empty for now - keeping consistent layout */}
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>הקצאת תוכנית אימון</label>
-                <select
-                  value={formData.initialPlanId}
-                  onChange={(e) => setFormData(prev => ({ ...prev, initialPlanId: e.target.value }))}
-                >
-                  <option value="">בחר תוכנית (אופציונלי)</option>
-                  {plans.map((plan) => (
-                    <option key={plan.planId} value={plan.planId}>
-                      {plan.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-actions">
-                <button type="button" onClick={resetForm} className="cancel-button">
-                  ביטול
-                </button>
-                <button type="submit" className="save-button" disabled={loading}>
-                  {loading ? 'שומר...' : 'הוסף מתאמן'}
-                </button>
-              </div>
-            </form>
+            <div className="form-group">
+              <label>אימייל</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="כתובת אימייל"
+              />
+            </div>
           </div>
-        </div>
-      )}
+
+          <div className="form-group">
+            <label>הקצאת תוכנית אימון</label>
+            <select
+              value={formData.initialPlanId}
+              onChange={(e) => setFormData(prev => ({ ...prev, initialPlanId: e.target.value }))}
+            >
+              <option value="">בחר תוכנית (אופציונלי)</option>
+              {plans.map((plan) => (
+                <option key={plan.planId} value={plan.planId}>
+                  {plan.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="button-group justify-end">
+            <button type="button" onClick={resetForm} className="btn-secondary">
+              ביטול
+            </button>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              <span className="btn-icon">{loading ? '⏳' : '➕'}</span>
+              {loading ? 'שומר...' : 'הוסף מתאמן'}
+            </button>
+          </div>
+        </form>
+      </Modal>
 
 
       {/* Trainees Grid */}
@@ -279,95 +281,107 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
             </button>
           </div>
         ) : (
-          trainees.map((trainee) => (
-            <div key={trainee.trainerId} className="trainee-card">
-              <div className="trainee-header">
-                <div className="trainee-info">
-                  <h3 className="trainee-name">{trainee.nickname}</h3>
+          trainees.map((trainee) => {
+            const isExpanded = expandedCards.has(trainee.trainerId);
+            return (
+              <Card key={trainee.trainerId} className={`trainee-card ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                <div
+                  className="card-header clickable"
+                  onClick={() => toggleCardExpansion(trainee.trainerId)}
+                >
+                  <div className="trainee-info">
+                    <h3 className="card-title">{trainee.nickname}</h3>
+                  </div>
+                  <div className="card-controls">
+                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                  </div>
                 </div>
-                <div className="trainee-actions">
-                  <button 
-                    onClick={() => openCustomPlanManager(trainee)} 
-                    className="custom-plan-button"
-                    title="תוכניות מותאמות"
-                  >
-                    👤
-                  </button>
-                  <button 
-                    onClick={() => openTrainingHistory(trainee)} 
-                    className="data-button"
-                    title="נתוני אימונים מלאים"
-                  >
-                    📊
-                  </button>
-                </div>
-              </div>
-              
-              <div className="trainee-details">
-                {trainee.email && (
-                  <div className="detail-item">
-                    <span className="detail-icon">📧</span>
-                    <span className="detail-text">{trainee.email}</span>
+
+                {isExpanded && (
+                  <div className="card-details">
+                    <div className="trainee-details">
+                      {trainee.email && (
+                        <div className="detail-item">
+                          <span className="detail-icon">📧</span>
+                          <span className="detail-text">{trainee.email}</span>
+                        </div>
+                      )}
+                      <div className="detail-item">
+                        <span className="detail-icon">📅</span>
+                        <span className="detail-text">נרשם ב-{formatDate(trainee.createdAt)}</span>
+                      </div>
+                    </div>
+
+                    <div className="plan-assignment">
+                      <div className="current-plan">
+                        <strong>תוכנית נוכחית:</strong>
+                        {trainee.plans && trainee.plans.length > 0 ? (
+                          <span className="assigned-plan">{getPlanName(trainee.plans[trainee.plans.length - 1])}</span>
+                        ) : (
+                          <span className="no-plan">לא הוקצתה תוכנית</span>
+                        )}
+                      </div>
+
+                      {trainee.plans && trainee.plans.length > 1 && (
+                        <div className="plan-history">
+                          <small style={{ color: 'var(--text-muted)' }}>
+                            תוכניות קודמות: {trainee.plans.slice(0, -1).map(planId => getPlanName(planId)).join(', ')}
+                          </small>
+                        </div>
+                      )}
+
+                      <div className="plan-actions">
+                        <select
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              assignPlan(trainee, e.target.value);
+                              e.target.value = '';
+                            }
+                          }}
+                          className="plan-selector"
+                          disabled={loading}
+                        >
+                          <option value="">הקצה תוכנית...</option>
+                          {plans
+                            .filter(plan => !trainee.plans || !trainee.plans.includes(plan.planId))
+                            .map((plan) => (
+                              <option key={plan.planId} value={plan.planId}>
+                                {plan.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="card-actions-section">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openCustomPlanManager(trainee);
+                        }}
+                        className="btn-secondary btn-sm"
+                        title="תוכניות מותאמות"
+                      >
+                        <span className="btn-icon">👤</span>
+                        תוכניות מותאמות
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openTrainingHistory(trainee);
+                        }}
+                        className="btn-secondary btn-sm"
+                        title="נתוני אימונים מלאים"
+                      >
+                        <span className="btn-icon">📊</span>
+                        נתוני אימונים
+                      </button>
+                    </div>
                   </div>
                 )}
-                <div className="detail-item">
-                  <span className="detail-icon">📅</span>
-                  <span className="detail-text">נרשם ב-{formatDate(trainee.createdAt)}</span>
-                </div>
-              </div>
-              
-              <div className="plan-assignment">
-                <div className="current-plan">
-                  <strong>תוכנית נוכחית:</strong>
-                  {trainee.plans && trainee.plans.length > 0 ? (
-                    <span className="assigned-plan">{getPlanName(trainee.plans[trainee.plans.length - 1])}</span>
-                  ) : (
-                    <span className="no-plan">לא הוקצתה תוכנית</span>
-                  )}
-                </div>
-                
-                {trainee.plans && trainee.plans.length > 1 && (
-                  <div className="plan-history">
-                    <small style={{ color: 'var(--text-muted)' }}>
-                      תוכניות קודמות: {trainee.plans.slice(0, -1).map(planId => getPlanName(planId)).join(', ')}
-                    </small>
-                  </div>
-                )}
-                
-                <div className="plan-actions">
-                  <select
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        assignPlan(trainee, e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                    className="plan-selector"
-                    disabled={loading}
-                  >
-                    <option value="">הקצה תוכנית...</option>
-                    {plans
-                      .filter(plan => !trainee.plans || !trainee.plans.includes(plan.planId))
-                      .map((plan) => (
-                        <option key={plan.planId} value={plan.planId}>
-                          {plan.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              
-              <div className="trainee-access">
-                <div className="access-info">
-                  <strong>פרטי כניסה לאפליקציה:</strong>
-                  <div className="access-details">
-                    <span>כינוי: <code>{trainee.nickname}</code></span>
-                    <span>כינוי מאמן: <code>1</code></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
+              </Card>
+            );
+          })
         )}
       </div>
 
