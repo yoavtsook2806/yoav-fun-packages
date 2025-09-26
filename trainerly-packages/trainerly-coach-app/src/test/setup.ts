@@ -21,18 +21,18 @@ const localStorageMock = {
 };
 global.localStorage = localStorageMock as any;
 
-// Fix for webidl-conversions error in jsdom environment
-// Provides the missing global that webidl-conversions expects
-if (typeof global.Symbol === 'undefined') {
-  global.Symbol = Symbol;
-}
+// Comprehensive fix for webidl-conversions error in jsdom environment
+// The error occurs because webidl-conversions expects certain globals to be available
 
-// Ensure WeakMap is available for webidl-conversions
-if (typeof global.WeakMap === 'undefined') {
-  global.WeakMap = WeakMap;
-}
+// Ensure all required globals are available
+Object.assign(global, {
+  Symbol: global.Symbol || Symbol,
+  WeakMap: global.WeakMap || WeakMap,
+  Map: global.Map || Map,
+  Set: global.Set || Set,
+});
 
-// Mock URL constructor for jsdom compatibility
+// Mock URL constructor for jsdom compatibility with proper prototype chain
 if (typeof global.URL === 'undefined') {
   global.URL = class URL {
     href: string;
@@ -60,5 +60,30 @@ if (typeof global.URL === 'undefined') {
     toString() {
       return this.href;
     }
+
+    // Add static method after class definition
+  } as any;
+}
+
+// Ensure URLSearchParams is available
+if (typeof global.URLSearchParams === 'undefined') {
+  global.URLSearchParams = class URLSearchParams {
+    private params = new Map<string, string>();
+
+    constructor(init?: string | URLSearchParams | Record<string, string>) {
+      if (typeof init === 'string') {
+        // Basic query string parsing
+        init.replace(/^\?/, '').split('&').forEach(pair => {
+          const [key, value = ''] = pair.split('=');
+          if (key) this.params.set(decodeURIComponent(key), decodeURIComponent(value));
+        });
+      }
+    }
+
+    get(name: string) { return this.params.get(name); }
+    set(name: string, value: string) { this.params.set(name, value); }
+    has(name: string) { return this.params.has(name); }
+    delete(name: string) { this.params.delete(name); }
+    toString() { return Array.from(this.params.entries()).map(([k, v]) => `${k}=${v}`).join('&'); }
   } as any;
 }
