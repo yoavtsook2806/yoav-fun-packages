@@ -3,6 +3,7 @@ import { cachedApiService, TrainingPlanSummary, Trainee } from '../services/cach
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
 import EditTrainingPlan from './EditTrainingPlan';
+import './Card.css';
 import './CustomTraineePlanManager.css';
 
 interface CustomTraineePlanManagerProps {
@@ -104,7 +105,6 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
       <div className="custom-trainee-plan-modal">
         <div className="modal-header">
           <h2>תוכניות אימון עבור {trainee.nickname}</h2>
-          <button onClick={onClose} className="close-button">✕</button>
         </div>
 
         <div className="plans-content">
@@ -126,48 +126,53 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
                 ) : (
                   <div className="plans-grid">
                     {customPlans.map((plan) => (
-                      <div key={plan.planId} className="plan-card custom-plan">
-                        <div className="plan-header">
-                          <h4 className="plan-name">{plan.name}</h4>
+                      <div key={plan.planId} className="card card-hoverable">
+                        <div className="card-header">
+                          <div className="card-header-content">
+                            <h3 className="card-title">{plan.name}</h3>
+                            {plan.description && (
+                              <p className="card-subtitle">{plan.description}</p>
+                            )}
+                          </div>
                           <div className="custom-badge">מותאם</div>
                         </div>
-                        
-                        {plan.description && (
-                          <p className="plan-description">{plan.description}</p>
-                        )}
-                        
-                        <div className="plan-stats">
-                          <div className="stat">
-                            <span className="stat-number">{plan.trainingsCount}</span>
-                            <span className="stat-label">אימונים</span>
+
+                        <div className="card-content">
+                          <div className="card-stats">
+                            <div className="card-stat">
+                              <span className="card-stat-number">{plan.trainingsCount}</span>
+                              <span className="card-stat-label">אימונים</span>
+                            </div>
                           </div>
                         </div>
-                        
-                        <div className="plan-actions">
-                          <button
-                            onClick={() => setEditingPlan(plan)}
-                            className="edit-custom-plan-btn"
-                            title="ערוך תוכנית"
-                          >
-                            ✏️ ערוך
-                          </button>
-                          <button
-                            onClick={() => handleMakeGeneric(plan)}
-                            disabled={makingGeneric === plan.planId}
-                            className="make-generic-btn"
-                            title="הפוך לתוכנית כללית"
-                          >
-                            {makingGeneric === plan.planId ? (
-                              <>
-                                <span className="loading-spinner-small"></span>
-                                מעביר...
-                              </>
-                            ) : (
-                              <>
-                                🌐 הפוך לכללית
-                              </>
-                            )}
-                          </button>
+
+                        <div className="card-footer">
+                          <div className="plan-actions">
+                            <button
+                              onClick={() => setEditingPlan(plan)}
+                              className="edit-custom-plan-btn"
+                              title="ערוך תוכנית"
+                            >
+                              ✏️ ערוך
+                            </button>
+                            <button
+                              onClick={() => handleMakeGeneric(plan)}
+                              disabled={makingGeneric === plan.planId}
+                              className="make-generic-btn"
+                              title="הפוך לתוכנית כללית"
+                            >
+                              {makingGeneric === plan.planId ? (
+                                <>
+                                  <span className="loading-spinner-small"></span>
+                                  מעביר...
+                                </>
+                              ) : (
+                                <>
+                                  🌐 הפוך לכללית
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -189,40 +194,45 @@ const CustomTraineePlanManager: React.FC<CustomTraineePlanManagerProps> = ({
                 ) : (
                   <div className="plans-grid">
                     {coachPlans.map((plan) => (
-                      <div key={plan.planId} className="plan-card generic-plan">
-                        <div className="plan-header">
-                          <h4 className="plan-name">{plan.name}</h4>
+                      <div key={plan.planId} className="card card-hoverable">
+                        <div className="card-header">
+                          <div className="card-header-content">
+                            <h3 className="card-title">{plan.name}</h3>
+                            {plan.description && (
+                              <p className="card-subtitle">{plan.description}</p>
+                            )}
+                          </div>
                           <div className="generic-badge">כללית</div>
                         </div>
-                        
-                        {plan.description && (
-                          <p className="plan-description">{plan.description}</p>
-                        )}
-                        
-                        <div className="plan-stats">
-                          <div className="stat">
-                            <span className="stat-number">{plan.trainingsCount}</span>
-                            <span className="stat-label">אימונים</span>
+
+                        <div className="card-content">
+                          <div className="card-stats">
+                            <div className="card-stat">
+                              <span className="card-stat-number">{plan.trainingsCount}</span>
+                              <span className="card-stat-label">אימונים</span>
+                            </div>
                           </div>
                         </div>
-                        
-                        <div className="plan-actions">
-                          <button
-                            onClick={() => handleCreateCustomPlan(plan)}
-                            disabled={creating === plan.planId}
-                            className="create-custom-btn"
-                          >
-                            {creating === plan.planId ? (
-                              <>
-                                <span className="loading-spinner-small"></span>
-                                יוצר...
-                              </>
-                            ) : (
-                              <>
-                                👤 צור מותאם עבור {trainee.nickname}
-                              </>
-                            )}
-                          </button>
+
+                        <div className="card-footer">
+                          <div className="plan-actions">
+                            <button
+                              onClick={() => handleCreateCustomPlan(plan)}
+                              disabled={creating === plan.planId}
+                              className="create-custom-btn"
+                            >
+                              {creating === plan.planId ? (
+                                <>
+                                  <span className="loading-spinner-small"></span>
+                                  יוצר...
+                                </>
+                              ) : (
+                                <>
+                                  👤 צור מותאם עבור {trainee.nickname}
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}

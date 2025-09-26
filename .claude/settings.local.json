@@ -10,7 +10,8 @@
       "Bash(npm run build:*)",
       "WebSearch",
       "Bash(yarn workspace trainerly-coach-app:*)",
-      "Bash(yarn dev:*)"
+      "Bash(yarn dev:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []

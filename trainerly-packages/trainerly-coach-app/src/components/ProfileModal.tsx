@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
+import Modal from './Modal';
 import './ProfileModal.css';
 
 interface ProfileModalProps {
@@ -19,7 +20,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   onUpdate 
 }) => {
   const [name, setName] = useState<string>(coach.name);
-  const [phone, setPhone] = useState<string>(coach.phone || '');
+  const [countryCode, setCountryCode] = useState<string>('972');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [age, setAge] = useState<string>(coach.age?.toString() || '');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +30,28 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setName(coach.name);
-      setPhone(coach.phone || '');
+
+      // Parse existing phone number
+      if (coach.phone) {
+        const phoneStr = coach.phone.replace(/[-\s]/g, ''); // Remove dashes and spaces
+        if (phoneStr.startsWith('972')) {
+          setCountryCode('972');
+          setPhoneNumber(phoneStr.substring(3));
+        } else if (phoneStr.startsWith('+972')) {
+          setCountryCode('972');
+          setPhoneNumber(phoneStr.substring(4));
+        } else if (phoneStr.startsWith('0')) {
+          setCountryCode('972');
+          setPhoneNumber(phoneStr.substring(1));
+        } else {
+          setCountryCode('972');
+          setPhoneNumber(phoneStr);
+        }
+      } else {
+        setCountryCode('972');
+        setPhoneNumber('');
+      }
+
       setAge(coach.age?.toString() || '');
       setError(null);
       setSuccess(false);
@@ -42,9 +65,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
     try {
       const updateData: any = { name };
-      
-      if (phone.trim()) {
-        updateData.phone = phone.trim();
+
+      if (phoneNumber.trim()) {
+        // Combine country code and phone number
+        const fullPhone = `+${countryCode}${phoneNumber.trim()}`;
+        updateData.phone = fullPhone;
       }
       
       if (age.trim()) {
@@ -83,131 +108,148 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="profile-modal-overlay" dir="rtl">
-      <div className="profile-modal">
-        <div className="modal-header">
-          <h2 className="modal-title">
-            <span className="modal-icon">⚙️</span>
-            עריכת פרופיל
-          </h2>
-          <button onClick={onClose} className="close-button">
-            <span className="close-icon">✕</span>
-          </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="עריכת פרופיל"
+      icon="⚙️"
+      size="md"
+    >
+      {success && (
+        <div className="success-message">
+          <span className="success-icon">✅</span>
+          הפרופיל עודכן בהצלחה!
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="profile-form">
+        <div className="form-group">
+          <label className="form-label">שם מלא *</label>
+          <div className="input-group">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="הכנס שם מלא"
+              className="modal-input"
+            />
+            <div className="input-icon">👤</div>
+          </div>
         </div>
 
-        {success && (
-          <div className="success-message">
-            <span className="success-icon">✅</span>
-            הפרופיל עודכן בהצלחה!
+        <div className="form-group">
+          <label className="form-label">מספר טלפון</label>
+          <div className="phone-input-container">
+            <div className="country-selector">
+              <select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                className="country-select"
+              >
+                <option value="972">🇮🇱 +972</option>
+                <option value="1">🇺🇸 +1</option>
+                <option value="44">🇬🇧 +44</option>
+                <option value="33">🇫🇷 +33</option>
+                <option value="49">🇩🇪 +49</option>
+                <option value="39">🇮🇹 +39</option>
+                <option value="34">🇪🇸 +34</option>
+                <option value="31">🇳🇱 +31</option>
+                <option value="41">🇨🇭 +41</option>
+                <option value="43">🇦🇹 +43</option>
+              </select>
+            </div>
+            <div className="phone-number-input">
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="50-123-4567"
+                className="modal-input phone-input"
+              />
+              <div className="input-icon">📱</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">גיל</label>
+          <div className="input-group">
+            <input
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              min="18"
+              max="120"
+              placeholder="35"
+              className="modal-input"
+            />
+            <div className="input-icon">🎂</div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="readonly-field">
+            <div className="field-icon">📧</div>
+            <div className="field-content">
+              <div className="field-label">אימייל (לקריאה בלבד)</div>
+              <div className="field-value">{coach.email}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="readonly-field">
+            <div className="field-icon">🏷️</div>
+            <div className="field-content">
+              <div className="field-label">כינוי (לקריאה בלבד)</div>
+              <div className="field-value">@{coach.nickname}</div>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            <span className="error-icon">⚠️</span>
+            {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-icon">👤</div>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder="שם מלא *"
-                className="modal-input"
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-icon">📱</div>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="מספר טלפון (לדוגמה: 050-123-4567)"
-                className="modal-input"
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <div className="input-group">
-              <div className="input-icon">🎂</div>
-              <input
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                min="18"
-                max="120"
-                placeholder="גיל (לדוגמה: 35)"
-                className="modal-input"
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <div className="readonly-field">
-              <div className="field-icon">📧</div>
-              <div className="field-content">
-                <div className="field-label">אימייל (לקריאה בלבד)</div>
-                <div className="field-value">{coach.email}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <div className="readonly-field">
-              <div className="field-icon">🏷️</div>
-              <div className="field-content">
-                <div className="field-label">כינוי (לקריאה בלבד)</div>
-                <div className="field-value">@{coach.nickname}</div>
-              </div>
-            </div>
-          </div>
-
-          {error && (
-            <div className="error-message">
-              <span className="error-icon">⚠️</span>
-              {error}
-            </div>
-          )}
-
-          <div className="modal-actions">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={loading}
-              className="modal-button secondary"
-            >
-              <span className="button-icon">❌</span>
-              ביטול
-            </button>
-            <button
-              type="submit"
-              disabled={loading || success}
-              className={`modal-button primary ${success ? 'success' : ''}`}
-            >
-              {loading ? (
-                <>
-                  <span className="loading-spinner small"></span>
-                  מעדכן...
-                </>
-              ) : success ? (
-                <>
-                  <span className="button-icon">✅</span>
-                  עודכן!
-                </>
-              ) : (
-                <>
-                  <span className="button-icon">💾</span>
-                  עדכן פרופיל
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="button-group justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={loading}
+            className="btn-secondary"
+          >
+            <span className="btn-icon">❌</span>
+            ביטול
+          </button>
+          <button
+            type="submit"
+            disabled={loading || success}
+            className={`btn-primary ${success ? 'btn-success' : ''}`}
+          >
+            {loading ? (
+              <>
+                <span className="loading-spinner small"></span>
+                מעדכן...
+              </>
+            ) : success ? (
+              <>
+                <span className="btn-icon">✅</span>
+                עודכן!
+              </>
+            ) : (
+              <>
+                <span className="btn-icon">💾</span>
+                עדכן פרופיל
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

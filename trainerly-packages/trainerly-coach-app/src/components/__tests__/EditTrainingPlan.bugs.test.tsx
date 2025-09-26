@@ -132,9 +132,10 @@ describe('EditTrainingPlan - Bug Fixes', () => {
         expect(screen.getByText('עריכת אימון')).toBeInTheDocument();
       });
 
-      // BUG: Currently shows empty modal with no form
-      // After fix, should show training name input
-      expect(screen.getByLabelText('שם האימון')).toBeInTheDocument();
+      // Should show full training form with exercise selection
+      expect(screen.getByLabelText('שם האימון *')).toBeInTheDocument();
+      expect(screen.getByText('בחר תרגילים מהספרייה:')).toBeInTheDocument();
+      expect(screen.getByText('תרגילים שנבחרו:')).toBeInTheDocument();
     });
 
     it('should show proper training form when adding a new training', async () => {
@@ -170,9 +171,10 @@ describe('EditTrainingPlan - Bug Fixes', () => {
         expect(screen.getByText('הוספת אימון חדש')).toBeInTheDocument();
       });
 
-      // BUG: Currently shows empty modal with no form
-      // After fix, should show training name input
-      expect(screen.getByLabelText('שם האימון')).toBeInTheDocument();
+      // Should show full training form with exercise selection
+      expect(screen.getByLabelText('שם האימון *')).toBeInTheDocument();
+      expect(screen.getByText('בחר תרגילים מהספרייה:')).toBeInTheDocument();
+      expect(screen.getByText('תרגילים שנבחרו:')).toBeInTheDocument();
     });
 
     it('should be able to save training changes in the edit modal', async () => {
@@ -193,10 +195,15 @@ describe('EditTrainingPlan - Bug Fixes', () => {
       });
 
       // Change training name
-      const nameInput = screen.getByLabelText('שם האימון');
+      const nameInput = screen.getByLabelText('שם האימון *');
       fireEvent.change(nameInput, { target: { value: 'Updated Training Name' } });
 
-      // Save changes
+      // Note: Save button should be disabled initially since no exercises are selected
+      // For this test, we'll add an exercise first
+      const addExerciseButton = screen.getByText('➕');
+      fireEvent.click(addExerciseButton);
+
+      // Now save changes
       const saveButton = screen.getByText('שמור אימון');
       fireEvent.click(saveButton);
 
