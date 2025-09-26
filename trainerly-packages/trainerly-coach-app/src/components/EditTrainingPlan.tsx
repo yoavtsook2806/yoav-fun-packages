@@ -119,6 +119,33 @@ const EditTrainingPlan: React.FC<EditTrainingPlanProps> = ({
     }
   };
 
+  const saveCurrentTraining = () => {
+    if (!currentTraining) return;
+
+    if (!currentTraining.name?.trim()) {
+      showError('יש להזין שם לאימון');
+      return;
+    }
+
+    setFormData(prev => {
+      const existingIndex = prev.trainings.findIndex(t => t.trainingId === currentTraining.trainingId);
+      
+      if (existingIndex >= 0) {
+        // Update existing training
+        const updatedTrainings = [...prev.trainings];
+        updatedTrainings[existingIndex] = currentTraining;
+        return { ...prev, trainings: updatedTrainings };
+      } else {
+        // Add new training
+        return { ...prev, trainings: [...prev.trainings, currentTraining] };
+      }
+    });
+
+    setShowTrainingForm(false);
+    setCurrentTraining(null);
+    showSuccess('האימון נשמר בהצלחה');
+  };
+
   const saveTraining = (training: TrainingItem) => {
     setFormData(prev => ({
       ...prev,
@@ -172,6 +199,9 @@ const EditTrainingPlan: React.FC<EditTrainingPlanProps> = ({
               <div className="trainings-section">
                 <div className="section-header">
                   <h3>אימונים בתוכנית ({formData.trainings.length})</h3>
+                  <button onClick={addTraining} className="add-training-btn">
+                    הוסף אימון
+                  </button>
                 </div>
 
                 <div className="trainings-list">
@@ -210,13 +240,68 @@ const EditTrainingPlan: React.FC<EditTrainingPlanProps> = ({
         </div>
       </div>
 
-      {/* Training Form Modal - would need to be implemented separately */}
+      {/* Training Form Modal */}
       {showTrainingForm && currentTraining && (
         <div className="training-form-overlay">
           <div className="training-form-modal">
-            <h3>{currentTraining.name ? 'עריכת אימון' : 'הוספת אימון חדש'}</h3>
-            {/* Training form implementation would go here */}
-            <button onClick={() => setShowTrainingForm(false)}>סגור</button>
+            <div className="modal-header">
+              <h3>{currentTraining.name ? 'עריכת אימון' : 'הוספת אימון חדש'}</h3>
+              <button onClick={() => setShowTrainingForm(false)} className="close-button">✕</button>
+            </div>
+            
+            <div className="training-form-content">
+              <div className="form-group">
+                <label htmlFor="training-name">שם האימון</label>
+                <input
+                  id="training-name"
+                  type="text"
+                  value={currentTraining.name || ''}
+                  onChange={(e) => setCurrentTraining(prev => prev ? { ...prev, name: e.target.value } : null)}
+                  placeholder="הכנס שם לאימון"
+                  dir="rtl"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="training-type">סוג האימון</label>
+                <select
+                  id="training-type"
+                  value={currentTraining.type || 'A'}
+                  onChange={(e) => setCurrentTraining(prev => prev ? { ...prev, type: e.target.value } : null)}
+                  dir="rtl"
+                >
+                  <option value="A">אימון A</option>
+                  <option value="B">אימון B</option>
+                  <option value="C">אימון C</option>
+                  <option value="D">אימון D</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>תרגילים באימון ({currentTraining.exercises.length})</label>
+                <div className="exercises-list">
+                  {currentTraining.exercises.map((exercise, index) => (
+                    <div key={index} className="exercise-item">
+                      <span>{exercise.name}</span>
+                      <span>{exercise.sets} סטים × {exercise.reps} חזרות</span>
+                      {exercise.weight > 0 && <span>{exercise.weight} ק"ג</span>}
+                    </div>
+                  ))}
+                  {currentTraining.exercises.length === 0 && (
+                    <p className="no-exercises">אין תרגילים באימון עדיין</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="training-form-actions">
+                <button onClick={() => setShowTrainingForm(false)} className="cancel-btn">
+                  ביטול
+                </button>
+                <button onClick={saveCurrentTraining} className="save-btn">
+                  שמור אימון
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

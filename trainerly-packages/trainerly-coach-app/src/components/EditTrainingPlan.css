@@ -116,27 +116,96 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #374151;
 }
 
 .add-training-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  font-size: 0.9rem;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .add-training-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Training Form Modal */
+.training-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+  direction: rtl;
+}
+
+.training-form-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.training-form-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.training-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.exercises-list {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #f8fafc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.exercise-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.exercise-item:last-child {
+  border-bottom: none;
+}
+
+.no-exercises {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  margin: 0;
 }
 
 .trainings-list {
