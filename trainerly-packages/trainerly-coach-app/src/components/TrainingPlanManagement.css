@@ -727,15 +727,42 @@
   margin-bottom: 0;
   border-radius: var(--border-radius-lg);
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
   flex-wrap: nowrap;
+  gap: var(--space-3);
+  direction: rtl;
 }
 
-.card-header.clickable > div:first-child {
+.plan-info {
   flex: 1;
   min-width: 0;
+  direction: rtl;
+  text-align: right;
+}
+
+.plan-info .card-title {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.2;
+}
+
+.plan-info .card-subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  text-align: right;
 }
 
 .card-header.clickable .card-title {
@@ -743,6 +770,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.2;
 }
 
 .card-header.clickable:hover {
@@ -754,12 +787,20 @@
   align-items: center;
   gap: var(--space-2);
   flex-shrink: 0;
+  order: -1; /* Show arrow first in RTL layout */
 }
 
 .expand-icon {
   font-size: var(--font-size-lg);
   transition: var(--transition-base);
   color: var(--text-secondary);
+  font-weight: bold;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
 }
 
 .card.collapsed {

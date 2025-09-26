@@ -272,11 +272,14 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
                   className="card-header clickable"
                   onClick={() => toggleCardExpansion(exercise.exerciseId)}
                 >
-                  <div>
-                    <h3 className="card-title">{exercise.name}</h3>
-                  </div>
                   <div className="card-controls">
-                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                    <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+                  </div>
+                  <div className="exercise-info">
+                    <h3 className="card-title">{exercise.name}</h3>
+                    {!isExpanded && exercise.muscleGroup && (
+                      <p className="card-subtitle">{exercise.muscleGroup}</p>
+                    )}
                   </div>
                 </div>
 

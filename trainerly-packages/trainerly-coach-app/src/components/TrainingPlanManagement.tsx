@@ -534,11 +534,14 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   className="card-header clickable"
                   onClick={() => toggleCardExpansion(plan.planId)}
                 >
-                  <div>
-                    <h3 className="card-title">{plan.name}</h3>
-                  </div>
                   <div className="card-controls">
-                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                    <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+                  </div>
+                  <div className="plan-info">
+                    <h3 className="card-title">{plan.name}</h3>
+                    {!isExpanded && plan.description && (
+                      <p className="card-subtitle">{plan.description}</p>
+                    )}
                   </div>
                 </div>
 

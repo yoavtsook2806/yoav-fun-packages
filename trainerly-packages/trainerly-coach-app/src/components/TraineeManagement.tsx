@@ -289,11 +289,14 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                   className="card-header clickable"
                   onClick={() => toggleCardExpansion(trainee.trainerId)}
                 >
+                  <div className="card-controls">
+                    <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+                  </div>
                   <div className="trainee-info">
                     <h3 className="card-title">{trainee.nickname}</h3>
-                  </div>
-                  <div className="card-controls">
-                    <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                    {!isExpanded && trainee.email && (
+                      <p className="card-subtitle">{trainee.email}</p>
+                    )}
                   </div>
                 </div>
 
