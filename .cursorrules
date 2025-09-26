@@ -54,16 +54,17 @@ This is a monorepo containing multiple fun web applications and packages.
 - Server endpoints must be deployed before client can use them
 
 ## Bug Fix Protocol
-When the user writes "bug: ${packageName}" follow this EXACT workflow:
-1. **Write a failing test** that reproduces the bug
-2. **Verify the test fails** by running it
-3. **Fix the bug** with minimal changes
-4. **Run all tests** in the package to ensure everything passes (including the new test)
-5. **If the test you wrote is not good** (e.g., doesn't properly test the bug, has wrong assertions, etc.):
+When the user writes "bug:" (without specifying package name) follow this EXACT workflow:
+1. **Find the right package** - Analyze the bug description and codebase to identify which package(s) contain the issue
+2. **Write a failing test** that reproduces the bug
+3. **Verify the test fails** by running it
+4. **Fix the bug** with minimal changes
+5. **Run all tests** in the package to ensure everything passes (including the new test)
+6. **If the test you wrote is not good** (e.g., doesn't properly test the bug, has wrong assertions, etc.):
    - You can modify/rewrite the test
    - ALWAYS ensure the test fails BEFORE making the bug fix
    - ALWAYS ensure the test passes AFTER making the bug fix
-6. **If other tests fail** that used to pass:
+7. **If other tests fail** that used to pass:
    - Ask the user if we should change the test or try another fix
    - NEVER change previously passing tests without user approval
 
