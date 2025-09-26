@@ -250,8 +250,7 @@ export interface TrainerIdentifyResponse {
 export interface TrainerListResponse {
   items: Array<{
     trainerId: string;
-    firstName: string;
-    lastName: string;
+    nickname: string;
     email?: string;
     createdAt: string;
     plans?: string[];

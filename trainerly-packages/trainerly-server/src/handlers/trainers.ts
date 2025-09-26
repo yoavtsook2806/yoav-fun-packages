@@ -135,8 +135,7 @@ export const listTrainers = async (
     const response: TrainerListResponse = {
       items: trainers.map(trainer => ({
         trainerId: trainer.trainerId,
-        firstName: trainer.firstName,
-        lastName: trainer.lastName,
+        nickname: trainer.nickname,
         email: trainer.email,
         createdAt: trainer.createdAt,
         plans: trainer.plans || []
@@ -208,8 +207,7 @@ export const getTrainer = async (
     const response = {
       trainerId: trainer.trainerId,
       coachId: trainer.coachId,
-      firstName: trainer.firstName,
-      lastName: trainer.lastName,
+      nickname: trainer.nickname,
       email: trainer.email,
       createdAt: trainer.createdAt
     };
@@ -439,7 +437,7 @@ export const getTraineeCustomPlans = async (
       };
     }
 
-    const traineeName = `${trainee.firstName} ${trainee.lastName}`;
+    const traineeName = trainee.nickname;
     
     // Get custom plans for this trainee
     const customPlans = await db.getCustomTrainingPlansForTrainee(coachId, traineeName);

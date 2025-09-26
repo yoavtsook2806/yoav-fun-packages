@@ -3,8 +3,7 @@ import { Trainings, Exercise } from '../types';
 
 interface TraineeData {
   trainerId: string;
-  firstName: string;
-  lastName: string;
+  nickname: string;
   plans: string[];
   currentPlan?: {
     planId: string;
@@ -173,15 +172,14 @@ export const fetchTraineeData = async (traineeId: string, coachId?: string): Pro
           console.log('✅ Found trainer:', foundTrainer);
           traineeData = {
             trainerId: foundTrainer.trainerId,
-            firstName: foundTrainer.firstName,
-            lastName: foundTrainer.lastName,
+            nickname: foundTrainer.nickname,
             plans: foundTrainer.plans || [],
             currentPlan: null
           };
           console.log('📋 Found trainee with plans:', foundTrainer.plans);
         } else {
           console.error('❌ Trainer not found in response. Looking for ID:', traineeId);
-          console.error('Available trainers:', trainersData.items?.map((t: any) => ({ id: t.trainerId, name: `${t.firstName} ${t.lastName}` })));
+          console.error('Available trainers:', trainersData.items?.map((t: any) => ({ id: t.trainerId, name: t.nickname })));
         }
       } else {
         console.error('❌ Failed to fetch trainers:', trainersResponse.status, trainersResponse.statusText);
