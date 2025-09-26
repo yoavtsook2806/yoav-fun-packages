@@ -298,15 +298,15 @@ export const updateExercise = async (event: APIGatewayProxyEvent): Promise<APIGa
     }
 
     const requestData = JSON.parse(event.body || '{}');
-    const { name, short, note, link } = requestData;
+    const { name, muscleGroup, note, link } = requestData;
 
-    if (!name || !short) {
+    if (!name || !muscleGroup) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           error: 'VALIDATION_ERROR',
-          message: 'Exercise name and short description are required'
+          message: 'Name and muscle group are required'
         })
       };
     }
@@ -357,7 +357,7 @@ export const updateExercise = async (event: APIGatewayProxyEvent): Promise<APIGa
     const updatedExercise = {
       ...existingExercise,
       name,
-      short,
+      muscleGroup,
       note: note || '',
       link: link || '',
       updatedAt: new Date().toISOString()

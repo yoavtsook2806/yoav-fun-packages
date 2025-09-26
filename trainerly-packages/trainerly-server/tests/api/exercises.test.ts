@@ -68,7 +68,7 @@ describe('Exercise Management API', () => {
         pathParameters: { coachId: 'coach-id' },
         body: JSON.stringify({
           name: 'לחיצת חזה',
-          short: 'חזה'
+          muscleGroup: 'חזה אמצעי'
         })
       };
 
@@ -99,7 +99,7 @@ describe('Exercise Management API', () => {
       expect(result.statusCode).toBe(400);
       const body = JSON.parse(result.body);
       expect(body.error).toBe('VALIDATION_ERROR');
-      expect(body.message).toBe('Name and short description are required');
+      expect(body.message).toBe('Name and muscle group are required');
     });
 
     it('should require coachId in path', async () => {
@@ -274,7 +274,7 @@ describe('Exercise Management API', () => {
           pathParameters: { coachId: 'coach-id' },
           body: JSON.stringify({
             name: exerciseName,
-            short: 'תרגיל'
+            muscleGroup: 'ליבה'
           })
         };
 
@@ -298,7 +298,7 @@ describe('Exercise Management API', () => {
           name: 'לחיצת חזה, מ. יד, שיפוע 30*',
           link: 'https://www.youtube.com/watch?v=QDKxHpMQxlY&list=PLQaATYNsaV4VVx7I8HxsrFZAppDjvdxkp&index=16',
           note: 'מרפקים מעט מכופפים, חזה פתוח. לרדת בשליטה למתיחה יפה ולעלות חזרה עד שהמשקולות מעל הכתפיים',
-          short: 'חזה'
+          muscleGroup: 'חזה עליון'
         })
       };
 
@@ -327,10 +327,9 @@ describe('Exercise Management API', () => {
         pathParameters: { coachId: 'coach-id' },
         body: JSON.stringify({
           name: 'תרגיל חדש',
-          short: 'חדש',
+          muscleGroup: 'ליבה',
           link: '',
-          note: '',
-          muscleGroup: null
+          note: ''
         })
       };
 
@@ -344,7 +343,7 @@ describe('Exercise Management API', () => {
       
       const savedExercise = await mockDatabase.getExercise(body.exerciseId);
       expect(savedExercise.name).toBe('תרגיל חדש');
-      expect(savedExercise.short).toBe('חדש');
+      expect(savedExercise.muscleGroup).toBe('ליבה');
       expect(savedExercise.link).toBe('');
       expect(savedExercise.note).toBe('');
     });
