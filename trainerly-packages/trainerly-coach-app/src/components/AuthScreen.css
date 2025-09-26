@@ -170,7 +170,7 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* Tabs */
+/* Tabs - Professional Design */
 .auth-tabs {
   display: flex;
   background: var(--bg-secondary);
@@ -179,6 +179,7 @@
   padding: var(--space-1);
   margin-bottom: var(--space-8);
   gap: var(--space-1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .tab-button {
@@ -189,7 +190,7 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
   color: var(--text-secondary);
   display: flex;
@@ -197,12 +198,16 @@
   justify-content: center;
   gap: var(--space-2);
   font-family: var(--font-family-sans);
+  position: relative;
+  overflow: hidden;
 }
 
 .tab-button.active {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
   color: white;
-  box-shadow: var(--shadow-glow);
+  box-shadow: 
+    0 2px 8px rgba(79, 70, 229, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
@@ -210,6 +215,7 @@
   background: var(--bg-tertiary);
   color: var(--text-primary);
   transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .tab-icon {
@@ -280,6 +286,10 @@
   transition: var(--transition-base);
   outline: none;
   font-family: var(--font-family-sans);
+  box-sizing: border-box;
+  height: 58px; /* Consistent height for all inputs */
+  width: 100%;
+  line-height: 1.4;
 }
 
 .modern-input:focus {
@@ -295,6 +305,8 @@
 
 .modern-input.password-input {
   padding-left: var(--space-12);
+  /* Ensure consistent height with other inputs */
+  box-sizing: border-box;
 }
 
 /* Password Toggle Button */
@@ -370,17 +382,17 @@
   }
 }
 
-/* Buttons */
+/* Professional Auth Buttons */
 .primary-button {
   padding: var(--space-5) var(--space-8);
-  border: none;
-  border-radius: var(--border-radius-xl);
-  font-size: var(--font-size-lg);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
   color: white;
-  transition: var(--transition-base);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,38 +400,49 @@
   font-family: var(--font-family-sans);
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    0 2px 8px rgba(79, 70, 229, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.01em;
+  min-height: 52px;
 }
 
 .primary-button::before {
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .primary-button:hover::before {
-  left: 100%;
+  opacity: 1;
 }
 
 .primary-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 16px rgba(79, 70, 229, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  border-color: rgba(79, 70, 229, 0.4);
 }
 
 .primary-button:active {
   transform: translateY(0);
+  box-shadow: 
+    0 1px 4px rgba(79, 70, 229, 0.2),
+    inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .primary-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .button-icon {
@@ -427,6 +450,68 @@
 }
 
 /* Professional Auth Buttons */
+.btn-primary {
+  padding: var(--space-5) var(--space-8);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: white;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-sans);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 2px 8px rgba(79, 70, 229, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.01em;
+  min-height: 52px;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 16px rgba(79, 70, 229, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  border-color: rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 1px 4px rgba(79, 70, 229, 0.2),
+    inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .auth-button {
   width: 100%;
   margin-top: var(--space-6);

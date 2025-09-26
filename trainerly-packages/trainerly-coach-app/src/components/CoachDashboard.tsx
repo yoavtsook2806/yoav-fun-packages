@@ -146,7 +146,30 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
                     className="simple-manage-button"
                     onClick={() => setActiveSection('exercises')}
                   >
+                    <div className="manage-card-actions">
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add quick actions here
+                        }}
+                        title="הגדרות מהירות"
+                      >
+                        ⚙️
+                      </button>
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add info here
+                        }}
+                        title="מידע נוסף"
+                      >
+                        ℹ️
+                      </button>
+                    </div>
                     <div className="simple-button-icon">💪</div>
+                    <div className="manage-card-divider"></div>
                     <div className="simple-button-text">ניהול תרגילים</div>
                   </button>
 
@@ -154,7 +177,30 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
                     className="simple-manage-button"
                     onClick={() => setActiveSection('plans')}
                   >
+                    <div className="manage-card-actions">
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add quick actions here
+                        }}
+                        title="הגדרות מהירות"
+                      >
+                        ⚙️
+                      </button>
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add info here
+                        }}
+                        title="מידע נוסף"
+                      >
+                        ℹ️
+                      </button>
+                    </div>
                     <div className="simple-button-icon">📋</div>
+                    <div className="manage-card-divider"></div>
                     <div className="simple-button-text">תוכניות אימון</div>
                   </button>
 
@@ -162,7 +208,30 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
                     className="simple-manage-button"
                     onClick={() => setActiveSection('trainees')}
                   >
+                    <div className="manage-card-actions">
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add quick actions here
+                        }}
+                        title="הגדרות מהירות"
+                      >
+                        ⚙️
+                      </button>
+                      <button 
+                        className="manage-action-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Could add info here
+                        }}
+                        title="מידע נוסף"
+                      >
+                        ℹ️
+                      </button>
+                    </div>
                     <div className="simple-button-icon">👥</div>
+                    <div className="manage-card-divider"></div>
                     <div className="simple-button-text">ניהול מתאמנים</div>
                   </button>
 
