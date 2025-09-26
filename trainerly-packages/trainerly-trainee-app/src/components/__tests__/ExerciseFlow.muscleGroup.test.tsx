@@ -83,9 +83,9 @@ describe('ExerciseFlow - Muscle Group Display Bug', () => {
     const muscleGroup1 = screen.getByText('חזה עליון');
     const muscleGroup2 = screen.getByText('גב רחב');
     
-    // Check that they have the correct CSS class
-    expect(muscleGroup1).toHaveClass('exercise-row-muscle-group');
-    expect(muscleGroup2).toHaveClass('exercise-row-muscle-group');
+    // Check that they have the correct CSS class (now using exercise-row-name)
+    expect(muscleGroup1).toHaveClass('exercise-row-name');
+    expect(muscleGroup2).toHaveClass('exercise-row-name');
     
     // Check that they are visible (not hidden)
     expect(muscleGroup1).toBeVisible();
