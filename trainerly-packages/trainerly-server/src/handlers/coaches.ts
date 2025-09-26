@@ -553,6 +553,23 @@ export const copyAdminExercise = async (
       };
     }
 
+    // Check if coach already has an exercise with this name
+    const existingExercises = await db.getExercisesByCoach(coachId);
+    const nameExists = existingExercises.some(
+      exercise => exercise.name.toLowerCase() === adminExercise.name.toLowerCase()
+    );
+    
+    if (nameExists) {
+      return {
+        statusCode: 409,
+        headers,
+        body: JSON.stringify({
+          error: 'DUPLICATE_NAME',
+          message: 'Exercise with this name already exists'
+        })
+      };
+    }
+
     // Create a copy for the coach
     const copiedExercise = {
       ...adminExercise,
