@@ -16,9 +16,16 @@
     "build:server": "yarn workspace trainerly-server build",
     "build:trainerly": "yarn workspace trainerly-trainee-app build",
     "build:coach": "yarn workspace trainerly-coach-app build",
+    "build:all": "yarn build && yarn build:server && yarn build:trainerly && yarn build:coach",
     "preview": "yarn workspace matan-training preview",
     "deploy:server": "yarn workspace trainerly-server deploy",
-    "type-check": "yarn workspaces foreach run type-check"
+    "type-check": "yarn workspaces foreach run type-check",
+    "test": "node scripts/test-all.cjs",
+    "test:server": "yarn workspace trainerly-server test",
+    "test:coach": "yarn workspace trainerly-coach-app test",
+    "test:trainee": "yarn workspace trainerly-trainee-app test",
+    "test:watch": "yarn workspaces foreach -pi run test:watch",
+    "test:coverage": "yarn workspace trainerly-server test:coverage && yarn workspace trainerly-coach-app test:coverage && yarn workspace trainerly-trainee-app test:coverage"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
