@@ -277,7 +277,16 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to copy admin exercise: ${response.statusText}`);
+      let errorMessage = `Failed to copy admin exercise: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (parseError) {
+        // If we can't parse the error response, keep the generic message
+      }
+      throw new Error(errorMessage);
     }
 
     return response.json();
