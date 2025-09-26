@@ -4,6 +4,7 @@ import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
 import Modal from './Modal';
 import './AdminExerciseBank.css';
+import './Card.css';
 
 interface AdminExerciseBankProps {
   coachId: string;
@@ -115,24 +116,33 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
                 {filteredExercises.map((exercise) => {
                   const isExpanded = expandedCards.has(exercise.exerciseId);
                   return (
-                    <div key={exercise.exerciseId} className={`admin-exercise-card ${isExpanded ? 'expanded' : 'collapsed'}`}>
-                      <div
-                        className="exercise-header clickable"
-                        onClick={() => toggleCardExpansion(exercise.exerciseId)}
-                      >
-                        <h3 className="exercise-name">{exercise.name}</h3>
-                        <div className="card-controls">
+                    <div key={exercise.exerciseId} className={`card card-hoverable ${isExpanded ? 'card-expanded' : 'card-collapsed'}`}>
+                      <div className="card-header">
+                        <div 
+                          className="card-header-content"
+                          onClick={() => toggleCardExpansion(exercise.exerciseId)}
+                        >
+                          <h3 className="card-title">{exercise.name}</h3>
+                          <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+                        </div>
+                        <div className="card-actions">
                           <div className="admin-badge">מאמן מנהל</div>
-                          <span className="expand-icon">{isExpanded ? '🔽' : '🔼'}</span>
+                          <button 
+                            className="card-action-button"
+                            onClick={() => toggleCardExpansion(exercise.exerciseId)}
+                            title={isExpanded ? 'כווץ תרגיל' : 'הרחב תרגיל'}
+                          >
+                            {isExpanded ? '🔽' : '🔼'}
+                          </button>
                         </div>
                       </div>
 
                       {isExpanded && (
-                        <div className="exercise-details">
-                          <p className="exercise-muscle-group">🎯 {exercise.muscleGroup}</p>
-
+                        <div className="card-content">
                           {exercise.note && (
-                            <p className="exercise-note">{exercise.note}</p>
+                            <div className="exercise-note">
+                              <p>{exercise.note}</p>
+                            </div>
                           )}
 
                           {exercise.link && (
@@ -142,28 +152,33 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
                               </a>
                             </div>
                           )}
+                        </div>
+                      )}
 
-                          <div className="exercise-actions">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCopyExercise(exercise);
-                              }}
-                              disabled={copying === exercise.exerciseId}
-                              className="copy-exercise-btn"
-                            >
-                              {copying === exercise.exerciseId ? (
-                                <>
-                                  <span className="loading-spinner-small"></span>
-                                  מעתיק...
-                                </>
-                              ) : (
-                                <>
-                                  📋 העתק תרגיל
-                                </>
-                              )}
-                            </button>
+                      {isExpanded && (
+                        <div className="card-footer">
+                          <div className="card-meta">
+                            תרגיל מבנק המאמנים
                           </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCopyExercise(exercise);
+                            }}
+                            disabled={copying === exercise.exerciseId}
+                            className="copy-exercise-btn"
+                          >
+                            {copying === exercise.exerciseId ? (
+                              <>
+                                <span className="loading-spinner-small"></span>
+                                מעתיק...
+                              </>
+                            ) : (
+                              <>
+                                📋 העתק תרגיל
+                              </>
+                            )}
+                          </button>
                         </div>
                       )}
                     </div>
