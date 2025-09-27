@@ -122,7 +122,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="profile-form">
+      <form onSubmit={handleSubmit} className="profile-form profile-modal">
         <div className="form-group">
           <label className="form-label">שם מלא *</label>
           <div className="input-group">
