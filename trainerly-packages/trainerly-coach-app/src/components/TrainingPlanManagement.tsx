@@ -371,8 +371,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   </>
                 ) : (
                   <>
-                    <span className="btn-icon">➕</span>
-                    הוסף לאימון
+                    ➕
                   </>
                 )}
               </button>
@@ -401,11 +400,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           </div>
           <div className="exercise-info">
             <h3 className="card-title">{exercise.name}</h3>
-            {!isExpanded && (
-              <p className="card-subtitle">
-                🎯 {exercise.muscleGroup} • 🔢 {exercise.numberOfSets || 3} סטים • 🔁 {exercise.minimumNumberOfRepeasts || 8}-{exercise.maximumNumberOfRepeasts || 12} חזרות
-              </p>
-            )}
           </div>
         </div>
 
@@ -578,8 +572,8 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               <div className="trainings-section">
                 <div className="section-header">
                   <h3>אימונים בתוכנית</h3>
-                  <button type="button" onClick={addTraining} className="add-training-button" title="הוסף אימון">
-                    ➕
+                  <button type="button" onClick={addTraining} className="add-training-button">
+                    ➕ הוסף אימון
                   </button>
                 </div>
 
