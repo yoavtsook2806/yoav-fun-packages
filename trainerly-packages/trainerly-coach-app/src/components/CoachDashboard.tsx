@@ -130,7 +130,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
               <section className="logo-section">
                 <div className="logo-container">
                   <img 
-                    src="/TrainerlyLogo.png" 
+                    src="./TrainerlyLogo.png" 
                     alt="Trainerly" 
                     className="trainerly-logo"
                   />

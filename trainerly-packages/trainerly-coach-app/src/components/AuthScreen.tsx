@@ -211,7 +211,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           <div className="auth-header">
             <div className="auth-logo">
               <img
-                src="/TrainerlyLogo.png"
+                src="./TrainerlyLogo.png"
                 alt="Trainerly"
                 className="trainerly-logo"
               />
