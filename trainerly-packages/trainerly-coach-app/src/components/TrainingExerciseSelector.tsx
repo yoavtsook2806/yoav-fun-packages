@@ -16,6 +16,8 @@ interface TrainingExerciseSelectorProps {
   onExerciseAdd: (exercise: Exercise) => void;
   onExerciseUpdate: (exerciseId: string, updates: Partial<PrescribedExercise>) => void;
   onExerciseRemove: (exerciseId: string) => void;
+  onSave?: () => void;
+  trainingName?: string;
 }
 
 const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
@@ -25,7 +27,9 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
   trainingExercises,
   onExerciseAdd,
   onExerciseUpdate,
-  onExerciseRemove
+  onExerciseRemove,
+  onSave,
+  trainingName
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [muscleGroupFilter, setMuscleGroupFilter] = useState('');
@@ -320,7 +324,7 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="ניהול תרגילים"
+        title={trainingName ? `עריכת אימון: ${trainingName}` : "ניהול תרגילים"}
         icon="💪"
         size="xl"
       >
@@ -418,6 +422,28 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
               )}
             </div>
           </div>
+
+          {/* Save Button */}
+          {onSave && (
+            <div className="modal-actions">
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-secondary"
+              >
+                ביטול
+              </button>
+              <button
+                type="button"
+                onClick={onSave}
+                className="btn-primary"
+                disabled={trainingExercises.length === 0}
+              >
+                <span className="btn-icon">💾</span>
+                שמור אימון
+              </button>
+            </div>
+          )}
         </div>
       </Modal>
 

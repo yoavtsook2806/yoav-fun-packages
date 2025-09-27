@@ -188,13 +188,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     showSuccess('האימון נשמר בהצלחה');
   };
 
-  const openTrainingExerciseSelector = () => {
-    if (!currentTraining.name?.trim()) {
-      showError('יש להזין שם לאימון תחילה');
-      return;
-    }
-    setShowTrainingExerciseSelector(true);
-  };
 
   const addExerciseToCurrentTraining = (exercise: Exercise) => {
     // Check if exercise is already added
@@ -366,13 +359,13 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             </form>
       </Modal>
 
-      {/* Training Form Modal */}
+      {/* Training Form Modal - Just Name Input */}
       <Modal
         isOpen={showTrainingForm}
         onClose={() => setShowTrainingForm(false)}
         title={editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}
         icon="🏋️"
-        size="md"
+        size="sm"
       >
         <div className="training-form">
           <div className="form-group">
@@ -386,73 +379,25 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             />
           </div>
 
-          <div className="exercises-section">
-            <div className="section-header">
-              <h3>תרגילים באימון</h3>
-              <div className="exercises-count">
-                {currentTraining.exercises.length} תרגילים
-              </div>
-            </div>
-
-            <div className="exercise-selection-actions">
-              <button 
-                type="button" 
-                onClick={openTrainingExerciseSelector}
-                className="btn-primary"
-              >
-                <span className="btn-icon">💪</span>
-                בחר תרגילים
-              </button>
-            </div>
-
-            {currentTraining.exercises.length > 0 && (
-              <div className="selected-exercises-summary">
-                <h4>תרגילים שנבחרו:</h4>
-                <div className="exercises-list">
-                  {currentTraining.exercises.map((exercise, index) => (
-                    <div key={exercise.exerciseId} className="exercise-summary-item">
-                      <div className="exercise-info">
-                        <span className="exercise-name">{exercise.name}</span>
-                        <span className="exercise-details">
-                          🎯 {exercise.muscleGroup} • 
-                          🔢 {exercise.numberOfSets} סטים • 
-                          🔁 {exercise.minimumNumberOfRepeasts}-{exercise.maximumNumberOfRepeasts} חזרות
-                        </span>
-                      </div>
-                      <button 
-                        type="button" 
-                        onClick={() => removeExerciseFromCurrentTraining(exercise.exerciseId)}
-                        className="remove-exercise-btn"
-                        title="הסר תרגיל"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {currentTraining.exercises.length === 0 && (
-              <div className="empty-exercises">
-                <p>עדיין לא נבחרו תרגילים לאימון זה</p>
-                <p>השתמש בכפתור "בחר תרגילים" למעלה כדי להוסיף תרגילים</p>
-              </div>
-            )}
-          </div>
-
           <div className="form-actions">
             <button type="button" onClick={() => setShowTrainingForm(false)} className="btn-secondary">
               ביטול
             </button>
             <button 
               type="button" 
-              onClick={saveTraining} 
+              onClick={() => {
+                if (!currentTraining.name?.trim()) {
+                  showError('יש להזין שם לאימון');
+                  return;
+                }
+                setShowTrainingForm(false);
+                setShowTrainingExerciseSelector(true);
+              }} 
               className="btn-primary"
-              disabled={!currentTraining.name?.trim() || currentTraining.exercises.length === 0}
+              disabled={!currentTraining.name?.trim()}
             >
-              <span className="btn-icon">💾</span>
-              שמור אימון
+              <span className="btn-icon">💪</span>
+              בחר תרגילים
             </button>
           </div>
         </div>
@@ -467,6 +412,11 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
         onExerciseAdd={addExerciseToCurrentTraining}
         onExerciseUpdate={updateCurrentTrainingExercise}
         onExerciseRemove={removeExerciseFromCurrentTraining}
+        onSave={() => {
+          setShowTrainingExerciseSelector(false);
+          saveTraining();
+        }}
+        trainingName={currentTraining.name}
       />
 
       {/* Plans Grid */}

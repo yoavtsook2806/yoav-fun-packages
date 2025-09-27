@@ -464,12 +464,9 @@ export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<b
       console.log('✅ Cleared exercise history (no server data)');
     }
 
-    // 4. Load First-time Experience Flag
-    if (serverData.firstTimeExperienceCompleted !== undefined) {
-      localStorage.setItem('trainerly_first_time_completed', 
-        JSON.stringify(serverData.firstTimeExperienceCompleted));
-      console.log('✅ Loaded first-time experience flag from server');
-    }
+    // 4. First-time Experience Flag (deprecated - now handled per-training via exercise defaults)
+    // The FTE is now determined per-training based on exercise defaults, not a global flag
+    console.log('ℹ️ First-time experience is now handled per-training via exercise defaults');
 
     // 5. Load Custom Exercise Data with cleanup
     const serverCustomData = serverData.customExerciseData || {};
@@ -524,9 +521,7 @@ export const syncAllTraineeDataToServer = async (traineeId: string): Promise<boo
       exerciseDefaults: getExerciseDefaults(),
       trainingProgress: getTrainingProgress(),
       exerciseHistory: getExerciseHistory(),
-      firstTimeExperienceCompleted: JSON.parse(
-        localStorage.getItem('trainerly_first_time_completed') || 'false'
-      ),
+      firstTimeExperienceCompleted: false, // Deprecated - FTE is now handled per-training via exercise defaults
       customExerciseData: JSON.parse(
         localStorage.getItem(CUSTOM_EXERCISE_DATA_KEY) || '{}'
       )

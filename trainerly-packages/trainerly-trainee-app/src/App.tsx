@@ -540,9 +540,7 @@ function App() {
       saveExerciseDefaults(exerciseName, currentTrainingPlan.planId, defaults.weight, defaults.timeToRest, defaults.repeats);
     });
 
-    // Mark first-time experience as completed
-    localStorage.setItem('trainerly_first_time_completed', 'true');
-    console.log('✅ First-time experience marked as completed');
+    console.log('✅ First-time experience completed for training:', firstTimeTrainingType);
 
     // Sync all data to server if authenticated
     if (traineeId) {
