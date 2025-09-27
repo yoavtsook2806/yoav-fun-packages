@@ -22,6 +22,11 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
 }) => {
   const [containerWidth, setContainerWidth] = useState(320);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // State for showing/hiding each property
+  const [showWeight, setShowWeight] = useState(true);
+  const [showReps, setShowReps] = useState(true);
+  const [showRest, setShowRest] = useState(true);
 
   // Update container width on mount and resize
   useEffect(() => {
@@ -140,16 +145,43 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
 
       <div className="graph-legend">
         <div className="legend-item">
-          <div className="legend-color weight-color"></div>
-          <span>משקל</span>
+          <input
+            type="checkbox"
+            id="weight-checkbox"
+            checked={showWeight}
+            onChange={(e) => setShowWeight(e.target.checked)}
+            className="legend-checkbox"
+          />
+          <label htmlFor="weight-checkbox" className="legend-label">
+            <div className="legend-color weight-color"></div>
+            <span>משקל</span>
+          </label>
         </div>
         <div className="legend-item">
-          <div className="legend-color reps-color"></div>
-          <span>חזרות</span>
+          <input
+            type="checkbox"
+            id="reps-checkbox"
+            checked={showReps}
+            onChange={(e) => setShowReps(e.target.checked)}
+            className="legend-checkbox"
+          />
+          <label htmlFor="reps-checkbox" className="legend-label">
+            <div className="legend-color reps-color"></div>
+            <span>חזרות</span>
+          </label>
         </div>
         <div className="legend-item">
-          <div className="legend-color rest-color"></div>
-          <span>קושי מנוחה</span>
+          <input
+            type="checkbox"
+            id="rest-checkbox"
+            checked={showRest}
+            onChange={(e) => setShowRest(e.target.checked)}
+            className="legend-checkbox"
+          />
+          <label htmlFor="rest-checkbox" className="legend-label">
+            <div className="legend-color rest-color"></div>
+            <span>קושי מנוחה</span>
+          </label>
         </div>
       </div>
 
@@ -178,61 +210,73 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
 
 
           {/* Data lines */}
-          <path
-            d={weightPath}
-            fill="none"
-            stroke="#f59e0b"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d={repsPath}
-            fill="none"
-            stroke="#3b82f6"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d={restPath}
-            fill="none"
-            stroke="#10b981"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {showWeight && (
+            <path
+              d={weightPath}
+              fill="none"
+              stroke="#f59e0b"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+          {showReps && (
+            <path
+              d={repsPath}
+              fill="none"
+              stroke="#3b82f6"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+          {showRest && (
+            <path
+              d={restPath}
+              fill="none"
+              stroke="#10b981"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
 
           {/* Data points */}
           {dataPoints.map((point, index) => (
             <g key={index}>
               {/* Weight point */}
-              <circle
-                cx={xScale(index)}
-                cy={yScale(point.weight, weightScale)}
-                r="4"
-                fill="#f59e0b"
-                stroke="white"
-                strokeWidth="2"
-              />
+              {showWeight && (
+                <circle
+                  cx={xScale(index)}
+                  cy={yScale(point.weight, weightScale)}
+                  r="4"
+                  fill="#f59e0b"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              )}
               {/* Reps point */}
-              <circle
-                cx={xScale(index)}
-                cy={yScale(point.reps, repsScale)}
-                r="4"
-                fill="#3b82f6"
-                stroke="white"
-                strokeWidth="2"
-              />
+              {showReps && (
+                <circle
+                  cx={xScale(index)}
+                  cy={yScale(point.reps, repsScale)}
+                  r="4"
+                  fill="#3b82f6"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              )}
               {/* Rest difficulty point */}
-              <circle
-                cx={xScale(index)}
-                cy={yScale(point.restDifficulty, restScale)}
-                r="4"
-                fill="#10b981"
-                stroke="white"
-                strokeWidth="2"
-              />
+              {showRest && (
+                <circle
+                  cx={xScale(index)}
+                  cy={yScale(point.restDifficulty, restScale)}
+                  r="4"
+                  fill="#10b981"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+              )}
             </g>
           ))}
 
@@ -263,41 +307,47 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
             return (
               <g key={`y-slot-${i}`}>
                 {/* Weight values */}
-                <text
-                  x={margin.left - 15}
-                  y={yPosition}
-                  textAnchor="end"
-                  fontSize="9"
-                  fill="#f59e0b"
-                  fontWeight="bold"
-                  dominantBaseline="middle"
-                >
-                  {Math.round(weightValue * 10) / 10}
-                </text>
+                {showWeight && (
+                  <text
+                    x={margin.left - 15}
+                    y={yPosition}
+                    textAnchor="end"
+                    fontSize="9"
+                    fill="#f59e0b"
+                    fontWeight="bold"
+                    dominantBaseline="middle"
+                  >
+                    {Math.round(weightValue * 10) / 10}
+                  </text>
+                )}
                 {/* Reps values */}
-                <text
-                  x={margin.left - 35}
-                  y={yPosition}
-                  textAnchor="end"
-                  fontSize="9"
-                  fill="#3b82f6"
-                  fontWeight="bold"
-                  dominantBaseline="middle"
-                >
-                  {Math.round(repsValue * 10) / 10}
-                </text>
+                {showReps && (
+                  <text
+                    x={margin.left - 35}
+                    y={yPosition}
+                    textAnchor="end"
+                    fontSize="9"
+                    fill="#3b82f6"
+                    fontWeight="bold"
+                    dominantBaseline="middle"
+                  >
+                    {Math.round(repsValue * 10) / 10}
+                  </text>
+                )}
                 {/* Rest difficulty values */}
-                <text
-                  x={margin.left - 55}
-                  y={yPosition}
-                  textAnchor="end"
-                  fontSize="9"
-                  fill="#10b981"
-                  fontWeight="bold"
-                  dominantBaseline="middle"
-                >
-                  {Math.round(restValue)}
-                </text>
+                {showRest && (
+                  <text
+                    x={margin.left - 55}
+                    y={yPosition}
+                    textAnchor="end"
+                    fontSize="9"
+                    fill="#10b981"
+                    fontWeight="bold"
+                    dominantBaseline="middle"
+                  >
+                    {Math.round(restValue)}
+                  </text>
+                )}
                 {/* Horizontal grid line */}
                 <line
                   x1={margin.left}
