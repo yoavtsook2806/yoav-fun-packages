@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import { Exercise } from '../services/cachedApiService';
 
-interface ExerciseGroupViewProps {
-  exercises: Exercise[];
-  onExerciseAction?: (exercise: Exercise, action: string) => void;
-  renderExerciseCard: (exercise: Exercise) => React.ReactNode;
+interface BaseExercise {
+  exerciseId?: string;
+  name: string;
+  muscleGroup: string;
+}
+
+interface ExerciseGroupViewProps<T extends BaseExercise = Exercise> {
+  exercises: T[];
+  onExerciseAction?: (exercise: T, action: string) => void;
+  renderExerciseCard: (exercise: T) => React.ReactNode;
   showCopyButton?: boolean;
   copiedExercises?: Set<string>;
   copying?: string | null;
 }
 
-interface MuscleGroupData {
+interface MuscleGroupData<T extends BaseExercise = Exercise> {
   name: string;
-  exercises: Exercise[];
+  exercises: T[];
   count: number;
 }
 
-const ExerciseGroupView: React.FC<ExerciseGroupViewProps> = ({
+const ExerciseGroupView = <T extends BaseExercise = Exercise>({
   exercises,
   renderExerciseCard
-}) => {
+}: ExerciseGroupViewProps<T>) => {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   // Group exercises by muscle group
-  const muscleGroups: MuscleGroupData[] = exercises.reduce((groups, exercise) => {
+  const muscleGroups: MuscleGroupData<T>[] = exercises.reduce((groups, exercise) => {
     const muscleGroup = exercise.muscleGroup || 'לא מוגדר';
     const existingGroup = groups.find(g => g.name === muscleGroup);
     
@@ -39,7 +45,7 @@ const ExerciseGroupView: React.FC<ExerciseGroupViewProps> = ({
     }
     
     return groups;
-  }, [] as MuscleGroupData[])
+  }, [] as MuscleGroupData<T>[])
   .sort((a, b) => a.name.localeCompare(b.name, 'he')); // Sort alphabetically in Hebrew
 
   const toggleGroup = (groupName: string) => {

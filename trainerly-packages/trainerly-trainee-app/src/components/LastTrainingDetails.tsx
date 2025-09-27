@@ -4,10 +4,11 @@ import ExerciseModal from './ExerciseModal';
 
 interface TrainingDetailedProps {
   exerciseName: string;
+  trainingPlanId: string;
   onClose: () => void;
 }
 
-const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, onClose }) => {
+const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, trainingPlanId, onClose }) => {
   const lastEntry = getExerciseLastEntry(exerciseName);
 
   if (!lastEntry) {
@@ -66,8 +67,8 @@ const TrainingDetailed: React.FC<TrainingDetailedProps> = ({ exerciseName, onClo
           <div className="sets-grid">
             {lastEntry.setsData.map((setData, index) => {
               // Get the target values that were used for this training
-              const targetWeight = getDefaultWeight(exerciseName) || lastEntry.weight;
-              const targetRepeats = getDefaultRepeats(exerciseName) || lastEntry.repeats;
+              const targetWeight = getDefaultWeight(exerciseName, trainingPlanId) || lastEntry.weight;
+              const targetRepeats = getDefaultRepeats(exerciseName, trainingPlanId) || lastEntry.repeats;
 
               // Check if this set met the targets
               const weightSuccess = !targetWeight || !setData.weight || setData.weight >= targetWeight;

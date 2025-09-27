@@ -174,8 +174,7 @@ export const fetchTraineeData = async (traineeId: string, coachId?: string): Pro
     
     let traineeData: TraineeData = {
       trainerId: traineeId,
-      firstName: '',
-      lastName: '',
+      nickname: '',
       plans: [],
       currentPlan: null
     };

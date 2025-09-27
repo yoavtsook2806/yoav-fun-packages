@@ -167,8 +167,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleConfirmEndExercise = () => {
     // Mark exercise as completed with all sets done at target values
-    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName) || 0;
-    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts;
+    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName, trainingPlanId) || 0;
+    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName, trainingPlanId) || currentExercise.minimumNumberOfRepeasts;
     
     // Create sets data for all remaining sets with target values
     const completedSetsData = [];
@@ -203,8 +203,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   // New finish exercise options handlers
   const handleFinishAsSuccess = () => {
     // If we're not at the last set, complete all remaining sets with target values
-    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName) || 0;
-    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts;
+    const targetWeight = currentExerciseState.weight || getDefaultWeight(currentExerciseName, trainingPlanId) || 0;
+    const targetRepeats = currentExerciseState.repeats || getDefaultRepeats(currentExerciseName, trainingPlanId) || currentExercise.minimumNumberOfRepeasts;
     
     // Get existing sets data and fill remaining sets
     const existingSetsData = currentExerciseState.setsData || [];
@@ -243,8 +243,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
       } else {
         // Fill missing sets with default values
         editingData.push({
-          weight: currentExerciseState.weight || getDefaultWeight(currentExerciseName),
-          repeats: currentExerciseState.repeats || getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts
+          weight: currentExerciseState.weight || getDefaultWeight(currentExerciseName, trainingPlanId),
+          repeats: currentExerciseState.repeats || getDefaultRepeats(currentExerciseName, trainingPlanId) || currentExercise.minimumNumberOfRepeasts
         });
       }
     }
@@ -296,8 +296,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         editingData.push({ ...currentSetsData[i] });
       } else {
         editingData.push({
-          weight: getDefaultWeight(currentExerciseName),
-          repeats: getDefaultRepeats(currentExerciseName) || currentExercise.minimumNumberOfRepeasts
+          weight: getDefaultWeight(currentExerciseName, trainingPlanId),
+          repeats: getDefaultRepeats(currentExerciseName, trainingPlanId) || currentExercise.minimumNumberOfRepeasts
         });
       }
     }
