@@ -102,8 +102,8 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
     const padding = maxDistance * 0.2; // 20% padding
     
     return {
-      min: Math.max(0, avg - maxDistance - padding),
-      max: avg + maxDistance + padding,
+      min: Math.floor(Math.max(0, avg - maxDistance - padding)), // Floor the minimum
+      max: Math.ceil(avg + maxDistance + padding), // Ceil the maximum
       avg
     };
   };
@@ -317,7 +317,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
                     fontWeight="bold"
                     dominantBaseline="middle"
                   >
-                    {Math.round(weightValue * 10) / 10}
+                    {Math.round(weightValue)}
                   </text>
                 )}
                 {/* Reps values */}
@@ -331,7 +331,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
                     fontWeight="bold"
                     dominantBaseline="middle"
                   >
-                    {Math.round(repsValue * 10) / 10}
+                    {Math.round(repsValue)}
                   </text>
                 )}
                 {/* Rest difficulty values */}
