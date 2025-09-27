@@ -21,23 +21,8 @@ describe('EditTrainingPlan - Bug Fixes', () => {
       planId: 'plan-123',
       name: 'Test Plan',
       description: 'Test Description',
-      trainings: [
-        {
-          trainingId: 'training-1',
-          name: 'Training 1',
-          exercises: [
-            {
-              exerciseId: 'ex-1',
-              name: 'Push ups',
-              sets: 3,
-              reps: 10,
-              weight: 0,
-              restTime: 60,
-              notes: ''
-            }
-          ]
-        }
-      ]
+      trainingsCount: 1,
+      createdAt: '2023-01-01T00:00:00.000Z'
     },
     isOpen: true,
     onClose: vi.fn(),
@@ -50,21 +35,28 @@ describe('EditTrainingPlan - Bug Fixes', () => {
     // Mock successful API responses
     mockCachedApiService.getTrainingPlan.mockResolvedValue({
       planId: 'plan-123',
+      coachId: 'coach-123',
       name: 'Test Plan',
       description: 'Test Description',
+      createdAt: '2023-01-01T00:00:00.000Z',
+      updatedAt: '2023-01-01T00:00:00.000Z',
       trainings: [
         {
           trainingId: 'training-1',
           name: 'Training 1',
+          order: 0,
           exercises: [
             {
               exerciseId: 'ex-1',
+              exerciseName: 'Push ups',
               name: 'Push ups',
-              sets: 3,
-              reps: 10,
-              weight: 0,
-              restTime: 60,
-              notes: ''
+              muscleGroup: 'Chest',
+              numberOfSets: 3,
+              minimumNumberOfRepeasts: 10,
+              maximumNumberOfRepeasts: 10,
+              minimumTimeToRest: 60,
+              maximumTimeToRest: 60,
+              prescriptionNote: ''
             }
           ]
         }
@@ -77,9 +69,12 @@ describe('EditTrainingPlan - Bug Fixes', () => {
           exerciseId: 'ex-1',
           name: 'Push ups',
           muscleGroup: 'Chest',
-          coachId: 'coach-123'
+          coachId: 'coach-123',
+          createdAt: '2023-01-01T00:00:00.000Z'
         }
-      ]
+      ],
+      fromCache: false,
+      timestamp: Date.now()
     });
   });
 
@@ -150,8 +145,11 @@ describe('EditTrainingPlan - Bug Fixes', () => {
 
       mockCachedApiService.getTrainingPlan.mockResolvedValue({
         planId: 'plan-123',
+        coachId: 'coach-123',
         name: 'Test Plan',
         description: 'Test Description',
+        createdAt: '2023-01-01T00:00:00.000Z',
+        updatedAt: '2023-01-01T00:00:00.000Z',
         trainings: []
       });
 

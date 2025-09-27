@@ -34,6 +34,7 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     note: 'תרגיל מצוין',
     link: '',
     isAdminExercise: true,
+    coachId: '',
     createdAt: '2023-01-01T00:00:00.000Z'
   };
 
@@ -56,12 +57,14 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     // Default API responses
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: [mockAdminExercise],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
     
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [mockCoachExercise],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
   });
 
@@ -83,7 +86,8 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     // ARRANGE: Mock that the coach has the exercise with originalExerciseId
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [mockCoachExercise], // This exercise has originalExerciseId: 'admin-exercise-1'
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // ACT: Render the component (simulating a fresh page load/refresh)
@@ -126,16 +130,18 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [mockCoachExercise, serverCopiedExercise],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: [
         mockAdminExercise,
-        { ...mockAdminExercise, exerciseId: 'admin-exercise-2', name: 'תרגיל נוסף' },
-        { ...mockAdminExercise, exerciseId: 'admin-exercise-old', name: 'תרגיל ישן' }
+        { ...mockAdminExercise, exerciseId: 'admin-exercise-2', name: 'תרגיל נוסף', coachId: '' },
+        { ...mockAdminExercise, exerciseId: 'admin-exercise-old', name: 'תרגיל ישן', coachId: '' }
       ],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // ACT: Render the component
@@ -171,7 +177,8 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [], // No copied exercises initially
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // Mock successful copy operation
@@ -217,7 +224,8 @@ describe('AdminExerciseBank - Persistent Copy Indication', () => {
     // ACT 2: Simulate refresh by updating mock data and re-rendering
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [mockCoachExercise], // Now the coach has the copied exercise
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
 
     // Simulate localStorage having the data from previous session

@@ -35,6 +35,7 @@ describe('AdminExerciseBank - Debug Copy Indication', () => {
     note: 'תרגיל מצוין',
     link: '',
     isAdminExercise: true,
+    coachId: '',
     createdAt: '2023-01-01T00:00:00.000Z'
   };
 
@@ -57,12 +58,14 @@ describe('AdminExerciseBank - Debug Copy Indication', () => {
     // Default API responses
     mockCachedApiService.getAdminExercises.mockResolvedValue({
       data: [mockAdminExercise],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
     
     mockCachedApiService.getExercises.mockResolvedValue({
       data: [mockCoachExercise],
-      fromCache: false
+      fromCache: false,
+      timestamp: Date.now()
     });
   });
 
