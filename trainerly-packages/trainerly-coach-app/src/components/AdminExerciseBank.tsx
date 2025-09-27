@@ -36,15 +36,37 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
   useEffect(() => {
     if (isOpen) {
       loadAdminExercises();
+    }
+  }, [isOpen, coachId]);
+
+  // Load copied exercises when admin exercises are loaded
+  useEffect(() => {
+    if (isOpen) {
       loadCopiedExercises();
     }
+  }, [isOpen, coachId]);
 
-    // Listen for cache updates
+  // Listen for cache updates
+  useEffect(() => {
     const handleCacheUpdate = (event: CustomEvent) => {
-      const { cacheKey, data } = event.detail;
+      const { cacheKey, data, coachId: eventCoachId } = event.detail;
       if (cacheKey === 'admin_exercises') {
         console.log('🔄 Admin exercises updated from background sync');
         setAdminExercises(data);
+      }
+      // Listen for coach exercises updates to refresh copied exercises
+      if (cacheKey === 'exercises' && eventCoachId === coachId) {
+        const coachExercises = data;
+        const copiedAdminExerciseIds = coachExercises
+          .filter((exercise: Exercise) => exercise.originalExerciseId)
+          .map((exercise: Exercise) => exercise.originalExerciseId!);
+        
+        setCopiedExercises(new Set(copiedAdminExerciseIds));
+        
+        // Update localStorage
+        if (copiedAdminExerciseIds.length > 0) {
+          localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify(copiedAdminExerciseIds));
+        }
       }
     };
 
@@ -53,12 +75,13 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     return () => {
       window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
     };
-  }, [isOpen, coachId]);
+  }, [coachId]);
 
   const loadAdminExercises = async () => {
     try {
       const result = await cachedApiService.getAdminExercises(token, { backgroundUpdate: true });
       setAdminExercises(result.data);
+      
       
       // Only show loading if data didn't come from cache
       if (!result.fromCache) {
@@ -74,37 +97,22 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
 
   const loadCopiedExercises = async () => {
     try {
-      console.log('🔍 Loading copied exercises for coach:', coachId);
-      
-      // Load from localStorage for immediate UI feedback
-      const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
-      const localCopiedIds = stored ? JSON.parse(stored) : [];
-      console.log('💾 Local copied IDs:', localCopiedIds);
-      
-      // Load coach's exercises to check for server-side copied exercises
-      const coachExercisesResult = await cachedApiService.getExercises(coachId, token);
+      // CONSISTENT DATA FLOW: Load from cache first, then background update from server
+      const coachExercisesResult = await cachedApiService.getExercises(coachId, token, { backgroundUpdate: true });
       const coachExercises = coachExercisesResult.data;
-      console.log('🏋️ Coach exercises count:', coachExercises.length);
       
-      // Find exercises that were copied from admin exercises (have originalExerciseId)
-      const exercisesWithOriginal = coachExercises.filter(exercise => exercise.originalExerciseId);
-      console.log('🔗 Exercises with originalExerciseId:', exercisesWithOriginal.map(e => ({
-        name: e.name,
-        originalExerciseId: e.originalExerciseId
-      })));
+      // SIMPLE LOGIC: Find all originalExerciseId values from coach exercises
+      // These are the admin exercise IDs that should show as "copied"
+      const copiedAdminExerciseIds = coachExercises
+        .filter(exercise => exercise.originalExerciseId) // Has originalExerciseId
+        .map(exercise => exercise.originalExerciseId!); // Get the admin exercise ID
       
-      const serverCopiedIds = exercisesWithOriginal.map(exercise => exercise.originalExerciseId!);
       
-      // Combine local and server copied IDs
-      const allCopiedIds = [...new Set([...localCopiedIds, ...serverCopiedIds])];
+      setCopiedExercises(new Set(copiedAdminExerciseIds));
       
-      setCopiedExercises(new Set(allCopiedIds));
-      console.log('📋 Final copied exercises - Local:', localCopiedIds, 'Server:', serverCopiedIds, 'Combined:', allCopiedIds);
-      
-      // Update localStorage with server data for consistency
-      if (serverCopiedIds.length > 0) {
-        localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify(allCopiedIds));
-        console.log('💾 Updated localStorage with server data');
+      // Also save to localStorage for immediate feedback on future loads
+      if (copiedAdminExerciseIds.length > 0) {
+        localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify(copiedAdminExerciseIds));
       }
     } catch (error) {
       console.error('❌ Failed to load copied exercises:', error);
@@ -114,7 +122,6 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
         if (stored) {
           const copiedIds = JSON.parse(stored);
           setCopiedExercises(new Set(copiedIds));
-          console.log('🔄 Fallback to localStorage:', copiedIds);
         }
       } catch (fallbackError) {
         console.error('❌ Failed to load from localStorage fallback:', fallbackError);
@@ -144,16 +151,19 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
       console.log('✅ Copy operation completed:', copiedExercise);
       showSuccess(`תרגיל "${exerciseData.name}" הועתק בהצלחה!`);
 
-      // Mark exercise as copied and persist to localStorage
+      // Mark admin exercise as copied (immediate UI feedback)
       const newCopiedExercises = new Set([...copiedExercises, editingExercise.exerciseId]);
       setCopiedExercises(newCopiedExercises);
       
-      // Persist copied exercises to localStorage for persistence after refresh
+      
+      // Persist to localStorage for immediate feedback on future loads
       try {
         localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify([...newCopiedExercises]));
       } catch (storageError) {
         console.warn('Failed to persist copied exercises to localStorage:', storageError);
       }
+
+      // The cache update listener will automatically refresh copied exercises when server data comes back
 
       if (onExerciseCopied) {
         onExerciseCopied(copiedExercise);
@@ -166,7 +176,6 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
       const errorMsg = err instanceof Error ? err.message : 'שגיאה בהעתקת התרגיל';
       showError(errorMsg);
     } finally {
-      console.log('🏁 Copy operation finished, clearing loading state');
       setCopying(null);
     }
   };
@@ -189,6 +198,32 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
           </div>
           <div className="card-actions">
             <div className="admin-badge">מאמן מנהל</div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopyExercise(exercise);
+              }}
+              disabled={copying === exercise.exerciseId || copiedExercises.has(exercise.exerciseId)}
+              className={`copy-exercise-btn-compact ${copiedExercises.has(exercise.exerciseId) ? 'copied' : ''}`}
+              title={copiedExercises.has(exercise.exerciseId) ? 'תרגיל הועתק' : 'העתק תרגיל'}
+            >
+              {copying === exercise.exerciseId ? (
+                <>
+                  <span className="loading-spinner-small"></span>
+                  <span>מעתיק</span>
+                </>
+              ) : copiedExercises.has(exercise.exerciseId) ? (
+                <>
+                  <span>✅</span>
+                  <span>הועתק</span>
+                </>
+              ) : (
+                <>
+                  <span>📄</span>
+                  <span>העתק</span>
+                </>
+              )}
+            </button>
             <button 
               className="card-action-button"
               onClick={() => toggleCardExpansion(exercise.exerciseId)}
@@ -222,29 +257,6 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
             <div className="card-meta">
               תרגיל מבנק המאמנים
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCopyExercise(exercise);
-              }}
-              disabled={copying === exercise.exerciseId || copiedExercises.has(exercise.exerciseId)}
-              className={`copy-exercise-btn ${copiedExercises.has(exercise.exerciseId) ? 'copied' : ''}`}
-            >
-              {copying === exercise.exerciseId ? (
-                <>
-                  <span className="loading-spinner-small"></span>
-                  מעתיק...
-                </>
-              ) : copiedExercises.has(exercise.exerciseId) ? (
-                <>
-                  ✅ הועתק
-                </>
-              ) : (
-                <>
-                  📋 העתק תרגיל
-                </>
-              )}
-            </button>
           </div>
         )}
       </div>

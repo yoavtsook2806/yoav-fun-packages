@@ -412,6 +412,13 @@ export class DatabaseService {
   // Exercise management methods
   async saveExercise(exercise: any): Promise<boolean> {
     try {
+      console.log('🔍 DB DEBUG: Saving exercise with data:', {
+        exerciseId: exercise.exerciseId,
+        name: exercise.name,
+        originalExerciseId: exercise.originalExerciseId,
+        hasOriginalExerciseId: !!exercise.originalExerciseId
+      });
+      
       const command = new PutCommand({
         TableName: this.getTableName('exercises'),
         Item: exercise
@@ -435,7 +442,21 @@ export class DatabaseService {
       });
       
       const result = await this.client.send(command);
-      return result.Items || [];
+      const exercises = result.Items || [];
+      
+      // DEBUG: Log exercises with originalExerciseId
+      const exercisesWithOriginal = exercises.filter(ex => ex.originalExerciseId);
+      if (exercisesWithOriginal.length > 0) {
+        console.log('🔍 DB DEBUG: Found exercises with originalExerciseId:', exercisesWithOriginal.map(ex => ({
+          name: ex.name,
+          exerciseId: ex.exerciseId,
+          originalExerciseId: ex.originalExerciseId
+        })));
+      } else {
+        console.log('🔍 DB DEBUG: No exercises found with originalExerciseId for coach:', coachId);
+      }
+      
+      return exercises;
     } catch (error) {
       console.error('❌ Error getting exercises by coach:', error);
       return [];

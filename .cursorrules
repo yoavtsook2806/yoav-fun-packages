@@ -55,6 +55,39 @@ This is a monorepo containing multiple fun web applications and packages.
 - **This includes**: API handlers, database schema changes, types, constants, services
 - **No exceptions**: Even small changes require deployment for client functionality
 
+## CONSISTENT DATA FLOW PATTERN
+**MANDATORY**: All data loading in the app must follow this exact pattern:
+1. **Load from cache first** - Show cached data immediately for fast UI
+2. **Background fetch from server** - Use `{ backgroundUpdate: true }` option
+3. **Listen for cache updates** - Use `cacheUpdated` event listener to update UI when server data arrives
+4. **Update state from server data** - Only update UI state when server data differs from cache
+
+### Implementation Pattern:
+```typescript
+// 1. Load data with background update
+const result = await cachedApiService.getData(id, token, { backgroundUpdate: true });
+setData(result.data); // Show cached data immediately
+
+// 2. Listen for cache updates
+useEffect(() => {
+  const handleCacheUpdate = (event: CustomEvent) => {
+    const { cacheKey, data, coachId: eventCoachId } = event.detail;
+    if (cacheKey === 'your_cache_key' && eventCoachId === coachId) {
+      setData(data); // Update UI when server data arrives
+    }
+  };
+  window.addEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+  return () => window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+}, [coachId]);
+```
+
+### Rules:
+- **NEVER use `forceRefresh: true`** - This breaks the consistent flow
+- **NEVER manually refresh data** after mutations - Let the cache system handle it
+- **ALWAYS use `backgroundUpdate: true`** for data loading
+- **ALWAYS add cache update listeners** for dynamic data
+- **Apply this pattern to ALL screens** in the app consistently
+
 ## Bug Fix Protocol
 When the user writes "bug:" (without specifying package name) follow this EXACT workflow:
 1. **Find the right package** - Analyze the bug description and codebase to identify which package(s) contain the issue

@@ -603,6 +603,13 @@ export const copyAdminExercise = async (
       createdAt: new Date().toISOString()
     };
 
+    console.log('🔍 DEBUG: About to save copied exercise:', {
+      exerciseId: copiedExercise.exerciseId,
+      name: copiedExercise.name,
+      originalExerciseId: copiedExercise.originalExerciseId,
+      coachId: copiedExercise.coachId
+    });
+    
     const success = await db.saveExercise(copiedExercise);
     if (!success) {
       return {
@@ -614,6 +621,8 @@ export const copyAdminExercise = async (
         })
       };
     }
+    
+    console.log('✅ DEBUG: Copied exercise saved successfully with originalExerciseId:', copiedExercise.originalExerciseId);
 
     return {
       statusCode: 201,

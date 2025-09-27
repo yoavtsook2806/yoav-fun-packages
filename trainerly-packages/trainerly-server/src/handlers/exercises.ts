@@ -144,7 +144,8 @@ export const listExercises = async (
         note: exercise.note,
         short: exercise.short,
         muscleGroup: exercise.muscleGroup,
-        createdAt: exercise.createdAt
+        createdAt: exercise.createdAt,
+        originalExerciseId: exercise.originalExerciseId // Include originalExerciseId for copy indication
       }))
     };
 

@@ -260,6 +260,11 @@ class CachedApiService {
     const updatedExercises = [...cachedExercises, copiedExercise];
     cacheService.set(coachId, CACHE_KEYS.EXERCISES, updatedExercises);
     
+    // Dispatch cache update event so UI components can update
+    window.dispatchEvent(new CustomEvent('cacheUpdated', {
+      detail: { cacheKey: CACHE_KEYS.EXERCISES, coachId, data: updatedExercises }
+    }));
+    
     return copiedExercise;
   }
 
