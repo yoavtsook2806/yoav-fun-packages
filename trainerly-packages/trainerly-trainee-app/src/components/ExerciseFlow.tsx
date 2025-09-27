@@ -4,7 +4,8 @@ import ExerciseHistory from './ExerciseHistory';
 import ExerciseFeedback from './ExerciseFeedback';
 import ExerciseInfo from './ExerciseInfo';
 import ExerciseEdit from './ExerciseEdit';
-import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime, updateTodaysExerciseEntry } from '../utils/exerciseHistory';
+import { saveExerciseDefaults, saveCustomExerciseData, getCustomExerciseTitle, getCustomExerciseNote, getDefaultWeight, getDefaultRepeats, getDefaultRestTime, updateTodaysExerciseEntry, getTrainingProgress, saveTrainingProgress } from '../utils/exerciseHistory';
+import { TRAINING_PROGRESS_KEY } from '../constants/localStorage';
 import { playEndSetBeep, playCountdownBeep } from '../utils/soundUtils';
 
 interface ExerciseFlowProps {
@@ -375,6 +376,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
     );
 
     if (confirmed) {
+      // Clear training progress from localStorage
+      const progress = getTrainingProgress();
+      if (trainingState.selectedTraining && progress[trainingState.selectedTraining]) {
+        delete progress[trainingState.selectedTraining];
+        localStorage.setItem(TRAINING_PROGRESS_KEY, JSON.stringify(progress));
+      }
+
       // Reset all exercise states for current training
       trainingState.exercises.forEach(exerciseName => {
         onUpdateExerciseState(exerciseName, {

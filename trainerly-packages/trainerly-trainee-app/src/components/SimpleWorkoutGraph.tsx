@@ -155,13 +155,8 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
 
       <div className="graph-container">
         <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="workout-chart">
-          {/* Grid lines */}
-          <defs>
-            <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 30" fill="none" stroke="var(--border-primary)" strokeWidth="0.5" opacity="0.2"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
+          {/* Background */}
+          <rect width="100%" height="100%" fill="transparent" />
 
           {/* Axes */}
           <line 
@@ -181,27 +176,6 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
             strokeWidth="2"
           />
 
-          {/* Average lines (horizontal) */}
-          <line
-            x1={margin.left}
-            y1={yScale(weightScale.avg, weightScale)}
-            x2={svgWidth - margin.right}
-            y2={yScale(weightScale.avg, weightScale)}
-            stroke="#f59e0b"
-            strokeWidth="1"
-            strokeDasharray="5,5"
-            opacity="0.5"
-          />
-          <line
-            x1={margin.left}
-            y1={yScale(repsScale.avg, repsScale)}
-            x2={svgWidth - margin.right}
-            y2={yScale(repsScale.avg, repsScale)}
-            stroke="#3b82f6"
-            strokeWidth="1"
-            strokeDasharray="5,5"
-            opacity="0.5"
-          />
 
           {/* Data lines */}
           <path
@@ -276,47 +250,67 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
             </text>
           ))}
 
-          {/* Y-axis labels for all three properties */}
-          {dataPoints.map((point, index) => (
-            <g key={`y-labels-${index}`}>
-              {/* Weight values */}
-              <text
-                x={margin.left - 15}
-                y={yScale(point.weight, weightScale)}
-                textAnchor="end"
-                fontSize="9"
-                fill="#f59e0b"
-                fontWeight="bold"
-                dominantBaseline="middle"
-              >
-                {point.weight}
-              </text>
-              {/* Reps values */}
-              <text
-                x={margin.left - 30}
-                y={yScale(point.reps, repsScale)}
-                textAnchor="end"
-                fontSize="9"
-                fill="#3b82f6"
-                fontWeight="bold"
-                dominantBaseline="middle"
-              >
-                {point.reps}
-              </text>
-              {/* Rest difficulty values */}
-              <text
-                x={margin.left - 45}
-                y={yScale(point.restDifficulty, restScale)}
-                textAnchor="end"
-                fontSize="9"
-                fill="#10b981"
-                fontWeight="bold"
-                dominantBaseline="middle"
-              >
-                {point.restDifficulty}
-              </text>
-            </g>
-          ))}
+          {/* Y-axis labels - 6 slots from 0 to top */}
+          {Array.from({ length: 6 }, (_, i) => {
+            const slotIndex = 5 - i; // 5, 4, 3, 2, 1, 0 (top to bottom)
+            const yPosition = margin.top + (i * chartHeight / 5); // Divide chart into 5 intervals (6 slots)
+            
+            // Calculate values for each property at this Y level
+            const weightValue = weightScale.min + (slotIndex / 5) * (weightScale.max - weightScale.min);
+            const repsValue = repsScale.min + (slotIndex / 5) * (repsScale.max - repsScale.min);
+            const restValue = restScale.min + (slotIndex / 5) * (restScale.max - restScale.min);
+            
+            return (
+              <g key={`y-slot-${i}`}>
+                {/* Weight values */}
+                <text
+                  x={margin.left - 15}
+                  y={yPosition}
+                  textAnchor="end"
+                  fontSize="9"
+                  fill="#f59e0b"
+                  fontWeight="bold"
+                  dominantBaseline="middle"
+                >
+                  {Math.round(weightValue * 10) / 10}
+                </text>
+                {/* Reps values */}
+                <text
+                  x={margin.left - 30}
+                  y={yPosition}
+                  textAnchor="end"
+                  fontSize="9"
+                  fill="#3b82f6"
+                  fontWeight="bold"
+                  dominantBaseline="middle"
+                >
+                  {Math.round(repsValue * 10) / 10}
+                </text>
+                {/* Rest difficulty values */}
+                <text
+                  x={margin.left - 45}
+                  y={yPosition}
+                  textAnchor="end"
+                  fontSize="9"
+                  fill="#10b981"
+                  fontWeight="bold"
+                  dominantBaseline="middle"
+                >
+                  {Math.round(restValue)}
+                </text>
+                {/* Horizontal grid line */}
+                <line
+                  x1={margin.left}
+                  y1={yPosition}
+                  x2={svgWidth - margin.right}
+                  y2={yPosition}
+                  stroke="var(--border-primary)"
+                  strokeWidth="0.5"
+                  opacity="0.3"
+                />
+              </g>
+            );
+          })}
         </svg>
       </div>
     </div>
