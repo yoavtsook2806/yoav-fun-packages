@@ -157,6 +157,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
     setError('');
 
     try {
+      console.log('🔧 Registering coach with data:', registerData);
+      console.log('🔧 API_BASE:', API_BASE);
       const response = await fetch(`${API_BASE}/coaches`, {
         method: 'POST',
         headers: {
@@ -166,6 +168,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
       });
 
       const data = await response.json();
+      console.log('🔧 Registration response:', { status: response.status, data });
 
       if (response.ok) {
         onLogin({
@@ -177,6 +180,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           createdAt: new Date().toISOString()
         }, data.token);
       } else {
+        console.error('🔧 Registration failed:', data);
         setError(data.message || 'שגיאה ברישום');
       }
     } catch (error) {
