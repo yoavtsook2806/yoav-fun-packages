@@ -238,7 +238,6 @@
 }
 
 .card-edit-btn {
-  position: absolute;
   top: var(--space-3);
   left: var(--space-3);
   background: var(--bg-tertiary);

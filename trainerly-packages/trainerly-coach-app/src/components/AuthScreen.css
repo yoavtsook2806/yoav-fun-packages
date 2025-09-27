@@ -265,16 +265,15 @@
   gap: var(--space-2);
 }
 
-.auth-screen .input-icon {
-  position: absolute !important;
-  right: var(--space-4) !important;
-  left: auto !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  font-size: var(--font-size-lg) !important;
-  z-index: 2 !important;
-  pointer-events: none !important;
-  color: var(--text-muted) !important;
+.input-icon {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-lg);
+  z-index: 2;
+  pointer-events: none;
+  color: var(--text-muted);
 }
 
 .modern-input {
@@ -311,36 +310,35 @@
 }
 
 /* Password Toggle Button */
-.auth-screen .password-toggle {
-  position: absolute !important;
-  left: var(--space-4) !important;
-  right: auto !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  background: none !important;
-  border: none !important;
-  font-size: var(--font-size-lg) !important;
-  cursor: pointer !important;
-  z-index: 3 !important;
-  padding: var(--space-1) !important;
-  border-radius: var(--border-radius-md) !important;
-  transition: var(--transition-fast) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: var(--space-8) !important;
-  height: var(--space-8) !important;
-  color: var(--text-muted) !important;
+.password-toggle {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  z-index: 3;
+  padding: var(--space-1);
+  border-radius: var(--border-radius-md);
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  color: var(--text-muted);
 }
 
-.auth-screen .password-toggle:hover {
-  background: var(--bg-tertiary) !important;
-  color: var(--text-secondary) !important;
-  transform: translateY(-50%) scale(1.05) !important;
+.password-toggle:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  transform: translateY(-50%) scale(1.05);
 }
 
-.auth-screen .password-toggle:active {
-  transform: translateY(-50%) scale(0.95) !important;
+.password-toggle:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 /* Nickname Status */
