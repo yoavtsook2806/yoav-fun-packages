@@ -96,7 +96,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 <div className="input-icon">🏃‍♂️</div>
                 <input
                   type="text"
-                  placeholder="כינוי המאמן (לדוגמה: יואב123)"
+                  placeholder="כינוי המאמן"
                   value={coachNickname}
                   onChange={(e) => setCoachNickname(e.target.value)}
                   required
