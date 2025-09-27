@@ -74,40 +74,50 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
 
   const loadCopiedExercises = async () => {
     try {
+      console.log('🔍 Loading copied exercises for coach:', coachId);
+      
       // Load from localStorage for immediate UI feedback
       const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
       const localCopiedIds = stored ? JSON.parse(stored) : [];
+      console.log('💾 Local copied IDs:', localCopiedIds);
       
       // Load coach's exercises to check for server-side copied exercises
       const coachExercisesResult = await cachedApiService.getExercises(coachId, token);
       const coachExercises = coachExercisesResult.data;
+      console.log('🏋️ Coach exercises count:', coachExercises.length);
       
       // Find exercises that were copied from admin exercises (have originalExerciseId)
-      const serverCopiedIds = coachExercises
-        .filter(exercise => exercise.originalExerciseId)
-        .map(exercise => exercise.originalExerciseId!);
+      const exercisesWithOriginal = coachExercises.filter(exercise => exercise.originalExerciseId);
+      console.log('🔗 Exercises with originalExerciseId:', exercisesWithOriginal.map(e => ({
+        name: e.name,
+        originalExerciseId: e.originalExerciseId
+      })));
+      
+      const serverCopiedIds = exercisesWithOriginal.map(exercise => exercise.originalExerciseId!);
       
       // Combine local and server copied IDs
       const allCopiedIds = [...new Set([...localCopiedIds, ...serverCopiedIds])];
       
       setCopiedExercises(new Set(allCopiedIds));
-      console.log('📋 Loaded copied exercises - Local:', localCopiedIds, 'Server:', serverCopiedIds);
+      console.log('📋 Final copied exercises - Local:', localCopiedIds, 'Server:', serverCopiedIds, 'Combined:', allCopiedIds);
       
       // Update localStorage with server data for consistency
       if (serverCopiedIds.length > 0) {
         localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify(allCopiedIds));
+        console.log('💾 Updated localStorage with server data');
       }
     } catch (error) {
-      console.warn('Failed to load copied exercises:', error);
+      console.error('❌ Failed to load copied exercises:', error);
       // Fallback to localStorage only
       try {
         const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
         if (stored) {
           const copiedIds = JSON.parse(stored);
           setCopiedExercises(new Set(copiedIds));
+          console.log('🔄 Fallback to localStorage:', copiedIds);
         }
       } catch (fallbackError) {
-        console.warn('Failed to load from localStorage fallback:', fallbackError);
+        console.error('❌ Failed to load from localStorage fallback:', fallbackError);
       }
     }
   };

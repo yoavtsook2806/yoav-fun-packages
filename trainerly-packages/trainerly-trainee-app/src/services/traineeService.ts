@@ -43,10 +43,37 @@ interface ServerPrescribedExercise {
 }
 
 // Convert server training plan format to trainee app format
-const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { version: string; name: string; trainings: Trainings } => {
+const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, coachId: string): Promise<{ version: string; name: string; trainings: Trainings }> => {
   console.log('🔄 Converting server plan:', serverPlan);
   
   const trainings: Trainings = {};
+  
+  // First, fetch all exercises from the coach to get muscle group information
+  let coachExercises: any[] = [];
+  try {
+    console.log(`🔄 Fetching coach exercises for muscle group data from coach: ${coachId}`);
+    const exercisesResponse = await fetch(`${API_BASE_URL}/coaches/${coachId}/exercises`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (exercisesResponse.ok) {
+      coachExercises = await exercisesResponse.json();
+      console.log(`✅ Fetched ${coachExercises.length} coach exercises for muscle group data`);
+    } else {
+      console.warn('Failed to fetch coach exercises for muscle group data');
+    }
+  } catch (error) {
+    console.warn('Error fetching coach exercises for muscle group data:', error);
+  }
+  
+  // Create a lookup map for exercise muscle groups
+  const exerciseMuscleGroupMap: { [exerciseName: string]: string } = {};
+  coachExercises.forEach(exercise => {
+    exerciseMuscleGroupMap[exercise.name] = exercise.muscleGroup || 'כללי';
+  });
   
   // Group exercises by training name
   serverPlan.trainings.forEach(training => {
@@ -54,7 +81,9 @@ const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { ver
     const trainingExercises: { [exerciseName: string]: Exercise } = {};
     
     training.exercises.forEach(prescribedExercise => {
-      console.log(`💪 Adding exercise: ${prescribedExercise.exerciseName}`);
+      const muscleGroup = exerciseMuscleGroupMap[prescribedExercise.exerciseName] || 'כללי';
+      console.log(`💪 Adding exercise: ${prescribedExercise.exerciseName} (${muscleGroup})`);
+      
       trainingExercises[prescribedExercise.exerciseName] = {
         numberOfSets: prescribedExercise.numberOfSets,
         minimumTimeToRest: prescribedExercise.minimumTimeToRest,
@@ -62,7 +91,7 @@ const convertServerPlanToTraineeFormat = (serverPlan: ServerTrainingPlan): { ver
         minimumNumberOfRepeasts: prescribedExercise.minimumNumberOfRepeasts,
         maximumNumberOfRepeasts: prescribedExercise.maximumNumberOfRepeasts,
         note: prescribedExercise.prescriptionNote || '',
-        muscleGroup: 'כללי', // Default muscle group until we get proper data from server
+        muscleGroup: muscleGroup,
         link: '' // We don't have links in the current structure
       };
     });
@@ -210,7 +239,7 @@ export const fetchTraineeData = async (traineeId: string, coachId?: string): Pro
           
           if (planResponse.ok) {
             const serverPlanData = await planResponse.json();
-            const convertedPlan = convertServerPlanToTraineeFormat(serverPlanData);
+            const convertedPlan = await convertServerPlanToTraineeFormat(serverPlanData, coachIdForPlans);
             const plan = {
               planId: serverPlanData.planId,
               name: convertedPlan.name,
