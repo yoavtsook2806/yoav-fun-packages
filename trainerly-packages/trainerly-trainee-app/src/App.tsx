@@ -9,6 +9,19 @@ import AuthScreen from './components/AuthScreen';
 import ToastContainer, { showSuccess, showError } from './components/ToastContainer';
 import { fetchTraineeData, clearTraineeCache, syncExerciseSession, loadAllTraineeDataFromServer, syncAllTraineeDataToServer } from './services/traineeService';
 import { clearAllLocalStorageData } from './constants/localStorage';
+
+// Environment-based API configuration
+const getApiBaseUrl = (): string => {
+  // Check if running locally
+  if (window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' ||
+      process.env.NODE_ENV === 'development') {
+    return 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
+  }
+  
+  // Use prod for production deployments
+  return 'https://fzfh3j7m0h.execute-api.eu-central-1.amazonaws.com/prod';
+};
 import {
   getLastUsedWeight,
   getLastUsedRepeats,
@@ -389,7 +402,7 @@ function App() {
         
         try {
           console.log('🔍 Background validation: checking if trainee exists in database...');
-          const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/trainers/${storedTraineeId}/data`, {
+          const response = await fetch(`${getApiBaseUrl()}/trainers/${storedTraineeId}/data`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

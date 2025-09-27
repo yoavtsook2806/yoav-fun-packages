@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import './AuthScreen.css';
 
+// Environment-based API configuration
+const getApiBaseUrl = (): string => {
+  // Check if running locally
+  if (window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' ||
+      process.env.NODE_ENV === 'development') {
+    return 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
+  }
+  
+  // Use prod for production deployments
+  return 'https://fzfh3j7m0h.execute-api.eu-central-1.amazonaws.com/prod';
+};
+
 interface AuthScreenProps {
   onAuthenticated: (traineeId: string, trainerName: string, coachId?: string) => void;
 }
@@ -18,7 +31,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
 
     try {
       // Use the trainer identification endpoint
-      const identifyResponse = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/auth/trainer/identify`, {
+      const identifyResponse = await fetch(`${getApiBaseUrl()}/auth/trainer/identify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

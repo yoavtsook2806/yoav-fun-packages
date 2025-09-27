@@ -122,7 +122,20 @@ interface CachedTraineeData {
   timestamp: number;
 }
 
-const API_BASE_URL = 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
+// Environment-based API configuration
+const getApiBaseUrl = (): string => {
+  // Check if running locally
+  if (window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1' ||
+      process.env.NODE_ENV === 'development') {
+    return 'https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev';
+  }
+  
+  // Use prod for production deployments
+  return 'https://fzfh3j7m0h.execute-api.eu-central-1.amazonaws.com/prod';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 // Exercise Session types for server API
