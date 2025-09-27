@@ -67,16 +67,31 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
       expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
     });
 
-    // Find and click the copy button
+    // Find and click the copy button (opens edit modal)
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
+
+    // Wait for edit modal to appear
+    await waitFor(() => {
+      expect(screen.getByText('עריכת תרגיל לפני העתקה')).toBeInTheDocument();
+    });
+
+    // Submit the edit form to trigger the copy
+    const copyWithEditsButton = screen.getByText('העתק עם השינויים');
+    fireEvent.click(copyWithEditsButton);
 
     // Wait for the copy operation to complete
     await waitFor(() => {
       expect(mockCachedApiService.copyAdminExercise).toHaveBeenCalledWith(
         'coach-123',
         'admin-exercise-1',
-        'test-token'
+        'test-token',
+        expect.objectContaining({
+          name: 'לחיצת חזה במוט',
+          muscleGroup: 'חזה אמצעי',
+          note: 'שכיבה על הספסל, אחיזה רחבה במוט',
+          link: 'https://www.youtube.com/watch?v=rT7DgCr-3pg'
+        })
       );
     });
 
@@ -225,17 +240,26 @@ describe('AdminExerciseBank - Copy Exercise Bug', () => {
     const copyWithEditsButton = screen.getByText('העתק עם השינויים');
     fireEvent.click(copyWithEditsButton);
 
-    // Button should show loading state
+    // Modal submit button should show loading state
     await waitFor(() => {
-      expect(screen.getByText('מעתיק...')).toBeInTheDocument();
+      const loadingButtons = screen.getAllByText('מעתיק...');
+      expect(loadingButtons.length).toBeGreaterThan(0);
+      // Find the submit button specifically
+      const modalSubmitButton = loadingButtons.find(button => 
+        button.closest('form') !== null
+      );
+      expect(modalSubmitButton).toBeInTheDocument();
     });
 
-    // Button should be disabled
-    const loadingButton = screen.getByRole('button', { name: /מעתיק/ });
-    expect(loadingButton).toBeDisabled();
+    // Modal submit button should be disabled
+    const loadingButtons = screen.getAllByText('מעתיק...');
+    const modalSubmitButton = loadingButtons.find(button => 
+      button.closest('form') !== null
+    );
+    expect(modalSubmitButton).toBeDisabled();
 
     // Try to click again - should not trigger another call
-    fireEvent.click(loadingButton);
+    fireEvent.click(modalSubmitButton!);
 
     // Should still only have one call
     expect(mockCachedApiService.copyAdminExercise).toHaveBeenCalledTimes(1);

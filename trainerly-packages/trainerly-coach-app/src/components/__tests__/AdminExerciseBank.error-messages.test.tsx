@@ -70,16 +70,31 @@ describe('AdminExerciseBank - Error Message Bug', () => {
       expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
     });
 
-    // Find and click the copy button
+    // Find and click the copy button (opens edit modal)
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
+
+    // Wait for edit modal to appear
+    await waitFor(() => {
+      expect(screen.getByText('עריכת תרגיל לפני העתקה')).toBeInTheDocument();
+    });
+
+    // Submit the edit form to trigger the copy
+    const copyWithEditsButton = screen.getByText('העתק עם השינויים');
+    fireEvent.click(copyWithEditsButton);
 
     // Wait for the copy operation to complete
     await waitFor(() => {
       expect(mockCachedApiService.copyAdminExercise).toHaveBeenCalledWith(
         'coach-123',
         'admin-exercise-1',
-        'test-token'
+        'test-token',
+        expect.objectContaining({
+          name: 'לחיצת חזה במוט',
+          muscleGroup: 'חזה אמצעי',
+          note: 'שכיבה על הספסל, אחיזה רחבה במוט',
+          link: 'https://www.youtube.com/watch?v=rT7DgCr-3pg'
+        })
       );
     });
 
@@ -125,16 +140,31 @@ describe('AdminExerciseBank - Error Message Bug', () => {
       expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
     });
 
-    // Find and click the copy button
+    // Find and click the copy button (opens edit modal)
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
+
+    // Wait for edit modal to appear
+    await waitFor(() => {
+      expect(screen.getByText('עריכת תרגיל לפני העתקה')).toBeInTheDocument();
+    });
+
+    // Submit the edit form to trigger the copy
+    const copyWithEditsButton = screen.getByText('העתק עם השינויים');
+    fireEvent.click(copyWithEditsButton);
 
     // Wait for the copy operation to complete
     await waitFor(() => {
       expect(mockCachedApiService.copyAdminExercise).toHaveBeenCalledWith(
         'coach-123',
         'admin-exercise-1',
-        'test-token'
+        'test-token',
+        expect.objectContaining({
+          name: 'לחיצת חזה במוט',
+          muscleGroup: 'חזה אמצעי',
+          note: 'שכיבה על הספסל, אחיזה רחבה במוט',
+          link: 'https://www.youtube.com/watch?v=rT7DgCr-3pg'
+        })
       );
     });
 
@@ -180,16 +210,31 @@ describe('AdminExerciseBank - Error Message Bug', () => {
       expect(screen.getByText('📋 העתק תרגיל')).toBeInTheDocument();
     });
 
-    // Find and click the copy button
+    // Find and click the copy button (opens edit modal)
     const copyButton = screen.getByText('📋 העתק תרגיל');
     fireEvent.click(copyButton);
+
+    // Wait for edit modal to appear
+    await waitFor(() => {
+      expect(screen.getByText('עריכת תרגיל לפני העתקה')).toBeInTheDocument();
+    });
+
+    // Submit the edit form to trigger the copy
+    const copyWithEditsButton = screen.getByText('העתק עם השינויים');
+    fireEvent.click(copyWithEditsButton);
 
     // Wait for the copy operation to complete
     await waitFor(() => {
       expect(mockCachedApiService.copyAdminExercise).toHaveBeenCalledWith(
         'coach-123',
         'admin-exercise-1',
-        'test-token'
+        'test-token',
+        expect.objectContaining({
+          name: 'לחיצת חזה במוט',
+          muscleGroup: 'חזה אמצעי',
+          note: 'שכיבה על הספסל, אחיזה רחבה במוט',
+          link: 'https://www.youtube.com/watch?v=rT7DgCr-3pg'
+        })
       );
     });
 
