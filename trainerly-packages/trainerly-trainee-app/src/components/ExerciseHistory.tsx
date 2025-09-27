@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { getExerciseHistory } from '../utils/exerciseHistory';
-import { ExerciseHistoryEntry } from '../types';
+import { ExerciseHistoryEntry, Exercise } from '../types';
 import ExerciseModal from './ExerciseModal';
-import ExercisePerformanceGraph from './ExercisePerformanceGraph';
+import SimpleWorkoutGraph from './SimpleWorkoutGraph';
+import './SimpleWorkoutGraph.css';
 
 interface ExerciseHistoryProps {
   exerciseName: string;
   onClose: () => void;
   trainingPlanId?: string; // Filter by training plan
   trainingType?: string; // Filter by training type
+  exercise?: Exercise; // Exercise data for graph
 }
 
 const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
@@ -16,6 +18,7 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
   onClose,
   trainingPlanId,
   trainingType,
+  exercise,
 }) => {
   const history = getExerciseHistory();
   const allExerciseHistory = history[exerciseName] || [];
@@ -258,9 +261,10 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
                 ))}
               </div>
             ) : (
-              <ExercisePerformanceGraph 
+              <SimpleWorkoutGraph 
                 exerciseName={exerciseName}
                 exerciseHistory={exerciseHistory}
+                maxRestTime={exercise?.maximumTimeToRest || 120}
               />
             )}
           </div>

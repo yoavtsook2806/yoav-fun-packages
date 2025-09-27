@@ -688,6 +688,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           onClose={() => setHistoryModal(null)}
           trainingPlanId={trainingPlanId}
           trainingType={trainingState.selectedTraining || undefined}
+          exercise={trainings[trainingState.selectedTraining!]?.[historyModal]}
         />
       )}
       
@@ -908,7 +909,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em'
                           }}>
-                            🏋️ משקל (ק"ג)
+                            🏋️ משקל
                           </label>
                           <input
                             type="number"
