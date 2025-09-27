@@ -92,6 +92,7 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 interface ExerciseSessionData {
   exerciseName: string;
   trainingType: string;
+  trainingPlanId: string;
   completedAt: string;
   totalSets: number;
   completedSets: number;

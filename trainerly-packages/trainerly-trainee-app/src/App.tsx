@@ -452,7 +452,7 @@ function App() {
     const exercises = Object.keys(currentTrainingPlan.trainings[trainingType]);
 
     // Check if this is a first-time experience
-    if (isFirstTimeExperience(trainingType, exercises)) {
+    if (isFirstTimeExperience(trainingType, exercises, currentTrainingPlan.planId)) {
       setFirstTimeTrainingType(trainingType);
       setShowFirstTimeSetup(true);
       return;
@@ -465,19 +465,19 @@ function App() {
       const exercise = currentTrainingPlan.trainings[trainingType][exerciseName];
       
       // Priority: default weight > first set from last workout > last used weight from history
-      const defaultWeight = getDefaultWeight(exerciseName);
+      const defaultWeight = getDefaultWeight(exerciseName, currentTrainingPlan.planId);
       const lastExerciseEntry = getExerciseLastEntry(exerciseName);
       const firstSetWeight = lastExerciseEntry?.setsData?.[0]?.weight;
       const lastUsedWeight = getLastUsedWeight(exerciseName);
       const weight = defaultWeight || firstSetWeight || lastUsedWeight;
       
       // Priority: default rest time > calculated default from exercise data
-      const defaultRestTime = getDefaultRestTime(exerciseName);
+      const defaultRestTime = getDefaultRestTime(exerciseName, currentTrainingPlan.planId);
       const calculatedRestTime = calculateDefaultRestTime(exercise);
       const customRestTime = defaultRestTime || calculatedRestTime;
       
       // Priority: default repeats > first set from last workout > last used repeats > calculated default from exercise data
-      const defaultRepeats = getDefaultRepeats(exerciseName);
+      const defaultRepeats = getDefaultRepeats(exerciseName, currentTrainingPlan.planId);
       const firstSetRepeats = lastExerciseEntry?.setsData?.[0]?.repeats;
       const lastUsedRepeats = getLastUsedRepeats(exerciseName);
       const calculatedRepeats = calculateDefaultRepeats(exercise);
@@ -537,7 +537,7 @@ function App() {
   const handleFirstTimeSetupComplete = async (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
     // Save all exercise defaults
     Object.entries(exerciseDefaults).forEach(([exerciseName, defaults]) => {
-      saveExerciseDefaults(exerciseName, defaults.weight, defaults.timeToRest, defaults.repeats);
+      saveExerciseDefaults(exerciseName, currentTrainingPlan.planId, defaults.weight, defaults.timeToRest, defaults.repeats);
     });
 
     // Mark first-time experience as completed
@@ -591,6 +591,8 @@ function App() {
         
         const historyEntry = {
           date: new Date().toISOString(),
+          trainingType: prev.selectedTraining!,
+          trainingPlanId: currentTrainingPlan.planId,
           weight: firstSetWeight, // First set weight for display
           restTime: newState.customRestTime || prev.restTime,
           completedSets: newState.currentSet,
@@ -610,6 +612,7 @@ function App() {
               const exerciseSessionData = {
                 exerciseName,
                 trainingType: prev.selectedTraining!,
+                trainingPlanId: currentTrainingPlan.planId,
                 completedAt: historyEntry.date,
                 totalSets: historyEntry.totalSets,
                 completedSets: historyEntry.completedSets,
@@ -830,6 +833,7 @@ function App() {
       <ExerciseFlow
         trainingState={trainingState}
         trainings={currentTrainingPlan.trainings}
+        trainingPlanId={currentTrainingPlan.planId}
         onUpdateExerciseState={updateExerciseState}
         onGoToExercise={goToExercise}
         onNextExercise={nextExercise}

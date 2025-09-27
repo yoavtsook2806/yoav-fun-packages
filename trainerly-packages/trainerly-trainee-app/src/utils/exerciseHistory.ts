@@ -234,13 +234,14 @@ export const getExerciseDefaults = (): ExerciseDefaultsStorage => {
   }
 };
 
-export const getExerciseDefaultSettings = (exerciseName: string): ExerciseDefaults => {
+export const getExerciseDefaultSettings = (exerciseName: string, trainingPlanId: string): ExerciseDefaults => {
   const defaults = getExerciseDefaults();
-  return defaults[exerciseName] || {};
+  return defaults[trainingPlanId]?.[exerciseName] || {};
 };
 
 export const saveExerciseDefaults = (
   exerciseName: string,
+  trainingPlanId: string,
   weight?: number,
   restTime?: number,
   repeats?: number
@@ -248,20 +249,24 @@ export const saveExerciseDefaults = (
   try {
     const defaults = getExerciseDefaults();
     
-    if (!defaults[exerciseName]) {
-      defaults[exerciseName] = {};
+    if (!defaults[trainingPlanId]) {
+      defaults[trainingPlanId] = {};
+    }
+    
+    if (!defaults[trainingPlanId][exerciseName]) {
+      defaults[trainingPlanId][exerciseName] = {};
     }
     
     if (weight !== undefined && weight > 0) {
-      defaults[exerciseName].weight = weight;
+      defaults[trainingPlanId][exerciseName].weight = weight;
     }
     
     if (restTime !== undefined && restTime > 0) {
-      defaults[exerciseName].restTime = restTime;
+      defaults[trainingPlanId][exerciseName].restTime = restTime;
     }
     
     if (repeats !== undefined && repeats > 0) {
-      defaults[exerciseName].repeats = repeats;
+      defaults[trainingPlanId][exerciseName].repeats = repeats;
     }
     
     localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify(defaults));
@@ -270,18 +275,18 @@ export const saveExerciseDefaults = (
   }
 };
 
-export const getDefaultWeight = (exerciseName: string): number | undefined => {
-  const defaults = getExerciseDefaultSettings(exerciseName);
+export const getDefaultWeight = (exerciseName: string, trainingPlanId: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName, trainingPlanId);
   return defaults.weight;
 };
 
-export const getDefaultRestTime = (exerciseName: string): number | undefined => {
-  const defaults = getExerciseDefaultSettings(exerciseName);
+export const getDefaultRestTime = (exerciseName: string, trainingPlanId: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName, trainingPlanId);
   return defaults.restTime;
 };
 
-export const getDefaultRepeats = (exerciseName: string): number | undefined => {
-  const defaults = getExerciseDefaultSettings(exerciseName);
+export const getDefaultRepeats = (exerciseName: string, trainingPlanId: string): number | undefined => {
+  const defaults = getExerciseDefaultSettings(exerciseName, trainingPlanId);
   return defaults.repeats;
 };
 
@@ -352,35 +357,36 @@ export const clearCustomExerciseData = (): void => {
   }
 };
 
-export const isFirstTimeExperience = (_trainingType: string, exercises: string[]): boolean => {
-  // First check if user has ever completed first-time setup
-  const firstTimeCompleted = localStorage.getItem('trainerly_first_time_completed');
-  if (firstTimeCompleted === 'true') {
-    console.log('✅ First-time experience already completed');
-    return false;
-  }
-
-  // Check if user has any exercise history (means they've used the app before)
+export const isFirstTimeExperience = (trainingType: string, exercises: string[], trainingPlanId: string): boolean => {
+  console.log(`🔍 Checking first-time experience for training: ${trainingType} in plan: ${trainingPlanId}`);
+  
+  // Check if user has exercise history for ANY of the exercises in this training IN THIS PLAN
   const history = getExerciseHistory();
-  if (Object.keys(history).length > 0) {
-    console.log('✅ User has exercise history, not first time');
-    // Mark as completed if they have history but flag wasn't set
-    localStorage.setItem('trainerly_first_time_completed', 'true');
-    return false;
+  for (const exerciseName of exercises) {
+    if (history[exerciseName] && history[exerciseName].length > 0) {
+      // Check if any history entry is from the current plan
+      const hasHistoryInCurrentPlan = history[exerciseName].some(entry => 
+        entry.trainingPlanId === trainingPlanId
+      );
+      if (hasHistoryInCurrentPlan) {
+        console.log(`✅ User has history for exercise "${exerciseName}" in plan "${trainingPlanId}", not first time for this training`);
+        return false;
+      }
+    }
   }
 
-  // Check if user has any exercise defaults set
+  // Check if user has any exercise defaults set for ANY of the exercises in this training IN THIS PLAN
   for (const exerciseName of exercises) {
-    const defaultWeight = getDefaultWeight(exerciseName);
-    const defaultRestTime = getDefaultRestTime(exerciseName);
-    const defaultRepeats = getDefaultRepeats(exerciseName);
+    const defaultWeight = getDefaultWeight(exerciseName, trainingPlanId);
+    const defaultRestTime = getDefaultRestTime(exerciseName, trainingPlanId);
+    const defaultRepeats = getDefaultRepeats(exerciseName, trainingPlanId);
 
     if (defaultWeight !== undefined || defaultRestTime !== undefined || defaultRepeats !== undefined) {
-      console.log('✅ User has exercise defaults, not first time');
+      console.log(`✅ User has defaults for exercise "${exerciseName}" in plan "${trainingPlanId}", not first time for this training`);
       return false;
     }
   }
   
-  console.log('🆕 This is a first-time experience');
+  console.log(`🆕 This is a first-time experience for training: ${trainingType} in plan: ${trainingPlanId}`);
   return true;
 };

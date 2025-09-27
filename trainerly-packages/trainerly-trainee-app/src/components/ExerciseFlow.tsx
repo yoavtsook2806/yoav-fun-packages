@@ -10,6 +10,7 @@ import { playEndSetBeep, playCountdownBeep } from '../utils/soundUtils';
 interface ExerciseFlowProps {
   trainingState: TrainingState;
   trainings: Trainings;
+  trainingPlanId: string;
   onUpdateExerciseState: (exerciseName: string, updates: Partial<ExerciseState>) => void;
   onGoToExercise: (exerciseIndex: number) => void;
   onNextExercise: () => void;
@@ -19,6 +20,7 @@ interface ExerciseFlowProps {
 const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   trainingState,
   trainings,
+  trainingPlanId,
   onUpdateExerciseState,
   onGoToExercise,
   onNextExercise,
@@ -346,7 +348,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
 
   const handleFeedbackSave = (weight?: number, restTime?: number, repeats?: number) => {
     if (feedbackModal) {
-      saveExerciseDefaults(feedbackModal, weight, restTime, repeats);
+      saveExerciseDefaults(feedbackModal, trainingPlanId, weight, restTime, repeats);
     }
   };
 
@@ -693,13 +695,13 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
           exerciseName={feedbackModal}
           currentWeight={
             trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.weight ||
-            getDefaultWeight(feedbackModal) ||
+            getDefaultWeight(feedbackModal, trainingPlanId) ||
             trainingState.exerciseStates[feedbackModal]?.weight
           }
-          currentRestTime={getDefaultRestTime(feedbackModal) || trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
+          currentRestTime={getDefaultRestTime(feedbackModal, trainingPlanId) || trainingState.exerciseStates[feedbackModal]?.customRestTime || trainingState.restTime}
           currentRepeats={
             trainingState.exerciseStates[feedbackModal]?.setsData?.[0]?.repeats ||
-            getDefaultRepeats(feedbackModal) ||
+            getDefaultRepeats(feedbackModal, trainingPlanId) ||
             trainingState.exerciseStates[feedbackModal]?.repeats
           }
           exercise={trainings[trainingState.selectedTraining!][feedbackModal]}

@@ -48,6 +48,8 @@ export interface SetData {
 
 export interface ExerciseHistoryEntry {
   date: string; // ISO date string
+  trainingType: string; // Which training this exercise was part of
+  trainingPlanId: string; // Which plan this exercise was part of
   weight?: number; // First set weight (for backward compatibility and display)
   restTime: number;
   completedSets: number;
@@ -79,5 +81,7 @@ export interface ExerciseDefaults {
 }
 
 export interface ExerciseDefaultsStorage {
-  [exerciseName: string]: ExerciseDefaults;
+  [planId: string]: {
+    [exerciseName: string]: ExerciseDefaults;
+  };
 }
