@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Exercise, PrescribedExercise } from '../services/apiService';
 import Modal from './Modal';
 import MuscleGroupSelect from './MuscleGroupSelect';
+import ExerciseGroupView from './ExerciseGroupView';
+import ExerciseParameterModal, { ExerciseParameters } from './ExerciseParameterModal';
+import Card from './Card';
 import './TrainingExerciseSelector.css';
+import './ExerciseGroupView.css';
 
 interface TrainingExerciseSelectorProps {
   isOpen: boolean;
@@ -12,27 +16,6 @@ interface TrainingExerciseSelectorProps {
   onExerciseAdd: (exercise: Exercise) => void;
   onExerciseUpdate: (exerciseId: string, updates: Partial<PrescribedExercise>) => void;
   onExerciseRemove: (exerciseId: string) => void;
-}
-
-interface MuscleGroupData {
-  name: string;
-  exercises: Exercise[];
-  count: number;
-}
-
-interface TrainingMuscleGroupData {
-  name: string;
-  exercises: PrescribedExercise[];
-  count: number;
-}
-
-interface ExerciseEditData {
-  numberOfSets: number;
-  minimumTimeToRest: number;
-  maximumTimeToRest: number;
-  minimumNumberOfRepeasts: number;
-  maximumNumberOfRepeasts: number;
-  prescriptionNote: string;
 }
 
 const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
@@ -46,19 +29,11 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [muscleGroupFilter, setMuscleGroupFilter] = useState('');
-  const [expandedExerciseGroups, setExpandedExerciseGroups] = useState<Set<string>>(new Set());
-  const [expandedTrainingGroups, setExpandedTrainingGroups] = useState<Set<string>>(new Set());
   const [expandedExerciseCards, setExpandedExerciseCards] = useState<Set<string>>(new Set());
   const [expandedTrainingCards, setExpandedTrainingCards] = useState<Set<string>>(new Set());
-  const [editingExercise, setEditingExercise] = useState<PrescribedExercise | null>(null);
-  const [editData, setEditData] = useState<ExerciseEditData>({
-    numberOfSets: 3,
-    minimumTimeToRest: 60,
-    maximumTimeToRest: 120,
-    minimumNumberOfRepeasts: 8,
-    maximumNumberOfRepeasts: 12,
-    prescriptionNote: ''
-  });
+  const [showParameterModal, setShowParameterModal] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [editingTrainingExercise, setEditingTrainingExercise] = useState<PrescribedExercise | null>(null);
 
   // Filter exercises based on search term and muscle group
   const filteredExercises = exercises.filter(exercise => {
@@ -71,66 +46,6 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
     
     return matchesSearch && matchesMuscleGroup;
   });
-
-  // Group exercises by muscle group
-  const exerciseMuscleGroups: MuscleGroupData[] = filteredExercises.reduce((groups, exercise) => {
-    const muscleGroup = exercise.muscleGroup || 'לא מוגדר';
-    const existingGroup = groups.find(g => g.name === muscleGroup);
-    
-    if (existingGroup) {
-      existingGroup.exercises.push(exercise);
-      existingGroup.count++;
-    } else {
-      groups.push({
-        name: muscleGroup,
-        exercises: [exercise],
-        count: 1
-      });
-    }
-    
-    return groups;
-  }, [] as MuscleGroupData[])
-  .sort((a, b) => a.name.localeCompare(b.name, 'he'));
-
-  // Group training exercises by muscle group
-  const trainingMuscleGroups: TrainingMuscleGroupData[] = trainingExercises.reduce((groups, exercise) => {
-    const muscleGroup = exercise.muscleGroup || 'לא מוגדר';
-    const existingGroup = groups.find(g => g.name === muscleGroup);
-    
-    if (existingGroup) {
-      existingGroup.exercises.push(exercise);
-      existingGroup.count++;
-    } else {
-      groups.push({
-        name: muscleGroup,
-        exercises: [exercise],
-        count: 1
-      });
-    }
-    
-    return groups;
-  }, [] as TrainingMuscleGroupData[])
-  .sort((a, b) => a.name.localeCompare(b.name, 'he'));
-
-  const toggleExerciseGroup = (groupName: string) => {
-    const newExpandedGroups = new Set(expandedExerciseGroups);
-    if (expandedExerciseGroups.has(groupName)) {
-      newExpandedGroups.delete(groupName);
-    } else {
-      newExpandedGroups.add(groupName);
-    }
-    setExpandedExerciseGroups(newExpandedGroups);
-  };
-
-  const toggleTrainingGroup = (groupName: string) => {
-    const newExpandedGroups = new Set(expandedTrainingGroups);
-    if (expandedTrainingGroups.has(groupName)) {
-      newExpandedGroups.delete(groupName);
-    } else {
-      newExpandedGroups.add(groupName);
-    }
-    setExpandedTrainingGroups(newExpandedGroups);
-  };
 
   const toggleExerciseCard = (exerciseId: string) => {
     const newExpandedCards = new Set(expandedExerciseCards);
@@ -156,35 +71,50 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
     return trainingExercises.some(selected => selected.exerciseId === exercise.exerciseId);
   };
 
-  const handleEditExercise = (exercise: PrescribedExercise) => {
-    setEditingExercise(exercise);
-    setEditData({
-      numberOfSets: exercise.numberOfSets || 3,
-      minimumTimeToRest: exercise.minimumTimeToRest || 60,
-      maximumTimeToRest: exercise.maximumTimeToRest || 120,
-      minimumNumberOfRepeasts: exercise.minimumNumberOfRepeasts || 8,
-      maximumNumberOfRepeasts: exercise.maximumNumberOfRepeasts || 12,
-      prescriptionNote: exercise.prescriptionNote || ''
-    });
+  const handleExerciseSelect = (exercise: Exercise) => {
+    if (isExerciseSelected(exercise)) return;
+    setSelectedExercise(exercise);
+    setShowParameterModal(true);
   };
 
-  const handleSaveExercise = () => {
-    if (!editingExercise) return;
-
-    onExerciseUpdate(editingExercise.exerciseId, {
-      numberOfSets: editData.numberOfSets,
-      minimumTimeToRest: editData.minimumTimeToRest,
-      maximumTimeToRest: editData.maximumTimeToRest,
-      minimumNumberOfRepeasts: editData.minimumNumberOfRepeasts,
-      maximumNumberOfRepeasts: editData.maximumNumberOfRepeasts,
-      prescriptionNote: editData.prescriptionNote
-    });
-
-    setEditingExercise(null);
+  const handleParameterSave = (parameters: ExerciseParameters) => {
+    if (!selectedExercise) return;
+    
+    // Create prescribed exercise with parameters
+    const prescribedExercise: PrescribedExercise = {
+      exerciseId: selectedExercise.exerciseId,
+      exerciseName: selectedExercise.name,
+      name: selectedExercise.name,
+      muscleGroup: selectedExercise.muscleGroup,
+      link: selectedExercise.link,
+      note: selectedExercise.note,
+      ...parameters
+    };
+    
+    onExerciseAdd(selectedExercise);
+    setSelectedExercise(null);
   };
 
-  const handleCancelEdit = () => {
-    setEditingExercise(null);
+  const handleTrainingExerciseEdit = (exercise: PrescribedExercise) => {
+    setEditingTrainingExercise(exercise);
+    setSelectedExercise({
+      exerciseId: exercise.exerciseId,
+      name: exercise.name,
+      muscleGroup: exercise.muscleGroup,
+      link: exercise.link,
+      note: exercise.note,
+      coachId: '', // Not needed for editing
+      createdAt: '' // Not needed for editing
+    });
+    setShowParameterModal(true);
+  };
+
+  const handleTrainingParameterSave = (parameters: ExerciseParameters) => {
+    if (!editingTrainingExercise) return;
+    
+    onExerciseUpdate(editingTrainingExercise.exerciseId, parameters);
+    setEditingTrainingExercise(null);
+    setSelectedExercise(null);
   };
 
   const renderExerciseCard = (exercise: Exercise) => {
@@ -192,21 +122,22 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
     const isSelected = isExerciseSelected(exercise);
 
     return (
-      <div 
+      <Card 
         key={exercise.exerciseId} 
-        className={`exercise-card ${isExpanded ? 'expanded' : 'collapsed'} ${isSelected ? 'selected' : ''}`}
+        data-id={exercise.exerciseId} 
+        className={`${isExpanded ? 'expanded' : 'collapsed'} ${isSelected ? 'selected' : ''}`}
       >
         <div
           className="card-header clickable"
           onClick={() => toggleExerciseCard(exercise.exerciseId)}
         >
           <div className="card-controls">
-            <span className="expand-icon">{isExpanded ? '▼' : '◀'}</span>
+            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
           </div>
           <div className="exercise-info">
-            <h4 className="card-title">{exercise.name}</h4>
-            {!isExpanded && (
-              <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+            <h3 className="card-title">{exercise.name}</h3>
+            {!isExpanded && exercise.muscleGroup && (
+              <p className="card-subtitle">{exercise.muscleGroup}</p>
             )}
           </div>
           {isSelected && (
@@ -219,13 +150,12 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
 
         {isExpanded && (
           <div className="card-details">
-            <div className="exercise-meta">
+            {exercise.muscleGroup && (
               <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-            </div>
+            )}
 
             {exercise.note && (
               <div className="card-content">
-                <h5>הוראות ביצוע:</h5>
                 <p>{exercise.note}</p>
               </div>
             )}
@@ -248,10 +178,11 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onExerciseAdd(exercise);
+                  handleExerciseSelect(exercise);
                 }}
                 className={`btn-primary btn-sm ${isSelected ? 'selected' : ''}`}
                 disabled={isSelected}
+                title={isSelected ? 'תרגיל נבחר' : 'הוסף לאימון'}
               >
                 {isSelected ? (
                   <>
@@ -268,7 +199,7 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
             </div>
           </div>
         )}
-      </div>
+      </Card>
     );
   };
 
@@ -276,48 +207,33 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
     const isExpanded = expandedTrainingCards.has(exercise.exerciseId);
 
     return (
-      <div 
+      <Card 
         key={exercise.exerciseId} 
-        className={`training-exercise-card ${isExpanded ? 'expanded' : 'collapsed'}`}
+        data-id={exercise.exerciseId} 
+        className={isExpanded ? 'expanded' : 'collapsed'}
       >
         <div
           className="card-header clickable"
           onClick={() => toggleTrainingCard(exercise.exerciseId)}
         >
           <div className="card-controls">
-            <span className="expand-icon">{isExpanded ? '▼' : '◀'}</span>
+            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
           </div>
           <div className="exercise-info">
-            <h4 className="card-title">{exercise.name}</h4>
+            <h3 className="card-title">{exercise.name}</h3>
             {!isExpanded && (
-              <div className="exercise-summary">
-                <span className="summary-item">🎯 {exercise.muscleGroup}</span>
-                <span className="summary-item">🔢 {exercise.numberOfSets || 3} סטים</span>
-                <span className="summary-item">
-                  🔁 {exercise.minimumNumberOfRepeasts || 8}-{exercise.maximumNumberOfRepeasts || 12} חזרות
-                </span>
-              </div>
+              <p className="card-subtitle">
+                🎯 {exercise.muscleGroup} • 🔢 {exercise.numberOfSets || 3} סטים • 🔁 {exercise.minimumNumberOfRepeasts || 8}-{exercise.maximumNumberOfRepeasts || 12} חזרות
+              </p>
             )}
-          </div>
-          <div className="card-actions-compact">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onExerciseRemove(exercise.exerciseId);
-              }}
-              className="remove-btn-compact"
-              title="הסר תרגיל"
-            >
-              ✕
-            </button>
           </div>
         </div>
 
         {isExpanded && (
           <div className="card-details">
-            <div className="exercise-meta">
+            {exercise.muscleGroup && (
               <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-            </div>
+            )}
 
             <div className="training-parameters">
               <div className="parameter-row">
@@ -344,7 +260,6 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
 
             {exercise.note && (
               <div className="card-content">
-                <h5>הוראות ביצוע:</h5>
                 <p>{exercise.note}</p>
               </div>
             )}
@@ -374,9 +289,10 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleEditExercise(exercise);
+                  handleTrainingExerciseEdit(exercise);
                 }}
                 className="btn-secondary btn-sm"
+                title="ערוך פרמטרים"
               >
                 <span className="btn-icon">⚙️</span>
                 ערוך פרמטרים
@@ -387,6 +303,7 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
                   onExerciseRemove(exercise.exerciseId);
                 }}
                 className="btn-danger btn-sm"
+                title="הסר תרגיל"
               >
                 <span className="btn-icon">🗑️</span>
                 הסר תרגיל
@@ -394,7 +311,7 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
             </div>
           </div>
         )}
-      </div>
+      </Card>
     );
   };
 
@@ -403,7 +320,7 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        title="בחירת תרגילים לאימון"
+        title="ניהול תרגילים"
         icon="💪"
         size="xl"
       >
@@ -452,47 +369,17 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
             </div>
 
             <div className="exercises-content">
-              {exerciseMuscleGroups.length === 0 ? (
+              {filteredExercises.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon">💪</div>
                   <h3>{searchTerm || muscleGroupFilter ? 'לא נמצאו תרגילים' : 'אין תרגילים זמינים'}</h3>
                   <p>{searchTerm || muscleGroupFilter ? 'נסה מילות חיפוש אחרות' : 'צור תרגילים חדשים בעמוד ניהול התרגילים'}</p>
                 </div>
               ) : (
-                <div className="exercise-group-view">
-                  {exerciseMuscleGroups.map((group) => {
-                    const isExpanded = expandedExerciseGroups.has(group.name);
-                    
-                    return (
-                      <div key={group.name} className="muscle-group-section">
-                        <div 
-                          className="muscle-group-header"
-                          onClick={() => toggleExerciseGroup(group.name)}
-                        >
-                          <div className="muscle-group-info">
-                            <h3 className="muscle-group-name">{group.name}</h3>
-                            <span className="exercise-count">{group.count} תרגילים</span>
-                          </div>
-                          <div className="expand-icon">
-                            {isExpanded ? '▼' : '◀'}
-                          </div>
-                        </div>
-                        
-                        {isExpanded && (
-                          <div className="muscle-group-exercises">
-                            <div className="exercises-grid">
-                              {group.exercises.map((exercise) => (
-                                <div key={exercise.exerciseId}>
-                                  {renderExerciseCard(exercise)}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                <ExerciseGroupView
+                  exercises={filteredExercises}
+                  renderExerciseCard={renderExerciseCard}
+                />
               )}
             </div>
           </div>
@@ -524,170 +411,35 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
                   <p className="empty-subtitle">בחר תרגילים מהרשימה למעלה כדי להוסיף אותם לאימון</p>
                 </div>
               ) : (
-                <div className="exercise-group-view">
-                  {trainingMuscleGroups.map((group) => {
-                    const isExpanded = expandedTrainingGroups.has(group.name);
-                    
-                    return (
-                      <div key={group.name} className="muscle-group-section">
-                        <div 
-                          className="muscle-group-header"
-                          onClick={() => toggleTrainingGroup(group.name)}
-                        >
-                          <div className="muscle-group-info">
-                            <h3 className="muscle-group-name">{group.name}</h3>
-                            <span className="exercise-count">{group.count} תרגילים</span>
-                          </div>
-                          <div className="expand-icon">
-                            {isExpanded ? '▼' : '◀'}
-                          </div>
-                        </div>
-                        
-                        {isExpanded && (
-                          <div className="muscle-group-exercises">
-                            <div className="exercises-grid">
-                              {group.exercises.map((exercise) => (
-                                <div key={exercise.exerciseId}>
-                                  {renderTrainingExerciseCard(exercise)}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                <ExerciseGroupView
+                  exercises={trainingExercises}
+                  renderExerciseCard={renderTrainingExerciseCard}
+                />
               )}
             </div>
           </div>
         </div>
       </Modal>
 
-      {/* Exercise Parameters Edit Modal */}
-      <Modal
-        isOpen={!!editingExercise}
-        onClose={handleCancelEdit}
-        title="עריכת פרמטרי תרגיל"
-        icon="⚙️"
-        size="md"
-      >
-        {editingExercise && (
-          <div className="exercise-edit-form">
-            <div className="exercise-info-header">
-              <h4>{editingExercise.name}</h4>
-              <p className="exercise-muscle-group">🎯 {editingExercise.muscleGroup}</p>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>מספר סטים *</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={editData.numberOfSets}
-                  onChange={(e) => setEditData(prev => ({ 
-                    ...prev, 
-                    numberOfSets: parseInt(e.target.value) || 1 
-                  }))}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>מינימום חזרות *</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="50"
-                  value={editData.minimumNumberOfRepeasts}
-                  onChange={(e) => setEditData(prev => ({ 
-                    ...prev, 
-                    minimumNumberOfRepeasts: parseInt(e.target.value) || 1 
-                  }))}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>מקסימום חזרות *</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="50"
-                  value={editData.maximumNumberOfRepeasts}
-                  onChange={(e) => setEditData(prev => ({ 
-                    ...prev, 
-                    maximumNumberOfRepeasts: parseInt(e.target.value) || 1 
-                  }))}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>מינימום זמן מנוחה (שניות) *</label>
-                <input
-                  type="number"
-                  min="10"
-                  max="600"
-                  value={editData.minimumTimeToRest}
-                  onChange={(e) => setEditData(prev => ({ 
-                    ...prev, 
-                    minimumTimeToRest: parseInt(e.target.value) || 10 
-                  }))}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>מקסימום זמן מנוחה (שניות) *</label>
-                <input
-                  type="number"
-                  min="10"
-                  max="600"
-                  value={editData.maximumTimeToRest}
-                  onChange={(e) => setEditData(prev => ({ 
-                    ...prev, 
-                    maximumTimeToRest: parseInt(e.target.value) || 10 
-                  }))}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>הוראות נוספות לאימון</label>
-              <textarea
-                value={editData.prescriptionNote}
-                onChange={(e) => setEditData(prev => ({ ...prev, prescriptionNote: e.target.value }))}
-                placeholder="הוראות מיוחדות לתרגיל זה באימון..."
-                rows={3}
-              />
-            </div>
-
-            <div className="button-group justify-end">
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="btn-secondary"
-              >
-                ביטול
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveExercise}
-                className="btn-primary"
-              >
-                <span className="btn-icon">💾</span>
-                שמור שינויים
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      {/* Exercise Parameter Modal */}
+      <ExerciseParameterModal
+        isOpen={showParameterModal}
+        onClose={() => {
+          setShowParameterModal(false);
+          setSelectedExercise(null);
+          setEditingTrainingExercise(null);
+        }}
+        exercise={selectedExercise}
+        onSave={editingTrainingExercise ? handleTrainingParameterSave : handleParameterSave}
+        initialParameters={editingTrainingExercise ? {
+          numberOfSets: editingTrainingExercise.numberOfSets || 3,
+          minimumTimeToRest: editingTrainingExercise.minimumTimeToRest || 60,
+          maximumTimeToRest: editingTrainingExercise.maximumTimeToRest || 120,
+          minimumNumberOfRepeasts: editingTrainingExercise.minimumNumberOfRepeasts || 8,
+          maximumNumberOfRepeasts: editingTrainingExercise.maximumNumberOfRepeasts || 12,
+          prescriptionNote: editingTrainingExercise.prescriptionNote || ''
+        } : undefined}
+      />
     </>
   );
 };
