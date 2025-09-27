@@ -1,0 +1,121 @@
+/* Exercise Group View - Collapsible Muscle Groups */
+
+.exercise-group-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.muscle-group-section {
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.muscle-group-section:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.muscle-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-6);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: var(--transition-base);
+  border-bottom: var(--border-width-1) solid var(--border-secondary);
+}
+
+.muscle-group-header:hover {
+  background: var(--bg-hover);
+}
+
+.muscle-group-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.muscle-group-name {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.exercise-count {
+  background: var(--gradient-primary);
+  color: white;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.expand-icon {
+  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  transition: var(--transition-base);
+  user-select: none;
+}
+
+.muscle-group-header:hover .expand-icon {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.muscle-group-exercises {
+  padding: var(--space-6);
+  background: var(--bg-tertiary);
+}
+
+.muscle-group-exercises .exercises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Animation for expand/collapse */
+.muscle-group-exercises {
+  animation: expandGroup 0.3s ease-out;
+}
+
+@keyframes expandGroup {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .muscle-group-header {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .muscle-group-name {
+    font-size: var(--font-size-base);
+  }
+  
+  .exercise-count {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+  }
+  
+  .muscle-group-exercises {
+    padding: var(--space-4);
+  }
+  
+  .muscle-group-exercises .exercises-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}

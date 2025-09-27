@@ -4,8 +4,10 @@ import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
 import Modal from './Modal';
 import MuscleGroupSelect from './MuscleGroupSelect';
+import ExerciseGroupView from './ExerciseGroupView';
 import './AdminExerciseBank.css';
 import './Card.css';
+import './ExerciseGroupView.css';
 
 interface AdminExerciseBankProps {
   coachId: string;
@@ -70,16 +72,43 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     }
   };
 
-  const loadCopiedExercises = () => {
+  const loadCopiedExercises = async () => {
     try {
+      // Load from localStorage for immediate UI feedback
       const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
-      if (stored) {
-        const copiedIds = JSON.parse(stored);
-        setCopiedExercises(new Set(copiedIds));
-        console.log('📋 Loaded copied exercises from localStorage:', copiedIds);
+      const localCopiedIds = stored ? JSON.parse(stored) : [];
+      
+      // Load coach's exercises to check for server-side copied exercises
+      const coachExercisesResult = await cachedApiService.getExercises(coachId, token);
+      const coachExercises = coachExercisesResult.data;
+      
+      // Find exercises that were copied from admin exercises (have originalExerciseId)
+      const serverCopiedIds = coachExercises
+        .filter(exercise => exercise.originalExerciseId)
+        .map(exercise => exercise.originalExerciseId!);
+      
+      // Combine local and server copied IDs
+      const allCopiedIds = [...new Set([...localCopiedIds, ...serverCopiedIds])];
+      
+      setCopiedExercises(new Set(allCopiedIds));
+      console.log('📋 Loaded copied exercises - Local:', localCopiedIds, 'Server:', serverCopiedIds);
+      
+      // Update localStorage with server data for consistency
+      if (serverCopiedIds.length > 0) {
+        localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify(allCopiedIds));
       }
     } catch (error) {
-      console.warn('Failed to load copied exercises from localStorage:', error);
+      console.warn('Failed to load copied exercises:', error);
+      // Fallback to localStorage only
+      try {
+        const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
+        if (stored) {
+          const copiedIds = JSON.parse(stored);
+          setCopiedExercises(new Set(copiedIds));
+        }
+      } catch (fallbackError) {
+        console.warn('Failed to load from localStorage fallback:', fallbackError);
+      }
     }
   };
 
@@ -136,6 +165,82 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     setEditingExercise(null);
   };
 
+  const renderExerciseCard = (exercise: Exercise) => {
+    const isExpanded = expandedCards.has(exercise.exerciseId);
+    return (
+      <div key={exercise.exerciseId} className={`card card-hoverable ${isExpanded ? 'card-expanded' : 'card-collapsed'}`}>
+        <div className="card-header">
+          <div 
+            className="card-header-content"
+            onClick={() => toggleCardExpansion(exercise.exerciseId)}
+          >
+            <h3 className="card-title">{exercise.name}</h3>
+            <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+          </div>
+          <div className="card-actions">
+            <div className="admin-badge">מאמן מנהל</div>
+            <button 
+              className="card-action-button"
+              onClick={() => toggleCardExpansion(exercise.exerciseId)}
+              title={isExpanded ? 'כווץ תרגיל' : 'הרחב תרגיל'}
+            >
+              {isExpanded ? '🔽' : '🔼'}
+            </button>
+          </div>
+        </div>
+
+        {isExpanded && (
+          <div className="card-content">
+            {exercise.note && (
+              <div className="exercise-note">
+                <p>{exercise.note}</p>
+              </div>
+            )}
+
+            {exercise.link && (
+              <div className="exercise-link">
+                <a href={exercise.link} target="_blank" rel="noopener noreferrer">
+                  🎥 צפה בסרטון
+                </a>
+              </div>
+            )}
+          </div>
+        )}
+
+        {isExpanded && (
+          <div className="card-footer">
+            <div className="card-meta">
+              תרגיל מבנק המאמנים
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopyExercise(exercise);
+              }}
+              disabled={copying === exercise.exerciseId || copiedExercises.has(exercise.exerciseId)}
+              className={`copy-exercise-btn ${copiedExercises.has(exercise.exerciseId) ? 'copied' : ''}`}
+            >
+              {copying === exercise.exerciseId ? (
+                <>
+                  <span className="loading-spinner-small"></span>
+                  מעתיק...
+                </>
+              ) : copiedExercises.has(exercise.exerciseId) ? (
+                <>
+                  ✅ הועתק
+                </>
+              ) : (
+                <>
+                  📋 העתק תרגיל
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const toggleCardExpansion = (exerciseId: string) => {
     const newExpandedCards = new Set(expandedCards);
     if (expandedCards.has(exerciseId)) {
@@ -146,17 +251,29 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     setExpandedCards(newExpandedCards);
   };
 
-  const filteredExercises = adminExercises.filter(exercise => {
-    // Filter by search term (name or muscle group)
-    const matchesSearch = !searchTerm || 
-      exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    // Filter by muscle group
-    const matchesMuscleGroup = !muscleGroupFilter || exercise.muscleGroup === muscleGroupFilter;
-    
-    return matchesSearch && matchesMuscleGroup;
-  });
+  const filteredExercises = adminExercises
+    .filter(exercise => {
+      // Filter by search term (name or muscle group)
+      const matchesSearch = !searchTerm || 
+        exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      // Filter by muscle group
+      const matchesMuscleGroup = !muscleGroupFilter || exercise.muscleGroup === muscleGroupFilter;
+      
+      return matchesSearch && matchesMuscleGroup;
+    })
+    .sort((a, b) => {
+      // Sort copied exercises to the end
+      const aIsCopied = copiedExercises.has(a.exerciseId);
+      const bIsCopied = copiedExercises.has(b.exerciseId);
+      
+      if (aIsCopied && !bIsCopied) return 1;  // a goes to end
+      if (!aIsCopied && bIsCopied) return -1; // b goes to end
+      
+      // If both are copied or both are not copied, sort alphabetically
+      return a.name.localeCompare(b.name, 'he');
+    });
 
   return (
     <Modal
@@ -212,83 +329,10 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
                 <p>{searchTerm ? 'נסה מילות חיפוש אחרות' : 'אין תרגילים זמינים בבנק'}</p>
               </div>
             ) : (
-              <div className="exercises-grid">
-                {filteredExercises.map((exercise) => {
-                  const isExpanded = expandedCards.has(exercise.exerciseId);
-                  return (
-                    <div key={exercise.exerciseId} className={`card card-hoverable ${isExpanded ? 'card-expanded' : 'card-collapsed'}`}>
-                      <div className="card-header">
-                        <div 
-                          className="card-header-content"
-                          onClick={() => toggleCardExpansion(exercise.exerciseId)}
-                        >
-                          <h3 className="card-title">{exercise.name}</h3>
-                          <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-                        </div>
-                        <div className="card-actions">
-                          <div className="admin-badge">מאמן מנהל</div>
-                          <button 
-                            className="card-action-button"
-                            onClick={() => toggleCardExpansion(exercise.exerciseId)}
-                            title={isExpanded ? 'כווץ תרגיל' : 'הרחב תרגיל'}
-                          >
-                            {isExpanded ? '🔽' : '🔼'}
-                          </button>
-                        </div>
-                      </div>
-
-                      {isExpanded && (
-                        <div className="card-content">
-                          {exercise.note && (
-                            <div className="exercise-note">
-                              <p>{exercise.note}</p>
-                            </div>
-                          )}
-
-                          {exercise.link && (
-                            <div className="exercise-link">
-                              <a href={exercise.link} target="_blank" rel="noopener noreferrer">
-                                🎥 צפה בסרטון
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {isExpanded && (
-                        <div className="card-footer">
-                          <div className="card-meta">
-                            תרגיל מבנק המאמנים
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCopyExercise(exercise);
-                            }}
-                            disabled={copying === exercise.exerciseId || copiedExercises.has(exercise.exerciseId)}
-                            className={`copy-exercise-btn ${copiedExercises.has(exercise.exerciseId) ? 'copied' : ''}`}
-                          >
-                            {copying === exercise.exerciseId ? (
-                              <>
-                                <span className="loading-spinner-small"></span>
-                                מעתיק...
-                              </>
-                            ) : copiedExercises.has(exercise.exerciseId) ? (
-                              <>
-                                ✅ הועתק
-                              </>
-                            ) : (
-                              <>
-                                📋 העתק תרגיל
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              <ExerciseGroupView
+                exercises={filteredExercises}
+                renderExerciseCard={renderExerciseCard}
+              />
             )}
           </>
         )}

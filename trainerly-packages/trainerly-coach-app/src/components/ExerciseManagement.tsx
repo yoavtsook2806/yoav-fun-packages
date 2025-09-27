@@ -5,8 +5,10 @@ import AdminExerciseBank from './AdminExerciseBank';
 import Card from './Card';
 import Modal from './Modal';
 import MuscleGroupSelect from './MuscleGroupSelect';
+import ExerciseGroupView from './ExerciseGroupView';
 import { MUSCLE_GROUPS } from '../constants/muscleGroups';
 import './ExerciseManagement.css';
+import './ExerciseGroupView.css';
 
 interface ExerciseManagementProps {
   coachId: string;
@@ -137,6 +139,64 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
     setExpandedCards(newExpandedCards);
   };
 
+  const renderExerciseCard = (exercise: Exercise) => {
+    const isExpanded = expandedCards.has(exercise.exerciseId);
+    return (
+      <Card key={exercise.exerciseId} data-id={exercise.exerciseId} className={isExpanded ? 'expanded' : 'collapsed'}>
+        <div
+          className="card-header clickable"
+          onClick={() => toggleCardExpansion(exercise.exerciseId)}
+        >
+          <div className="card-controls">
+            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+          </div>
+          <div className="exercise-info">
+            <h3 className="card-title">{exercise.name}</h3>
+            {!isExpanded && exercise.muscleGroup && (
+              <p className="card-subtitle">{exercise.muscleGroup}</p>
+            )}
+          </div>
+        </div>
+
+        {isExpanded && (
+          <div className="card-details">
+            {exercise.muscleGroup && (
+              <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+            )}
+
+            {exercise.note && (
+              <div className="card-content">
+                <p>{exercise.note}</p>
+              </div>
+            )}
+
+            {exercise.link && (
+              <div className="card-footer">
+                <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
+                  🎥 צפה בסרטון
+                </a>
+              </div>
+            )}
+
+            <div className="card-actions-section">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(exercise);
+                }}
+                className="btn-secondary btn-sm"
+                title="ערוך תרגיל"
+              >
+                <span className="btn-icon">✏️</span>
+                ערוך תרגיל
+              </button>
+            </div>
+          </div>
+        )}
+      </Card>
+    );
+  };
+
 
 
   if (loading && exercises.length === 0) {
@@ -246,8 +306,8 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
         </form>
       </Modal>
 
-      <div className="exercises-grid">
-        {exercises.length === 0 ? (
+      {exercises.length === 0 ? (
+        <div className="exercises-grid">
           <Card>
             <div className="empty-state">
               <div className="empty-icon">💪</div>
@@ -258,66 +318,13 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
               </button>
             </div>
           </Card>
-        ) : (
-          exercises.map((exercise) => {
-            const isExpanded = expandedCards.has(exercise.exerciseId);
-            return (
-              <Card key={exercise.exerciseId} data-id={exercise.exerciseId} className={isExpanded ? 'expanded' : 'collapsed'}>
-                <div
-                  className="card-header clickable"
-                  onClick={() => toggleCardExpansion(exercise.exerciseId)}
-                >
-                  <div className="card-controls">
-                    <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
-                  </div>
-                  <div className="exercise-info">
-                    <h3 className="card-title">{exercise.name}</h3>
-                    {!isExpanded && exercise.muscleGroup && (
-                      <p className="card-subtitle">{exercise.muscleGroup}</p>
-                    )}
-                  </div>
-                </div>
-
-                {isExpanded && (
-                  <div className="card-details">
-                    {exercise.muscleGroup && (
-                      <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-                    )}
-
-                    {exercise.note && (
-                      <div className="card-content">
-                        <p>{exercise.note}</p>
-                      </div>
-                    )}
-
-                    {exercise.link && (
-                      <div className="card-footer">
-                        <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
-                          🎥 צפה בסרטון
-                        </a>
-                      </div>
-                    )}
-
-                    <div className="card-actions-section">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEdit(exercise);
-                        }}
-                        className="btn-secondary btn-sm"
-                        title="ערוך תרגיל"
-                      >
-                        <span className="btn-icon">✏️</span>
-                        ערוך תרגיל
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </Card>
-            );
-          })
-        )}
-      </div>
+        </div>
+      ) : (
+        <ExerciseGroupView
+          exercises={exercises}
+          renderExerciseCard={renderExerciseCard}
+        />
+      )}
 
       {/* Admin Exercise Bank Modal */}
       <AdminExerciseBank

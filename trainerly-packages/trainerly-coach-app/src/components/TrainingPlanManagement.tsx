@@ -44,8 +44,9 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     loadData();
     
     // Listen for cache updates
-    const handleCacheUpdate = (event: CustomEvent) => {
-      const { cacheKey, coachId: updatedCoachId, data } = event.detail;
+    const handleCacheUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { cacheKey, coachId: updatedCoachId, data } = customEvent.detail;
       if (updatedCoachId === coachId) {
         if (cacheKey === 'training_plans') {
           console.log('🔄 Training plans updated from background sync');
@@ -309,6 +310,9 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               <div className="trainings-section">
                 <div className="section-header">
                   <h3>אימונים בתוכנית</h3>
+                  <button type="button" onClick={addTraining} className="add-training-button">
+                    ➕ הוסף אימון
+                  </button>
                 </div>
 
                 <div className="trainings-list">
@@ -334,9 +338,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                   {formData.trainings.length === 0 && (
                     <div className="empty-trainings">
                       <p>עדיין לא נוספו אימונים לתוכנית</p>
-                      <button type="button" onClick={addTraining} className="empty-action-button">
-                        הוסף אימון ראשון
-                      </button>
+                      <p>השתמש בכפתור "הוסף אימון" למעלה כדי להתחיל</p>
                     </div>
                   )}
                 </div>

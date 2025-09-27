@@ -137,10 +137,11 @@ const MuscleGroupSelect: React.FC<MuscleGroupSelectProps> = ({
         style={{
           width: '100%',
           padding: '8px 12px',
-          border: '1px solid #d1d5db',
-          borderRadius: '6px',
+          border: '1px solid var(--border-primary)',
+          borderRadius: 'var(--border-radius-lg)',
           fontSize: '14px',
-          backgroundColor: disabled ? '#f9fafb' : 'white',
+          backgroundColor: disabled ? 'var(--bg-disabled)' : 'var(--bg-tertiary)',
+          color: 'var(--text-primary)',
           cursor: disabled ? 'not-allowed' : 'text'
         }}
       />
@@ -153,14 +154,14 @@ const MuscleGroupSelect: React.FC<MuscleGroupSelectProps> = ({
             top: '100%',
             left: 0,
             right: 0,
-            backgroundColor: 'white',
-            border: '1px solid #d1d5db',
+            backgroundColor: 'var(--bg-tertiary)',
+            border: '1px solid var(--border-primary)',
             borderTop: 'none',
-            borderRadius: '0 0 6px 6px',
+            borderRadius: '0 0 var(--border-radius-lg) var(--border-radius-lg)',
             maxHeight: '200px',
             overflowY: 'auto',
             zIndex: 1000,
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            boxShadow: 'var(--shadow-md)'
           }}
         >
           {filteredGroups.length > 0 ? (
@@ -172,10 +173,11 @@ const MuscleGroupSelect: React.FC<MuscleGroupSelectProps> = ({
                 style={{
                   padding: '8px 12px',
                   cursor: 'pointer',
-                  backgroundColor: index === highlightedIndex ? '#f3f4f6' : 'transparent',
-                  borderBottom: index < filteredGroups.length - 1 ? '1px solid #f3f4f6' : 'none',
+                  backgroundColor: index === highlightedIndex ? 'var(--bg-hover)' : 'transparent',
+                  borderBottom: index < filteredGroups.length - 1 ? '1px solid var(--border-secondary)' : 'none',
                   fontSize: '14px',
-                  textAlign: 'right'
+                  textAlign: 'right',
+                  color: 'var(--text-primary)'
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
               >
@@ -186,7 +188,7 @@ const MuscleGroupSelect: React.FC<MuscleGroupSelectProps> = ({
             <div 
               style={{
                 padding: '8px 12px',
-                color: '#6b7280',
+                color: 'var(--text-muted)',
                 fontSize: '14px',
                 textAlign: 'right'
               }}
