@@ -4,7 +4,7 @@ import SettingsModal from './SettingsModal';
 import ExerciseManagement from './ExerciseManagement';
 import TrainingPlanManagement from './TrainingPlanManagement';
 import TraineeManagement from './TraineeManagement';
-import Modal from './Modal';
+import { Modal } from 'trainerly-ui-components';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
@@ -246,7 +246,6 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
         isOpen={activeSection === 'exercises'}
         onClose={() => setActiveSection('dashboard')}
         title="ניהול תרגילים"
-        icon="💪"
         size="xl"
       >
         {coach && (
@@ -263,7 +262,6 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
         isOpen={activeSection === 'plans'}
         onClose={() => setActiveSection('dashboard')}
         title="ניהול תוכניות אימון"
-        icon="📋"
         size="xl"
       >
         {coach && (
@@ -280,7 +278,6 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
         isOpen={activeSection === 'trainees'}
         onClose={() => setActiveSection('dashboard')}
         title="ניהול מתאמנים"
-        icon="👥"
         size="xl"
       >
         <TraineeManagement

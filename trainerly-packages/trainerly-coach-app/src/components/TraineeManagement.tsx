@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import TraineeTrainingHistoryModal from './TraineeTrainingHistory';
-import Card from './Card';
-import Modal from './Modal';
+import { Card, Modal } from 'trainerly-ui-components';
 import '../styles/design-system.css';
 import './TraineeManagement.css';
 
@@ -223,7 +222,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
         isOpen={showAddForm}
         onClose={resetForm}
         title="הוספת מתאמן חדש"
-        icon="👤"
         size="lg"
       >
         <form onSubmit={handleSubmit} className="trainee-form">
@@ -265,9 +263,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
           </div>
 
           <div className="button-group justify-end">
-            <button type="button" onClick={resetForm} className="btn-secondary">
-              ביטול
-            </button>
             <button type="submit" className="btn-primary" disabled={loading}>
               <span className="btn-icon">{loading ? '⏳' : '➕'}</span>
               {loading ? 'שומר...' : 'הוסף מתאמן'}

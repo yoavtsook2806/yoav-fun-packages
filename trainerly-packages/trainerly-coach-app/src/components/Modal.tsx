@@ -31,7 +31,6 @@ const Modal: React.FC<ModalProps> = ({
       <div className={`modal-container modal-${size}`}>
         <div className="modal-header">
           <div className="modal-title-section">
-            {icon && <span className="modal-icon">{icon}</span>}
             <h2 className="modal-title">{title}</h2>
           </div>
           <button

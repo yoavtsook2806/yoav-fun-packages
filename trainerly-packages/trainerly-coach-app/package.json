@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "trainerly-ui-components": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

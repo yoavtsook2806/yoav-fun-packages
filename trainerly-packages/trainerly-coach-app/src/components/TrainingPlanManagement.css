@@ -38,6 +38,109 @@
   padding: var(--space-8);
 }
 
+/* Plan Modal Content Layout */
+.plan-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.plan-modal-content .plan-form {
+  padding: 0;
+  margin: 0;
+}
+
+/* Trainings list - stretched across full modal content */
+.plan-modal-content .trainings-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-4);
+  min-width: 0;
+  width: 100%;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: var(--border-width-1) solid var(--border-secondary);
+}
+
+/* Button Styles */
+.btn-purple {
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-width-1) solid var(--primary);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  background: var(--primary);
+  color: white;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-sans);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-purple:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-success {
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-width-1) solid var(--success);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  background: var(--success);
+  color: white;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-sans);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-success:disabled,
+.btn-purple:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .plan-modal-content .trainings-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .modal-actions {
+    gap: var(--space-2);
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
 /* Management Header */
 .management-header {
   margin-bottom: var(--space-10);
@@ -125,6 +228,7 @@
   background: #f8fafc;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
+  min-width: 0; /* Allow shrinking */
 }
 
 .section-header {
@@ -164,9 +268,11 @@
 
 /* Training Items */
 .trainings-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  min-width: 0; /* Allow shrinking */
+  width: 100%; /* Take full available width */
 }
 
 .training-item {
@@ -503,20 +609,6 @@
   }
 }
 
-.plan-card.deleting {
-  animation: fadeOutSlideUp 0.3s ease forwards;
-}
-
-@keyframes fadeOutSlideUp {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-}
 
 .plan-card:hover {
   transform: translateY(-5px);
@@ -546,8 +638,7 @@
   transition: opacity 0.2s ease;
 }
 
-.edit-plan-btn,
-.delete-plan-btn {
+.edit-plan-btn {
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
@@ -568,10 +659,66 @@
   transform: scale(1.1);
 }
 
-.delete-plan-btn:hover {
-  background: #ef4444;
+/* Simple Plan Card Styles */
+.simple-plan-card {
+  position: relative;
+  padding: var(--space-6);
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.simple-plan-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.simple-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.plan-main-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.plan-name-large {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+
+.edit-plan-corner-btn {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.edit-plan-corner-btn:hover {
+  background: var(--primary-color);
   color: white;
   transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .plan-name {
@@ -676,6 +823,11 @@
   }
   
   .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .trainings-list {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -1057,4 +1209,195 @@
   background: #10B981;
   border-color: #059669;
   box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+/* Trainings Section - Design System Styling */
+.trainings-section {
+  margin-top: var(--space-6);
+  background: var(--bg-card);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+}
+
+.trainings-section:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.trainings-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-width-1) solid var(--border-secondary);
+}
+
+.trainings-section .section-header h3 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.add-training-button {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-sm);
+}
+
+.add-training-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.trainings-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.training-item {
+  background: var(--bg-secondary);
+  border: var(--border-width-1) solid var(--border-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-4);
+  transition: var(--transition-base);
+}
+
+.training-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.training-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.training-header h4 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.training-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.edit-button,
+.remove-button {
+  background: var(--bg-tertiary);
+  border: var(--border-width-1) solid var(--border-secondary);
+  border-radius: var(--border-radius-md);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-base);
+  font-size: var(--font-size-sm);
+}
+
+.edit-button:hover {
+  background: var(--color-blue-500);
+  border-color: var(--color-blue-600);
+  color: white;
+  transform: scale(1.1);
+}
+
+.remove-button:hover {
+  background: var(--color-red-500);
+  border-color: var(--color-red-600);
+  color: white;
+  transform: scale(1.1);
+}
+
+.training-exercises {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.empty-trainings {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border: 2px dashed var(--border-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.empty-trainings p {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-base);
+}
+
+.empty-trainings p:last-child {
+  margin-bottom: 0;
+  font-size: var(--font-size-sm);
+}
+
+/* Training Form Modal - Higher Z-Index for Nested Modals */
+.training-form-modal-wrapper.active {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999; /* Much higher than regular modals */
+  pointer-events: none; /* Allow clicks to pass through wrapper */
+}
+
+.training-form-modal-wrapper.active .modal-overlay {
+  z-index: 99999 !important;
+  pointer-events: all; /* Re-enable clicks on modal overlay */
+}
+
+.training-form-modal-wrapper.active .modal-container {
+  z-index: 100000 !important;
+  pointer-events: all; /* Re-enable clicks on modal content */
+}
+
+/* Exercise Parameter Modal - Even Higher Z-Index for Triple Nested Modals */
+.exercise-parameter-modal-wrapper.nested-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 199999; /* Even higher than training form modal */
+  pointer-events: none; /* Allow clicks to pass through wrapper */
+}
+
+.exercise-parameter-modal-wrapper.nested-modal .modal-overlay {
+  z-index: 199999 !important;
+  pointer-events: all; /* Re-enable clicks on modal overlay */
+}
+
+.exercise-parameter-modal-wrapper.nested-modal .modal-container {
+  z-index: 200000 !important;
+  pointer-events: all; /* Re-enable clicks on modal content */
 }

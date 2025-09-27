@@ -140,11 +140,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 0.5rem 1rem;
   background: var(--background-secondary);
   cursor: pointer;
   transition: background-color 0.2s ease;
   user-select: none;
+  min-height: 48px;
 }
 
 .muscle-group-header:hover {
@@ -154,12 +155,12 @@
 .muscle-group-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .muscle-group-name {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
 }

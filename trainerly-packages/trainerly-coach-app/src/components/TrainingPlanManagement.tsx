@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise, Coach } from '../services/cachedApiService';
-import { showError, showSuccess } from './ToastContainer';
+import { showError, showSuccess } from 'trainerly-ui-components';
+import { LoadingSpinner } from 'trainerly-ui-components';
 import EditTrainingPlan from './EditTrainingPlan';
-import Card from './Card';
-import Modal from './Modal';
-import ExerciseGroupView from './ExerciseGroupView';
+import { Card, Modal, ExerciseGroupView, Title } from 'trainerly-ui-components';
 import ExerciseParameterModal, { ExerciseParameters } from './ExerciseParameterModal';
 import './TrainingPlanManagement.css';
 import './ExerciseGroupView.css';
@@ -99,13 +98,25 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     e.preventDefault();
     try {
       setLoading(true);
-      await cachedApiService.createTrainingPlan(coachId, token, formData);
+      
+      if (editingPlan) {
+        // Update existing plan
+        await cachedApiService.updateTrainingPlan(coachId, editingPlan.planId, token, formData);
+        showSuccess('תוכנית האימון עודכנה בהצלחה!');
+        setEditingPlan(null);
+      } else {
+        // Create new plan
+        await cachedApiService.createTrainingPlan(coachId, token, formData);
+        showSuccess('תוכנית אימון נשמרה בהצלחה!');
+        setShowAddForm(false);
+      }
+      
       await loadData();
       resetPlanForm();
       setError(null);
-      showSuccess('תוכנית אימון נשמרה בהצלחה!');
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'שגיאה בשמירת תוכנית האימון';
+      const errorMsg = err instanceof Error ? err.message : 
+        editingPlan ? 'שגיאה בעדכון תוכנית האימון' : 'שגיאה בשמירת תוכנית האימון';
       setError(errorMsg);
       showError(errorMsg);
     } finally {
@@ -122,37 +133,25 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     setShowAddForm(false);
   };
 
-  const handleEditPlan = (plan: TrainingPlanSummary) => {
-    setEditingPlan(plan);
-  };
-
-  const handleDeletePlan = async (plan: TrainingPlanSummary) => {
-    if (confirm(`האם אתה בטוח שברצונך למחוק את תוכנית "${plan.name}"?`)) {
-      try {
-        // Add deleting class for animation
-        const planElement = document.querySelector(`[data-plan-id="${plan.planId}"]`);
-        if (planElement) {
-          planElement.classList.add('deleting');
-        }
-        
-        // Wait for animation to start
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        await cachedApiService.deleteTrainingPlan(coachId, plan.planId, token);
-        showSuccess(`תוכנית "${plan.name}" נמחקה בהצלחה`);
-        // Plans will be updated automatically via cache event
-      } catch (err) {
-        // Remove deleting class if error occurred
-        const planElement = document.querySelector(`[data-plan-id="${plan.planId}"]`);
-        if (planElement) {
-          planElement.classList.remove('deleting');
-        }
-        
-        const errorMsg = err instanceof Error ? err.message : 'שגיאה במחיקת תוכנית האימון';
-        showError(errorMsg);
-      }
+  const handleEditPlan = async (plan: TrainingPlanSummary) => {
+    try {
+      setLoading(true);
+      // Load full plan details for editing
+      const fullPlan = await cachedApiService.getTrainingPlan(coachId, plan.planId, token);
+      setFormData({
+        name: fullPlan.name,
+        description: fullPlan.description || '',
+        trainings: fullPlan.trainings || []
+      });
+      setEditingPlan(plan);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'שגיאה בטעינת פרטי התוכנית';
+      showError(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const addTraining = () => {
     setCurrentTraining({
@@ -165,10 +164,19 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     setShowTrainingForm(true);
   };
 
-  const editTraining = (index: number) => {
-    setCurrentTraining({ ...formData.trainings[index] });
-    setEditingTrainingIndex(index);
+  const editTraining = (training: TrainingItem) => {
+    setCurrentTraining({ ...training });
+    setEditingTrainingIndex(formData.trainings.findIndex(t => t.trainingId === training.trainingId));
     setShowTrainingForm(true);
+  };
+
+  const deleteTraining = (trainingId: string) => {
+    if (confirm('האם אתה בטוח שברצונך למחוק את האימון?')) {
+      setFormData(prev => ({
+        ...prev,
+        trainings: prev.trainings.filter(t => t.trainingId !== trainingId)
+      }));
+    }
   };
 
   const saveTraining = () => {
@@ -190,6 +198,37 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     setShowTrainingForm(false);
     setCurrentTraining({ trainingId: '', name: '', order: 0, exercises: [] });
     showSuccess('האימון נשמר בהצלחה');
+  };
+
+  const handleSave = async () => {
+    if (!formData.name.trim()) {
+      showError('שם התוכנית הוא שדה חובה');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      if (editingPlan) {
+        // Update existing plan
+        await cachedApiService.updateTrainingPlan(coachId, editingPlan.planId, token, formData);
+        showSuccess('תוכנית האימון עודכנה בהצלחה!');
+        setEditingPlan(null);
+      } else {
+        // Create new plan
+        await cachedApiService.createTrainingPlan(coachId, token, formData);
+        showSuccess('תוכנית האימון נוצרה בהצלחה!');
+        setShowAddForm(false);
+      }
+      
+      resetPlanForm();
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 
+        editingPlan ? 'שגיאה בעדכון תוכנית האימון' : 'שגיאה ביצירת תוכנית האימון';
+      showError(errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -534,111 +573,106 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
         isOpen={showAddForm}
         onClose={resetPlanForm}
         title="יצירת תוכנית אימון חדשה"
-        icon="📋"
-        size="lg"
+        size="xl"
       >
+        <div className="plan-modal-content">
+          <form className="plan-form">
+            <div className="form-group">
+              <label>שם התוכנית *</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                required
+                placeholder="לדוגמה: תוכנית מתחילים"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>תיאור</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="תיאור התוכנית"
+                rows={3}
+              />
+            </div>
+          </form>
+
+          <Title level={3}>אימונים בתוכנית</Title>
+
+          <div className="trainings-list">
+            {formData.trainings.map((training, index) => (
+              <Card
+                key={training.trainingId}
+                variant="simple"
+                title={`אימון ${training.name}`}
+                label={`${training.exercises.length} תרגילים`}
+                labelColor="purple"
+                onEdit={() => editTraining(training)}
+                onRemove={() => deleteTraining(training.trainingId)}
+              />
+            ))}
             
-            <form onSubmit={handleSubmitPlan} className="plan-form">
-              <div className="form-group">
-                <label>שם התוכנית *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  required
-                  placeholder="לדוגמה: תוכנית מתחילים"
-                />
+            {formData.trainings.length === 0 && (
+              <div className="empty-trainings">
+                <p>עדיין לא נוספו אימונים לתוכנית</p>
+                <p>השתמש בכפתור "הוסף אימון" למטה כדי להתחיל</p>
               </div>
+            )}
+          </div>
 
-              <div className="form-group">
-                <label>תיאור</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="תיאור התוכנית"
-                  rows={3}
-                />
-              </div>
-
-              <div className="trainings-section">
-                <div className="section-header">
-                  <h3>אימונים בתוכנית</h3>
-                  <button type="button" onClick={addTraining} className="add-training-button">
-                    ➕ הוסף אימון
-                  </button>
-                </div>
-
-                <div className="trainings-list">
-                  {formData.trainings.map((training, index) => (
-                    <div key={training.trainingId} className="training-item">
-                      <div className="training-header">
-                        <h4>אימון {training.name}</h4>
-                        <div className="training-actions">
-                          <button type="button" onClick={() => editTraining(index)} className="edit-button">
-                            ✏️
-                          </button>
-                          <button type="button" onClick={() => removeTraining(index)} className="remove-button">
-                            🗑️
-                          </button>
-                        </div>
-                      </div>
-                      <div className="training-exercises">
-                        {training.exercises.length} תרגילים
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {formData.trainings.length === 0 && (
-                    <div className="empty-trainings">
-                      <p>עדיין לא נוספו אימונים לתוכנית</p>
-                      <p>השתמש בכפתור "הוסף אימון" למעלה כדי להתחיל</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="form-actions">
-                <button type="button" onClick={resetPlanForm} className="cancel-button">
-                  ביטול
-                </button>
-                <button type="submit" className="save-button" disabled={loading || formData.trainings.length === 0}>
-                  {loading ? 'שומר...' : 'שמור תוכנית'}
-                </button>
-              </div>
-            </form>
+          <div className="modal-actions">
+            <button 
+              type="button" 
+              onClick={addTraining} 
+              className="btn-purple"
+            >
+              ➕ הוסף אימון
+            </button>
+            <button 
+              type="button" 
+              onClick={handleSave} 
+              className="btn-success"
+              disabled={loading || !formData.name.trim() || formData.trainings.length === 0}
+            >
+              {loading ? 'שומר...' : 'שמור תוכנית'}
+            </button>
+          </div>
+        </div>
       </Modal>
 
       {/* Training Form Modal - Complete Interface */}
-      <Modal
-        isOpen={showTrainingForm}
-        onClose={() => setShowTrainingForm(false)}
-        title={editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}
-        icon="🏋️"
-        size="xl"
-      >
-        <div className="training-form">
+      <div className={`training-form-modal-wrapper ${showTrainingForm ? 'active' : ''}`}>
+        <Modal
+          isOpen={showTrainingForm}
+          onClose={() => setShowTrainingForm(false)}
+          title={editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}
+          size="xl"
+        >
+            <div className="training-form">
           {/* Training Name */}
-          <div className="form-group">
-            <label>שם האימון *</label>
-            <input
-              type="text"
-              value={currentTraining.name}
-              onChange={(e) => setCurrentTraining(prev => ({ ...prev, name: e.target.value }))}
-              placeholder="לדוגמה: A, B, C או חזה וכתפיים"
+              <div className="form-group">
+                <label>שם האימון *</label>
+                <input
+                  type="text"
+                  value={currentTraining.name}
+                  onChange={(e) => setCurrentTraining(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="לדוגמה: A, B, C או חזה וכתפיים"
               dir="rtl"
-            />
-          </div>
+                />
+              </div>
 
           {/* Two-Section Layout */}
           <div className="training-sections">
             {/* Top Section: Exercise Browser */}
             <div className="exercise-browser-section">
-              <div className="section-header">
+                <div className="section-header">
                 <h3 className="section-title">
                   <span className="section-icon">💪</span>
                   התרגילים שלי
                 </h3>
-              </div>
+                </div>
 
               <div className="exercises-content">
                 {exercises.length === 0 ? (
@@ -653,16 +687,16 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                     renderExerciseCard={renderExerciseCard}
                   />
                 )}
-              </div>
-            </div>
-
+                        </div>
+                      </div>
+                      
             {/* Divider */}
             <div className="sections-divider">
               <div className="divider-line"></div>
               <div className="divider-icon">⬇️</div>
               <div className="divider-line"></div>
-            </div>
-
+                      </div>
+                      
             {/* Bottom Section: Training Exercises */}
             <div className="training-exercises-section">
               <div className="section-header">
@@ -693,42 +727,42 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           </div>
 
           {/* Form Actions */}
-          <div className="form-actions">
-            <button type="button" onClick={() => setShowTrainingForm(false)} className="btn-secondary">
-              ביטול
-            </button>
-            <button 
-              type="button" 
-              onClick={saveTraining} 
+              <div className="form-actions">
+                <button 
+                  type="button" 
+                  onClick={saveTraining} 
               className="btn-primary"
               disabled={!currentTraining.name?.trim() || currentTraining.exercises.length === 0}
-            >
+                >
               <span className="btn-icon">💾</span>
               הוסף אימון
-            </button>
+                </button>
           </div>
         </div>
       </Modal>
+      </div>
 
-      {/* Exercise Parameter Modal */}
-      <ExerciseParameterModal
-        isOpen={showParameterModal}
-        onClose={() => {
-          setShowParameterModal(false);
-          setSelectedExercise(null);
-          setEditingTrainingExercise(null);
-        }}
-        exercise={selectedExercise}
-        onSave={editingTrainingExercise ? handleTrainingParameterSave : handleParameterSave}
-        initialParameters={editingTrainingExercise ? {
-          numberOfSets: editingTrainingExercise.numberOfSets || 3,
-          minimumTimeToRest: editingTrainingExercise.minimumTimeToRest || 60,
-          maximumTimeToRest: editingTrainingExercise.maximumTimeToRest || 120,
-          minimumNumberOfRepeasts: editingTrainingExercise.minimumNumberOfRepeasts || 8,
-          maximumNumberOfRepeasts: editingTrainingExercise.maximumNumberOfRepeasts || 12,
-          prescriptionNote: editingTrainingExercise.prescriptionNote || ''
-        } : undefined}
-      />
+      {/* Exercise Parameter Modal - Higher Z-Index when within Training Form */}
+      <div className={`exercise-parameter-modal-wrapper ${showParameterModal && showTrainingForm ? 'nested-modal' : ''}`}>
+        <ExerciseParameterModal
+          isOpen={showParameterModal}
+          onClose={() => {
+            setShowParameterModal(false);
+            setSelectedExercise(null);
+            setEditingTrainingExercise(null);
+          }}
+          exercise={selectedExercise}
+          onSave={editingTrainingExercise ? handleTrainingParameterSave : handleParameterSave}
+          initialParameters={editingTrainingExercise ? {
+            numberOfSets: editingTrainingExercise.numberOfSets || 3,
+            minimumTimeToRest: editingTrainingExercise.minimumTimeToRest || 60,
+            maximumTimeToRest: editingTrainingExercise.maximumTimeToRest || 120,
+            minimumNumberOfRepeasts: editingTrainingExercise.minimumNumberOfRepeasts || 8,
+            maximumNumberOfRepeasts: editingTrainingExercise.maximumNumberOfRepeasts || 12,
+            prescriptionNote: editingTrainingExercise.prescriptionNote || ''
+          } : undefined}
+        />
+      </div>
 
       {/* Plans Grid */}
       <div className="plans-grid">
@@ -748,91 +782,96 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             .filter(plan => !plan.customTrainee)
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .map((plan) => {
-            const isExpanded = expandedCards.has(plan.planId);
             return (
-              <Card key={plan.planId} data-id={plan.planId} className={isExpanded ? 'expanded' : 'collapsed'}>
-                <div
-                  className="card-header clickable"
-                  onClick={() => toggleCardExpansion(plan.planId)}
-                >
-                  <div className="card-controls">
-                    <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
-                  </div>
-                  <div className="plan-info">
-                    <h3 className="card-title">{plan.name}</h3>
-                    {!isExpanded && plan.description && (
-                      <p className="card-subtitle">{plan.description}</p>
-                    )}
-                  </div>
-                </div>
-
-                {isExpanded && (
-                  <div className="card-details">
-                    {plan.description && (
-                      <p className="card-subtitle">{plan.description}</p>
-                    )}
-
-                    <div className="card-stats">
-                      <div className="card-stat">
-                        <span className="card-stat-number">{plan.trainingsCount}</span>
-                        <span className="card-stat-label">אימונים</span>
-                      </div>
-                      <div className="card-stat">
-                        <span className="card-stat-number">{exercises.length}</span>
-                        <span className="card-stat-label">תרגילים</span>
-                      </div>
-                    </div>
-
-                    <div className="card-footer">
-                      <span className="card-meta">נוצר ב-{new Date(plan.createdAt).toLocaleDateString('he-IL')}</span>
-                    </div>
-
-                    <div className="card-actions-section">
-                      <button
-                        className="btn-secondary btn-sm"
-                        title="ערוך תוכנית"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditPlan(plan);
-                        }}
-                      >
-                        <span className="btn-icon">✏️</span>
-                        ערוך תוכנית
-                      </button>
-                      <button
-                        className="btn-warning btn-sm"
-                        title="מחק תוכנית"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeletePlan(plan);
-                        }}
-                      >
-                        <span className="btn-icon">🗑️</span>
-                        מחק תוכנית
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </Card>
+              <Card 
+                key={plan.planId} 
+                data-id={plan.planId}
+                variant="simple"
+                title={plan.name}
+                label={`${plan.trainingsCount} אימונים`}
+                labelColor="purple"
+                onEdit={() => handleEditPlan(plan)}
+              />
             );
           })
         )}
       </div>
 
 
-      {/* Edit Training Plan Modal */}
+      {/* Edit Plan Modal - Same as Create Plan */}
       {editingPlan && (
-        <EditTrainingPlan
-          coachId={coachId}
-          token={token}
-          plan={editingPlan}
+        <Modal
           isOpen={!!editingPlan}
           onClose={() => setEditingPlan(null)}
-          onPlanUpdated={(updatedPlan) => {
-            // Plans will be updated automatically via cache event
-            setEditingPlan(null);
-          }}
-        />
+          title="עריכת תוכנית"
+          size="xl"
+        >
+          <div className="plan-modal-content">
+            <form className="plan-form">
+              <div className="form-group">
+                <label>שם התוכנית *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  required
+                  placeholder="לדוגמה: תוכנית מתחילים"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>תיאור</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="תיאור התוכנית"
+                  rows={3}
+                />
+              </div>
+            </form>
+
+            <Title level={3}>אימונים בתוכנית</Title>
+
+            <div className="trainings-list">
+              {formData.trainings.map((training, index) => (
+                <Card
+                  key={training.trainingId}
+                  variant="simple"
+                  title={`אימון ${training.name}`}
+                  label={`${training.exercises.length} תרגילים`}
+                  labelColor="purple"
+                  onEdit={() => editTraining(training)}
+                  onRemove={() => deleteTraining(training.trainingId)}
+                />
+              ))}
+              
+              {formData.trainings.length === 0 && (
+                <div className="empty-trainings">
+                  <p>עדיין לא נוספו אימונים לתוכנית</p>
+                  <p>השתמש בכפתור "הוסף אימון" למטה כדי להתחיל</p>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-actions">
+              <button 
+                type="button" 
+                onClick={addTraining} 
+                className="btn-purple"
+              >
+                ➕ הוסף אימון
+              </button>
+              <button 
+                type="button" 
+                onClick={handleSave} 
+                className="btn-success"
+                disabled={loading || !formData.name.trim() || formData.trainings.length === 0}
+              >
+                {loading ? 'שומר...' : 'שמור שינויים'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

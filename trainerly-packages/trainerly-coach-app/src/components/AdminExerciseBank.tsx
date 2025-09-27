@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise } from '../services/cachedApiService';
-import { showError, showSuccess } from './ToastContainer';
-import LoadingSpinner from './LoadingSpinner';
-import Modal from './Modal';
-import MuscleGroupSelect from './MuscleGroupSelect';
-import ExerciseGroupView from './ExerciseGroupView';
+import { showError, showSuccess, LoadingSpinner } from 'trainerly-ui-components';
+import { Modal, ExerciseGroupView } from 'trainerly-ui-components';
+import { MuscleGroupSelect } from 'trainerly-ui-components';
 import './AdminExerciseBank.css';
 import './Card.css';
 import './ExerciseGroupView.css';
@@ -302,7 +300,6 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="בנק התרגילים"
-      icon="🏦"
       size="xl"
     >
       <div className="search-section">
@@ -447,9 +444,6 @@ const ExerciseEditModal: React.FC<ExerciseEditModalProps> = ({ exercise, onSave,
         </div>
 
         <div className="modal-actions">
-          <button type="button" onClick={onCancel} className="btn-secondary">
-            ביטול
-          </button>
           <button 
             type="submit" 
             className="btn-primary"

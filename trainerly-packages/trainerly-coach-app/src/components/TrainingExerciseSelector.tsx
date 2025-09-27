@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Exercise, PrescribedExercise } from '../services/apiService';
-import Modal from './Modal';
-import MuscleGroupSelect from './MuscleGroupSelect';
-import ExerciseGroupView from './ExerciseGroupView';
+import { Card, Modal, ExerciseGroupView } from 'trainerly-ui-components';
+import { MuscleGroupSelect } from 'trainerly-ui-components';
 import ExerciseParameterModal, { ExerciseParameters } from './ExerciseParameterModal';
-import Card from './Card';
 import './TrainingExerciseSelector.css';
 import './ExerciseGroupView.css';
 
@@ -325,7 +323,6 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         title={trainingName ? `עריכת אימון: ${trainingName}` : "ניהול תרגילים"}
-        icon="💪"
         size="xl"
       >
         <div className="training-exercise-selector">
@@ -426,13 +423,6 @@ const TrainingExerciseSelector: React.FC<TrainingExerciseSelectorProps> = ({
           {/* Save Button */}
           {onSave && (
             <div className="modal-actions">
-              <button
-                type="button"
-                onClick={onClose}
-                className="btn-secondary"
-              >
-                ביטול
-              </button>
               <button
                 type="button"
                 onClick={onSave}

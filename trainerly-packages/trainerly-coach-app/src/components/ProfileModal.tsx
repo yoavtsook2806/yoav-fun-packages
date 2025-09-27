@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
-import Modal from './Modal';
+import { Modal } from 'trainerly-ui-components';
 import './ProfileModal.css';
 
 interface ProfileModalProps {
@@ -112,7 +112,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="עריכת פרופיל"
-      icon="⚙️"
       size="md"
     >
       {success && (
@@ -216,15 +215,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         )}
 
         <div className="button-group justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={loading}
-            className="btn-secondary"
-          >
-            <span className="btn-icon">❌</span>
-            ביטול
-          </button>
           <button
             type="submit"
             disabled={loading || success}

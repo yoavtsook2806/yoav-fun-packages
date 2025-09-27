@@ -5,7 +5,7 @@ import './App.css';
 // Components
 import AuthScreen from './components/AuthScreen';
 import CoachDashboard from './components/CoachDashboard';
-import ToastContainer from './components/ToastContainer';
+import { ToastContainer } from 'trainerly-ui-components';
 import { getApiBaseUrl } from './config/api';
 
 // Types

@@ -93,17 +93,11 @@
 .modal-title-section {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
   text-align: center;
   justify-content: center;
   width: 100%;
   margin-left: 60px; /* Account for close button width - using margin-left for RTL */
   direction: rtl;
-}
-
-.modal-icon {
-  font-size: var(--font-size-3xl);
-  filter: drop-shadow(0 2px 8px rgba(99, 102, 241, 0.3));
 }
 
 .modal-title {

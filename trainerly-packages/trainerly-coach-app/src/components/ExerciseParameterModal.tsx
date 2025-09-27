@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Exercise } from '../services/cachedApiService';
-import Modal from './Modal';
+import { Modal } from 'trainerly-ui-components';
 import './ExerciseParameterModal.css';
 
 interface ExerciseParameterModalProps {
@@ -65,7 +65,6 @@ const ExerciseParameterModal: React.FC<ExerciseParameterModalProps> = ({
       isOpen={isOpen}
       onClose={handleCancel}
       title="הגדרת פרמטרי תרגיל"
-      icon="⚙️"
       size="md"
     >
       <div className="exercise-parameter-modal">
@@ -186,13 +185,6 @@ const ExerciseParameterModal: React.FC<ExerciseParameterModalProps> = ({
         </div>
 
         <div className="modal-actions">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="btn-secondary"
-          >
-            ביטול
-          </button>
           <button
             type="button"
             onClick={handleSave}

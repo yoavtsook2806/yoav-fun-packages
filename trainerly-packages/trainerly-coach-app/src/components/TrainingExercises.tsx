@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PrescribedExercise } from '../services/apiService';
-import Modal from './Modal';
+import { Modal } from 'trainerly-ui-components';
 import './TrainingExercises.css';
 
 interface TrainingExercisesProps {
@@ -231,7 +231,6 @@ const TrainingExercises: React.FC<TrainingExercisesProps> = ({
         isOpen={!!editingExercise}
         onClose={handleCancelEdit}
         title="עריכת פרמטרי תרגיל"
-        icon="⚙️"
         size="md"
       >
         {editingExercise && (
@@ -331,13 +330,6 @@ const TrainingExercises: React.FC<TrainingExercisesProps> = ({
             </div>
 
             <div className="button-group justify-end">
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="btn-secondary"
-              >
-                ביטול
-              </button>
               <button
                 type="button"
                 onClick={handleSaveExercise}

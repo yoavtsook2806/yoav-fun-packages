@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Exercise } from '../services/apiService';
-import ExerciseGroupView from './ExerciseGroupView';
+import { ExerciseGroupView } from 'trainerly-ui-components';
 import './ExerciseBrowser.css';
 
 interface ExerciseBrowserProps {

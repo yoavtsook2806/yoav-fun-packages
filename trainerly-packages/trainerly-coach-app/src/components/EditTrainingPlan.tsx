@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
-import Modal from './Modal';
+import { Modal } from 'trainerly-ui-components';
 import TrainingExerciseSelector from './TrainingExerciseSelector';
 import './EditTrainingPlan.css';
 

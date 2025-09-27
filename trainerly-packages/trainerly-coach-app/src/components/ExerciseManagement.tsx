@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Exercise, Coach } from '../services/cachedApiService';
-import { showError, showSuccess } from './ToastContainer';
+import { showError, showSuccess } from 'trainerly-ui-components';
 import AdminExerciseBank from './AdminExerciseBank';
-import Card from './Card';
-import Modal from './Modal';
-import MuscleGroupSelect from './MuscleGroupSelect';
-import ExerciseGroupView from './ExerciseGroupView';
-import { MUSCLE_GROUPS } from '../constants/muscleGroups';
+import { Card, Modal, ExerciseGroupView } from 'trainerly-ui-components';
+import { MuscleGroupSelect, MUSCLE_GROUPS } from 'trainerly-ui-components';
 import './ExerciseManagement.css';
 import './ExerciseGroupView.css';
 
@@ -140,60 +137,16 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
   };
 
   const renderExerciseCard = (exercise: Exercise) => {
-    const isExpanded = expandedCards.has(exercise.exerciseId);
     return (
-      <Card key={exercise.exerciseId} data-id={exercise.exerciseId} className={isExpanded ? 'expanded' : 'collapsed'}>
-        <div
-          className="card-header clickable"
-          onClick={() => toggleCardExpansion(exercise.exerciseId)}
-        >
-          <div className="card-controls">
-            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
-          </div>
-          <div className="exercise-info">
-            <h3 className="card-title">{exercise.name}</h3>
-            {!isExpanded && exercise.muscleGroup && (
-              <p className="card-subtitle">{exercise.muscleGroup}</p>
-            )}
-          </div>
-        </div>
-
-        {isExpanded && (
-          <div className="card-details">
-            {exercise.muscleGroup && (
-              <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
-            )}
-
-            {exercise.note && (
-              <div className="card-content">
-                <p>{exercise.note}</p>
-              </div>
-            )}
-
-            {exercise.link && (
-              <div className="card-footer">
-                <a href={exercise.link} target="_blank" rel="noopener noreferrer" className="video-link">
-                  🎥 צפה בסרטון
-                </a>
-              </div>
-            )}
-
-            <div className="card-actions-section">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(exercise);
-                }}
-                className="btn-secondary btn-sm"
-                title="ערוך תרגיל"
-              >
-                <span className="btn-icon">✏️</span>
-                ערוך תרגיל
-              </button>
-            </div>
-          </div>
-        )}
-      </Card>
+      <Card 
+        key={exercise.exerciseId} 
+        data-id={exercise.exerciseId}
+        variant="simple"
+        title={exercise.name}
+        label={exercise.muscleGroup}
+        labelColor="purple"
+        onEdit={() => handleEdit(exercise)}
+      />
     );
   };
 
@@ -244,7 +197,6 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
         isOpen={showAddForm}
         onClose={resetForm}
         title={editingExercise ? 'עריכת תרגיל' : 'הוספת תרגיל חדש'}
-        icon="💪"
         size="lg"
       >
         <form onSubmit={handleSubmit} className="exercise-form">
@@ -291,9 +243,6 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
           </div>
 
           <div className="button-group justify-end">
-            <button type="button" onClick={resetForm} className="btn-secondary">
-              ביטול
-            </button>
             <button
               type="submit"
               className="btn-primary"

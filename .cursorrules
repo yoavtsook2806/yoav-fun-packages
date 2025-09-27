@@ -1,4 +1,4 @@
-# Yoav Fun Packages - Cursor Rules
+1.# Yoav Fun Packages - Cursor Rules
 
 ## Project Structure
 This is a monorepo containing multiple fun web applications and packages.
@@ -16,6 +16,7 @@ This is a monorepo containing multiple fun web applications and packages.
   - `trainerly-coach-app`: Coach dashboard and management
   - `trainerly-trainee-app`: Trainee mobile/web app with authentication
   - `trainerly-server`: Backend API server
+  - `trainerly-ui-components`: Shared UI components library
 
 ## Package Management
 - **Use yarn workspaces** for all package management operations
@@ -129,6 +130,14 @@ When the user writes "new product:" follow this EXACT TDD workflow:
    - Clean up code while keeping tests green
    - Optimize implementation
    - Ensure code quality and maintainability
+
+## UI Components Package
+- **ALWAYS use base UI components** from `trainerly-ui-components` package
+- **Available components**: Card, Modal, Toast, Label (more to be added)
+- **Import pattern**: `import { Card } from 'trainerly-ui-components'`
+- **If you need a new UI component**: Ask the user to create it in the UI components package first
+- **Never create duplicate UI components** in individual apps - use the shared package
+- **Consistent design**: All apps should use the same UI components for consistency
 
 ## Code Style
 - Use TypeScript for all new code
