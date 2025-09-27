@@ -246,14 +246,6 @@ functions:
           method: get
           cors: true
 
-  # Admin training plan bank
-  getAdminTrainingPlans:
-    handler: src/handlers/admin.getAdminTrainingPlans
-    events:
-      - http:
-          path: /admin/training-plans
-          method: get
-          cors: true
 
   # Copy admin exercise to coach
   copyAdminExercise:
@@ -264,14 +256,6 @@ functions:
           method: post
           cors: true
 
-  # Copy admin training plan to coach
-  copyAdminTrainingPlan:
-    handler: src/handlers/coaches.copyAdminTrainingPlan
-    events:
-      - http:
-          path: /coaches/{coachId}/training-plans/copy-admin/{adminPlanId}
-          method: post
-          cors: true
 
   # Create custom training plan for trainee
   createCustomTrainingPlan:

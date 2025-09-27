@@ -104,36 +104,3 @@ export const getAdminExercises = async (
   }
 };
 
-/**
- * Get all admin training plans (created by admin coaches)
- */
-export const getAdminTrainingPlans = async (
-  event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-  try {
-    console.log('📋 Get admin training plans request received');
-    
-    // Get all training plans marked as admin plans
-    const adminPlans = await db.getAdminTrainingPlans();
-    
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        items: adminPlans,
-        count: adminPlans.length
-      })
-    };
-  } catch (error) {
-    console.error('Error in getAdminTrainingPlans:', error);
-    
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      })
-    };
-  }
-};

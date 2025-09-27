@@ -602,33 +602,6 @@ export class DatabaseService {
     }
   }
 
-  async getAdminTrainingPlans(): Promise<any[]> {
-    try {
-      const command = new ScanCommand({
-        TableName: this.getTableName('plans'),
-        FilterExpression: 'isAdminPlan = :isAdmin',
-        ExpressionAttributeValues: { ':isAdmin': true }
-      });
-      
-      const result = await this.client.send(command);
-      
-      // Convert to summary format
-      const plans = result.Items || [];
-      return plans.map(plan => ({
-        planId: plan.planId,
-        name: plan.name,
-        description: plan.description,
-        trainingsCount: plan.trainings?.length || 0,
-        isAdminPlan: plan.isAdminPlan,
-        originalPlanId: plan.originalPlanId,
-        customTrainee: plan.customTrainee,
-        createdAt: plan.createdAt
-      }));
-    } catch (error) {
-      console.error('❌ Error getting admin training plans:', error);
-      return [];
-    }
-  }
 
   async getExercise(exerciseId: string): Promise<any | null> {
     try {

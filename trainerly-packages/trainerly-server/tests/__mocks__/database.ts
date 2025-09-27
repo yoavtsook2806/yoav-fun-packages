@@ -166,24 +166,6 @@ export const mockDatabase = {
     return adminExercises;
   },
 
-  async getAdminTrainingPlans(): Promise<any[]> {
-    const adminPlans = [];
-    for (const plan of this.plans.values()) {
-      if (plan.isAdminPlan) {
-        adminPlans.push({
-          planId: plan.planId,
-          name: plan.name,
-          description: plan.description,
-          trainingsCount: plan.trainings?.length || 0,
-          isAdminPlan: plan.isAdminPlan,
-          originalPlanId: plan.originalPlanId,
-          customTrainee: plan.customTrainee,
-          createdAt: plan.createdAt
-        });
-      }
-    }
-    return adminPlans;
-  },
 
   async getCustomTrainingPlansForTrainee(coachId: string, traineeName: string): Promise<any[]> {
     const customPlans = [];

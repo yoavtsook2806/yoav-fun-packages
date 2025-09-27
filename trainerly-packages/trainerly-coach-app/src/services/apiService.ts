@@ -328,33 +328,6 @@ class ApiService {
     return response.json();
   }
 
-  // Admin Training Plan Bank
-  async getAdminTrainingPlans(token: string): Promise<TrainingPlanSummary[]> {
-    const response = await fetch(`${this.baseUrl}/admin/training-plans`, {
-      method: 'GET',
-      headers: this.getAuthHeaders(token),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch admin training plans: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.items || [];
-  }
-
-  async copyAdminTrainingPlan(coachId: string, adminPlanId: string, token: string): Promise<TrainingPlan> {
-    const response = await fetch(`${this.baseUrl}/coaches/${coachId}/training-plans/copy-admin/${adminPlanId}`, {
-      method: 'POST',
-      headers: this.getAuthHeaders(token),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to copy admin training plan: ${response.statusText}`);
-    }
-
-    return response.json();
-  }
 
   // Custom Trainee Training Plans
   async createCustomTrainingPlan(

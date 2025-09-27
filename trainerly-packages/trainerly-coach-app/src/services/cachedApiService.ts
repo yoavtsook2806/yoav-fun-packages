@@ -268,36 +268,6 @@ class CachedApiService {
     return copiedExercise;
   }
 
-  // Admin Training Plan Bank Methods
-  async getAdminTrainingPlans(token: string, options?: LoadOptions): Promise<CachedData<TrainingPlanSummary[]>> {
-    return this.loadWithCache(
-      'admin_training_plans',
-      'admin', // Use 'admin' as coachId for admin training plans
-      () => apiService.getAdminTrainingPlans(token),
-      options
-    );
-  }
-
-  async copyAdminTrainingPlan(coachId: string, adminPlanId: string, token: string): Promise<TrainingPlan> {
-    const copiedPlan = await apiService.copyAdminTrainingPlan(coachId, adminPlanId, token);
-    
-    // Update the coach's training plans cache
-    const cachedPlans = cacheService.get<TrainingPlanSummary[]>(coachId, CACHE_KEYS.TRAINING_PLANS) || [];
-    const newPlanSummary: TrainingPlanSummary = {
-      planId: copiedPlan.planId,
-      name: copiedPlan.name,
-      description: copiedPlan.description,
-      trainingsCount: copiedPlan.trainings.length,
-      isAdminPlan: copiedPlan.isAdminPlan,
-      originalPlanId: copiedPlan.originalPlanId,
-      customTrainee: copiedPlan.customTrainee,
-      createdAt: copiedPlan.createdAt
-    };
-    const updatedPlans = [...cachedPlans, newPlanSummary];
-    cacheService.set(coachId, CACHE_KEYS.TRAINING_PLANS, updatedPlans);
-    
-    return copiedPlan;
-  }
 
   // Custom Trainee Training Plan Methods
   async createCustomTrainingPlan(

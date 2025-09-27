@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, PrescribedExercise, Coach } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
-import AdminTrainingPlanBank from './AdminTrainingPlanBank';
 import EditTrainingPlan from './EditTrainingPlan';
 import Card from './Card';
 import './TrainingPlanManagement.css';
@@ -19,7 +18,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [showAdminPlanBank, setShowAdminPlanBank] = useState(false);
   const [editingPlan, setEditingPlan] = useState<TrainingPlanSummary | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   
@@ -257,16 +255,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
           <span className="btn-icon">➕</span>
           הוסף תוכנית חדשה
         </button>
-        {!coach.isAdmin && (
-          <button
-            onClick={() => setShowAdminPlanBank(true)}
-            className="btn-secondary"
-            disabled={loading}
-          >
-            <span className="btn-icon">🏦</span>
-            בנק תוכניות מנהל
-          </button>
-        )}
       </div>
 
       {error && (
@@ -607,17 +595,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
         )}
       </div>
 
-      {/* Admin Training Plan Bank Modal */}
-      <AdminTrainingPlanBank
-        coachId={coachId}
-        token={token}
-        isOpen={showAdminPlanBank}
-        onClose={() => setShowAdminPlanBank(false)}
-        onPlanCopied={(plan) => {
-          // Refresh plans after copying
-          loadData();
-        }}
-      />
 
       {/* Edit Training Plan Modal */}
       {editingPlan && (
