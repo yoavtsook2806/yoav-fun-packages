@@ -805,6 +805,7 @@ function App() {
             availableTrainings={Object.keys(currentTrainingPlan.trainings)}
             trainings={currentTrainingPlan.trainings}
             trainerName={trainerName}
+            trainingPlanId={currentTrainingPlan.planId}
           />
 
           {/* Settings Modal */}

@@ -6,6 +6,7 @@ interface TrainingSelectionProps {
   availableTrainings: string[];
   trainings: any; // Training data to get exercise lists
   trainerName?: string;
+  trainingPlanId: string;
 }
 
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
@@ -13,6 +14,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   availableTrainings,
   trainings,
   trainerName,
+  trainingPlanId,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
   
@@ -26,11 +28,18 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
     if (exerciseNames.length === 0) return 0;
     
     // Get the minimum count across all exercises in this training
+    // Filter by trainingPlanId and trainingType to only count completions for this specific training
     let minCompletions = Infinity;
     
     for (const exerciseName of exerciseNames) {
       const exerciseEntries = exerciseHistory[exerciseName] || [];
-      const count = exerciseEntries.length;
+      
+      // Filter entries to only count those from the current training plan and training type
+      const filteredEntries = exerciseEntries.filter(entry => 
+        entry.trainingPlanId === trainingPlanId && entry.trainingType === trainingType
+      );
+      
+      const count = filteredEntries.length;
       minCompletions = Math.min(minCompletions, count);
     }
     

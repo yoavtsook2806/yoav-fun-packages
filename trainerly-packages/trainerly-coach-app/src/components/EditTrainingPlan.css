@@ -550,3 +550,143 @@
     align-items: flex-start;
   }
 }
+
+/* New Training Form - Two-Section Layout */
+.training-form-new {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.training-name-section {
+  flex-shrink: 0;
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+}
+
+.training-name-section .form-group {
+  margin: 0;
+}
+
+.training-name-section label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.training-name-section input {
+  width: 100%;
+  padding: var(--space-3);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-base);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: var(--transition-base);
+}
+
+.training-name-section input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+.training-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  overflow: hidden;
+}
+
+.exercise-browser-section,
+.training-exercises-section {
+  flex: 1;
+  min-height: 0;
+  background: var(--bg-secondary);
+  border: var(--border-width-1) solid var(--border-primary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-4);
+}
+
+.sections-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: var(--border-width-1);
+  background: var(--border-primary);
+}
+
+.divider-icon {
+  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  background: var(--bg-primary);
+  padding: var(--space-2);
+  border-radius: var(--border-radius-full);
+  border: var(--border-width-1) solid var(--border-primary);
+}
+
+.training-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: var(--border-width-1) solid var(--border-secondary);
+  flex-shrink: 0;
+}
+
+/* Responsive Design for New Training Form */
+@media (max-width: 1024px) {
+  .training-form-new {
+    max-height: 85vh;
+  }
+  
+  .training-sections {
+    gap: var(--space-3);
+  }
+  
+  .exercise-browser-section,
+  .training-exercises-section {
+    padding: var(--space-3);
+  }
+}
+
+@media (max-width: 768px) {
+  .training-form-new {
+    max-height: 80vh;
+    gap: var(--space-4);
+  }
+  
+  .training-name-section {
+    padding: var(--space-3);
+  }
+  
+  .training-sections {
+    gap: var(--space-2);
+  }
+  
+  .exercise-browser-section,
+  .training-exercises-section {
+    padding: var(--space-2);
+  }
+  
+  .training-form-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .training-form-actions button {
+    width: 100%;
+  }
+}

@@ -45,7 +45,12 @@ export interface TrainingItem {
 }
 
 export interface PrescribedExercise {
+  exerciseId: string; // references Exercise.exerciseId
   exerciseName: string; // references Exercise.name
+  name: string; // alias for exerciseName for consistency
+  muscleGroup: string; // muscle group from Exercise
+  link?: string; // video URL from Exercise
+  note?: string; // instructions from Exercise
   numberOfSets: number;
   minimumTimeToRest: number;
   maximumTimeToRest: number;

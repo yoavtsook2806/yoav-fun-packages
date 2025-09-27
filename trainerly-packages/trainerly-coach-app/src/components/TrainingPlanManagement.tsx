@@ -3,6 +3,8 @@ import { cachedApiService, TrainingPlanSummary, Exercise, TrainingItem, Prescrib
 import { showError, showSuccess } from './ToastContainer';
 import EditTrainingPlan from './EditTrainingPlan';
 import Card from './Card';
+import Modal from './Modal';
+import TrainingExerciseSelector from './TrainingExerciseSelector';
 import './TrainingPlanManagement.css';
 
 interface TrainingPlanManagementProps {
@@ -36,6 +38,7 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   });
   
   const [showTrainingForm, setShowTrainingForm] = useState(false);
+  const [showTrainingExerciseSelector, setShowTrainingExerciseSelector] = useState(false);
   const [editingTrainingIndex, setEditingTrainingIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -165,6 +168,11 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   };
 
   const saveTraining = () => {
+    if (!currentTraining.name?.trim()) {
+      showError('יש להזין שם לאימון');
+      return;
+    }
+
     if (editingTrainingIndex !== null) {
       const updatedTrainings = [...formData.trainings];
       updatedTrainings[editingTrainingIndex] = currentTraining;
@@ -177,18 +185,29 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     }
     setShowTrainingForm(false);
     setCurrentTraining({ trainingId: '', name: '', order: 0, exercises: [] });
+    showSuccess('האימון נשמר בהצלחה');
   };
 
-  const removeTraining = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      trainings: prev.trainings.filter((_, i) => i !== index)
-    }));
+  const openTrainingExerciseSelector = () => {
+    if (!currentTraining.name?.trim()) {
+      showError('יש להזין שם לאימון תחילה');
+      return;
+    }
+    setShowTrainingExerciseSelector(true);
   };
 
-  const addExerciseToTraining = (exercise: Exercise) => {
+  const addExerciseToCurrentTraining = (exercise: Exercise) => {
+    // Check if exercise is already added
+    const isAlreadyAdded = currentTraining.exercises.some(ex => ex.exerciseId === exercise.exerciseId);
+    if (isAlreadyAdded) return;
+    
     const prescribedExercise: PrescribedExercise = {
+      exerciseId: exercise.exerciseId,
       exerciseName: exercise.name,
+      name: exercise.name,
+      muscleGroup: exercise.muscleGroup,
+      link: exercise.link,
+      note: exercise.note,
       numberOfSets: 3,
       minimumTimeToRest: 60,
       maximumTimeToRest: 120,
@@ -203,25 +222,29 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     }));
   };
 
-  const updateTrainingExercise = (index: number, updates: Partial<PrescribedExercise>) => {
+  const updateCurrentTrainingExercise = (exerciseId: string, updates: Partial<PrescribedExercise>) => {
     setCurrentTraining(prev => ({
       ...prev,
-      exercises: prev.exercises.map((ex, i) => 
-        i === index ? { ...ex, ...updates } : ex
+      exercises: prev.exercises.map(ex => 
+        ex.exerciseId === exerciseId ? { ...ex, ...updates } : ex
       )
     }));
   };
 
-  const removeExerciseFromTraining = (index: number) => {
+  const removeExerciseFromCurrentTraining = (exerciseId: string) => {
     setCurrentTraining(prev => ({
       ...prev,
-      exercises: prev.exercises.filter((_, i) => i !== index)
+      exercises: prev.exercises.filter(ex => ex.exerciseId !== exerciseId)
     }));
   };
 
-  const getExerciseName = (exerciseName: string) => {
-    return exerciseName || 'תרגיל לא נמצא';
+  const removeTraining = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      trainings: prev.trainings.filter((_, i) => i !== index)
+    }));
   };
+
 
   const toggleCardExpansion = (planId: string) => {
     const newExpandedCards = new Set(expandedCards);
@@ -265,13 +288,13 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
       )}
 
       {/* Add Plan Modal */}
-      {showAddForm && (
-        <div className="modal-overlay">
-          <div className="plan-form-modal">
-            <div className="modal-header">
-              <h2>יצירת תוכנית אימון חדשה</h2>
-              <button onClick={resetPlanForm} className="close-button">✕</button>
-            </div>
+      <Modal
+        isOpen={showAddForm}
+        onClose={resetPlanForm}
+        title="יצירת תוכנית אימון חדשה"
+        icon="📋"
+        size="lg"
+      >
             
             <form onSubmit={handleSubmitPlan} className="plan-form">
               <div className="form-group">
@@ -341,173 +364,110 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+      </Modal>
 
       {/* Training Form Modal */}
-      {showTrainingForm && (
-        <div className="modal-overlay">
-          <div className="training-form-modal">
-            <div className="modal-header">
-              <h2>{editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}</h2>
-              <button onClick={() => setShowTrainingForm(false)} className="close-button">✕</button>
-            </div>
-            
-            <div className="training-form">
-              <div className="form-group">
-                <label>שם האימון *</label>
-                <input
-                  type="text"
-                  value={currentTraining.name}
-                  onChange={(e) => setCurrentTraining(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="לדוגמה: A, B, C או חזה וכתפיים"
-                />
+      <Modal
+        isOpen={showTrainingForm}
+        onClose={() => setShowTrainingForm(false)}
+        title={editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}
+        icon="🏋️"
+        size="md"
+      >
+        <div className="training-form">
+          <div className="form-group">
+            <label>שם האימון *</label>
+            <input
+              type="text"
+              value={currentTraining.name}
+              onChange={(e) => setCurrentTraining(prev => ({ ...prev, name: e.target.value }))}
+              placeholder="לדוגמה: A, B, C או חזה וכתפיים"
+              dir="rtl"
+            />
+          </div>
+
+          <div className="exercises-section">
+            <div className="section-header">
+              <h3>תרגילים באימון</h3>
+              <div className="exercises-count">
+                {currentTraining.exercises.length} תרגילים
               </div>
+            </div>
 
-              <div className="exercises-section">
-                <div className="section-header">
-                  <h3>תרגילים באימון</h3>
-                </div>
+            <div className="exercise-selection-actions">
+              <button 
+                type="button" 
+                onClick={openTrainingExerciseSelector}
+                className="btn-primary"
+              >
+                <span className="btn-icon">💪</span>
+                בחר תרגילים
+              </button>
+            </div>
 
-                {/* Exercise Selection */}
-                <div className="exercise-selection">
-                  <h4>בחר תרגילים מהספרייה:</h4>
-                  <div className="available-exercises">
-                    {exercises.map((exercise) => (
-                      <div key={exercise.exerciseId} className="available-exercise">
-                        <div className="exercise-info">
-                          <span className="exercise-name">{exercise.name}</span>
-                          {exercise.muscleGroup && (
-                            <span className="exercise-muscle-group">🎯 {exercise.muscleGroup}</span>
-                          )}
-                        </div>
-                        <button 
-                          type="button" 
-                          onClick={() => addExerciseToTraining(exercise)}
-                          className="add-exercise-button"
-                          disabled={currentTraining.exercises.some(ex => ex.exerciseName === exercise.name)}
-                        >
-                          {currentTraining.exercises.some(ex => ex.exerciseName === exercise.name) ? '✓' : '➕'}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Selected Exercises */}
-                <div className="selected-exercises">
-                  <h4>תרגילים שנבחרו:</h4>
-                  {currentTraining.exercises.map((trainingEx, index) => (
-                    <div key={index} className="training-exercise-item">
+            {currentTraining.exercises.length > 0 && (
+              <div className="selected-exercises-summary">
+                <h4>תרגילים שנבחרו:</h4>
+                <div className="exercises-list">
+                  {currentTraining.exercises.map((exercise, index) => (
+                    <div key={exercise.exerciseId} className="exercise-summary-item">
                       <div className="exercise-info">
-                        <h5>{getExerciseName(trainingEx.exerciseName)}</h5>
+                        <span className="exercise-name">{exercise.name}</span>
+                        <span className="exercise-details">
+                          🎯 {exercise.muscleGroup} • 
+                          🔢 {exercise.numberOfSets} סטים • 
+                          🔁 {exercise.minimumNumberOfRepeasts}-{exercise.maximumNumberOfRepeasts} חזרות
+                        </span>
                       </div>
-                      
-                      <div className="exercise-params">
-                        <div className="param-group">
-                          <label>סטים</label>
-                          <input
-                            type="number"
-                            value={trainingEx.numberOfSets}
-                            onChange={(e) => updateTrainingExercise(index, { numberOfSets: parseInt(e.target.value) || 1 })}
-                            min="1"
-                            max="10"
-                          />
-                        </div>
-                        
-                        <div className="param-group">
-                          <label>חזרות מינימום</label>
-                          <input
-                            type="number"
-                            value={trainingEx.minimumNumberOfRepeasts}
-                            onChange={(e) => updateTrainingExercise(index, { minimumNumberOfRepeasts: parseInt(e.target.value) || 1 })}
-                            min="1"
-                            max="50"
-                          />
-                        </div>
-                        
-                        <div className="param-group">
-                          <label>חזרות מקסימום</label>
-                          <input
-                            type="number"
-                            value={trainingEx.maximumNumberOfRepeasts}
-                            onChange={(e) => updateTrainingExercise(index, { maximumNumberOfRepeasts: parseInt(e.target.value) || 1 })}
-                            min="1"
-                            max="50"
-                          />
-                        </div>
-                        
-                        <div className="param-group">
-                          <label>מנוחה מינימום (שניות)</label>
-                          <input
-                            type="number"
-                            value={trainingEx.minimumTimeToRest}
-                            onChange={(e) => updateTrainingExercise(index, { minimumTimeToRest: parseInt(e.target.value) || 30 })}
-                            min="15"
-                            max="300"
-                            step="15"
-                          />
-                        </div>
-                        
-                        <div className="param-group">
-                          <label>מנוחה מקסימום (שניות)</label>
-                          <input
-                            type="number"
-                            value={trainingEx.maximumTimeToRest}
-                            onChange={(e) => updateTrainingExercise(index, { maximumTimeToRest: parseInt(e.target.value) || 60 })}
-                            min="15"
-                            max="300"
-                            step="15"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="exercise-notes">
-                        <label>הערות</label>
-                        <input
-                          type="text"
-                          value={trainingEx.prescriptionNote || ''}
-                          onChange={(e) => updateTrainingExercise(index, { prescriptionNote: e.target.value })}
-                          placeholder="הערות נוספות (אופציונלי)"
-                        />
-                      </div>
-                      
                       <button 
                         type="button" 
-                        onClick={() => removeExerciseFromTraining(index)}
-                        className="remove-exercise-button"
+                        onClick={() => removeExerciseFromCurrentTraining(exercise.exerciseId)}
+                        className="remove-exercise-btn"
+                        title="הסר תרגיל"
                       >
-                        🗑️
+                        ✕
                       </button>
                     </div>
                   ))}
-                  
-                  {currentTraining.exercises.length === 0 && (
-                    <div className="empty-exercises">
-                      <p>עדיין לא נבחרו תרגילים לאימון זה</p>
-                    </div>
-                  )}
                 </div>
               </div>
+            )}
 
-              <div className="form-actions">
-                <button type="button" onClick={() => setShowTrainingForm(false)} className="cancel-button">
-                  ביטול
-                </button>
-                <button 
-                  type="button" 
-                  onClick={saveTraining} 
-                  className="save-button"
-                  disabled={!currentTraining.name.trim() || currentTraining.exercises.length === 0}
-                >
-                  שמור אימון
-                </button>
+            {currentTraining.exercises.length === 0 && (
+              <div className="empty-exercises">
+                <p>עדיין לא נבחרו תרגילים לאימון זה</p>
+                <p>השתמש בכפתור "בחר תרגילים" למעלה כדי להוסיף תרגילים</p>
               </div>
-            </div>
+            )}
+          </div>
+
+          <div className="form-actions">
+            <button type="button" onClick={() => setShowTrainingForm(false)} className="btn-secondary">
+              ביטול
+            </button>
+            <button 
+              type="button" 
+              onClick={saveTraining} 
+              className="btn-primary"
+              disabled={!currentTraining.name?.trim() || currentTraining.exercises.length === 0}
+            >
+              <span className="btn-icon">💾</span>
+              שמור אימון
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
+
+      {/* Training Exercise Selector Modal */}
+      <TrainingExerciseSelector
+        isOpen={showTrainingExerciseSelector}
+        onClose={() => setShowTrainingExerciseSelector(false)}
+        exercises={exercises}
+        trainingExercises={currentTraining.exercises}
+        onExerciseAdd={addExerciseToCurrentTraining}
+        onExerciseUpdate={updateCurrentTrainingExercise}
+        onExerciseRemove={removeExerciseFromCurrentTraining}
+      />
 
       {/* Plans Grid */}
       <div className="plans-grid">
@@ -523,7 +483,10 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             </div>
           </Card>
         ) : (
-          plans.filter(plan => !plan.customTrainee).map((plan) => {
+          plans
+            .filter(plan => !plan.customTrainee)
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .map((plan) => {
             const isExpanded = expandedCards.has(plan.planId);
             return (
               <Card key={plan.planId} data-id={plan.planId} className={isExpanded ? 'expanded' : 'collapsed'}>

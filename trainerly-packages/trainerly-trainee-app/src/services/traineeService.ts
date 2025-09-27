@@ -386,30 +386,27 @@ export const loadAllTraineeDataFromServer = async (traineeId: string): Promise<b
 
     // 1. Load Exercise Defaults with cleanup
     const serverExerciseDefaults = serverData.exerciseDefaults || {};
-    const localExerciseDefaults = getExerciseDefaults();
     
-    // Remove local exercise defaults that don't exist on server
-    const localExerciseNames = Object.keys(localExerciseDefaults);
-    const serverExerciseNames = Object.keys(serverExerciseDefaults);
-    const exercisesToRemove = localExerciseNames.filter(name => !serverExerciseNames.includes(name));
+    // Check if server data is in the correct plan-aware format
+    const isServerDataPlanAware = Object.values(serverExerciseDefaults).some(value => 
+      typeof value === 'object' && value !== null && !('defaultWeight' in value)
+    );
     
-    if (exercisesToRemove.length > 0) {
-      console.log('🧹 Removing exercise defaults not found on server:', exercisesToRemove);
-      exercisesToRemove.forEach(exerciseName => {
-        // Remove from localStorage by saving empty defaults
-        // Clear exercise defaults by removing from localStorage
-        const exerciseDefaults = JSON.parse(localStorage.getItem('trainerly_exercise_defaults') || '{}');
-        delete exerciseDefaults[exerciseName];
-        localStorage.setItem('trainerly_exercise_defaults', JSON.stringify(exerciseDefaults));
-      });
-    }
-    
-    // Load server exercise defaults
-    if (Object.keys(serverExerciseDefaults).length > 0) {
-      for (const [exerciseName, defaults] of Object.entries(serverExerciseDefaults)) {
-        saveExerciseDefaults(exerciseName, defaults as any);
-      }
-      console.log('✅ Loaded exercise defaults from server');
+    if (isServerDataPlanAware) {
+      // Server data is already in plan-aware format - use it directly
+      console.log('✅ Server exercise defaults are plan-aware, loading directly');
+      localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify(serverExerciseDefaults));
+    } else if (Object.keys(serverExerciseDefaults).length > 0) {
+      // Server data is in legacy flat format - we cannot restore plan context
+      console.warn('⚠️ Server exercise defaults are in legacy flat format, cannot restore plan context');
+      console.warn('⚠️ User will need to redo FTE for proper plan-aware defaults');
+      
+      // Clear local defaults since we can't properly restore plan context
+      localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify({}));
+    } else {
+      // No server data - clear local defaults
+      localStorage.setItem(EXERCISE_DEFAULTS_KEY, JSON.stringify({}));
+      console.log('✅ Cleared exercise defaults (no server data)');
     }
 
     // 2. Load Training Progress with cleanup

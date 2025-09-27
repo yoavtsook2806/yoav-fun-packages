@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cachedApiService, Trainee, TrainingPlanSummary } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
-import CustomTraineePlanManager from './CustomTraineePlanManager';
 import TraineeTrainingHistoryModal from './TraineeTrainingHistory';
 import Card from './Card';
 import Modal from './Modal';
@@ -20,8 +19,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [showCustomPlanManager, setShowCustomPlanManager] = useState(false);
-  const [customPlanTrainee, setCustomPlanTrainee] = useState<Trainee | null>(null);
   const [showTrainingHistory, setShowTrainingHistory] = useState(false);
   const [historyTrainee, setHistoryTrainee] = useState<Trainee | null>(null);
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
@@ -142,15 +139,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
     }
   };
 
-  const openCustomPlanManager = (trainee: Trainee) => {
-    setCustomPlanTrainee(trainee);
-    setShowCustomPlanManager(true);
-  };
-
-  const closeCustomPlanManager = () => {
-    setShowCustomPlanManager(false);
-    setCustomPlanTrainee(null);
-  };
 
   const openTrainingHistory = (trainee: Trainee) => {
     setHistoryTrainee(trainee);
@@ -380,20 +368,9 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          openCustomPlanManager(trainee);
-                        }}
-                        className="btn-secondary btn-sm"
-                        title="תוכניות מותאמות"
-                      >
-                        <span className="btn-icon">👤</span>
-                        תוכניות מותאמות
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
                           openTrainingHistory(trainee);
                         }}
-                        className="btn-secondary btn-sm"
+                        className="btn-secondary btn-full"
                         title="נתוני אימונים מלאים"
                       >
                         <span className="btn-icon">📊</span>
@@ -408,16 +385,6 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
         )}
       </div>
 
-      {/* Custom Trainee Plan Manager Modal */}
-      {customPlanTrainee && (
-        <CustomTraineePlanManager
-          coachId={coachId}
-          token={token}
-          trainee={customPlanTrainee}
-          isOpen={showCustomPlanManager}
-          onClose={closeCustomPlanManager}
-        />
-      )}
 
       {/* Training History Modal */}
       {historyTrainee && (

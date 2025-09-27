@@ -218,6 +218,7 @@ export class DatabaseService {
         { name: 'plans', key: 'planId' },
         { name: 'plan-assignments', key: 'assignmentId' },
         { name: 'progress', key: 'progressId' },
+        { name: 'trainee_data', key: 'traineeId' }, // Added missing trainee data table
         // Legacy tables
         { name: 'training-plans', key: 'version' },
         { name: 'user-profiles', key: 'userId' },
