@@ -7,14 +7,38 @@ import ExercisePerformanceGraph from './ExercisePerformanceGraph';
 interface ExerciseHistoryProps {
   exerciseName: string;
   onClose: () => void;
+  trainingPlanId?: string; // Filter by training plan
+  trainingType?: string; // Filter by training type
 }
 
 const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
   exerciseName,
   onClose,
+  trainingPlanId,
+  trainingType,
 }) => {
   const history = getExerciseHistory();
-  const exerciseHistory = history[exerciseName] || [];
+  const allExerciseHistory = history[exerciseName] || [];
+  
+  // Filter history based on training plan and training type if provided
+  const exerciseHistory = allExerciseHistory.filter(entry => {
+    // If no filters provided, show all history (backward compatibility)
+    if (!trainingPlanId && !trainingType) {
+      return true;
+    }
+    
+    // Filter by training plan if provided
+    if (trainingPlanId && entry.trainingPlanId !== trainingPlanId) {
+      return false;
+    }
+    
+    // Filter by training type if provided
+    if (trainingType && entry.trainingType !== trainingType) {
+      return false;
+    }
+    
+    return true;
+  });
   const [selectedEntry, setSelectedEntry] = useState<ExerciseHistoryEntry | null>(null);
   const [activeTab, setActiveTab] = useState<'history' | 'graph'>('history');
 

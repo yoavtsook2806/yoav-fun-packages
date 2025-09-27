@@ -33,13 +33,32 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     if (isOpen) {
       loadAdminExercises();
     }
+
+    // Listen for cache updates
+    const handleCacheUpdate = (event: CustomEvent) => {
+      const { cacheKey, data } = event.detail;
+      if (cacheKey === 'admin_exercises') {
+        console.log('🔄 Admin exercises updated from background sync');
+        setAdminExercises(data);
+      }
+    };
+
+    window.addEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    };
   }, [isOpen]);
 
   const loadAdminExercises = async () => {
     try {
-      setLoading(true);
-      const result = await cachedApiService.getAdminExercises(token);
+      const result = await cachedApiService.getAdminExercises(token, { backgroundUpdate: true });
       setAdminExercises(result.data);
+      
+      // Only show loading if data didn't come from cache
+      if (!result.fromCache) {
+        setLoading(true);
+      }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'שגיאה בטעינת בנק התרגילים';
       showError(errorMsg);

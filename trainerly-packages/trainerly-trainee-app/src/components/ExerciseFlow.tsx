@@ -686,6 +686,8 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <ExerciseHistory
           exerciseName={historyModal}
           onClose={() => setHistoryModal(null)}
+          trainingPlanId={trainingPlanId}
+          trainingType={trainingState.selectedTraining || undefined}
         />
       )}
       

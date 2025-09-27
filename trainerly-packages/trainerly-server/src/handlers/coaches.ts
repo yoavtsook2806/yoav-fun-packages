@@ -556,10 +556,23 @@ export const copyAdminExercise = async (
       };
     }
 
+    // Parse optional exercise data modifications from request body
+    let exerciseData = null;
+    if (event.body) {
+      try {
+        exerciseData = JSON.parse(event.body);
+      } catch (error) {
+        console.log('No valid JSON in request body, using original exercise data');
+      }
+    }
+
+    // Determine the final exercise name (use modified name if provided)
+    const finalExerciseName = exerciseData?.name || adminExercise.name;
+
     // Check if coach already has an exercise with this name
     const existingExercises = await db.getExercisesByCoach(coachId);
     const nameExists = existingExercises.some(
-      exercise => exercise.name.toLowerCase() === adminExercise.name.toLowerCase()
+      exercise => exercise.name.toLowerCase() === finalExerciseName.toLowerCase()
     );
     
     if (nameExists) {
@@ -573,9 +586,16 @@ export const copyAdminExercise = async (
       };
     }
 
-    // Create a copy for the coach
+    // Create a copy for the coach with optional modifications
     const copiedExercise = {
       ...adminExercise,
+      // Override with any provided exercise data
+      ...(exerciseData && {
+        name: exerciseData.name || adminExercise.name,
+        muscleGroup: exerciseData.muscleGroup || adminExercise.muscleGroup,
+        note: exerciseData.note !== undefined ? exerciseData.note : adminExercise.note,
+        link: exerciseData.link !== undefined ? exerciseData.link : adminExercise.link
+      }),
       exerciseId: randomUUID(),
       coachId,
       originalExerciseId: adminExerciseId,
