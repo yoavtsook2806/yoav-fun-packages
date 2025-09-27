@@ -70,11 +70,13 @@ const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, 
     console.warn('Error fetching coach exercises for muscle group data:', error);
   }
   
-  // Create a lookup map for exercise muscle groups
+  // Create lookup maps for exercise muscle groups and links
   const exerciseMuscleGroupMap: { [exerciseName: string]: string } = {};
+  const exerciseLinkMap: { [exerciseName: string]: string } = {};
   if (Array.isArray(coachExercises)) {
     coachExercises.forEach(exercise => {
       exerciseMuscleGroupMap[exercise.name] = exercise.muscleGroup || 'כללי';
+      exerciseLinkMap[exercise.name] = exercise.link || '';
     });
   } else {
     console.warn('Coach exercises is not an array:', coachExercises);
@@ -87,7 +89,8 @@ const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, 
     
     training.exercises.forEach(prescribedExercise => {
       const muscleGroup = exerciseMuscleGroupMap[prescribedExercise.exerciseName] || 'כללי';
-      console.log(`💪 Adding exercise: ${prescribedExercise.exerciseName} (${muscleGroup})`);
+      const exerciseLink = exerciseLinkMap[prescribedExercise.exerciseName] || '';
+      console.log(`💪 Adding exercise: ${prescribedExercise.exerciseName} (${muscleGroup}) with link: ${exerciseLink ? 'Yes' : 'No'}`);
       
       trainingExercises[prescribedExercise.exerciseName] = {
         numberOfSets: prescribedExercise.numberOfSets,
@@ -97,7 +100,7 @@ const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, 
         maximumNumberOfRepeasts: prescribedExercise.maximumNumberOfRepeasts,
         note: prescribedExercise.prescriptionNote || '',
         muscleGroup: muscleGroup,
-        link: '' // We don't have links in the current structure
+        link: exerciseLink
       };
     });
     
