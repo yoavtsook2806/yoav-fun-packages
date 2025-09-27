@@ -297,10 +297,24 @@ function App() {
         });
         
         if (isRealPlanUpdate) {
-          console.log('🔔 Training plan ACTUALLY updated:', { 
-            from: `${previousPlanName} (${previousPlanVersion})`, 
-            to: `${newCurrentPlan.name} (${newCurrentPlan.version})` 
+          console.log('🔔 Training plan ACTUALLY updated:', {
+            from: `${previousPlanName} (${previousPlanVersion})`,
+            to: `${newCurrentPlan.name} (${newCurrentPlan.version})`
           });
+
+          // Reset training state when plan updates to ensure fresh start
+          setTrainingState({
+            selectedTraining: null,
+            restTime: 60,
+            currentExerciseIndex: 0,
+            exercises: [],
+            exerciseStates: {},
+            isTrainingComplete: false,
+            trainingPlanVersion: newCurrentPlan.version,
+          });
+          setShowCongratulation(false);
+          console.log('🔄 Reset training state due to plan update');
+
           showSuccess(`תוכנית האימונים עודכנה ל"${newCurrentPlan.name}"`, 6000);
         } else if (!storedHasLoadedRealPlan) {
           console.log('✅ First time loading real plan - no toast notification needed');
@@ -444,6 +458,10 @@ function App() {
         trainingPlanVersion: selectedPlan.version,
       });
       setShowCongratulation(false);
+
+      // Save updated plan to localStorage
+      saveTrainingPlanToLocalStorage(selectedPlan);
+      console.log('🔄 Reset training state due to manual plan change');
     }
   };
 

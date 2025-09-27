@@ -320,6 +320,19 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               <p className="card-subtitle">{exercise.muscleGroup}</p>
             )}
           </div>
+          <div className="card-top-actions">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleExerciseSelect(exercise);
+              }}
+              className={`add-exercise-btn ${isSelected ? 'selected' : ''}`}
+              disabled={isSelected}
+              title={isSelected ? 'תרגיל נבחר' : 'הוסף לאימון'}
+            >
+              {isSelected ? '✅' : '➕'}
+            </button>
+          </div>
           {isSelected && (
             <div className="selected-indicator">
               <span className="selected-icon">✅</span>
@@ -354,28 +367,6 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
               </div>
             )}
 
-            <div className="card-actions-section">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleExerciseSelect(exercise);
-                }}
-                className={`btn-primary btn-sm ${isSelected ? 'selected' : ''}`}
-                disabled={isSelected}
-                title={isSelected ? 'תרגיל נבחר' : 'הוסף לאימון'}
-              >
-                {isSelected ? (
-                  <>
-                    <span className="btn-icon">✅</span>
-                    נבחר
-                  </>
-                ) : (
-                  <>
-                    ➕
-                  </>
-                )}
-              </button>
-            </div>
           </div>
         )}
       </Card>

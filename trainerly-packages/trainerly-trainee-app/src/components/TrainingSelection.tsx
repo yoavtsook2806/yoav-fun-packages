@@ -94,15 +94,16 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
         
         for (const exerciseName of exerciseNames) {
           const exerciseEntries = exerciseHistory[exerciseName] || [];
-          
+
           for (const entry of exerciseEntries) {
-            if (entry.completedSets >= entry.totalSets) {
+            // Only consider completions from the current training plan
+            if (entry.completedSets >= entry.totalSets && entry.trainingPlanId === trainingPlanId) {
               const dateStr = entry.date.split('T')[0]; // Get just the date part (YYYY-MM-DD)
-              
+
               if (!completionsByDate[dateStr]) {
                 completionsByDate[dateStr] = [];
               }
-              
+
               if (!completionsByDate[dateStr].includes(exerciseName)) {
                 completionsByDate[dateStr].push(exerciseName);
               }

@@ -1013,4 +1013,42 @@
   max-height: none;
 }
 
-/* Add Training Button Styling - Reverted to original */
+/* Add Exercise Button in Card Header */
+.card-top-actions {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+}
+
+.add-exercise-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.add-exercise-btn:hover {
+  background: var(--primary-hover);
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.add-exercise-btn:disabled {
+  background: var(--success-color);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.add-exercise-btn.selected {
+  background: var(--success-color);
+}
