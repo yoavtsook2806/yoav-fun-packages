@@ -79,7 +79,7 @@ function App() {
   
   const [trainingState, setTrainingState] = useState<TrainingState>({
     selectedTraining: null,
-    restTime: 60,
+    restTime: 20, // Temporary: reduced for testing
     currentExerciseIndex: 0,
     exercises: [],
     exerciseStates: {},
@@ -525,7 +525,7 @@ function App() {
 
     setTrainingState({
       selectedTraining: trainingType,
-      restTime: 60, // Default fallback, but exercises should use their customRestTime
+      restTime: 20, // Temporary: reduced for testing
       currentExerciseIndex: 0,
       exercises,
       exerciseStates,
@@ -540,7 +540,7 @@ function App() {
   const resetTraining = () => {
     setTrainingState({
       selectedTraining: null,
-      restTime: 60,
+      restTime: 20, // Temporary: reduced for testing
       currentExerciseIndex: 0,
       exercises: [],
       exerciseStates: {},
