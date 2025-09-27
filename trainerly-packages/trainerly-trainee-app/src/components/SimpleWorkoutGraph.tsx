@@ -11,7 +11,7 @@ interface GraphDataPoint {
   date: string;
   weight: number;
   reps: number;
-  restDifficulty: number; // (maxRestTime - actualRest) / maxRestTime * 100
+  restDifficulty: number; // maxRestTime - actualRestTime (in seconds)
   displayDate: string;
 }
 
@@ -48,10 +48,8 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
       const avgWeight = validSets.reduce((sum, set) => sum + (set.weight || 0), 0) / validSets.length;
       const avgReps = validSets.reduce((sum, set) => sum + (set.repeats || 0), 0) / validSets.length;
       
-      // Calculate rest difficulty: higher value = less rest (more difficult)
-      const restDifficulty = Math.max(0, Math.min(100, 
-        ((maxRestTime - entry.restTime) / maxRestTime) * 100
-      ));
+      // Calculate rest difficulty: maxRestTime - actualRestTime (in seconds)
+      const restDifficulty = Math.max(0, maxRestTime - entry.restTime);
 
       const date = new Date(entry.date);
       const displayDate = date.toLocaleDateString('he-IL', {
@@ -107,7 +105,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
 
   const weightScale = calculateScale(weights);
   const repsScale = calculateScale(reps);
-  const restScale = { min: 0, max: 100, avg: 50 }; // Rest difficulty is 0-100%
+  const restScale = calculateScale(restDifficulties); // Rest difficulty in seconds
 
   // SVG dimensions
   const svgWidth = containerWidth;
@@ -151,7 +149,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
         </div>
         <div className="legend-item">
           <div className="legend-color rest-color"></div>
-          <span>קושי מנוחה</span>
+          <span>זמן מנוחה נוסף</span>
         </div>
       </div>
 
@@ -315,7 +313,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
                 fontWeight="bold"
                 dominantBaseline="middle"
               >
-                {point.restDifficulty}%
+                {point.restDifficulty}
               </text>
             </g>
           ))}
