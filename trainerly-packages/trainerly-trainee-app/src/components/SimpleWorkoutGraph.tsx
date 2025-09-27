@@ -112,7 +112,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
   // SVG dimensions
   const svgWidth = containerWidth;
   const svgHeight = 280;
-  const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+  const margin = { top: 20, right: 20, bottom: 50, left: 70 }; // Increased left margin for Y-axis labels
   const chartWidth = svgWidth - margin.left - margin.right;
   const chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -274,59 +274,52 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
               fontSize="12"
               fill="var(--text-secondary)"
             >
-              {point.displayDate}
+              w{index + 1}
             </text>
           ))}
 
-          {/* Y-axis labels - show min, avg, max for primary scale (weight) */}
-          <text
-            x={margin.left - 10}
-            y={yScale(weightScale.min, weightScale)}
-            textAnchor="end"
-            fontSize="10"
-            fill="var(--text-secondary)"
-            dominantBaseline="middle"
-          >
-            {Math.round(weightScale.min)}
-          </text>
-          <text
-            x={margin.left - 10}
-            y={yScale(weightScale.avg, weightScale)}
-            textAnchor="end"
-            fontSize="10"
-            fill="#f59e0b"
-            fontWeight="bold"
-            dominantBaseline="middle"
-          >
-            {Math.round(weightScale.avg)}
-          </text>
-          <text
-            x={margin.left - 10}
-            y={yScale(weightScale.max, weightScale)}
-            textAnchor="end"
-            fontSize="10"
-            fill="var(--text-secondary)"
-            dominantBaseline="middle"
-          >
-            {Math.round(weightScale.max)}
-          </text>
+          {/* Y-axis labels for all three properties */}
+          {dataPoints.map((point, index) => (
+            <g key={`y-labels-${index}`}>
+              {/* Weight values */}
+              <text
+                x={margin.left - 15}
+                y={yScale(point.weight, weightScale)}
+                textAnchor="end"
+                fontSize="9"
+                fill="#f59e0b"
+                fontWeight="bold"
+                dominantBaseline="middle"
+              >
+                {point.weight}
+              </text>
+              {/* Reps values */}
+              <text
+                x={margin.left - 30}
+                y={yScale(point.reps, repsScale)}
+                textAnchor="end"
+                fontSize="9"
+                fill="#3b82f6"
+                fontWeight="bold"
+                dominantBaseline="middle"
+              >
+                {point.reps}
+              </text>
+              {/* Rest difficulty values */}
+              <text
+                x={margin.left - 45}
+                y={yScale(point.restDifficulty, restScale)}
+                textAnchor="end"
+                fontSize="9"
+                fill="#10b981"
+                fontWeight="bold"
+                dominantBaseline="middle"
+              >
+                {point.restDifficulty}%
+              </text>
+            </g>
+          ))}
         </svg>
-      </div>
-
-      {/* Current values display */}
-      <div className="current-values">
-        <div className="value-item">
-          <span className="value-label">משקל אחרון:</span>
-          <span className="value-number weight-color">{weights[weights.length - 1]}</span>
-        </div>
-        <div className="value-item">
-          <span className="value-label">חזרות אחרונות:</span>
-          <span className="value-number reps-color">{reps[reps.length - 1]}</span>
-        </div>
-        <div className="value-item">
-          <span className="value-label">קושי מנוחה:</span>
-          <span className="value-number rest-color">{restDifficulties[restDifficulties.length - 1]}%</span>
-        </div>
       </div>
     </div>
   );
