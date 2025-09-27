@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getExerciseHistory, getDailyTrainingProgress } from '../utils/exerciseHistory';
+import { TrainingState } from '../types';
 
 interface TrainingSelectionProps {
   onSelectTraining: (trainingType: string) => void;
@@ -7,6 +8,7 @@ interface TrainingSelectionProps {
   trainings: any; // Training data to get exercise lists
   trainerName?: string;
   trainingPlanId: string;
+  currentTrainingState?: TrainingState;
 }
 
 const TrainingSelection: React.FC<TrainingSelectionProps> = ({
@@ -15,6 +17,7 @@ const TrainingSelection: React.FC<TrainingSelectionProps> = ({
   trainings,
   trainerName,
   trainingPlanId,
+  currentTrainingState,
 }) => {
   const [selectedTraining, setSelectedTraining] = useState<string>('');
   

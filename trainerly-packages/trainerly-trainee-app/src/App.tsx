@@ -565,6 +565,22 @@ function App() {
     setFirstTimeTrainingType(null);
   };
 
+  // Navigate back to home without losing training data
+  const navigateToHome = () => {
+    setTrainingState(prev => ({
+      ...prev,
+      selectedTraining: null
+    }));
+  };
+
+  // Resume training - restore selectedTraining without reinitializing
+  const resumeTraining = (trainingType: string) => {
+    setTrainingState(prev => ({
+      ...prev,
+      selectedTraining: trainingType
+    }));
+  };
+
   const handleFirstTimeSetupComplete = async (exerciseDefaults: { [exerciseName: string]: { weight?: number; repeats?: number; timeToRest?: number } }) => {
     // Save all exercise defaults
     Object.entries(exerciseDefaults).forEach(([exerciseName, defaults]) => {
@@ -830,11 +846,29 @@ function App() {
             ⚙️
           </button>
           <TrainingSelection
-            onSelectTraining={initializeTraining}
+            onSelectTraining={(trainingType) => {
+              // Check if we have existing training data for this specific training type
+              const hasExistingData = trainingState.exercises.length > 0 && 
+                                    trainingState.exercises.every(ex => trainingState.exerciseStates[ex]) &&
+                                    Object.keys(currentTrainingPlan.trainings[trainingType]).every(ex => 
+                                      trainingState.exerciseStates[ex] !== undefined
+                                    );
+              
+              if (hasExistingData) {
+                // Resume existing training
+                console.log('🔄 Resuming existing training:', trainingType);
+                resumeTraining(trainingType);
+              } else {
+                // Start fresh training
+                console.log('🆕 Starting fresh training:', trainingType);
+                initializeTraining(trainingType);
+              }
+            }}
             availableTrainings={Object.keys(currentTrainingPlan.trainings)}
             trainings={currentTrainingPlan.trainings}
             trainerName={trainerName}
             trainingPlanId={currentTrainingPlan.planId}
+            currentTrainingState={trainingState}
           />
 
           {/* Settings Modal */}
@@ -868,6 +902,7 @@ function App() {
         onGoToExercise={goToExercise}
         onNextExercise={nextExercise}
         onResetTraining={resetTraining}
+        onNavigateToHome={navigateToHome}
       />
     </ToastContainer>
   );

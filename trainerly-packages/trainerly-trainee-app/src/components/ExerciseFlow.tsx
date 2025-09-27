@@ -16,6 +16,7 @@ interface ExerciseFlowProps {
   onGoToExercise: (exerciseIndex: number) => void;
   onNextExercise: () => void;
   onResetTraining: () => void;
+  onNavigateToHome: () => void;
 }
 
 const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
@@ -26,6 +27,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
   onGoToExercise,
   onNextExercise,
   onResetTraining,
+  onNavigateToHome,
 }) => {
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
   const [historyModal, setHistoryModal] = useState<string | null>(null);
@@ -427,7 +429,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
         <h2>{trainingState.selectedTraining} אימון</h2>
         <button
           className="back-arrow-button"
-          onClick={onResetTraining}
+          onClick={onNavigateToHome}
           style={{
             position: 'absolute',
             top: '20px',
@@ -445,7 +447,7 @@ const ExerciseFlow: React.FC<ExerciseFlowProps> = ({
             width: '40px',
             height: '40px'
           }}
-          title="חזור להתחלה"
+          title="חזור לבית"
         >
           ←
         </button>
