@@ -1,0 +1,237 @@
+/* Simple Workout Graph - Mobile-First Responsive Design */
+
+.simple-workout-graph {
+  width: 100%;
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1rem;
+}
+
+.graph-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.graph-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Legend */
+.graph-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.legend-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.legend-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.weight-color {
+  background-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.reps-color {
+  background-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.rest-color {
+  background-color: #10b981;
+  color: #10b981;
+}
+
+/* Graph Container */
+.graph-container {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.workout-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Graph Note */
+.graph-note {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.graph-note p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Current Values Display */
+.current-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-primary);
+}
+
+.value-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.value-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.value-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* No Data State */
+.no-data-message {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-secondary);
+}
+
+.no-data-message p {
+  margin: 0.5rem 0;
+}
+
+.no-data-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+  .simple-workout-graph {
+    padding: 0.75rem;
+  }
+  
+  .graph-header h3 {
+    font-size: 1rem;
+  }
+  
+  .graph-legend {
+    gap: 0.75rem;
+  }
+  
+  .legend-item {
+    font-size: 0.8rem;
+  }
+  
+  .legend-color {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .current-values {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .value-label {
+    font-size: 0.7rem;
+  }
+  
+  .value-number {
+    font-size: 1rem;
+  }
+  
+  .graph-note p {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .current-values {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .value-item {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .value-label {
+    margin-bottom: 0;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .legend-color {
+    border-color: var(--bg-card);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .simple-workout-graph {
+    border: 2px solid var(--border-primary);
+  }
+  
+  .legend-color {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .workout-chart {
+    transition: none;
+  }
+}

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { getExerciseHistory } from '../utils/exerciseHistory';
 import { ExerciseHistoryEntry } from '../types';
 import ExerciseModal from './ExerciseModal';
-import ExercisePerformanceGraph from './ExercisePerformanceGraph';
+import SimpleWorkoutGraph from './SimpleWorkoutGraph';
+import './SimpleWorkoutGraph.css';
 
 interface ExerciseHistoryProps {
   exerciseName: string;
@@ -234,9 +235,10 @@ const ExerciseHistory: React.FC<ExerciseHistoryProps> = ({
                 ))}
               </div>
             ) : (
-              <ExercisePerformanceGraph 
+              <SimpleWorkoutGraph 
                 exerciseName={exerciseName}
                 exerciseHistory={exerciseHistory}
+                maxRestTime={120} // Default max rest time in seconds
               />
             )}
           </div>
