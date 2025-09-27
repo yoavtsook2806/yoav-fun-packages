@@ -247,8 +247,13 @@ class CachedApiService {
     );
   }
 
-  async copyAdminExercise(coachId: string, adminExerciseId: string, token: string): Promise<Exercise> {
-    const copiedExercise = await apiService.copyAdminExercise(coachId, adminExerciseId, token);
+  async copyAdminExercise(
+    coachId: string, 
+    adminExerciseId: string, 
+    token: string, 
+    exerciseData?: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>
+  ): Promise<Exercise> {
+    const copiedExercise = await apiService.copyAdminExercise(coachId, adminExerciseId, token, exerciseData);
     
     // Update the coach's exercises cache
     const cachedExercises = cacheService.get<Exercise[]>(coachId, CACHE_KEYS.EXERCISES) || [];

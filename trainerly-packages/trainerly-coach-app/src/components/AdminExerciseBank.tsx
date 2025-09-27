@@ -26,6 +26,8 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
   const [copying, setCopying] = useState<string | null>(null); // exerciseId being copied
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+  const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
+  const [copiedExercises, setCopiedExercises] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
@@ -46,24 +48,44 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     }
   };
 
-  const handleCopyExercise = async (adminExercise: Exercise) => {
-    try {
-      setCopying(adminExercise.exerciseId);
-      const copiedExercise = await cachedApiService.copyAdminExercise(coachId, adminExercise.exerciseId, token);
+  const handleCopyExercise = (adminExercise: Exercise) => {
+    // Open edit modal instead of copying directly
+    setEditingExercise(adminExercise);
+  };
 
-      showSuccess(`תרגיל "${adminExercise.name}" הועתק בהצלחה!`);
+  const handleCopyWithEdits = async (exerciseData: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>) => {
+    if (!editingExercise) return;
+
+    try {
+      setCopying(editingExercise.exerciseId);
+      const copiedExercise = await cachedApiService.copyAdminExercise(
+        coachId, 
+        editingExercise.exerciseId, 
+        token,
+        exerciseData
+      );
+
+      showSuccess(`תרגיל "${exerciseData.name}" הועתק בהצלחה!`);
+
+      // Mark exercise as copied
+      setCopiedExercises(prev => new Set([...prev, editingExercise.exerciseId]));
 
       if (onExerciseCopied) {
         onExerciseCopied(copiedExercise);
       }
 
-      // Don't close modal after successful copy - let user copy multiple exercises
+      // Close edit modal
+      setEditingExercise(null);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'שגיאה בהעתקת התרגיל';
       showError(errorMsg);
     } finally {
       setCopying(null);
     }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingExercise(null);
   };
 
   const toggleCardExpansion = (exerciseId: string) => {
@@ -165,13 +187,17 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
                               e.stopPropagation();
                               handleCopyExercise(exercise);
                             }}
-                            disabled={copying === exercise.exerciseId}
-                            className="copy-exercise-btn"
+                            disabled={copying === exercise.exerciseId || copiedExercises.has(exercise.exerciseId)}
+                            className={`copy-exercise-btn ${copiedExercises.has(exercise.exerciseId) ? 'copied' : ''}`}
                           >
                             {copying === exercise.exerciseId ? (
                               <>
                                 <span className="loading-spinner-small"></span>
                                 מעתיק...
+                              </>
+                            ) : copiedExercises.has(exercise.exerciseId) ? (
+                              <>
+                                ✅ הועתק
                               </>
                             ) : (
                               <>
@@ -189,6 +215,114 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
           </>
         )}
       </div>
+
+      {/* Edit Exercise Modal */}
+      {editingExercise && (
+        <ExerciseEditModal
+          exercise={editingExercise}
+          onSave={handleCopyWithEdits}
+          onCancel={handleCancelEdit}
+          isLoading={copying === editingExercise.exerciseId}
+        />
+      )}
+    </Modal>
+  );
+};
+
+// Exercise Edit Modal Component
+interface ExerciseEditModalProps {
+  exercise: Exercise;
+  onSave: (exerciseData: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>) => void;
+  onCancel: () => void;
+  isLoading: boolean;
+}
+
+const ExerciseEditModal: React.FC<ExerciseEditModalProps> = ({ exercise, onSave, onCancel, isLoading }) => {
+  const [formData, setFormData] = useState({
+    name: exercise.name,
+    muscleGroup: exercise.muscleGroup,
+    note: exercise.note || '',
+    link: exercise.link || ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <Modal isOpen={true} onClose={onCancel} title="עריכת תרגיל לפני העתקה">
+      <form onSubmit={handleSubmit} className="exercise-edit-form">
+        <div className="form-group">
+          <label htmlFor="exercise-name">שם התרגיל *</label>
+          <input
+            id="exercise-name"
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+            required
+            dir="rtl"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="muscle-group">קבוצת שרירים *</label>
+          <input
+            id="muscle-group"
+            type="text"
+            value={formData.muscleGroup}
+            onChange={(e) => handleChange('muscleGroup', e.target.value)}
+            required
+            dir="rtl"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="exercise-note">הערות</label>
+          <textarea
+            id="exercise-note"
+            value={formData.note}
+            onChange={(e) => handleChange('note', e.target.value)}
+            rows={3}
+            dir="rtl"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="exercise-link">קישור לסרטון</label>
+          <input
+            id="exercise-link"
+            type="url"
+            value={formData.link}
+            onChange={(e) => handleChange('link', e.target.value)}
+            dir="ltr"
+          />
+        </div>
+
+        <div className="modal-actions">
+          <button type="button" onClick={onCancel} className="btn-secondary">
+            ביטול
+          </button>
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={isLoading || !formData.name.trim() || !formData.muscleGroup.trim()}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading-spinner-small"></span>
+                מעתיק...
+              </>
+            ) : (
+              'העתק עם השינויים'
+            )}
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

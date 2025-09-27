@@ -270,10 +270,21 @@ class ApiService {
     return data.items || [];
   }
 
-  async copyAdminExercise(coachId: string, adminExerciseId: string, token: string): Promise<Exercise> {
+  async copyAdminExercise(
+    coachId: string, 
+    adminExerciseId: string, 
+    token: string, 
+    exerciseData?: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>
+  ): Promise<Exercise> {
+    const requestBody = exerciseData ? JSON.stringify(exerciseData) : undefined;
+    
     const response = await fetch(`${this.baseUrl}/coaches/${coachId}/exercises/copy-admin/${adminExerciseId}`, {
       method: 'POST',
-      headers: this.getAuthHeaders(token),
+      headers: {
+        ...this.getAuthHeaders(token),
+        ...(requestBody && { 'Content-Type': 'application/json' })
+      },
+      ...(requestBody && { body: requestBody })
     });
 
     if (!response.ok) {
