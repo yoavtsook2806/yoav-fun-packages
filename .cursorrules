@@ -46,12 +46,14 @@ This is a monorepo containing multiple fun web applications and packages.
 
 ## Server Deployment
 - **ALWAYS deploy server changes** after modifying trainerly-server code
-- After any changes to `/trainerly-packages/trainerly-server/src/` files, run:
+- **MANDATORY**: After ANY changes to `/trainerly-packages/trainerly-server/src/` files, run:
   ```bash
   cd /Users/yoavt/publicDev/yoav-fun-packages && yarn workspace trainerly-server deploy:dev
   ```
-- Deploy immediately after committing server-side changes
-- Server endpoints must be deployed before client can use them
+- **Deploy immediately** after committing server-side changes
+- **Server endpoints must be deployed** before client can use them
+- **This includes**: API handlers, database schema changes, types, constants, services
+- **No exceptions**: Even small changes require deployment for client functionality
 
 ## Bug Fix Protocol
 When the user writes "bug:" (without specifying package name) follow this EXACT workflow:

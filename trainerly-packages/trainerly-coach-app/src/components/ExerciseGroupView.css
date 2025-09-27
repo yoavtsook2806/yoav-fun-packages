@@ -48,12 +48,14 @@
 }
 
 .exercise-count {
-  background: var(--gradient-primary);
+  background: var(--gradient-primary, linear-gradient(135deg, #8b5cf6, #7c3aed));
   color: white;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  padding: var(--space-1, 4px) var(--space-3, 12px);
+  border-radius: var(--border-radius-full, 9999px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .expand-icon {

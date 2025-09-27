@@ -478,6 +478,8 @@
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
+  background: var(--bg-tertiary, #f8fafc) !important;
+  color: var(--text-primary, #1f2937) !important;
 }
 
 .modal-actions {
