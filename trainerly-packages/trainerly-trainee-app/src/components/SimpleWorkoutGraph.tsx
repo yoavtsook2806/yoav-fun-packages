@@ -110,7 +110,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
   // SVG dimensions
   const svgWidth = containerWidth;
   const svgHeight = 280;
-  const margin = { top: 20, right: 20, bottom: 50, left: 70 }; // Increased left margin for Y-axis labels
+  const margin = { top: 20, right: 20, bottom: 50, left: 80 }; // Increased left margin for Y-axis labels with more spacing
   const chartWidth = svgWidth - margin.left - margin.right;
   const chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -149,7 +149,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
         </div>
         <div className="legend-item">
           <div className="legend-color rest-color"></div>
-          <span>זמן מנוחה נוסף</span>
+          <span>קושי מנוחה</span>
         </div>
       </div>
 
@@ -276,7 +276,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
                 </text>
                 {/* Reps values */}
                 <text
-                  x={margin.left - 30}
+                  x={margin.left - 35}
                   y={yPosition}
                   textAnchor="end"
                   fontSize="9"
@@ -288,7 +288,7 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
                 </text>
                 {/* Rest difficulty values */}
                 <text
-                  x={margin.left - 45}
+                  x={margin.left - 55}
                   y={yPosition}
                   textAnchor="end"
                   fontSize="9"

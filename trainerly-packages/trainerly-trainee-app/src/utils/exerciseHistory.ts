@@ -155,10 +155,10 @@ export const removeDuplicateHistoryEntries = (): void => {
 
 // Training Progress Functions
 const getTodayDateString = (): string => {
-  // Reset every 4 hours instead of daily
+  // TEMP: Reset every 20 seconds for testing
   const now = new Date();
-  const fourHourBlocks = Math.floor(now.getTime() / (4 * 60 * 60 * 1000)); // Every 4 hours
-  return `4h-${fourHourBlocks}`; // Format: 4h-12345
+  const twentySecondBlocks = Math.floor(now.getTime() / (20 * 1000)); // Every 20 seconds
+  return `20s-${twentySecondBlocks}`; // Format: 20s-12345
 };
 
 export const getTrainingProgress = (): TrainingProgressStorage => {
