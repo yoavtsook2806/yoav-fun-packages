@@ -97,22 +97,33 @@ class ApiService {
 
   // Exercise Management
   async createExercise(coachId: string, token: string, exerciseData: Omit<Exercise, 'exerciseId' | 'coachId' | 'createdAt'>): Promise<Exercise> {
+    console.log('🔧 EXERCISE CREATION DEBUG - Version: v2.1.0-debug-env-fix');
+    console.log('🔧 Creating exercise for coach:', coachId);
+    console.log('🔧 Exercise data:', exerciseData);
+    console.log('🔧 Exercise data JSON:', JSON.stringify(exerciseData, null, 2));
+    console.log('🔧 API URL:', `${this.baseUrl}/coaches/${coachId}/exercises`);
+    
     const response = await fetch(`${this.baseUrl}/coaches/${coachId}/exercises`, {
       method: 'POST',
       headers: this.getAuthHeaders(token),
       body: JSON.stringify(exerciseData),
     });
 
+    console.log('🔧 Exercise creation response status:', response.status);
+    console.log('🔧 Exercise creation response headers:', Object.fromEntries(response.headers.entries()));
+    
     if (!response.ok) {
       let errorMessage = `Failed to create exercise: ${response.statusText}`;
       try {
         const errorData = await response.json();
+        console.log('🔧 Exercise creation error data:', errorData);
         if (errorData.message) {
           errorMessage = errorData.message;
         }
       } catch (e) {
-        // If we can't parse the error response, use the default message
+        console.log('🔧 Could not parse error response');
       }
+      console.log('🔧 Final error message:', errorMessage);
       throw new Error(errorMessage);
     }
 
