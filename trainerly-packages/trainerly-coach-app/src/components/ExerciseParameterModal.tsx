@@ -199,7 +199,7 @@ const ExerciseParameterModal: React.FC<ExerciseParameterModalProps> = ({
             className="btn-primary"
           >
             <span className="btn-icon">💾</span>
-            שמור
+            הוסף
           </button>
         </div>
       </div>

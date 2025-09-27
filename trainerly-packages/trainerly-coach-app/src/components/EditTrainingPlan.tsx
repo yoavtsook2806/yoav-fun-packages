@@ -401,7 +401,7 @@ const EditTrainingPlan: React.FC<EditTrainingPlanProps> = ({
                 disabled={!currentTraining.name?.trim() || currentTraining.exercises.length === 0}
               >
                 <span className="btn-icon">💾</span>
-                שמור אימון
+                הוסף אימון
               </button>
             </div>
           </div>
