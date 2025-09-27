@@ -5,17 +5,10 @@ export interface ApiConfig {
   stage: 'dev' | 'prod';
 }
 
-// Environment detection
+// Environment detection - Always use dev for now
 const getEnvironment = (): 'dev' | 'prod' => {
-  // Check if running locally
-  if (window.location.hostname === 'localhost' || 
-      window.location.hostname === '127.0.0.1' ||
-      process.env.NODE_ENV === 'development') {
-    return 'dev';
-  }
-  
-  // Default to prod for production deployments
-  return 'prod';
+  // Always use dev server for both local and deployed versions
+  return 'dev';
 };
 
 // API Configuration for each environment
