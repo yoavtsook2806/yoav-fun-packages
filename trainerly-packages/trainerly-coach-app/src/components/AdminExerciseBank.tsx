@@ -3,6 +3,7 @@ import { cachedApiService, Exercise } from '../services/cachedApiService';
 import { showError, showSuccess } from './ToastContainer';
 import LoadingSpinner from './LoadingSpinner';
 import Modal from './Modal';
+import MuscleGroupSelect from './MuscleGroupSelect';
 import './AdminExerciseBank.css';
 import './Card.css';
 
@@ -25,6 +26,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [copying, setCopying] = useState<string | null>(null); // exerciseId being copied
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [muscleGroupFilter, setMuscleGroupFilter] = useState<string>('');
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
   const [copiedExercises, setCopiedExercises] = useState<Set<string>>(new Set());
@@ -144,10 +146,17 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     setExpandedCards(newExpandedCards);
   };
 
-  const filteredExercises = adminExercises.filter(exercise =>
-    exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredExercises = adminExercises.filter(exercise => {
+    // Filter by search term (name or muscle group)
+    const matchesSearch = !searchTerm || 
+      exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    // Filter by muscle group
+    const matchesMuscleGroup = !muscleGroupFilter || exercise.muscleGroup === muscleGroupFilter;
+    
+    return matchesSearch && matchesMuscleGroup;
+  });
 
   return (
     <Modal
@@ -158,14 +167,37 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
       size="xl"
     >
       <div className="search-section">
-        <input
-          type="text"
-          placeholder="חפש תרגיל..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-          dir="rtl"
-        />
+        <div className="search-filters">
+          <input
+            type="text"
+            placeholder="חפש תרגיל..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+            dir="rtl"
+          />
+          <div className="muscle-group-filter">
+            <MuscleGroupSelect
+              value={muscleGroupFilter}
+              onChange={setMuscleGroupFilter}
+              placeholder="סנן לפי קבוצת שרירים..."
+              className="filter-select"
+            />
+          </div>
+          {(searchTerm || muscleGroupFilter) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm('');
+                setMuscleGroupFilter('');
+              }}
+              className="clear-filters-btn"
+              title="נקה מסננים"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="exercises-content">
@@ -317,13 +349,12 @@ const ExerciseEditModal: React.FC<ExerciseEditModalProps> = ({ exercise, onSave,
 
         <div className="form-group">
           <label htmlFor="muscle-group">קבוצת שרירים *</label>
-          <input
+          <MuscleGroupSelect
             id="muscle-group"
-            type="text"
             value={formData.muscleGroup}
-            onChange={(e) => handleChange('muscleGroup', e.target.value)}
+            onChange={(value) => handleChange('muscleGroup', value)}
             required
-            dir="rtl"
+            placeholder="בחר קבוצת שרירים..."
           />
         </div>
 

@@ -4,6 +4,7 @@ import { showError, showSuccess } from './ToastContainer';
 import AdminExerciseBank from './AdminExerciseBank';
 import Card from './Card';
 import Modal from './Modal';
+import MuscleGroupSelect from './MuscleGroupSelect';
 import { MUSCLE_GROUPS } from '../constants/muscleGroups';
 import './ExerciseManagement.css';
 
@@ -200,18 +201,12 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
             </div>
             <div className="form-group">
               <label>קבוצת שרירים *</label>
-              <select
+              <MuscleGroupSelect
                 value={formData.muscleGroup}
-                onChange={(e) => setFormData(prev => ({ ...prev, muscleGroup: e.target.value }))}
+                onChange={(value) => setFormData(prev => ({ ...prev, muscleGroup: value }))}
                 required
-              >
-                <option value="">בחר קבוצת שרירים...</option>
-                {MUSCLE_GROUPS.map((group) => (
-                  <option key={group} value={group}>
-                    {group}
-                  </option>
-                ))}
-              </select>
+                placeholder="בחר קבוצת שרירים..."
+              />
             </div>
           </div>
 
