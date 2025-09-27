@@ -157,8 +157,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
     setError('');
 
     try {
+      console.log('🔧 REGISTRATION DEBUG - Version: v2.1.0-debug-env-fix');
       console.log('🔧 Registering coach with data:', registerData);
       console.log('🔧 API_BASE:', API_BASE);
+      console.log('🔧 Full registration URL:', `${API_BASE}/coaches`);
+      console.log('🔧 Request payload:', JSON.stringify(registerData, null, 2));
       const response = await fetch(`${API_BASE}/coaches`, {
         method: 'POST',
         headers: {
@@ -168,17 +171,23 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
       });
 
       const data = await response.json();
-      console.log('🔧 Registration response:', { status: response.status, data });
+      console.log('🔧 Registration response status:', response.status);
+      console.log('🔧 Registration response headers:', Object.fromEntries(response.headers.entries()));
+      console.log('🔧 Registration response data:', data);
+      console.log('🔧 Registration success:', response.ok);
 
       if (response.ok) {
-        onLogin({
+        const coachData = {
           coachId: data.coachId,
           name: registerData.name,
           email: registerData.email,
           nickname: data.nickname,
           valid: data.valid,
           createdAt: new Date().toISOString()
-        }, data.token);
+        };
+        console.log('🔧 Calling onLogin with coach data:', coachData);
+        console.log('🔧 Calling onLogin with token:', data.token);
+        onLogin(coachData, data.token);
       } else {
         console.error('🔧 Registration failed:', data);
         setError(data.message || 'שגיאה ברישום');

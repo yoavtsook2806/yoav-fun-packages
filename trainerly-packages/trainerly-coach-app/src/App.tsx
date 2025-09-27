@@ -6,6 +6,7 @@ import './App.css';
 import AuthScreen from './components/AuthScreen';
 import CoachDashboard from './components/CoachDashboard';
 import ToastContainer from './components/ToastContainer';
+import { getApiBaseUrl } from './config/api';
 
 // Types
 interface Coach {
@@ -26,6 +27,11 @@ interface AuthState {
 }
 
 const App: React.FC = () => {
+  // Version identifier for debugging
+  console.log('🚀 COACH APP VERSION: v2.1.0-debug-env-fix');
+  console.log('🔧 Environment detection - hostname:', window.location.hostname);
+  console.log('🔧 API Base URL:', getApiBaseUrl());
+  
   // Initialize auth state optimistically based on localStorage
   const [authState, setAuthState] = useState<AuthState>(() => {
     const savedToken = localStorage.getItem('coach_token');
@@ -67,7 +73,9 @@ const App: React.FC = () => {
           const coachData = JSON.parse(savedCoach);
           
           console.log('🔍 Background validation: checking if coach exists in database...');
-          const response = await fetch(`https://f4xgifcx49.execute-api.eu-central-1.amazonaws.com/dev/coaches/${coachData.coachId}`, {
+          console.log('🔧 Background validation URL:', `${getApiBaseUrl()}/coaches/${coachData.coachId}`);
+          console.log('🔧 Coach data from localStorage:', coachData);
+          const response = await fetch(`${getApiBaseUrl()}/coaches/${coachData.coachId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -77,6 +85,7 @@ const App: React.FC = () => {
           if (response.ok) {
             const serverCoachData = await response.json();
             console.log('✅ Background validation successful');
+            console.log('🔧 Server coach data:', serverCoachData);
             
             // Update local data with server data to get any updates
             const updatedCoachData = { ...coachData, ...serverCoachData };
@@ -89,6 +98,13 @@ const App: React.FC = () => {
             }));
           } else {
             console.log('❌ Background validation failed: coach no longer exists, logging out...');
+            console.log('🔧 Response status:', response.status);
+            try {
+              const errorText = await response.text();
+              console.log('🔧 Response text:', errorText);
+            } catch (e) {
+              console.log('🔧 Could not read response text');
+            }
             // Coach doesn't exist anymore, clear auth and show login screen
             localStorage.removeItem('coach_token');
             localStorage.removeItem('coach_data');
@@ -118,6 +134,9 @@ const App: React.FC = () => {
   }, [authState.isAuthenticated]);
 
   const handleLogin = (coach: Coach, token: string) => {
+    console.log('🔧 handleLogin called with coach:', coach);
+    console.log('🔧 handleLogin called with token:', token);
+    
     setAuthState({
       isAuthenticated: true,
       coach,
@@ -127,6 +146,9 @@ const App: React.FC = () => {
     // Save to localStorage
     localStorage.setItem('coach_token', token);
     localStorage.setItem('coach_data', JSON.stringify(coach));
+    
+    console.log('🔧 Auth state updated and saved to localStorage');
+    console.log('🔧 New auth state will be:', { isAuthenticated: true, coach, token });
   };
 
   const handleLogout = () => {
