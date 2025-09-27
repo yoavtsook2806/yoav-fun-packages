@@ -60,8 +60,9 @@ const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, 
     });
     
     if (exercisesResponse.ok) {
-      coachExercises = await exercisesResponse.json();
-      console.log(`✅ Fetched ${coachExercises.length} coach exercises for muscle group data`);
+      const response = await exercisesResponse.json();
+      coachExercises = response.items || [];
+      console.log(`✅ Fetched ${Array.isArray(coachExercises) ? coachExercises.length : 'invalid'} coach exercises for muscle group data`);
     } else {
       console.warn('Failed to fetch coach exercises for muscle group data');
     }
@@ -71,9 +72,13 @@ const convertServerPlanToTraineeFormat = async (serverPlan: ServerTrainingPlan, 
   
   // Create a lookup map for exercise muscle groups
   const exerciseMuscleGroupMap: { [exerciseName: string]: string } = {};
-  coachExercises.forEach(exercise => {
-    exerciseMuscleGroupMap[exercise.name] = exercise.muscleGroup || 'כללי';
-  });
+  if (Array.isArray(coachExercises)) {
+    coachExercises.forEach(exercise => {
+      exerciseMuscleGroupMap[exercise.name] = exercise.muscleGroup || 'כללי';
+    });
+  } else {
+    console.warn('Coach exercises is not an array:', coachExercises);
+  }
   
   // Group exercises by training name
   serverPlan.trainings.forEach(training => {
