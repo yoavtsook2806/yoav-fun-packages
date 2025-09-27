@@ -363,6 +363,11 @@ const SimpleWorkoutGraph: React.FC<SimpleWorkoutGraphProps> = ({
           })}
         </svg>
       </div>
+      
+      {/* Explanation note */}
+      <div className="graph-note">
+        <p>* קושי מנוחה = זמן המנוחה המומלץ מינוס זמן המנוחה בפועל</p>
+      </div>
     </div>
   );
 };

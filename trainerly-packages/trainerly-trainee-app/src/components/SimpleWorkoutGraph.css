@@ -89,6 +89,21 @@
   display: block;
 }
 
+/* Graph Note */
+.graph-note {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.graph-note p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  font-style: italic;
+}
+
 /* Current Values Display */
 .current-values {
   display: grid;
@@ -171,6 +186,10 @@
   
   .value-number {
     font-size: 1rem;
+  }
+  
+  .graph-note p {
+    font-size: 0.7rem;
   }
 }
 

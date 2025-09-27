@@ -2194,8 +2194,8 @@ button:disabled {
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-2xl);
   width: 100%;
-  max-width: 600px;
-  max-height: 85vh;
+  max-width: 800px; /* Increased from 600px for better graph display */
+  max-height: 90vh; /* Increased from 85vh for more vertical space */
   overflow: hidden;
   position: relative;
   backdrop-filter: blur(30px);
