@@ -35,13 +35,33 @@ const TraineeManagement: React.FC<TraineeManagementProps> = ({ coachId, token, o
 
   useEffect(() => {
     loadData();
-  }, []);
+
+    // Listen for cache updates
+    const handleCacheUpdate = (event: CustomEvent) => {
+      const { cacheKey, coachId: updatedCoachId, data } = event.detail;
+      if (updatedCoachId === coachId) {
+        if (cacheKey === 'trainees') {
+          console.log('🔄 Trainees updated from background sync');
+          setTrainees(data);
+        } else if (cacheKey === 'training_plans') {
+          console.log('🔄 Training plans updated from background sync');
+          setPlans(data);
+        }
+      }
+    };
+
+    window.addEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
+    };
+  }, [coachId]);
 
   const loadData = async () => {
     try {
       const [traineeResult, planResult] = await Promise.all([
-        cachedApiService.getTrainees(coachId, token),
-        cachedApiService.getTrainingPlans(coachId, token)
+        cachedApiService.getTrainees(coachId, token, { backgroundUpdate: true }),
+        cachedApiService.getTrainingPlans(coachId, token, { backgroundUpdate: true })
       ]);
       
       setTrainees(traineeResult.data);

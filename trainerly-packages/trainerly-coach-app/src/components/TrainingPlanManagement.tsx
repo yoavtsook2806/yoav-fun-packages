@@ -44,9 +44,16 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     loadData();
     
     // Listen for cache updates
-    const handleCacheUpdate = (event: any) => {
-      if (event.detail.key === 'training_plans' && event.detail.coachId === coachId) {
-        loadData();
+    const handleCacheUpdate = (event: CustomEvent) => {
+      const { cacheKey, coachId: updatedCoachId, data } = event.detail;
+      if (updatedCoachId === coachId) {
+        if (cacheKey === 'training_plans') {
+          console.log('🔄 Training plans updated from background sync');
+          setPlans(data);
+        } else if (cacheKey === 'exercises') {
+          console.log('🔄 Exercises updated from background sync');
+          setExercises(data);
+        }
       }
     };
     
@@ -60,8 +67,8 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   const loadData = async () => {
     try {
       const [planResult, exerciseResult] = await Promise.all([
-        cachedApiService.getTrainingPlans(coachId, token),
-        cachedApiService.getExercises(coachId, token)
+        cachedApiService.getTrainingPlans(coachId, token, { backgroundUpdate: true }),
+        cachedApiService.getExercises(coachId, token, { backgroundUpdate: true })
       ]);
       
       setPlans(planResult.data);

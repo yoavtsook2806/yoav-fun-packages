@@ -52,7 +52,7 @@ const CoachDashboard: React.FC<CoachDashboardProps> = ({
     try {
       console.log('Loading coach profile for:', coachId);
       
-      const result = await cachedApiService.getCoach(coachId, token);
+      const result = await cachedApiService.getCoach(coachId, token, { backgroundUpdate: true });
       setCoach(result.data);
       
       // Only show loading if data came from cache

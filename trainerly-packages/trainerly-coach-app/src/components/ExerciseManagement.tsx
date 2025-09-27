@@ -52,7 +52,7 @@ const ExerciseManagement: React.FC<ExerciseManagementProps> = ({ coachId, token,
 
   const loadExercises = async () => {
     try {
-      const result = await cachedApiService.getExercises(coachId, token);
+      const result = await cachedApiService.getExercises(coachId, token, { backgroundUpdate: true });
       setExercises(result.data);
       
       // Only show loading if data didn't come from cache

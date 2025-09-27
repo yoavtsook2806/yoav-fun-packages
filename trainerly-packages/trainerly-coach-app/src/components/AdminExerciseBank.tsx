@@ -32,6 +32,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
   useEffect(() => {
     if (isOpen) {
       loadAdminExercises();
+      loadCopiedExercises();
     }
 
     // Listen for cache updates
@@ -48,7 +49,7 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     return () => {
       window.removeEventListener('cacheUpdated', handleCacheUpdate as EventListener);
     };
-  }, [isOpen]);
+  }, [isOpen, coachId]);
 
   const loadAdminExercises = async () => {
     try {
@@ -67,6 +68,19 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     }
   };
 
+  const loadCopiedExercises = () => {
+    try {
+      const stored = localStorage.getItem(`copied_admin_exercises_${coachId}`);
+      if (stored) {
+        const copiedIds = JSON.parse(stored);
+        setCopiedExercises(new Set(copiedIds));
+        console.log('📋 Loaded copied exercises from localStorage:', copiedIds);
+      }
+    } catch (error) {
+      console.warn('Failed to load copied exercises from localStorage:', error);
+    }
+  };
+
   const handleCopyExercise = (adminExercise: Exercise) => {
     // Open edit modal instead of copying directly
     setEditingExercise(adminExercise);
@@ -76,7 +90,9 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
     if (!editingExercise) return;
 
     try {
+      console.log('🚀 Starting copy operation for exercise:', editingExercise.exerciseId);
       setCopying(editingExercise.exerciseId);
+      
       const copiedExercise = await cachedApiService.copyAdminExercise(
         coachId, 
         editingExercise.exerciseId, 
@@ -84,10 +100,19 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
         exerciseData
       );
 
+      console.log('✅ Copy operation completed:', copiedExercise);
       showSuccess(`תרגיל "${exerciseData.name}" הועתק בהצלחה!`);
 
-      // Mark exercise as copied
-      setCopiedExercises(prev => new Set([...prev, editingExercise.exerciseId]));
+      // Mark exercise as copied and persist to localStorage
+      const newCopiedExercises = new Set([...copiedExercises, editingExercise.exerciseId]);
+      setCopiedExercises(newCopiedExercises);
+      
+      // Persist copied exercises to localStorage for persistence after refresh
+      try {
+        localStorage.setItem(`copied_admin_exercises_${coachId}`, JSON.stringify([...newCopiedExercises]));
+      } catch (storageError) {
+        console.warn('Failed to persist copied exercises to localStorage:', storageError);
+      }
 
       if (onExerciseCopied) {
         onExerciseCopied(copiedExercise);
@@ -96,9 +121,11 @@ const AdminExerciseBank: React.FC<AdminExerciseBankProps> = ({
       // Close edit modal
       setEditingExercise(null);
     } catch (err) {
+      console.error('❌ Copy operation failed:', err);
       const errorMsg = err instanceof Error ? err.message : 'שגיאה בהעתקת התרגיל';
       showError(errorMsg);
     } finally {
+      console.log('🏁 Copy operation finished, clearing loading state');
       setCopying(null);
     }
   };
