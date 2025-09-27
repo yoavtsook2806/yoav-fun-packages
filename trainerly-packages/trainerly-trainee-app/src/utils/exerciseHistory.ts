@@ -359,46 +359,45 @@ export const clearCustomExerciseData = (): void => {
 
 export const isFirstTimeExperience = (trainingType: string, exercises: string[], trainingPlanId: string): boolean => {
   console.log(`🔍 Checking first-time experience for training: ${trainingType} in plan: ${trainingPlanId}`);
-  
-  // Check if user has exercise history for ANY of the exercises in this training IN THIS PLAN
+
+  // Check if user has exercise history for ANY of the exercises in this training IN THIS PLAN AND TRAINING TYPE
   const history = getExerciseHistory();
   for (const exerciseName of exercises) {
     if (history[exerciseName] && history[exerciseName].length > 0) {
-      // Check if any history entry is from the current plan
-      const hasHistoryInCurrentPlan = history[exerciseName].some(entry => 
-        entry.trainingPlanId === trainingPlanId
+      // Check if any history entry is from the current plan AND training type
+      const hasHistoryInCurrentTraining = history[exerciseName].some(entry =>
+        entry.trainingPlanId === trainingPlanId && entry.trainingType === trainingType
       );
-      if (hasHistoryInCurrentPlan) {
-        console.log(`✅ User has history for exercise "${exerciseName}" in plan "${trainingPlanId}", not first time for this training`);
+      if (hasHistoryInCurrentTraining) {
+        console.log(`✅ User has history for exercise "${exerciseName}" in training "${trainingType}" of plan "${trainingPlanId}", not first time for this training`);
         return false;
       }
     }
   }
 
-  // Check if ALL exercises in this training have defaults (meaning the complete training has been done before)
-  // FTE should only be skipped if the entire training has been completed, not just individual exercises
+  // Check if ALL exercises in this training have defaults (meaning FTE was completed for this training)
+  // OR if any exercise has been completed in this specific training type
   let allExercisesHaveDefaults = true;
-  
+
   for (const exerciseName of exercises) {
+    // Check if this exercise has defaults (user configured it via FTE)
     const defaultWeight = getDefaultWeight(exerciseName, trainingPlanId);
     const defaultRestTime = getDefaultRestTime(exerciseName, trainingPlanId);
     const defaultRepeats = getDefaultRepeats(exerciseName, trainingPlanId);
-
     const hasDefaults = defaultWeight !== undefined || defaultRestTime !== undefined || defaultRepeats !== undefined;
-    
+
     if (!hasDefaults) {
-      // This exercise doesn't have defaults, so the complete training hasn't been done
       allExercisesHaveDefaults = false;
-      console.log(`🆕 Exercise "${exerciseName}" has no defaults in plan "${trainingPlanId}", training is still first-time`);
+      console.log(`🆕 Exercise "${exerciseName}" has no defaults in training "${trainingType}" of plan "${trainingPlanId}", training is still first-time`);
       break; // No need to check further
     }
   }
-  
+
   if (allExercisesHaveDefaults) {
-    console.log(`✅ All exercises have defaults in plan "${trainingPlanId}", not first time for this training`);
+    console.log(`✅ All exercises have defaults in training "${trainingType}" of plan "${trainingPlanId}", FTE was already completed for this training`);
     return false;
   }
-  
+
   console.log(`🆕 This is a first-time experience for training: ${trainingType} in plan: ${trainingPlanId}`);
   return true;
 };

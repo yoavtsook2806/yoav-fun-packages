@@ -4,8 +4,10 @@ import { showError, showSuccess } from './ToastContainer';
 import EditTrainingPlan from './EditTrainingPlan';
 import Card from './Card';
 import Modal from './Modal';
-import TrainingExerciseSelector from './TrainingExerciseSelector';
+import ExerciseGroupView from './ExerciseGroupView';
+import ExerciseParameterModal, { ExerciseParameters } from './ExerciseParameterModal';
 import './TrainingPlanManagement.css';
+import './ExerciseGroupView.css';
 
 interface TrainingPlanManagementProps {
   coachId: string;
@@ -38,7 +40,9 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
   });
   
   const [showTrainingForm, setShowTrainingForm] = useState(false);
-  const [showTrainingExerciseSelector, setShowTrainingExerciseSelector] = useState(false);
+  const [showParameterModal, setShowParameterModal] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [editingTrainingExercise, setEditingTrainingExercise] = useState<PrescribedExercise | null>(null);
   const [editingTrainingIndex, setEditingTrainingIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -231,6 +235,266 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
     }));
   };
 
+  const handleExerciseSelect = (exercise: Exercise) => {
+    // Check if exercise is already added
+    const isAlreadyAdded = currentTraining.exercises.some(ex => ex.exerciseId === exercise.exerciseId);
+    if (isAlreadyAdded) return;
+    
+    setSelectedExercise(exercise);
+    setShowParameterModal(true);
+  };
+
+  const handleParameterSave = (parameters: ExerciseParameters) => {
+    if (!selectedExercise) return;
+    
+    const prescribedExercise: PrescribedExercise = {
+      exerciseId: selectedExercise.exerciseId,
+      exerciseName: selectedExercise.name,
+      name: selectedExercise.name,
+      muscleGroup: selectedExercise.muscleGroup,
+      link: selectedExercise.link,
+      note: selectedExercise.note,
+      ...parameters
+    };
+    
+    setCurrentTraining(prev => ({
+      ...prev,
+      exercises: [...prev.exercises, prescribedExercise]
+    }));
+    
+    setSelectedExercise(null);
+  };
+
+  const handleTrainingExerciseEdit = (exercise: PrescribedExercise) => {
+    setEditingTrainingExercise(exercise);
+    setSelectedExercise({
+      exerciseId: exercise.exerciseId,
+      name: exercise.name,
+      muscleGroup: exercise.muscleGroup,
+      link: exercise.link,
+      note: exercise.note,
+      coachId: '', // Not needed for editing
+      createdAt: '' // Not needed for editing
+    });
+    setShowParameterModal(true);
+  };
+
+  const handleTrainingParameterSave = (parameters: ExerciseParameters) => {
+    if (!editingTrainingExercise) return;
+    
+    setCurrentTraining(prev => ({
+      ...prev,
+      exercises: prev.exercises.map(ex => 
+        ex.exerciseId === editingTrainingExercise.exerciseId ? { ...ex, ...parameters } : ex
+      )
+    }));
+    
+    setEditingTrainingExercise(null);
+    setSelectedExercise(null);
+  };
+
+  const isExerciseSelected = (exercise: Exercise) => {
+    return currentTraining.exercises.some(selected => selected.exerciseId === exercise.exerciseId);
+  };
+
+  const renderExerciseCard = (exercise: Exercise) => {
+    const isExpanded = expandedCards.has(exercise.exerciseId);
+    const isSelected = isExerciseSelected(exercise);
+
+    return (
+      <Card 
+        key={exercise.exerciseId} 
+        data-id={exercise.exerciseId} 
+        className={`${isExpanded ? 'expanded' : 'collapsed'} ${isSelected ? 'selected' : ''}`}
+      >
+        <div
+          className="card-header clickable"
+          onClick={() => toggleCardExpansion(exercise.exerciseId)}
+        >
+          <div className="card-controls">
+            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+          </div>
+          <div className="exercise-info">
+            <h3 className="card-title">{exercise.name}</h3>
+            {!isExpanded && exercise.muscleGroup && (
+              <p className="card-subtitle">{exercise.muscleGroup}</p>
+            )}
+          </div>
+          {isSelected && (
+            <div className="selected-indicator">
+              <span className="selected-icon">✅</span>
+              <span className="selected-text">נבחר</span>
+            </div>
+          )}
+        </div>
+
+        {isExpanded && (
+          <div className="card-details">
+            {exercise.muscleGroup && (
+              <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+            )}
+
+            {exercise.note && (
+              <div className="card-content">
+                <p>{exercise.note}</p>
+              </div>
+            )}
+
+            {exercise.link && (
+              <div className="card-footer">
+                <a 
+                  href={exercise.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="video-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  🎥 צפה בסרטון
+                </a>
+              </div>
+            )}
+
+            <div className="card-actions-section">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExerciseSelect(exercise);
+                }}
+                className={`btn-primary btn-sm ${isSelected ? 'selected' : ''}`}
+                disabled={isSelected}
+                title={isSelected ? 'תרגיל נבחר' : 'הוסף לאימון'}
+              >
+                {isSelected ? (
+                  <>
+                    <span className="btn-icon">✅</span>
+                    נבחר
+                  </>
+                ) : (
+                  <>
+                    <span className="btn-icon">➕</span>
+                    הוסף לאימון
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+      </Card>
+    );
+  };
+
+  const renderTrainingExerciseCard = (exercise: PrescribedExercise) => {
+    const isExpanded = expandedCards.has(exercise.exerciseId);
+
+    return (
+      <Card 
+        key={exercise.exerciseId} 
+        data-id={exercise.exerciseId} 
+        className={isExpanded ? 'expanded' : 'collapsed'}
+      >
+        <div
+          className="card-header clickable"
+          onClick={() => toggleCardExpansion(exercise.exerciseId)}
+        >
+          <div className="card-controls">
+            <span className="expand-icon">{isExpanded ? '▼' : '▲'}</span>
+          </div>
+          <div className="exercise-info">
+            <h3 className="card-title">{exercise.name}</h3>
+            {!isExpanded && (
+              <p className="card-subtitle">
+                🎯 {exercise.muscleGroup} • 🔢 {exercise.numberOfSets || 3} סטים • 🔁 {exercise.minimumNumberOfRepeasts || 8}-{exercise.maximumNumberOfRepeasts || 12} חזרות
+              </p>
+            )}
+          </div>
+        </div>
+
+        {isExpanded && (
+          <div className="card-details">
+            {exercise.muscleGroup && (
+              <p className="card-subtitle">🎯 {exercise.muscleGroup}</p>
+            )}
+
+            <div className="training-parameters">
+              <div className="parameter-row">
+                <div className="parameter-item">
+                  <span className="parameter-label">🔢 מספר סטים:</span>
+                  <span className="parameter-value">{exercise.numberOfSets || 3}</span>
+                </div>
+                <div className="parameter-item">
+                  <span className="parameter-label">⏱️ זמן מנוחה:</span>
+                  <span className="parameter-value">
+                    {exercise.minimumTimeToRest || 60}-{exercise.maximumTimeToRest || 120} שניות
+                  </span>
+                </div>
+              </div>
+              <div className="parameter-row">
+                <div className="parameter-item">
+                  <span className="parameter-label">🔁 חזרות:</span>
+                  <span className="parameter-value">
+                    {exercise.minimumNumberOfRepeasts || 8}-{exercise.maximumNumberOfRepeasts || 12}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {exercise.note && (
+              <div className="card-content">
+                <p>{exercise.note}</p>
+              </div>
+            )}
+
+            {exercise.prescriptionNote && (
+              <div className="card-content">
+                <h5>הוראות לאימון:</h5>
+                <p>{exercise.prescriptionNote}</p>
+              </div>
+            )}
+
+            {exercise.link && (
+              <div className="card-footer">
+                <a 
+                  href={exercise.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="video-link"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  🎥 צפה בסרטון
+                </a>
+              </div>
+            )}
+
+            <div className="card-actions-section">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTrainingExerciseEdit(exercise);
+                }}
+                className="btn-secondary btn-sm"
+                title="ערוך פרמטרים"
+              >
+                <span className="btn-icon">⚙️</span>
+                ערוך פרמטרים
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeExerciseFromCurrentTraining(exercise.exerciseId);
+                }}
+                className="btn-danger btn-sm"
+                title="הסר תרגיל"
+              >
+                <span className="btn-icon">🗑️</span>
+                הסר תרגיל
+              </button>
+            </div>
+          </div>
+        )}
+      </Card>
+    );
+  };
+
   const removeTraining = (index: number) => {
     setFormData(prev => ({
       ...prev,
@@ -359,15 +623,16 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             </form>
       </Modal>
 
-      {/* Training Form Modal - Just Name Input */}
+      {/* Training Form Modal - Complete Interface */}
       <Modal
         isOpen={showTrainingForm}
         onClose={() => setShowTrainingForm(false)}
         title={editingTrainingIndex !== null ? 'עריכת אימון' : 'הוספת אימון חדש'}
         icon="🏋️"
-        size="sm"
+        size="xl"
       >
         <div className="training-form">
+          {/* Training Name */}
           <div className="form-group">
             <label>שם האימון *</label>
             <input
@@ -379,44 +644,105 @@ const TrainingPlanManagement: React.FC<TrainingPlanManagementProps> = ({ coachId
             />
           </div>
 
+          {/* Two-Section Layout */}
+          <div className="training-sections">
+            {/* Top Section: Exercise Browser */}
+            <div className="exercise-browser-section">
+              <div className="section-header">
+                <h3 className="section-title">
+                  <span className="section-icon">💪</span>
+                  התרגילים שלי
+                </h3>
+              </div>
+
+              <div className="exercises-content">
+                {exercises.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-icon">💪</div>
+                    <h3>אין תרגילים זמינים</h3>
+                    <p>צור תרגילים חדשים בעמוד ניהול התרגילים</p>
+                  </div>
+                ) : (
+                  <ExerciseGroupView
+                    exercises={exercises}
+                    renderExerciseCard={renderExerciseCard}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="sections-divider">
+              <div className="divider-line"></div>
+              <div className="divider-icon">⬇️</div>
+              <div className="divider-line"></div>
+            </div>
+
+            {/* Bottom Section: Training Exercises */}
+            <div className="training-exercises-section">
+              <div className="section-header">
+                <h3 className="section-title">
+                  <span className="section-icon">🏋️</span>
+                  תרגילי האימון
+                </h3>
+                <div className="exercises-count">
+                  {currentTraining.exercises.length} תרגילים
+                </div>
+              </div>
+
+              <div className="training-exercises-content">
+                {currentTraining.exercises.length === 0 ? (
+                  <div className="empty-state">
+                    <span className="empty-icon">🏋️</span>
+                    <p>לא נבחרו תרגילים עדיין</p>
+                    <p className="empty-subtitle">בחר תרגילים מהרשימה למעלה כדי להוסיף אותם לאימון</p>
+                  </div>
+                ) : (
+                  <ExerciseGroupView
+                    exercises={currentTraining.exercises}
+                    renderExerciseCard={renderTrainingExerciseCard}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Form Actions */}
           <div className="form-actions">
             <button type="button" onClick={() => setShowTrainingForm(false)} className="btn-secondary">
               ביטול
             </button>
             <button 
               type="button" 
-              onClick={() => {
-                if (!currentTraining.name?.trim()) {
-                  showError('יש להזין שם לאימון');
-                  return;
-                }
-                setShowTrainingForm(false);
-                setShowTrainingExerciseSelector(true);
-              }} 
+              onClick={saveTraining} 
               className="btn-primary"
-              disabled={!currentTraining.name?.trim()}
+              disabled={!currentTraining.name?.trim() || currentTraining.exercises.length === 0}
             >
-              <span className="btn-icon">💪</span>
-              בחר תרגילים
+              <span className="btn-icon">💾</span>
+              שמור אימון
             </button>
           </div>
         </div>
       </Modal>
 
-      {/* Training Exercise Selector Modal */}
-      <TrainingExerciseSelector
-        isOpen={showTrainingExerciseSelector}
-        onClose={() => setShowTrainingExerciseSelector(false)}
-        exercises={exercises}
-        trainingExercises={currentTraining.exercises}
-        onExerciseAdd={addExerciseToCurrentTraining}
-        onExerciseUpdate={updateCurrentTrainingExercise}
-        onExerciseRemove={removeExerciseFromCurrentTraining}
-        onSave={() => {
-          setShowTrainingExerciseSelector(false);
-          saveTraining();
+      {/* Exercise Parameter Modal */}
+      <ExerciseParameterModal
+        isOpen={showParameterModal}
+        onClose={() => {
+          setShowParameterModal(false);
+          setSelectedExercise(null);
+          setEditingTrainingExercise(null);
         }}
-        trainingName={currentTraining.name}
+        exercise={selectedExercise}
+        onSave={editingTrainingExercise ? handleTrainingParameterSave : handleParameterSave}
+        initialParameters={editingTrainingExercise ? {
+          numberOfSets: editingTrainingExercise.numberOfSets || 3,
+          minimumTimeToRest: editingTrainingExercise.minimumTimeToRest || 60,
+          maximumTimeToRest: editingTrainingExercise.maximumTimeToRest || 120,
+          minimumNumberOfRepeasts: editingTrainingExercise.minimumNumberOfRepeasts || 8,
+          maximumNumberOfRepeasts: editingTrainingExercise.maximumNumberOfRepeasts || 12,
+          prescriptionNote: editingTrainingExercise.prescriptionNote || ''
+        } : undefined}
       />
 
       {/* Plans Grid */}
